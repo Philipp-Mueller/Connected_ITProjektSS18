@@ -1,4 +1,4 @@
-package de.Connected.client;
+package de.hdm.Connected.client;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;

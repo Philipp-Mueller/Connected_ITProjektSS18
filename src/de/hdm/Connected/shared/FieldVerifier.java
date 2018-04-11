@@ -1,4 +1,4 @@
-package de.Connected.shared;
+package de.hdm.Connected.shared;
 
 /**
  * <p>

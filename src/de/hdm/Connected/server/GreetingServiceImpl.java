@@ -1,8 +1,9 @@
-package de.Connected.server;
+package de.hdm.Connected.server;
 
-import de.Connected.client.GreetingService;
-import de.Connected.shared.FieldVerifier;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
+import de.hdm.Connected.client.GreetingService;
+import de.hdm.Connected.shared.FieldVerifier;
 
 /**
  * The server-side implementation of the RPC service.
