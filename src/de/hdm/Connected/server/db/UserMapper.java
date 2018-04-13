@@ -7,7 +7,7 @@ import java.sql.Statement;
 import de.hdm.Connected.shared.bo.User;
 
 /**
- * Die Klasse PersonMapper bildet Person-Objekte auf eine relationale Datenbank
+ * Die Klasse UserMapper bildet User-Objekte auf eine relationale Datenbank
  * ab. Ebenfalls ist es moeglich aus Datenbank-Tupel Java-Objekte zu erzeugen.
  * 
  * Zur Verwaltung der Objekte implementiert die Mapper-Klasse entsprechende
@@ -38,8 +38,8 @@ public class UserMapper {
 	/**
 	 * Methode zum Sicherstellen der Singleton-Eigenschaft. Diese sorgt dafür,
 	 * dass nur eine einzige Instanz der UserMapper-Klasse exsistiert.
-	 * Aufgerufen wird die Klasse somit ueber PersonMapper.personMapper() und
-	 * nicht ueber den New-Operator.
+	 * Aufgerufen wird die Klasse somit über UserMapper.userMapper() und
+	 * nicht über den New-Operator.
 	 * 
 	 * @return userMapper
 	 */
@@ -52,7 +52,7 @@ public class UserMapper {
 	}
 
 	/**
-	 * Fügt ein Person-Objekt der Datenbank hinzu.
+	 * Fügt ein User-Objekt der Datenbank hinzu.
 	 * 
 	 * @param user
 	 * @return user
@@ -71,7 +71,7 @@ public class UserMapper {
 			Statement stmt = con.createStatement();
 
 			/**
-			 * Abfrage des zuletzt hinzugefügten Primärschluessel (id). Die
+			 * Abfrage des zuletzt hinzugefügten Primärschlüssel (id). Die
 			 * aktuelle id wird um eins erhöht. Statement ausfüllen und als
 			 * Query an die Datenbank senden.
 			 */
@@ -102,7 +102,7 @@ public class UserMapper {
 	}
 
 	/**
-	 * Aktualisiert ein Person-Objekt in der Datenbank.
+	 * Aktualisiert ein User-Objekt in der Datenbank.
 	 * 
 	 * @param user
 	 * @return user
@@ -131,7 +131,7 @@ public class UserMapper {
 	}
 
 	/**
-	 * Löscht ein Person-Objekt aus der Datenbank.
+	 * Löscht ein User-Objekt aus der Datenbank.
 	 * 
 	 * @param user
 	 */
@@ -207,7 +207,7 @@ public class UserMapper {
 			 * SQL-Anweisung zum Finden aller Datensätze, anhand der eMail, in
 			 * der Datenbank.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name, email FROM person WHERE email LIKE '" + email + "'");
+			ResultSet rs = stmt.executeQuery("SELECT id, name, email FROM user WHERE email LIKE '" + email + "'");
 			/**
 			 * Zu einem eindeutigen Wert exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurückgegeben werden.
