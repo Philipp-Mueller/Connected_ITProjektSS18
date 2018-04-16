@@ -81,8 +81,8 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Einfuegen des neuen Contact-Tupels in die
 			 * Datenbank.
 			 */
-			stmt.executeUpdate("INSERT INTO contact (id, name) VALUES (" + contact.getId()
-					+ ", '" + contact.getName() + "', '"  + "')");
+			stmt.executeUpdate("INSERT INTO contact (id, name, contactlistid) VALUES (" + contact.getId()
+					+ ", '" + contact.getName() + "', '" + contactlistID.getID() + "')");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
@@ -109,7 +109,7 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Aktualisieren des uebergebenen Datensatzes in
 			 * der Datenbank.
 			 */
-			stmt.executeUpdate("UPDATE contact SET name='" + contact.getName() + "' + "' WHERE id= " + contact.getId());
+			stmt.executeUpdate("UPDATE contact SET name='" + contact.getName() + "', contactlistid = '" + contact.getContactlistID() + "' WHERE id= " + contact.getId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -164,7 +164,7 @@ public class ContactMapper {
 			 * Id, in der Datenbank.
 			 */
 			ResultSet rs = stmt
-					.executeQuery("SELECT id, name FROM contact WHERE id=" + id);
+					.executeQuery("SELECT id,contactlistid, name FROM contact WHERE id=" + id);
 			/**
 			 * Zu einem Primaerschluessel exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurueckgegeben werden.
@@ -174,7 +174,9 @@ public class ContactMapper {
 			if (rs.next()) {
 				Contact contact = new contact();
 				contact.setId(rs.getInt("id"));
+				contact.setContactlistID(rs.getInt("contactlistid"))
 				contact.setName(rs.getString("name"));
+				
 				
 				return contact;
 			}
@@ -204,7 +206,7 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze in der Datenbank,
 			 * sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name FROM contact ORDER BY id");
+			ResultSet rs = stmt.executeQuery("SELECT id, contactlistid, name FROM contact ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle contact vorhanden ist, muss das Abfragen des ResultSet so
@@ -216,6 +218,7 @@ public class ContactMapper {
 			while (rs.next()) {
 				Contact contact = new contact();
 				contact.setId(rs.getInt("id"));
+				contact.setContactlistID(rs.getInt("contactlistid"))
 				contact.setName(rs.getString("name"));
 				
 				result.add(contact);
@@ -248,7 +251,7 @@ public class ContactMapper {
 			 * Namens, in der Datenbank, sortiert nach der Id.
 			 */
 			ResultSet rs = stmt
-					.executeQuery("SELECT id, name FROM contact WHERE name LIKE '" + name
+					.executeQuery("SELECT id, contactlistid, name FROM contact WHERE name LIKE '" + name
 							+ "' ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
@@ -260,6 +263,7 @@ public class ContactMapper {
 			while (rs.next()) {
 				Contact contact = new Contact();
 				contact.setId(rs.getInt("id"));
+				contact.setContactlistID(rs.getInt("contactlistid"))
 				contact.setName(rs.getString("name"));
 				
 				result.add(contact);
@@ -292,7 +296,7 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand des Vornamens,
 			 * in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name FROM contact WHERE name LIKE '"
+			ResultSet rs = stmt.executeQuery("SELECT id, contactlistid, name FROM contact WHERE name LIKE '"
 					+ id + "' ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
@@ -305,6 +309,7 @@ public class ContactMapper {
 			while (rs.next()) {
 				Contact contact = new Contact();
 				contact.setId(rs.getInt("id"));
+				contact.setContactlistID(rs.getInt("contactlistid"))
 				contact.setName(rs.getString("name"));
 				
 				result.add(contact);
