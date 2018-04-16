@@ -81,8 +81,8 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Einfuegen des neuen Contact-Tupels in die
 			 * Datenbank.
 			 */
-			stmt.executeUpdate("INSERT INTO contact (id, name, contactlistid) VALUES (" + contact.getId()
-					+ ", '" + contact.getName() + "', '" + contactlistID.getID() + "')");
+			stmt.executeUpdate("INSERT INTO contact (id, name, contactlistid, userid) VALUES (" + contact.getId()
+					+ ", '" + contact.getName() + "', '" + contactlistID.getID()+ ", '" + contact.getUserId() + "')");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
@@ -251,7 +251,7 @@ public class ContactMapper {
 			 * Namens, in der Datenbank, sortiert nach der Id.
 			 */
 			ResultSet rs = stmt
-					.executeQuery("SELECT id, contactlistid, name FROM contact WHERE name LIKE '" + name
+					.executeQuery("SELECT id, contactlistid, name FROM contact " + " WHERE name LIKE '" + name
 							+ "' ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
@@ -280,23 +280,23 @@ public class ContactMapper {
 	}
 
 	/**
-	 * Findet ein Contact-Objekt anhand des uebergebenen Vornamens in der
+	 * Findet ein Contact-Objekt anhand des uebergebenen UserId in der
 	 * Datenbank.
 	 * 
-	 * @param firstName
+	 * @param userid
 	 * @return ArrayList<Contact>
 	 */
-	public ArrayList<Contact> findByUserId(int id) {
+	public ArrayList<Contact> findByUserId(int userid) {
 		Connection con = DBConnection.connection();
 
 		ArrayList<Contact> result = new ArrayList<Contact>();
 		try {
 			Statement stmt = con.createStatement();
 			/**
-			 * SQL-Anweisung zum Finden aller Datensaetze, anhand des Vornamens,
+			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der UserID,
 			 * in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, contactlistid, name FROM contact WHERE name LIKE '"
+			ResultSet rs = stmt.executeQuery("SELECT id, contactlistid, name FROM contact" + " WHERE userid LIKE '"
 					+ id + "' ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
