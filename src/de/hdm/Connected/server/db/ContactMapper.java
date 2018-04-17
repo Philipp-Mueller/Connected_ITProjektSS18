@@ -82,7 +82,7 @@ public class ContactMapper {
 			 * Datenbank.
 			 */
 			stmt.executeUpdate("INSERT INTO contact (id, name, contactlistid, userid) VALUES (" + contact.getId()
-					+ ", '" + contact.getName() + "', '" + contactlistID.getID()+ ", '" + contact.getUserId() + "')");
+					+ ", '" + contact.getName() + "', " + contact.getContactlistID()+ ", " + contact.getUserId() + ")");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
@@ -251,7 +251,7 @@ public class ContactMapper {
 			 * Namens, in der Datenbank, sortiert nach der Id.
 			 */
 			ResultSet rs = stmt
-					.executeQuery("SELECT id, contactlistid, name FROM contact " + " WHERE name LIKE '" + name
+					.executeQuery("SELECT id, contactlistid, name FROM contact WHERE name LIKE '" + name
 							+ "' ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
@@ -296,8 +296,8 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der UserID,
 			 * in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, contactlistid, name FROM contact" + " WHERE userid LIKE '"
-					+ id + "' ORDER BY id");
+			ResultSet rs = stmt.executeQuery("SELECT id, contactlistid, name FROM contact WHERE userid LIKE '"
+					+ userid + "' ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle Contact mit dem uebergebenen Vornamen vorhanden ist, muss
