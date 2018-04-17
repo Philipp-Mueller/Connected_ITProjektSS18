@@ -81,8 +81,8 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Einfuegen des neuen Contact-Tupels in die
 			 * Datenbank.
 			 */
-			stmt.executeUpdate("INSERT INTO contact (id, name, contactlistid, userid) VALUES (" + contact.getId()
-					+ ", '" + contact.getName() + "', " + contact.getContactlistID()+ ", " + contact.getUserId() + ")");
+			stmt.executeUpdate("INSERT INTO contact (id, contactname, contactlistId) VALUES (" + contact.getId()
+					+ ", '" + contact.getName() + "', " + contact.getContactlistID()+ ")");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
@@ -109,7 +109,7 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Aktualisieren des uebergebenen Datensatzes in
 			 * der Datenbank.
 			 */
-			stmt.executeUpdate("UPDATE contact SET name='" + contact.getName() + "', contactlistid = '" + contact.getContactlistID() + "' WHERE id= " + contact.getId());
+			stmt.executeUpdate("UPDATE contact SET contactname='" + contact.getContactname() + "', contactlistid = '" + contact.getContactlistID() + "' WHERE id= " + contact.getId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -175,7 +175,7 @@ public class ContactMapper {
 				Contact contact = new contact();
 				contact.setId(rs.getInt("id"));
 				contact.setContactlistID(rs.getInt("contactlistid"))
-				contact.setName(rs.getString("name"));
+				contact.setContactname(rs.getString("contactname"));
 				
 				
 				return contact;
@@ -206,7 +206,7 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze in der Datenbank,
 			 * sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, contactlistid, name FROM contact ORDER BY id");
+			ResultSet rs = stmt.executeQuery("SELECT id, contactlistid, contactname FROM contact ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle contact vorhanden ist, muss das Abfragen des ResultSet so
@@ -219,7 +219,7 @@ public class ContactMapper {
 				Contact contact = new contact();
 				contact.setId(rs.getInt("id"));
 				contact.setContactlistID(rs.getInt("contactlistid"))
-				contact.setName(rs.getString("name"));
+				contact.setName(rs.getString("contactname"));
 				
 				result.add(contact);
 			}
@@ -251,7 +251,7 @@ public class ContactMapper {
 			 * Namens, in der Datenbank, sortiert nach der Id.
 			 */
 			ResultSet rs = stmt
-					.executeQuery("SELECT id, contactlistid, name FROM contact WHERE name LIKE '" + name
+					.executeQuery("SELECT id, contactlistid, contactname FROM contact WHERE contactname LIKE '" + contactname
 							+ "' ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
@@ -264,7 +264,7 @@ public class ContactMapper {
 				Contact contact = new Contact();
 				contact.setId(rs.getInt("id"));
 				contact.setContactlistID(rs.getInt("contactlistid"))
-				contact.setName(rs.getString("name"));
+				contact.setContactname(rs.getString("contactname"));
 				
 				result.add(contact);
 			}
@@ -296,11 +296,11 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der UserID,
 			 * in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, contactlistid, name FROM contact WHERE userid LIKE '"
+			ResultSet rs = stmt.executeQuery("SELECT id, contactlistid, contactname FROM contact WHERE userid LIKE '"
 					+ userid + "' ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
-			 * Tabelle Contact mit dem uebergebenen Vornamen vorhanden ist, muss
+			 * Tabelle Contact mit dem uebergebenen UserId vorhanden ist, muss
 			 * das Abfragen des ResultSet so oft erfolgen (while-Schleife), bis
 			 * alle Tupel durchlaufen wurden. Die DB-Tupel werden in
 			 * Java-Objekte transformiert und anschliessend der ArrayList
@@ -310,7 +310,7 @@ public class ContactMapper {
 				Contact contact = new Contact();
 				contact.setId(rs.getInt("id"));
 				contact.setContactlistID(rs.getInt("contactlistid"))
-				contact.setName(rs.getString("name"));
+				contact.setContactname(rs.getString("contactname"));
 				
 				result.add(contact);
 			}
