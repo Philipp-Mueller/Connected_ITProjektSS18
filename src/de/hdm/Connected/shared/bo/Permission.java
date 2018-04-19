@@ -10,20 +10,20 @@ public class Permission extends BusinessObject{
 
 
 	private static final long serialVersionUID = 1L;
-	private int userID = 0;
+	private int receiverUserID = 0;
 	private int businessObjectID = 0;
 	private int shareUserID = 0;
 	/**
 	 * @return the userID
 	 */
-	public int getUserID() {
-		return userID;
+	public int getReceiverUserID() {
+		return receiverUserID;
 	}
 	/**
 	 * @param userID the userID to set
 	 */
-	public void setUserID(int userID) {
-		this.userID = userID;
+	public void setReceiverUserID(int receiverUserID) {
+		this.receiverUserID = receiverUserID;
 	}
 	/**
 	 * @return the businessObjectID

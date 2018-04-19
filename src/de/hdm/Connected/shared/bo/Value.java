@@ -3,20 +3,20 @@ package de.hdm.Connected.shared.bo;
 public class Value extends BusinessObject{
 
 	private static final long serialVersionUID = 1L;
-	private String description = "";
+	private String name = "";
 	private int propertyID = 0;
 	private int contactID = 0;
 	/**
 	 * @return the description
 	 */
 	public String getDescription() {
-		return description;
+		return name;
 	}
 	/**
 	 * @param description the description to set
 	 */
-	public void setDescription(String description) {
-		this.description = description;
+	public void setDescription(String name) {
+		this.name = name;
 	}
 	/**
 	 * @return the propertyID
