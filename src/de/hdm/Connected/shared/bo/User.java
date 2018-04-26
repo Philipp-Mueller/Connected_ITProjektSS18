@@ -8,31 +8,19 @@ package de.hdm.Connected.shared.bo;
 public class User extends BusinessObject{
 
 	private static final long serialVersionUID = 1L;
-	private String name = "";
-	private String email = "";
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+	private String logEmail = "";
+	
 	/**
 	 * @return the email
 	 */
-	public String getEmail() {
-		return email;
+	public String getLogEmail() {
+		return logEmail;
 	}
 	/**
 	 * @param email the email to set
 	 */
-	public void setEmail(String email) {
-		this.email = email;
+	public void setLogEmail(String email) {
+		this.logEmail = email;
 	}
 	
 
