@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.hdm.Connected.server;
 
 import java.sql.Date;
