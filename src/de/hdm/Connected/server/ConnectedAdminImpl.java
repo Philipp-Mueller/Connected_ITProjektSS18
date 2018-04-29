@@ -1,23 +1,20 @@
 package de.hdm.Connected.server;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet; //weiß gerade noch nicht wo bzw wie ich sie sonst importieren soll...
+import de.hdm.Connected.server.db.ContactListMapper;
+import de.hdm.Connected.server.db.ContactMapper;
+import de.hdm.Connected.server.db.PermissionMapper;
+import de.hdm.Connected.server.db.PropertyMapper;
+import de.hdm.Connected.server.db.UserMapper;
+import de.hdm.Connected.server.db.ValueMapper;
+import de.hdm.Connected.shared.bo.Contact;
+import de.hdm.Connected.shared.bo.ContactList;
 
-import de.pitchMen.server.db.ApplicationMapper;
-import de.pitchMen.server.db.CompanyMapper;
-import de.pitchMen.server.db.JobPostingMapper;
-import de.pitchMen.server.db.MarketplaceMapper;
-import de.pitchMen.server.db.ParticipationMapper;
-import de.pitchMen.server.db.PartnerProfileMapper;
-import de.pitchMen.server.db.PersonMapper;
-import de.pitchMen.server.db.ProjectMapper;
-import de.pitchMen.server.db.RatingMapper;
-import de.pitchMen.server.db.TeamMapper;
-import de.pitchMen.server.db.TraitMapper;
-import de.pitchMen.shared.bo.Application;
-import de.pitchMen.shared.bo.Rating;
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
 
 /**
  * Implemetierungsklasse des Interface ConnectedAdmin. Sie enthält die
@@ -28,17 +25,29 @@ import de.pitchMen.shared.bo.Rating;
  *
  */
 public class ConnectedAdminImpl extends RemoteServiceServlet {
+	
+	private static final long serialVersionUID = 1L;
 
 	public ConnectedAdminImpl() throws IllegalArgumentException {
 	}
+	
+	Timestamp ts = new Timestamp(System.currentTimeMillis());
 
-	private static final long serialVersionUID = 1L;
+/*	public void init() {
+		this.contactListMapper = ContactListMapper.contactListMapper();
+		this.contactMapper = ContactMapper.contactMapper();
+		this.permissionMapper = PermissionMapper.permissionMapper();
+		this.propertyMapper = PropertyMapper.propertyMapper();
+		this.valueMapper = ValueMapper.valueMapper();
+		this.userMapper = UserMapper.userMapper(); 
+		};*/
+
 
 	/**
 	 * Referenzen auf die DatenbankMapper, die Objekte mit der Datenbank
 	 * abgleicht.
 	 */	
-	private ContactListMapper 	contactlistMapper = null;
+	private ContactListMapper 	contactListMapper = null;
 	private ContactMapper 	contactMapper = null;
 	private PermissionMapper 	permissionMapper = null;
 	private PropertyMapper	propertyMapper = null;
@@ -53,7 +62,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet {
 		 * Vollständiger Satz von Mappern mit deren Hilfe ConnectedAdminImpl mit der Datenbank kommunizieren kann.
 		 */
 
-		this.contactlistMapper = ContactListMapper.contactlistMapper();
+		this.contactListMapper = ContactListMapper.contactListMapper();
 		this.contactMapper = ContactMapper.contactMapper();
 		this.permissionMapper = PermissionMapper.permissionMapper();
 		this.propertyMapper = PropertyMapper.propertyMapper();
@@ -75,15 +84,13 @@ public class ConnectedAdminImpl extends RemoteServiceServlet {
 
 	}
 
-	@Override
+	
 	public void updateContact(Contact contact) throws IllegalArgumentException {
 		contactMapper.update(contact);
 	}
 
-	@Override
-	public void deleteContact(Contact contact) throws IllegalArgumentException {
-		Contact contact = this.getContactByContactId(contact.getId());
-
+	public void deleteContact(Contact contact, int userId, int permissionId) throws IllegalArgumentException {
+	
 		if (contact != null) {
 			this.contactMapper.delete(contact);
 		}
@@ -91,20 +98,54 @@ public class ConnectedAdminImpl extends RemoteServiceServlet {
 		this.contactMapper.delete(contact);
 	}
 
-	@Override
+	
 	public ArrayList<Contact> getContacts() throws IllegalArgumentException {
 		return this.contactMapper.findAll();
 	}
 
-	@Override
 	public ArrayList<Contact> getContactByUser(int userId) throws IllegalArgumentException {
-		return this.contactMapper.findContactsByUserId(userId);
+		return this.contactMapper.findByUserId(userId);
 	}
 
 	// 			*** ContactList ***
 	
 	
+	public ContactList createContactList(String name){
+		ContactList contactList = new ContactList();
+
+		return this.contactListMapper.insert(contactList);
+	}
 	
+	public void updateContactList(ContactList contactList) throws IllegalArgumentException {
+		contactListMapper.update(contactList);
+	}
+
+	// fügt einer Kontaktliste einen Kontakt hinzu
+	
+	public void addContact(Timestamp modificationDate, ContactList cl, int contactId, int userId, int permissionId) 
+	throws IllegalArgumentException {
+		
+		if(cl.getPermissionId()==permissionId || userId==cl.getCreatorID())	{
+			cl.setModificationDate(modificationDate);
+			cl.setContactId(contactId);	
+			this.contactListMapper.update(cl);
+		}
+	
+	
+		
+
+	
+
 	
 	
 }
+		
+		
+
+		
+		
+	}
+
+	
+	
+
