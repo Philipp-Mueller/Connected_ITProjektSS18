@@ -34,7 +34,7 @@ public class Contact extends BusinessObject{
 	/**
 	 * @param name the name to set
 	 */
-	public void setName(String prename) {
+	public void setPrename(String prename) {
 		this.prename = prename;
 	}
 	/**
