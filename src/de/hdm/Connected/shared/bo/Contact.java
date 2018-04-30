@@ -1,18 +1,34 @@
 package de.hdm.Connected.shared.bo;
 
+import java.sql.Timestamp;
 
 /**
  * 
- * @author Moritz
+ * @author Moritz Realisierung eines Kontakts
  *
  */
-public class Contact extends BusinessObject{
+public class Contact extends SharedObject{
 
 
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Der Default-Wert von Strings ist "null". Hier wird ein leerer
+	 * String verwendet, um das Werfen einer NullPointException
+	 * zu vermeiden.
+	 */
+	
 	private String prename ="";
 	private String surname ="";
-	private int ownerId= 0;
+	
+	/**
+	 * Realisierung der Beziehung zu einem User durch einen Fremdschlüssel.
+	 */
+	private int creatorId= 0;
+	
+	
+	private Timestamp creationDate = new Timestamp(System.currentTimeMillis());
+	private Timestamp modificationDate = new Timestamp(System.currentTimeMillis());
+	
 	/**
 	 * @return the surname
 	 */
@@ -38,16 +54,40 @@ public class Contact extends BusinessObject{
 		this.prename = prename;
 	}
 	/**
-	 * @return the ownerId
+	 * @return gibt creatur -User-Id zurück
 	 */
-	public int getOwnerId() {
-		return ownerId;
+	public int getCreatorId() {
+		return creatorId;
 	}
 	/**
-	 * @param ownerId the ownerId to set
+	 * @param creatorId wird gesetzt
 	 */
-	public void setOwnerId(int ownerId) {
-		this.ownerId = ownerId;
+	public void setCreatorId(int creatorId) {
+		this.creatorId = creatorId;
+	}
+	/**
+	 * @return the creationDate
+	 */
+	public Timestamp getCreationDate() {
+		return creationDate;
+	}
+	/**
+	 * @param creationDate the creationDate to set
+	 */
+	public void setCreationDate(Timestamp creationDate) {
+		this.creationDate = creationDate;
+	}
+	/**
+	 * @return the modificationDate
+	 */
+	public Timestamp getModificationDate() {
+		return modificationDate;
+	}
+	/**
+	 * @param modificationDate the modificationDate to set
+	 */
+	public void setModificationDate(Timestamp modificationDate) {
+		this.modificationDate = modificationDate;
 	}
 	
 }

@@ -1,8 +1,6 @@
 package de.hdm.Connected.shared.bo;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
-
 
 /**
  * 
@@ -14,12 +12,6 @@ public class BusinessObject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private int boId = 0;
-	private Timestamp creationDate = new Timestamp(System.currentTimeMillis());
-	private Timestamp modificationDate = new Timestamp(System.currentTimeMillis());
-	private int modifiyerID = 0;
-	private int ownerID = 0;
-
-	
 	
 	/**
 	 * @return the id
@@ -33,55 +25,7 @@ public class BusinessObject implements Serializable {
 	public void setBoId(int boId) {
 		this.boId = boId;
 	}
-	/**
-	 * @return the creationDate
-	 */
-	public Timestamp getCreationDate() {
-		return creationDate;
-	}
-	/**
-	 * @param creationDate the creationDate to set
-	 */
-	public void setCreationDate(Timestamp creationDate) {
-		this.creationDate = creationDate;
-	}
-	/**
-	 * @return the modificationDate
-	 */
-	public Timestamp getModificationDate() {
-		return modificationDate;
-	}
-	/**
-	 * @param modificationDate the modificationDate to set
-	 */
-	public void setModificationDate(Timestamp modificationDate) {
-		this.modificationDate = modificationDate;
-	}
-	/**
-	 * @return the modifiyerID
-	 */
-	public int getModifiyerID() {
-		return modifiyerID;
-	}
-	/**
-	 * @param modifiyerID the modifiyerID to set
-	 */
-	public void setModifiyerID(int modifiyerID) {
-		this.modifiyerID = modifiyerID;
-	}
-	/**
-	 * @return the ownerID
-	 */
-	public int getOwnerID() {
-		return ownerID;
-	}
-	/**
-	 * @param ownerID the ownerID to set
-	 */
-	public void setOwnerID(int ownerID) {
-		this.ownerID = ownerID;
-	}
-
+	
 	/**
 	 * Klassenname und ID des Objekts werden als String zurück gegeben
 	 */
