@@ -67,12 +67,12 @@ public class PropertyMapper {
 			
 			if (rs.next()) {
 				// Ergebnis-Tupel in Objekt umwandeln
-				property.setId(rs.getInt("maxid")+1);
+				property.setBoId(rs.getInt("maxid")+1);
 			}
 			
 			stmt = con.createStatement();
 			// SQL-Anweisung zum Einfügen des neuen Property-Tupels in die Datenbank
-			stmt.executeUpdate("INSERT INTO property (id, description) VALUES " + "(" + property.getId() + ",'"
+			stmt.executeUpdate("INSERT INTO property (id, name) VALUES " + "(" + property.getBoId() + ",'"
 					+ property.getDescription() + "')");
 			
 			/**
@@ -103,7 +103,7 @@ public class PropertyMapper {
 			Statement stmt = con.createStatement();
 			
 			// SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in der Datenbank
-			stmt.executeUpdate("UPDATE property SET description='" + property.getDescription() + "'WHERE id=" + property.getId());
+			stmt.executeUpdate("UPDATE property SET name='" + property.getDescription() + "'WHERE id=" + property.getBoId());
 		
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -132,7 +132,7 @@ public class PropertyMapper {
 			Statement stmt = con.createStatement();
 			
 			//SQL-Anweisung zum Löschen des übergebenen Datensatzes in der Datenbank
-			stmt.executeUpdate("DELETE FROM property WHERE id=" + property.getId());
+			stmt.executeUpdate("DELETE FROM property WHERE id=" + property.getBoId());
 		
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -161,7 +161,7 @@ public class PropertyMapper {
 			  Statement stmt = con.createStatement();
 
 			  // SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der Id in der Datenbank
-			  ResultSet rs = stmt.executeQuery("SELECT id, description FROM property WHERE id=" + id);
+			  ResultSet rs = stmt.executeQuery("SELECT id, name FROM property WHERE id=" + id);
 			  /**
 			    * Da id Primärschlüssel ist, kann max. nur ein Tupel zurückgegeben
 			    * werden. Es wird geprüft, ob ein Ergebnis vorliegt.
@@ -169,8 +169,8 @@ public class PropertyMapper {
 			  if (rs.next()) {
 				  // Ergebnis-Tupel in Objekt umwandeln
 				  Property property = new Property();
-				  property.setId(rs.getInt("id"));
-				  property.setDescription(rs.getString("description"));
+				  property.setBoId(rs.getInt("id"));
+				  property.setDescription(rs.getString("name"));
 				  return property;
 			  }
 			   /**
