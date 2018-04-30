@@ -42,7 +42,7 @@ public class PermissionMapper {
 	 */
 	
 	public static PermissionMapper permissionMapper() {
-		if ( permissionMapper == null){
+		if (permissionMapper == null){
 			permissionMapper = new PermissionMapper();
 		}
 		return permissionMapper;
@@ -68,12 +68,12 @@ public class PermissionMapper {
 		
 			if (rs.next()) {
 				// Ergebnis-Tupel in Objekt umwandeln
-				permission.setId(rs.getInt("maxid") + 1);
+				permission.setBoId(rs.getInt("maxid") + 1);
 			}
 			stmt = con.createStatement();
 			// SQL-Anweisung zum Einfügen des neuen Permission-Tupels in die Datenbank
-			stmt.executeUpdate("INSERT INTO permission (id, businessObjectID, userID, shareUserID) VALUES " + "(" + permission.getId() + ", '"
-					+ permission.getBusinessObjectID() + ", '"+ permission.getUserID() + ", '" + permission.getShareUserID() + "')");
+			stmt.executeUpdate("INSERT INTO permission (id, sharedObjectID, receiverUserID, shareUserID) VALUES " + "(" + permission.getBoId() + ", '"
+					+ permission.getSharedObjectId() + ", '"+ permission.getReceiverUserID() + ", '" + permission.getShareUserID() + "')");
 			
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -103,8 +103,8 @@ public class PermissionMapper {
 				Statement stmt = con.createStatement();
 				
 				// SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in der Datenbank
-				stmt.executeUpdate("UPDATE permission  SET" + "BusinessObjectID='" + permission.getBusinessObjectID() + "'," + "UserID='" + permission.getUserID() + "'," + "shareUserID='" 
-						+ permission.getShareUserID() + "'WHERE id='" + permission.getId() + "'");
+				stmt.executeUpdate("UPDATE permission  SET" + "sharedObjectID='" + permission.getSharedObjectId() + "'," + "UserID='" + permission.getReceiverUserID() + "'," + "shareUserID='" 
+						+ permission.getShareUserID() + "'WHERE id='" + permission.getBoId() + "'");
 				
 				/**
 				 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -132,7 +132,7 @@ public class PermissionMapper {
 			Statement stmt = con.createStatement();
 			
 			//SQL-Anweisung zum Löschen des übergebenen Datensatzes in der Datenbank
-			stmt.executeUpdate("DELETE FROM permission WHERE id=" + permission.getId());
+			stmt.executeUpdate("DELETE FROM permission WHERE id=" + permission.getBoId());
 		
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -158,16 +158,16 @@ public class PermissionMapper {
 			Statement stmt = con.createStatement();
 				
 			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der Id in der Datenbank
-			ResultSet rs = stmt.executeQuery("SELECT id, businessObjectID, userID, shareUserID FROM permission WHERE id=" + id);
+			ResultSet rs = stmt.executeQuery("SELECT id, sharedObjectID, receiverUserID, shareUserID FROM permission WHERE id=" + id);
 			/**
 			 * Da id Primärschlüssel ist, kann max. nur ein Tupel zurückgegeben
 		     * werden. Es wird geprüft, ob ein Ergebnis vorliegt.
 			 */
 			if (rs.next()) {
 				Permission permission = new Permission();
-				permission.setId(rs.getInt("id"));
-				permission.setBusinessObjectID(rs.getInt("businessObjectID"));
-				permission.setUserID(rs.getInt("userID"));
+				permission.setBoId(rs.getInt("id"));
+				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
+				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));
 				return permission;			
 		    }
@@ -200,7 +200,7 @@ public class PermissionMapper {
 			Statement stmt = con.createStatement();
 			
 			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der ContactId in der Datenbank
-			ResultSet rs = stmt.executeQuery("SELECT id, businessObjectID, userID, shareUserID FROM permission " + "WHERE contactID=" + contactID);
+			ResultSet rs = stmt.executeQuery("SELECT id, sharedObjectID, receiverUserID, shareUserID FROM permission " + "WHERE contactID=" + contactID);
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle permission vorhanden ist, muss das Abfragen des ResultSet so
@@ -211,9 +211,9 @@ public class PermissionMapper {
 			
 			while (rs.next()) {
 				Permission permission = new Permission();
-				permission.setId(rs.getInt("id"));
-				permission.setBusinessObjectID(rs.getInt("businessObjectID"));
-				permission.setUserID(rs.getInt("userID"));
+				permission.setBoId(rs.getInt("id"));
+				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
+				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));
 				result.add(permission);
 			}
@@ -225,17 +225,17 @@ public class PermissionMapper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 	}
-		//Rückgabe des Ergebnisvektors
+		//Rückgabe der ArrayList
 		return result;
 }
 	/**
 	 * Suchen eines Permission-Objekts anhand der übergebenen UserId in der Datenbank.
 	 * 
-	 * @param userID
+	 * @param receiverUserID
 	 * @return ArrayList<Permission>
 	 */
 	
-	public ArrayList<Permission> findByUserId (int userID) {
+	public ArrayList<Permission> findByUserId (int receiverUserID) {
 		// DB-Verbindung holen
 		Connection con = DBConnection.connection();
 		
@@ -246,7 +246,7 @@ public class PermissionMapper {
 			Statement stmt = con.createStatement();
 
 			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der UserId in der Datenbank
-			ResultSet rs = stmt.executeQuery("SELECT id, businessObjectID, userID, shareUserID FROM permission " + "WHERE userID=" + userID);
+			ResultSet rs = stmt.executeQuery("SELECT id, sharedObjectID, receiverUserID, shareUserID FROM permission " + "WHERE receiverUserID=" + receiverUserID);
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle permission vorhanden ist, muss das Abfragen des ResultSet so
@@ -257,9 +257,9 @@ public class PermissionMapper {
 			
 			while (rs.next()) {
 				Permission permission = new Permission();
-				permission.setId(rs.getInt("id"));
-				permission.setBusinessObjectID(rs.getInt("businessObjectID"));
-				permission.setUserID(rs.getInt("userID"));
+				permission.setBoId(rs.getInt("id"));
+				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
+				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));
 				result.add(permission);
 			}
@@ -271,7 +271,7 @@ public class PermissionMapper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 	}	
-		// Rückgabe des Ergebnisvektors
+		// Rückgabe der ArrayList
 		return result;
 	
 	}
@@ -293,7 +293,7 @@ public class PermissionMapper {
 			Statement stmt = con.createStatement();
 
 			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der ContactListId in der Datenbank
-			ResultSet rs = stmt.executeQuery("SELECT id, businessObjectID, userID, shareUserID FROM permission " + "WHERE contactListID=" + contactListID);
+			ResultSet rs = stmt.executeQuery("SELECT id, sharedObjectID, receiverUserID, shareUserID FROM permission " + "WHERE contactListID=" + contactListID);
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle permission vorhanden ist, muss das Abfragen des ResultSet so
@@ -304,9 +304,9 @@ public class PermissionMapper {
 			
 			while (rs.next()) {
 				Permission permission = new Permission();
-				permission.setId(rs.getInt("id"));
-				permission.setBusinessObjectID(rs.getInt("businessObjectID"));
-				permission.setUserID(rs.getInt("userID"));
+				permission.setBoId(rs.getInt("id"));
+				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
+				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));
 				result.add(permission);
 			}
@@ -318,7 +318,7 @@ public class PermissionMapper {
 		}catch (SQLException e) {
 			e.printStackTrace();
 	}
-		//Rückgabe des Ergebnisvektors
+		//Rückgabe der ArrayList
 		return result;
 	}
 	
@@ -339,7 +339,7 @@ public class PermissionMapper {
 			Statement stmt = con.createStatement();
 
 			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der ValueId in der Datenbank
-			ResultSet rs = stmt.executeQuery("SELECT id, businessObjectID, userID, shareUserID FROM permission " + "WHERE valueID=" + valueID);
+			ResultSet rs = stmt.executeQuery("SELECT id, sharedObjectID, receiverUserID, shareUserID FROM permission " + "WHERE valueID=" + valueID);
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle permission vorhanden ist, muss das Abfragen des ResultSet so
@@ -350,9 +350,9 @@ public class PermissionMapper {
 			
 			while (rs.next()) {
 				Permission permission = new Permission();
-				permission.setId(rs.getInt("id"));
-				permission.setBusinessObjectID(rs.getInt("businessObjectID"));
-				permission.setUserID(rs.getInt("userID"));
+				permission.setBoId(rs.getInt("id"));
+				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
+				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));
 				result.add(permission);
 			}
@@ -364,7 +364,7 @@ public class PermissionMapper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 	}
-		// Rückgabe des Ergebnisvektors
+		// Rückgabe der ArrayList
 		return result;
 	}
 	
@@ -386,7 +386,7 @@ public class PermissionMapper {
 			Statement stmt = con.createStatement();
 
 			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der ShareUserId in der Datenbank
-			ResultSet rs = stmt.executeQuery("SELECT id, businessObjectID, userID, shareUserID FROM permission " + "WHERE shareUserID=" + shareUserID);
+			ResultSet rs = stmt.executeQuery("SELECT id, sharedObjectID, receiverUserID, shareUserID FROM permission " + "WHERE shareUserID=" + shareUserID);
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle permission vorhanden ist, muss das Abfragen des ResultSet so
@@ -397,9 +397,9 @@ public class PermissionMapper {
 			
 			while (rs.next()) {
 				Permission permission = new Permission();
-				permission.setId(rs.getInt("id"));
-				permission.setBusinessObjectID(rs.getInt("businessObjectID"));
-				permission.setUserID(rs.getInt("userID"));
+				permission.setBoId(rs.getInt("id"));
+				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
+				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));
 				result.add(permission);
 			}
@@ -411,7 +411,7 @@ public class PermissionMapper {
 		}catch (SQLException e) {
 			e.printStackTrace();
 	}
-		// Rückgabe des Ergebnisvektors
+		// Rückgabe der ArrayList
 		return result;
 		
 	}
