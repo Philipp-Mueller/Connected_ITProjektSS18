@@ -11,7 +11,7 @@ public class Permission extends BusinessObject{
 
 	private static final long serialVersionUID = 1L;
 	private int receiverUserID = 0;
-	private int businessObjectID = 0;
+	private int sharedObjectId = 0;
 	private int shareUserID = 0;
 	/**
 	 * @return the userID
@@ -28,14 +28,14 @@ public class Permission extends BusinessObject{
 	/**
 	 * @return the businessObjectID
 	 */
-	public int getBusinessObjectID() {
-		return businessObjectID;
+	public int getSharedObjectId() {
+		return sharedObjectId;
 	}
 	/**
 	 * @param businessObjectID the businessObjectID to set
 	 */
-	public void setBusinessObjectID(int businessObjectID) {
-		this.businessObjectID = businessObjectID;
+	public void setSharedObjectId(int sharedObjectId) {
+		this.sharedObjectId = sharedObjectId;
 	}
 	/**
 	 * @return the shareUserID

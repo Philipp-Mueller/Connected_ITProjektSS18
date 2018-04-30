@@ -4,10 +4,11 @@
 package de.hdm.Connected.shared.bo;
 
 /**
+ * Klasse um ContactListen darzustellen
  * @author Denise
  *
  */
-public class ContactList extends BusinessObject {
+public class ContactList extends SharedObject {
 
 	private static final long serialVersionUID = 1L;
 	private String name ="";

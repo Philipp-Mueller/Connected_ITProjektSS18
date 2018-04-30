@@ -1,11 +1,21 @@
 package de.hdm.Connected.shared.bo;
 
-public class Value extends BusinessObject{
+
+/**
+*** Klasse um Eigenschaftausprägungen darzustellen
+*	@author Moritz
+*/
+public class Value extends SharedObject{
 
 	private static final long serialVersionUID = 1L;
 	private String name = "";
+	
+	// Fremdschlüsselbeziehung zu Eigenschaft
 	private int propertyID = 0;
+	
+	//Fremdschlüssel um Beziehung zu Contact zu realisieren
 	private int contactID = 0;
+	
 	/**
 	 * @return the description
 	 */
