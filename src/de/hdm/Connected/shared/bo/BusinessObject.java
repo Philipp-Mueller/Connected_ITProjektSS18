@@ -13,25 +13,25 @@ import java.sql.Timestamp;
 public class BusinessObject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private int id = 0;
+	private int boId = 0;
 	private Timestamp creationDate = new Timestamp(System.currentTimeMillis());
 	private Timestamp modificationDate = new Timestamp(System.currentTimeMillis());
 	private int modifiyerID = 0;
-	private int creatorID = 0;
+	private int ownerID = 0;
 
 	
 	
 	/**
 	 * @return the id
 	 */
-	public int getId() {
-		return id;
+	public int getBoId() {
+		return boId;
 	}
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
-		this.id = id;
+	public void setBoId(int boId) {
+		this.boId = boId;
 	}
 	/**
 	 * @return the creationDate
@@ -70,16 +70,16 @@ public class BusinessObject implements Serializable {
 		this.modifiyerID = modifiyerID;
 	}
 	/**
-	 * @return the creatorID
+	 * @return the ownerID
 	 */
-	public int getCreatorID() {
-		return creatorID;
+	public int getOwnerID() {
+		return ownerID;
 	}
 	/**
-	 * @param creatorID the creatorID to set
+	 * @param ownerID the ownerID to set
 	 */
-	public void setCreatorID(int creatorID) {
-		this.creatorID = creatorID;
+	public void setOwnerID(int ownerID) {
+		this.ownerID = ownerID;
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class BusinessObject implements Serializable {
 	 */
 	public String toString() {
 	
-		return this.getClass().getName() + " #" + this.id;
+		return this.getClass().getName() + " #" + this.boId;
 	}
 	
 	/**
@@ -102,7 +102,7 @@ public class BusinessObject implements Serializable {
 	 * liefert einen eindeutigen Wert zur Identifikation des Objekts
 	 */
 	public int hashCode() {
-		return this.id;
+		return this.boId;
 	}
 
 }
