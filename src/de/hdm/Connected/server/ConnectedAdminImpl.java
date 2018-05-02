@@ -78,7 +78,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet {
 		Contact contact = new Contact();
 		contact.setPrename(prename);
 		contact.setSurname(surname);
-		contact.setOwnerId(ownerId);
+		contact.setCreatorId(ownerId);
 
 		return this.contactMapper.insert(contact);
 
@@ -91,7 +91,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet {
 
 	// löscht Kontakt wenn User entweder Owner ist oder Permission besitzt 
 	
-	public void deleteContact(Contact contact, int userId, int permissionId, int boId) throws IllegalArgumentException {
+/*	public void deleteContact(Contact contact, int userId, int permissionId, int boId) throws IllegalArgumentException {
 	
 		ArrayList<Permission> permissions = this.permissionMapper
 				.findByUserId(userId);
@@ -100,7 +100,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet {
 		System.out.println("übergebene UserID: " + userId);
 		try {
 			// Wenn der User der das Notebookerstellt hat, es löschen möchte
-			if (currentContact.getOwnerID() == userId) {
+			if (currentContact.getCreatorId()== userId) {
 				System.out.println("userID = notebook.getUserId");
 				}
 				// wenn es Permissions gibt
@@ -113,11 +113,13 @@ public class ConnectedAdminImpl extends RemoteServiceServlet {
 
 		if (contact != null) {
 			this.contactMapper.delete(contact);
-		
-	}else {
-		System.out.println("cotenance");
+		}
+	else {
+		System.out.println("cotenance");}
 	}
-	
+				}
+	}
+	*/
 
 
 	

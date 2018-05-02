@@ -3,6 +3,8 @@
  */
 package de.hdm.Connected.shared.bo;
 
+import java.sql.Timestamp;
+
 /**
  * Die Klasse soll die Gemeinsamkeiten von Contat, ContactList und Value zusammenfassen 
  * und eine Struktur vorgeben, da User und Permissions nicht teilbar sind.
@@ -19,7 +21,10 @@ public abstract class SharedObject extends BusinessObject{
 	
 	// Fremdschlüssel zu User um deren Besitzer/Ersteller-Beziehung darszustellen
 	private int creatorId = 0;
-		
+	
+	// Realisierung des Modificationsdatums um Status propagieren zu können
+	private Timestamp creationDate = new Timestamp(System.currentTimeMillis());
+	
 	/**
 	 * AutoKonstruktor
 	 */
@@ -34,7 +39,6 @@ public abstract class SharedObject extends BusinessObject{
 	public int getModifiyerId() {
 		return modifiyerId;
 	}
-
 
 	/**
 	 * @param setzt ID des letzten Users als ModifierID
@@ -53,12 +57,27 @@ public abstract class SharedObject extends BusinessObject{
 	}
 
 
-
 	/**
 	 * @param stzt die ID des Erstellers als OwnerID
 	 */
 	public void setCreatorId(int creatorId) {
 		this.creatorId = creatorId;
+	}
+
+
+	/**
+	 * @return the creationDate
+	 */
+	public Timestamp getCreationDate() {
+		return creationDate;
+	}
+
+
+	/**
+	 * @param creationDate the creationDate to set
+	 */
+	public void setCreationDate(Timestamp creationDate) {
+		this.creationDate = creationDate;
 	}
 
 }
