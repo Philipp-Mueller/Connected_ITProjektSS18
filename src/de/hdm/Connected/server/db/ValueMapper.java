@@ -74,7 +74,7 @@ public class ValueMapper {
 			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM value");
 
 			if (rs.next()) {
-				value.setId(rs.getInt("maxid") + 1);
+				value.setBoId(rs.getInt("maxid") + 1);
 			}
 			stmt = con.createStatement();
 			/**
@@ -82,7 +82,7 @@ public class ValueMapper {
 			 * Datenbank.
 			 */
 						
-			stmt.executeUpdate("INSERT INTO value (id, description, propertyID, contactId) VALUES (" + value.getId()
+			stmt.executeUpdate("INSERT INTO value (id, name, propertyId, contactId) VALUES (" + value.getBoId()
 			+ ", '" + value.getDescription() + "', " + value.getPropertyID()+ ", " + value.getContactID() + ")");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -110,7 +110,7 @@ public class ValueMapper {
 			 * SQL-Anweisung zum Aktualisieren des uebergebenen Datensatzes in
 			 * der Datenbank.
 			 */
-			stmt.executeUpdate("UPDATE value SET description='" + value.getDescription() + "', propertyID = '" + value.getContactID() + "' WHERE id= " + value.getId());
+			stmt.executeUpdate("UPDATE value SET name='" + value.getDescription() + "', propertyId = '" + value.getPropertyID() + "', contactId = '" + value.getContactID() + "' WHERE id= " + value.getBoId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -137,7 +137,7 @@ public class ValueMapper {
 			 * SQL-Anweisung zum Loeschen des uebergebenen Datensatzes in der
 			 * Datenbank.
 			 */
-			stmt.executeUpdate("DELETE FROM value WHERE id=" + value.getId());
+			stmt.executeUpdate("DELETE FROM value WHERE id=" + value.getBoId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -165,7 +165,7 @@ public class ValueMapper {
 			 * Id, in der Datenbank.
 			 */
 			ResultSet rs = stmt
-					.executeQuery("SELECT id, description, propertyId, contactId FROM value WHERE id=" + id);
+					.executeQuery("SELECT id, name, propertyId, contactId FROM value WHERE id=" + id);
 			/**
 			 * Zu einem Primaerschluessel exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurueckgegeben werden.
@@ -174,10 +174,10 @@ public class ValueMapper {
 			 */
 			if (rs.next()) {
 				Value value = new Value();
-				value.setId(rs.getInt("id"));
-				value.setDescription(rs.getString("description"));
-				value.setRelatedProperty(rs.getProperty("relatedProperty"));
-				value.setRelatedContact(rs.getContact("relatedContact"))
+				value.setBoId(rs.getInt("id"));
+				value.setDescription(rs.getString("name"));
+				value.setPropertyID(rs.getInt("propertyId"));
+				value.setContactID(rs.getInt("contactId"));
 				return value;
 			}
 			/**
@@ -208,7 +208,7 @@ public class ValueMapper {
 			 * bez, in der Datenbank, sortiert nach der Id.
 			 */
 			ResultSet rs = stmt
-					.executeQuery("SELECT id, description, propertyId, contactId FROM value WHERE bez LIKE '" + bez
+					.executeQuery("SELECT id, name, propertyId, contactId FROM value WHERE bez LIKE '" + bez
 							+ "' ORDER BY id");
 			
 			/**
@@ -220,10 +220,10 @@ public class ValueMapper {
 			 */
 			while (rs.next()) {
 				Value value = new Value();
-				value.setId(rs.getInt("id"));
-				value.setDescription(rs.getString("description"));
-				value.setRelatedProperty(rs.getProperty("relatedProperty"));
-				value.setRelatedContact(rs.getContact("relatedContact"))
+				value.setBoId(rs.getInt("id"));
+				value.setDescription(rs.getString("name"));
+				value.setPropertyID(rs.getInt("propertyId"));
+				value.setContactID(rs.getInt("contactId"));
 				result.add(value);
 			}
 			/**
@@ -255,7 +255,7 @@ public class ValueMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der ContactId,
 			 * in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, description, propertyId, contactId FROM value WHERE contactId LIKE '"
+			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId FROM value WHERE contactId LIKE '"
 					+ contactId + "' ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
@@ -267,11 +267,11 @@ public class ValueMapper {
 			 */
 			while (rs.next()) {
 				Value value = new Value();
-				value.setId(rs.getInt("id"));
+				value.setBoId(rs.getInt("id"));
 				value.setDescription(rs.getString("description"));
-				value.setRelatedProperty(rs.getProperty("relatedProperty"));
-				value.setRelatedContact(rs.getContact("relatedContact"))
-				result.add(contact);
+				value.setPropertyID(rs.getInt("propertyId"));
+				value.setContactID(rs.getInt("contactId"));
+				result.add(value);
 			}
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -302,7 +302,7 @@ public class ValueMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der PropertyId,
 			 * in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, description, propertyId, contactId FROM value WHERE propertyId LIKE '"
+			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId FROM value WHERE propertyId LIKE '"
 					+ propertyId + "' ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
@@ -314,10 +314,10 @@ public class ValueMapper {
 			 */
 			while (rs.next()) {
 				Value value = new Value();
-				value.setId(rs.getInt("id"));
+				value.setBoId(rs.getInt("id"));
 				value.setDescription(rs.getString("description"));
-				value.setRelatedProperty(rs.getProperty("relatedProperty"));
-				value.setRelatedContact(rs.getContact("relatedContact"))
+				value.setPropertyID(rs.getInt("propertyId"));
+				value.setContactID(rs.getInt("contactId"));
 				result.add(value);
 			}
 			/**
