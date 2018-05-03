@@ -74,15 +74,15 @@ public class ContactMapper {
 			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM contact");
 
 			if (rs.next()) {
-				contact.setId(rs.getInt("maxid") + 1);
+				contact.setBoId(rs.getInt("maxid") + 1);
 			}
 			stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Einfuegen des neuen Contact-Tupels in die
 			 * Datenbank.
 			 */
-			stmt.executeUpdate("INSERT INTO contact (id, contactname, contactlistId) VALUES (" + contact.getId()
-					+ ", '" + contact.getName() + "', " + contact.getContactlistID()+ ")");
+			stmt.executeUpdate("INSERT INTO contact (id, prename, surname) VALUES (" + contact.getBoId()
+					+ ", '" + contact.getPrename() + "', " + contact.getSurname()+ ")");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
@@ -109,7 +109,7 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Aktualisieren des uebergebenen Datensatzes in
 			 * der Datenbank.
 			 */
-			stmt.executeUpdate("UPDATE contact SET contactname='" + contact.getContactname() + "', contactlistid = '" + contact.getContactlistID() + "' WHERE id= " + contact.getId());
+			stmt.executeUpdate("UPDATE contact SET prename='" + contact.getPrename() + "', surname= '" + contact.getSurname() + "' WHERE id= " + contact.getBoId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -136,7 +136,7 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Loeschen des uebergebenen Datensatzes in der
 			 * Datenbank.
 			 */
-			stmt.executeUpdate("DELETE FROM contact WHERE id=" + contact.getId());
+			stmt.executeUpdate("DELETE FROM contact WHERE id=" + contact.getBoId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -164,7 +164,7 @@ public class ContactMapper {
 			 * Id, in der Datenbank.
 			 */
 			ResultSet rs = stmt
-					.executeQuery("SELECT id,contactlistid, name FROM contact WHERE id=" + id);
+					.executeQuery("SELECT id, prename, surname FROM contact WHERE id=" + id);
 			/**
 			 * Zu einem Primaerschluessel exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurueckgegeben werden.
@@ -172,12 +172,10 @@ public class ContactMapper {
 			 * angefragten Primaerschluessel ein DB-Tupel gibt.
 			 */
 			if (rs.next()) {
-				Contact contact = new contact();
-				contact.setId(rs.getInt("id"));
-				contact.setContactlistID(rs.getInt("contactlistid"))
-				contact.setContactname(rs.getString("contactname"));
-				
-				
+				Contact contact = new Contact();
+				contact.setBoId(rs.getInt("id"));
+				contact.setPrename(rs.getString("prename"));
+				contact.setSurname(rs.getString("surname"));
 				return contact;
 			}
 			/**
@@ -206,7 +204,7 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze in der Datenbank,
 			 * sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, contactlistid, contactname FROM contact ORDER BY id");
+			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname FROM contact ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle contact vorhanden ist, muss das Abfragen des ResultSet so
@@ -216,11 +214,54 @@ public class ContactMapper {
 			 */
 
 			while (rs.next()) {
-				Contact contact = new contact();
-				contact.setId(rs.getInt("id"));
-				contact.setContactlistID(rs.getInt("contactlistid"))
-				contact.setName(rs.getString("contactname"));
-				
+				Contact contact = new Contact();
+				contact.setBoId(rs.getInt("id"));
+				contact.setPrename(rs.getString("prename"));
+				contact.setSurname(rs.getString("surname"));
+				result.add(contact);
+			}
+			/**
+			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
+			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
+			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
+			 */
+		} catch (SQLException e2) {
+			e2.printStackTrace();
+		}
+		return result;
+	}
+
+	/**
+	 * Findet Contact-Objekte anhand des uebergebenen Vornamens in der Datenbank.
+	 * 
+	 * @param prename
+	 * @return ArrayList<Contact>
+	 */
+	public ArrayList<Contact> findByPrename (String prename) {
+		Connection con = DBConnection.connection();
+
+		ArrayList<Contact> result = new ArrayList<Contact>();
+		try {
+			Statement stmt = con.createStatement();
+			/**
+			 * SQL-Anweisung zum Finden des Datensatzes, anhand des uebergebenen
+			 * Namens, in der Datenbank, sortiert nach der Id.
+			 */
+			ResultSet rs = stmt
+					.executeQuery("SELECT id, prename, surname FROM contact WHERE prename LIKE '" + prename
+							+ "' ORDER BY id");
+			/**
+			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
+			 * Tabelle Contact mit dem uebergebenen Namen vorhanden ist, muss das
+			 * Abfragen des ResultSet so oft erfolgen (while-Schleife), bis alle
+			 * Tupel durchlaufen wurden. Die DB-Tupel werden in Java-Objekte
+			 * transformiert und anschliessend der ArrayList hinzugefuegt.
+			 */
+			while (rs.next()) {
+				Contact contact = new Contact();
+				contact.setBoId(rs.getInt("id"));
+				contact.setPrename(rs.getString("prename"));
+				contact.setSurname(rs.getString("surname"));
 				result.add(contact);
 			}
 			/**
@@ -237,10 +278,10 @@ public class ContactMapper {
 	/**
 	 * Findet Contact-Objekte anhand des uebergebenen Namens in der Datenbank.
 	 * 
-	 * @param name
+	 * @param surname
 	 * @return ArrayList<Contact>
 	 */
-	public ArrayList<Contact> findByName(String name) {
+	public ArrayList<Contact> findBySurname(String surname) {
 		Connection con = DBConnection.connection();
 
 		ArrayList<Contact> result = new ArrayList<Contact>();
@@ -251,7 +292,7 @@ public class ContactMapper {
 			 * Namens, in der Datenbank, sortiert nach der Id.
 			 */
 			ResultSet rs = stmt
-					.executeQuery("SELECT id, contactlistid, contactname FROM contact WHERE contactname LIKE '" + contactname
+					.executeQuery("SELECT id, prename, surname FROM contact WHERE prename LIKE '" + surname
 							+ "' ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
@@ -262,10 +303,9 @@ public class ContactMapper {
 			 */
 			while (rs.next()) {
 				Contact contact = new Contact();
-				contact.setId(rs.getInt("id"));
-				contact.setContactlistID(rs.getInt("contactlistid"))
-				contact.setContactname(rs.getString("contactname"));
-				
+				contact.setBoId(rs.getInt("id"));
+				contact.setPrename(rs.getString("prename"));
+				contact.setSurname(rs.getString("surname"));
 				result.add(contact);
 			}
 			/**
@@ -278,51 +318,4 @@ public class ContactMapper {
 		}
 		return result;
 	}
-
-	/**
-	 * Findet ein Contact-Objekt anhand des uebergebenen UserId in der
-	 * Datenbank.
-	 * 
-	 * @param userid
-	 * @return ArrayList<Contact>
-	 */
-	public ArrayList<Contact> findByUserId(int userid) {
-		Connection con = DBConnection.connection();
-
-		ArrayList<Contact> result = new ArrayList<Contact>();
-		try {
-			Statement stmt = con.createStatement();
-			/**
-			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der UserID,
-			 * in der Datenbank, sortiert nach der Id.
-			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, contactlistid, contactname FROM contact WHERE userid LIKE '"
-					+ userid + "' ORDER BY id");
-			/**
-			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
-			 * Tabelle Contact mit dem uebergebenen UserId vorhanden ist, muss
-			 * das Abfragen des ResultSet so oft erfolgen (while-Schleife), bis
-			 * alle Tupel durchlaufen wurden. Die DB-Tupel werden in
-			 * Java-Objekte transformiert und anschliessend der ArrayList
-			 * hinzugefuegt.
-			 */
-			while (rs.next()) {
-				Contact contact = new Contact();
-				contact.setId(rs.getInt("id"));
-				contact.setContactlistID(rs.getInt("contactlistid"))
-				contact.setContactname(rs.getString("contactname"));
-				
-				result.add(contact);
-			}
-			/**
-			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
-			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
-			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
-			 */
-		} catch (SQLException e2) {
-			e2.printStackTrace();
-		}
-		return result;
-	}
-
 }
