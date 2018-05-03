@@ -143,12 +143,14 @@ public class SharedObjectsMapper {
 			e.printStackTrace();
 		}	
 		}
+		/*
+		
 		/**
 		 * Suchen eines SharedObject-Objekts anhand der übergebenen Id in der Datenbank.
 		 * 
 		 * @param id
 		 * @return sharedObject
-		 */
+		 *//*
 		public SharedObject findById (int id) {
 			// DB-Verbindung holen
 			Connection con = DBConnection.connection();
@@ -159,10 +161,10 @@ public class SharedObjectsMapper {
 					
 				// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der Id in der Datenbank
 				ResultSet rs = stmt.executeQuery("SELECT id, modifiyerId, creatorId FROM sharedObject WHERE id=" + id);
-				/**
+				*//**
 				 * Da id Primärschlüssel ist, kann max. nur ein Tupel zurückgegeben
 			     * werden. Es wird geprüft, ob ein Ergebnis vorliegt.
-				 */
+				 *//*
 				if (rs.next()) {
 					SharedObject sharedObject = new SharedObject();
 					sharedObject.setBoId(rs.getInt("id"));
@@ -170,23 +172,23 @@ public class SharedObjectsMapper {
 					sharedObject.setCreatorId(rs.getInt("creatorId"));
 					return sharedObject;			
 			    }
-				/**
+				*//**
 				 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 				 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
 				 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
-				 */
+				 *//*
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 			return null;
 		}
 		
-		/**
+		*//**
 		 * Suchen eines SharedObject-Objekts anhand der übergebenen ObjectId in der Datenbank.
 		 * 
 		 * @param objectId
 		 * @return ArrayList<SharedObject>
-		 */
+		 *//*
 		
 		public ArrayList<SharedObject> findByObjectId (int objectId) {
 			// DB-Verbindung holen
@@ -200,13 +202,13 @@ public class SharedObjectsMapper {
 
 				// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der UserId in der Datenbank
 				ResultSet rs = stmt.executeQuery("SELECT id, modifiyerId, creatorId FROM sharedObject " + "objectId=" + objectId);
-				/**
+				*//**
 				 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 				 * Tabelle sharedObject vorhanden ist, muss das Abfragen des ResultSet so
 				 * oft erfolgen (while-Schleife), bis alle Tupel durchlaufen wurden.
 				 * Die DB-Tupel werden in Java-Objekte transformiert und
 				 * anschliessend der ArrayList hinzugefügt.
-				 */
+				 *//*
 				
 				while (rs.next()) {
 					SharedObject sharedObject = new SharedObject();
@@ -215,11 +217,11 @@ public class SharedObjectsMapper {
 					sharedObject.setCreatorId(rs.getInt("receiverUserID"));
 					result.add(sharedObject);
 				}
-				/**
+				*//**
 				 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 				 * Fehlermeldung genauer zu analyisieren. Es werden Informationen dazu
 				 * ausgegeben, was passiert ist und wo im Code es passiert ist.
-				 */	
+				 *//*	
 			} catch (SQLException e) {
 				e.printStackTrace();
 		    }	
@@ -227,12 +229,12 @@ public class SharedObjectsMapper {
 			return result;
 		}
 		
-		/**
+		*//**
 		 * Suchen eines SharedObject-Objekts anhand der übergebenen UserId in der Datenbank.
 		 * 
 		 * @param userId
 		 * @return ArrayList<SharedObject>
-		 */
+		 *//*
 
 		public ArrayList<SharedObject> findByUserId (int userId) {
 			// DB-Verbindung holen
@@ -246,13 +248,13 @@ public class SharedObjectsMapper {
 
 				// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der ShareUserId in der Datenbank
 				ResultSet rs = stmt.executeQuery("SELECT id, modifiyerId, creatorId FROM sharedObject " + "WHERE userId=" + userId);
-				/**
+				*//**
 				 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 				 * Tabelle sharedObject vorhanden ist, muss das Abfragen des ResultSet so
 				 * oft erfolgen (while-Schleife), bis alle Tupel durchlaufen wurden.
 				 * Die DB-Tupel werden in Java-Objekte transformiert und
 				 * anschliessend der ArrayList hinzugefügt.
-				 */
+				 *//*
 				
 				while (rs.next()) {
 					SharedObject sharedObject = new SharedObject();
@@ -261,20 +263,15 @@ public class SharedObjectsMapper {
 					sharedObject.setCreatorId(rs.getInt("creatorId"));
 					result.add(sharedObject);
 				}
-				/**
+				*//**
 				 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 				 * Fehlermeldung genauer zu analyisieren. Es werden Informationen dazu
 				 * ausgegeben, was passiert ist und wo im Code es passiert ist.
-				 */	
+				 *//*	
 			  } catch (SQLException e) {
 				e.printStackTrace();
 		      }
 			// Rückgabe der ArrayList
 		      return result;
-			
-	}
+	}*/
 }
-
-	
-	
-
