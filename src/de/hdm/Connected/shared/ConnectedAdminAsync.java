@@ -64,7 +64,7 @@ public interface ConnectedAdminAsync {
 	
 	void findPropertyByPropertyId(int id, AsyncCallback <Property> callback);
 	
-	void createPermission(int shareUserId, int shareObjectId, int receiverUserId, AsyncCallback<Void> callback);
+	void createPermission(int shareUserId, int shareObjectId, int receiverUserId, AsyncCallback<Permission> callback);
 	
 	void deletePermission(Permission permission, AsyncCallback<Void> callback);
 	

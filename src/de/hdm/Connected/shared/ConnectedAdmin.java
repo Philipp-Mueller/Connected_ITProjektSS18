@@ -155,27 +155,99 @@ public interface ConnectedAdmin extends RemoteService {
 	 */
 	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException;
 	
+	
+	/**
+	 * Gibt alle Contacts einer ContactList aus
+	 * 
+	 * @param contactlistId
+	 * @throws IllegalArgumentException
+	 */
 	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException;
 	
+	/**
+	 * Gibt alle Contacts mit einer bestimmten Ausprägung aus
+	 * 
+	 * @param valueId
+	 * @throws IllegalArgumentException
+	 */
 	public ArrayList<Contact> findContactsByValue(String value) throws IllegalArgumentException;
 	
+	/**
+	 * Gibt einen spezifischen Contact anhand seiner Id aus.
+	 * 
+	 * @param contactId
+	 * @throws IllegalArgumentException
+	 */
 	public Contact findContactById(int id) throws IllegalArgumentException;
 	
+	/**
+	 * Gibt alle Contacte eines Users aus, bei denen er Owner ist
+	 * 
+	 * @param userId
+	 * @throws IllegalArgumentException
+	 */
 	public ArrayList<Contact> findContactsByOwnerId(int id) throws IllegalArgumentException;
 	
+	/**
+	 * Gibt alle Values eines Contacts aus
+	 * 
+	 * @param contactlist
+	 * @throws IllegalArgumentException
+	 */
 	public ArrayList<Value> findValuesByContactId(int id) throws IllegalArgumentException;
 	
+	/**
+	 * Gibt eine spezifische Property anhand seiner id aus
+	 * 
+	 * @param contactlist
+	 * @throws IllegalArgumentException
+	 */
 	public Property findPropertyByPropertyId(int id) throws IllegalArgumentException;
 	
-	public void createPermission(int shareUserId, int shareObjectId, int receiverUserId) throws IllegalArgumentException;
+	/**
+	 * Erstellt ein neues Permission-Objekt.
+	 * 
+	 * @return neu erstelltes Permission-Objekt
+	 * @throws IllegalArgumentException
+	 */
+	public Permission createPermission(int shareUserId, int shareObjectId, int receiverUserId) throws IllegalArgumentException;
 	
+	/**
+	 * Löscht ein Permission-Objekt 
+	 * 
+	 * @param permission
+	 * @throws IllegalArgumentException
+	 */
 	public void deletePermission(Permission permission) throws IllegalArgumentException;
 	
+	/**
+	 * Fügt ein Contact einer ContactList hinzu
+	 * 
+	 * @param contactId, contactlistId
+	 * @throws IllegalArgumentException
+	 */
 	public void addContactToContactList(int contactId, int contactlistId) throws IllegalArgumentException;
 	
+	/**
+	 * Entfernt ein Contact einer ContactList
+	 * 
+	 * @param contactId, contactlistId
+	 * @throws IllegalArgumentException
+	 */
 	public void removeContactFromContactList(int contactId, int contactlistid) throws IllegalArgumentException;
 	
+	/**
+	 * Löscht die Permission des Users auf das Objekt
+	 * 
+	 * @param shareObjectId, userId
+	 * @throws IllegalArgumentException
+	 */
 	public void removeAccessToObject(int userId, int shareObjectId) throws IllegalArgumentException;
 	
+	/**
+	 * Gibt alle Properties zurückk
+	 * 
+	 * @throws IllegalArgumentException
+	 */
 	public ArrayList<Property> findAllProperties() throws IllegalArgumentException;
 }
