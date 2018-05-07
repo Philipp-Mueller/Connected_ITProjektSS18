@@ -205,6 +205,13 @@ public interface ConnectedAdmin extends RemoteService {
 	public Property findPropertyByPropertyId(int id) throws IllegalArgumentException;
 	
 	/**
+	 * Gibt alle Permissions eines User aus
+	 * 
+	 * @param userId
+	 * @throws IllegalArgumentException
+	 */
+	public ArrayList<Permission> findPermissionsByUserId(int id) throws IllegalArgumentException;
+	/**
 	 * Erstellt ein neues Permission-Objekt.
 	 * 
 	 * @return neu erstelltes Permission-Objekt
