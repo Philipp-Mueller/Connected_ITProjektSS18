@@ -17,15 +17,15 @@ public class Value extends SharedObject{
 	private int contactID = 0;
 	
 	/**
-	 * @return the description
+	 * @return the name
 	 */
-	public String getDescription() {
+	public String getName() {
 		return name;
 	}
 	/**
 	 * @param description the description to set
 	 */
-	public void setDescription(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 	/**

@@ -13,13 +13,13 @@ public class Property extends BusinessObject{
 	/**
 	 * @return the description
 	 */
-	public String getDescription() {
+	public String getName() {
 		return name;
 	}
 	/**
 	 * @param description the description to set
 	 */
-	public void setDescription(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 	
