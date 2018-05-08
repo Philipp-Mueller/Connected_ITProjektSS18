@@ -17,9 +17,9 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.hdm.Connected.client.gui.ContactForm;
+import de.hdm.Connected.client.gui.ContactListForm;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.FieldVerifier;
-
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -33,7 +33,8 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			+ "attempting to contact the server. Please check your network " + "connection and try again.";
 
 	/**
-	 * Create a remote service proxy to talk to the server-side Greeting service.
+	 * Create a remote service proxy to talk to the server-side Greeting
+	 * service.
 	 */
 	private final ConnectedAdminAsync connectedAdmin = ClientSideSettings.getConnectedAdmin();
 
@@ -41,17 +42,28 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		
-		Button newContactButtun = new Button("Neuen Kontakt anlegen");
-		
-		newContactButtun.addClickHandler(new ClickHandler() {
+
+		Button newContactButton = new Button("Neuen Kontakt anlegen");
+
+		newContactButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				ContactForm newcontactForm = new ContactForm();
 			}
-			
+
 		});
-		RootPanel.get("content").add(newContactButtun);
+		Button newContactListButton = new Button("Neue Kontaktliste anlegen");
+
+		newContactListButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				ContactListForm newcontactlistForm = new ContactListForm();
+			}
+
+		});
+		RootPanel.get("content").add(newContactButton);
+		RootPanel.get("content").add(newContactListButton);
 	}
 }
