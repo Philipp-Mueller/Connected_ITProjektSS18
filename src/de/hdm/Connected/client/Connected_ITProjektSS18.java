@@ -20,6 +20,7 @@ import de.hdm.Connected.client.gui.ContactForm;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.FieldVerifier;
 
+
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
@@ -41,8 +42,16 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		
-		ContactForm contactform = new ContactForm();
+		Button newContactButtun = new Button("Neuen Kontakt anlegen");
 		
-		
+		newContactButtun.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				ContactForm newcontactForm = new ContactForm();
+			}
+			
+		});
+		RootPanel.get("content").add(newContactButtun);
 	}
 }

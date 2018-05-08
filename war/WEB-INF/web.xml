@@ -5,20 +5,23 @@
          version="2.5"
          xmlns="http://java.sun.com/xml/ns/javaee">
 
-  <!-- Servlets -->
-  <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>de.Connected.server.GreetingServiceImpl</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/connected_itprojektss18/greet</url-pattern>
-  </servlet-mapping>
-  
-  <!-- Default page to serve -->
+    <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Connected_ITProjektSS18.html</welcome-file>
   </welcome-file-list>
+    
+  
+  
+  <!-- Servlets -->
+  <servlet>
+    <servlet-name>connectedAdminImpl</servlet-name>
+    <servlet-class>de.hdm.Connected.server.ConnectedAdminImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>connectedAdminImpl</servlet-name>
+    <url-pattern>/connected_itprojektss18/connectedadministration</url-pattern>
+  </servlet-mapping>
+  
 
 </web-app>
