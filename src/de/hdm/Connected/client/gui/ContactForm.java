@@ -31,11 +31,17 @@ public class ContactForm extends Widget {
 	TextBox firstNameBox = new TextBox();
 	Label surnameLabel = new Label("Nachname:");
 	TextBox surnameBox = new TextBox();
-	Button addButton = new Button("+");
 	ListBox propertyListBox = new ListBox();
+	Button addButton = new Button("weitere Eigenschaften hinzufügen");
+	Button addButton2 = new Button("+");
+	HorizontalPanel itemPanel = new HorizontalPanel();
 	
+	VerticalPanel propertyPanel = new VerticalPanel();
+	VerticalPanel valuePanel = new VerticalPanel();
+		
 	
 	ArrayList<Property> propertyArray = new ArrayList<Property>();
+	ArrayList<ListBox> selectedProperties = new ArrayList<ListBox>();
 	
 	/**
 	 * Konstruktor wenn ein Kontakt schon existiert.
@@ -66,22 +72,28 @@ public class ContactForm extends Widget {
 		
 		topPanel.add(new HTML("<h2> Neuen Kontakt erstellen</h2>"));
 		
+		
+		
+				
 		RootPanel.get("content").add(topPanel);
 		
-		RootPanel.get("content").add(new HTML ("<h3> Vorname: </h3>"));
+		itemPanel.add(propertyPanel);
+		itemPanel.add(valuePanel);
 		
-		RootPanel.get("content").add(firstNameBox);
+		propertyPanel.add(new HTML ("<h3> Vorname: </h3>"));	
 		
-		RootPanel.get("content").add(new HTML ("<h3> Nachname: </h3>"));
+		valuePanel.add(firstNameBox);
 		
-		RootPanel.get("content").add(surnameBox);
-	
-		//TODO  Eigenschaft "+" hinzufügen mit ListBox für Vorgaben bzw. für eigene des Users
+		propertyPanel.add(new HTML ("<h3> Nachname: </h3>"));
 		
-	    
-		addButton.addClickHandler(new ClickHandler (){
-			@Override
+		valuePanel.add(surnameBox);
+		
+		propertyPanel.add(addButton);
+		//Eigenschaft "+" hinzufügen mit ListBox für Vorgaben bzw. für eigene des Users
+		
+	    addButton.addClickHandler(new addNewPropertyClickHandler());
 			
+		/*	
 		public void onClick(ClickEvent event){
 				ClientSideSettings.getConnectedAdmin().findAllProperties(new findAllPropertiesCallback(){
 					public void onFailure(Throwable caught) {
@@ -97,8 +109,8 @@ public class ContactForm extends Widget {
 		});
 		
 	
-		
-		
+		*/
+		RootPanel.get("content").add(itemPanel);
 		HorizontalPanel bottomPanel = new HorizontalPanel();
 		
 		/**
@@ -151,6 +163,9 @@ public class ContactForm extends Widget {
 	RootPanel.get("content").add(bottomPanel);
 	
 	
+	
+
+	
 }
 	private class findAllPropertiesCallback implements AsyncCallback<ArrayList<Property>>{
 
@@ -175,4 +190,40 @@ public class ContactForm extends Widget {
 		}
 		
 	}
+	
+// ----Clickhandler für add Button-----
+	private class addNewPropertyClickHandler implements ClickHandler {
+
+		@Override
+		public void onClick(ClickEvent event) {
+			// wennn kein "+" Button dann den addbutton entfernen sonst den "+" Button entfernen 
+			if(addButton != null){
+				RootPanel.get("content").remove(addButton);
+				addButton = null;
+				
+			}
+			else{
+				RootPanel.get("content").remove(addButton2);
+			}
+			
+			ClientSideSettings.getConnectedAdmin().findAllProperties(new findAllPropertiesCallback(){
+				public void onFailure(Throwable caught) {
+					ClientSideSettings.getLogger().severe("Konnte die Eigenschaften nicht laden");
+				}
+				
+				public void onSuccess(Void result) {
+					propertyPanel.add(propertyListBox);
+					TextBox propertyTextBox = new TextBox();
+					valuePanel.add(propertyTextBox);
+					propertyPanel.add(addButton2);
+					addButton.addClickHandler(new addNewPropertyClickHandler());
+				}
+			});
+		}
+	
+			
+			
+		}
+		
+	
 }
