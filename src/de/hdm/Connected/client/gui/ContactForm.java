@@ -63,7 +63,7 @@ public class ContactForm extends Widget {
 	
 	public ContactForm() {
 		
-		RootPanel.get("content").clear();
+		//RootPanel.get("content").clear();
 		
 		HorizontalPanel topPanel = new HorizontalPanel();
 		/* TODO     style erstellen in CSS
@@ -76,10 +76,7 @@ public class ContactForm extends Widget {
 		
 				
 		RootPanel.get("content").add(topPanel);
-		
-		itemPanel.add(propertyPanel);
-		itemPanel.add(valuePanel);
-		
+	
 		propertyPanel.add(new HTML ("<h3> Vorname: </h3>"));	
 		
 		valuePanel.add(firstNameBox);
@@ -92,7 +89,10 @@ public class ContactForm extends Widget {
 		//Eigenschaft "+" hinzufügen mit ListBox für Vorgaben bzw. für eigene des Users
 		
 	    addButton.addClickHandler(new addNewPropertyClickHandler());
-			
+		
+		itemPanel.add(propertyPanel);
+		itemPanel.add(valuePanel);
+		
 		/*	
 		public void onClick(ClickEvent event){
 				ClientSideSettings.getConnectedAdmin().findAllProperties(new findAllPropertiesCallback(){
@@ -180,9 +180,9 @@ public class ContactForm extends Widget {
 			for (int i = 0; i < result.size(); i++) {
 				Property propertyItem = result.get(i);
 				
-				if(result.get(i).getDescription() != "Vorname" || result.get(i).getDescription() != "Nachname"){
+				if(result.get(i).getName() != "Vorname" || result.get(i).getName() != "Nachname"){
 				propertyArray.add(propertyItem);
-				propertyListBox.addItem(propertyItem.getDescription());
+				propertyListBox.addItem(propertyItem.getName());
 				}
 								
 			}
