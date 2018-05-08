@@ -83,7 +83,7 @@ public class ValueMapper {
 			 */
 						
 			stmt.executeUpdate("INSERT INTO value (id, name, propertyId, contactId) VALUES (" + value.getBoId()
-			+ ", '" + value.getDescription() + "', " + value.getPropertyID()+ ", " + value.getContactID() + ")");
+			+ ", '" + value.getName() + "', " + value.getPropertyID()+ ", " + value.getContactID() + ")");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
@@ -110,7 +110,7 @@ public class ValueMapper {
 			 * SQL-Anweisung zum Aktualisieren des uebergebenen Datensatzes in
 			 * der Datenbank.
 			 */
-			stmt.executeUpdate("UPDATE value SET name='" + value.getDescription() + "', propertyId = '" + value.getPropertyID() + "', contactId = '" + value.getContactID() + "' WHERE id= " + value.getBoId());
+			stmt.executeUpdate("UPDATE value SET name='" + value.getName() + "', propertyId = '" + value.getPropertyID() + "', contactId = '" + value.getContactID() + "' WHERE id= " + value.getBoId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -175,7 +175,7 @@ public class ValueMapper {
 			if (rs.next()) {
 				Value value = new Value();
 				value.setBoId(rs.getInt("id"));
-				value.setDescription(rs.getString("name"));
+				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
 				return value;
@@ -221,7 +221,7 @@ public class ValueMapper {
 			while (rs.next()) {
 				Value value = new Value();
 				value.setBoId(rs.getInt("id"));
-				value.setDescription(rs.getString("name"));
+				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
 				result.add(value);
@@ -268,7 +268,7 @@ public class ValueMapper {
 			while (rs.next()) {
 				Value value = new Value();
 				value.setBoId(rs.getInt("id"));
-				value.setDescription(rs.getString("description"));
+				value.setName(rs.getString("description"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
 				result.add(value);
@@ -315,7 +315,7 @@ public class ValueMapper {
 			while (rs.next()) {
 				Value value = new Value();
 				value.setBoId(rs.getInt("id"));
-				value.setDescription(rs.getString("description"));
+				value.setName(rs.getString("description"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
 				result.add(value);

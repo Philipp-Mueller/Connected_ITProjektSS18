@@ -1,8 +1,9 @@
 package de.hdm.Connected.server;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import de.hdm.Connected.server.db.ContactListMapper;
 import de.hdm.Connected.server.db.ContactMapper;
@@ -10,15 +11,13 @@ import de.hdm.Connected.server.db.PermissionMapper;
 import de.hdm.Connected.server.db.PropertyMapper;
 import de.hdm.Connected.server.db.UserMapper;
 import de.hdm.Connected.server.db.ValueMapper;
+import de.hdm.Connected.shared.ConnectedAdmin;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.ContactList;
 import de.hdm.Connected.shared.bo.Permission;
 import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
-import de.pitchMen.shared.bo.Participation;
-
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
  * Implemetierungsklasse des Interface ConnectedAdmin. Sie enthält die
@@ -28,7 +27,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * @author Denise
  *
  */
-public class ConnectedAdminImpl extends RemoteServiceServlet {
+public class ConnectedAdminImpl extends RemoteServiceServlet implements ConnectedAdmin {
 
 	private static final long serialVersionUID = 1L;
 
@@ -118,7 +117,8 @@ public class ConnectedAdminImpl extends RemoteServiceServlet {
 	}
 
 	public ArrayList<Contact> getContactByUser(int userId) throws IllegalArgumentException {
-		return this.contactMapper.findByUserId(userId);
+		// return this.contactMapper.findByUserId(userId);
+		return null;
 	}
 
 	// *** ContactList ***
@@ -134,7 +134,8 @@ public class ConnectedAdminImpl extends RemoteServiceServlet {
 	}
 	// fügt einer Kontaktliste einen Kontakt hinzu
 
-	//@Denise bitte an UML orientieren oder siehe ConnectedAdmin Grüßle Mo
+	// @Denise bitte an UML orientieren oder siehe ConnectedAdmin Grüßle Mo
+	// AddContactToContactList heißt das glaub
 	public void addContact(Timestamp modificationDate, ContactList cl, int contactId, int userId)
 			throws IllegalArgumentException {
 
@@ -146,71 +147,173 @@ public class ConnectedAdminImpl extends RemoteServiceServlet {
 	}
 
 	// *** User ***
-	public User createUser(String name) throws IllegalArgumentException{
+	@Override
+	public User createUser(String email) throws IllegalArgumentException {
 		User user = new User();
+		user.setLogEmail(email);
 
 		return this.userMapper.insert(user);
 	}
-	
+
+	@Override
 	public void updateUser(User user) throws IllegalArgumentException {
 		userMapper.update(user);
 	}
-	
+
+	@Override
 	public void deleteUser(User user) throws IllegalArgumentException {
 		ArrayList<Permission> permissions = this.findPermissionsByUserId(user.getBoId());
-		
-		if(permissions != null) {
-			for (Permission permission : permissions)
-			{
+
+		if (permissions != null) {
+			for (Permission permission : permissions) {
 				this.permissionMapper.delete(permission);
 			}
 		}
 		this.userMapper.delete(user);
 	}
 
-	public ArrayList<Permission> findPermissionsByUserId (int userId) throws IllegalArgumentException {
+	@Override
+	public ArrayList<Permission> findPermissionsByUserId(int userId) throws IllegalArgumentException {
 		return this.permissionMapper.findByUserId(userId);
 	}
 
 	// *** Permission ***
-	public Permission createPermission(String name) throws IllegalArgumentException{
+	@Override
+	public Permission createPermission(int shareUserId, int shareObjectId, int receiverUserId)
+			throws IllegalArgumentException {
 		Permission permission = new Permission();
+		permission.setShareUserID(shareUserId);
+		permission.setSharedObjectId(shareObjectId);
+		permission.setReceiverUserID(receiverUserId);
 
 		return this.permissionMapper.insert(permission);
 	}
-	
-	public void updatePermission(Permission permission) throws IllegalArgumentException {
-		permissionMapper.update(permission);
-	}
-	
-	public void deletePermission(Permission permission) throws IllegalArgumentException{
+
+	@Override
+	public void deletePermission(Permission permission) throws IllegalArgumentException {
 		permissionMapper.delete(permission);
 	}
-	
+
 	// *** Value ***
-	public Value createValue(String name) throws IllegalArgumentException{
+	@Override
+	public Value createValue(String name, int propertyId, int contactId) throws IllegalArgumentException {
 		Value value = new Value();
+		value.setName(name);
+		value.setPropertyID(propertyId);
+		value.setContactID(contactId);
 
 		return this.valueMapper.insert(value);
 	}
-	
+
+	@Override
 	public void updateValue(Value value) throws IllegalArgumentException {
 		valueMapper.update(value);
 	}
-	
-	public void deleteValue(Value value) throws IllegalArgumentException{
+
+	@Override
+	public void deleteValue(Value value) throws IllegalArgumentException {
 		valueMapper.delete(value);
 	}
-	
+
 	// *** Property ***
-	public Property createProperty(String name) throws IllegalArgumentException{
+	@Override
+	public Property createProperty(String name) throws IllegalArgumentException {
 		Property property = new Property();
+		property.setName(name);
+		property.setName(name);
 
 		return this.propertyMapper.insert(property);
 	}
-	
+
+	@Override
 	public void updateProperty(Property property) throws IllegalArgumentException {
 		propertyMapper.update(property);
 	}
-	
+
+	@Override
+	public void deleteProperty(Property property) throws IllegalArgumentException {
+		propertyMapper.delete(property);
+
+	}
+
+	// Das sind deine! Wurden automatisch erstellt sonst hätte es einen Fehler
+	// gegeben
+	@Override
+	public Contact createContact(String prename, String surname, Timestamp creationDate, Timestamp modificationDate,
+			int ownerId) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteContact(Contact contact) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+
+	}
+	// Bis hier
+	////////////////////////////////////////////////////////////////////////////////////////
+
+	@Override // fehlt im Mapper
+	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override // Fehlt im Mapper
+	public ArrayList<Contact> findContactsByValue(String value) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Contact findContactById(int id) throws IllegalArgumentException {
+		return this.contactMapper.findById(id);
+	}
+
+	@Override // Fehlt im Mapper
+	public ArrayList<Contact> findContactsByOwnerId(int id) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Value> findValuesByContactId(int id) throws IllegalArgumentException {
+		return this.valueMapper.findByContactId(id);
+	}
+
+	@Override
+	public Property findPropertyByPropertyId(int id) throws IllegalArgumentException {
+		return this.propertyMapper.findById(id);
+	}
+
+	@Override
+	public void addContactToContactList(int contactId, int contactlistId) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void removeContactFromContactList(int contactId, int contactlistid) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override // Delete Permission Redundant?!
+	public void removeAccessToObject(int userId, int shareObjectId) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public ArrayList<Property> findAllProperties() throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
