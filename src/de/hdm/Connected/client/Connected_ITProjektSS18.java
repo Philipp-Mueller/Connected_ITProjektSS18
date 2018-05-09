@@ -49,6 +49,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
+				RootPanel.get("content").clear();
 				ContactForm newcontactForm = new ContactForm();
 			}
 
@@ -59,7 +60,9 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
+				RootPanel.get("content").clear();
 				ContactListForm newcontactlistForm = new ContactListForm();
+				
 			}
 
 		});
