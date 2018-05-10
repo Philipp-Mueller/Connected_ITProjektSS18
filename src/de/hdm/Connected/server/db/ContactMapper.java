@@ -410,5 +410,47 @@ public class ContactMapper {
 			return result;
 	}
 	
+	/**
+	 * Findet Contact-Objekte anhand des uebergebenen Value in der Datenbank.
+	 * 
+	 * @param value
+	 * @return ArrayList<Contact>
+	 */
+	public ArrayList<Contact> findByValue(String value) {
+		Connection con = DBConnection.connection();
+
+		ArrayList<Contact> result = new ArrayList<Contact>();
+		try {
+			Statement stmt = con.createStatement();
+			/**
+			 * SQL-Anweisung zum Finden des Datensatzes, anhand des uebergebenen Value, in
+			 * der Datenbank, sortiert nach der Id.
+			 */
+			ResultSet rs = stmt.executeQuery(
+					"SELECT id, prename, surname FROM contact WHERE value LIKE '" + value + "' ORDER BY id");
+			/**
+			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle Contact
+			 * mit dem uebergebenen Namen vorhanden ist, muss das Abfragen des ResultSet so
+			 * oft erfolgen (while-Schleife), bis alle Tupel durchlaufen wurden. Die
+			 * DB-Tupel werden in Java-Objekte transformiert und anschliessend der ArrayList
+			 * hinzugefuegt.
+			 */
+			while (rs.next()) {
+				Contact contact = new Contact();
+				contact.setBoId(rs.getInt("id"));
+				contact.setPrename(rs.getString("prename"));
+				contact.setSurname(rs.getString("surname"));
+				result.add(contact);
+			}
+			/**
+			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
+			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
+			 * passiert ist und wo im Code es passiert ist.
+			 */
+		} catch (SQLException e2) {
+			e2.printStackTrace();
+		}
+		return result;
+	}
 }
 
