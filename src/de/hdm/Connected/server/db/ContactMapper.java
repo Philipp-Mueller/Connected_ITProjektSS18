@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import de.hdm.Connected.shared.bo.Contact;
+import de.hdm.Connected.shared.bo.Permission;
 
 /**
  * Die Klasse ContactMapper bildet Contact-Objekte auf eine relationale Datenbank
@@ -292,7 +293,7 @@ public class ContactMapper {
 			 * Namens, in der Datenbank, sortiert nach der Id.
 			 */
 			ResultSet rs = stmt
-					.executeQuery("SELECT id, prename, surname FROM contact WHERE prename LIKE '" + surname
+					.executeQuery("SELECT id, prename, surname FROM contact WHERE surename LIKE '" + surname
 							+ "' ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
@@ -318,4 +319,50 @@ public class ContactMapper {
 		}
 		return result;
 	}
+	/**
+	 * Suchen ein Contact-Objekt anhand der übergebenen ContactListId in der Datenbank.
+	 * 
+	 * @param contactListID
+	 * @return ArrayList<Contact>
+	 */
+	
+	public ArrayList<Contact> findByContactListId (int contactListID) {
+		// DB-Verbindung holen
+		Connection con = DBConnection.connection();
+		
+		ArrayList<Contact> result = new ArrayList<Contact>();
+		
+		try {
+			// Leeres SQL-Statement (JDBC) anlegen
+			Statement stmt = con.createStatement();
+
+			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der ContactListId in der Datenbank
+			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname  FROM contact " + " WHERE contactListID=" + contactListID);
+			/**
+			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
+			 * Tabelle permission vorhanden ist, muss das Abfragen des ResultSet so
+			 * oft erfolgen (while-Schleife), bis alle Tupel durchlaufen wurden.
+			 * Die DB-Tupel werden in Java-Objekte transformiert und
+			 * anschliessend der ArrayList hinzugefügt.
+			 */
+			
+			while (rs.next()) {
+				Contact contact = new Contact();
+				contact.setBoId(rs.getInt("id"));
+				contact.setPrename(rs.getString("prename"));
+				contact.setSurname(rs.getString("surname"));
+				result.add(contact);
+			}
+			/**
+			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
+			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen dazu
+			 * ausgegeben, was passiert ist und wo im Code es passiert ist.
+			 */	
+		}catch (SQLException e) {
+			e.printStackTrace();
+	}
+		//Rückgabe der ArrayList
+		return result;
+}
+
 }
