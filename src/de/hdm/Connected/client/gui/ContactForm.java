@@ -31,7 +31,7 @@ public class ContactForm extends Widget {
 	TextBox firstNameBox = new TextBox();
 	Label surnameLabel = new Label("Nachname:");
 	TextBox surnameBox = new TextBox();
-	ListBox propertyListBox = new ListBox();
+	ListBox propertyListBox = null;
 	Button addButton = new Button("weitere Eigenschaften hinzufügen");
 	Button addButton2 = new Button("+");
 	HorizontalPanel itemPanel = new HorizontalPanel();
@@ -167,12 +167,13 @@ public class ContactForm extends Widget {
 
 	
 }
-	private class findAllPropertiesCallback implements AsyncCallback<ArrayList<Property>>{
+/*	private class findAllPropertiesCallback implements AsyncCallback<ArrayList<Property>>{
 
 		@Override
 		public void onFailure(Throwable caught) {
 			// TODO Auto-generated method stub
-			
+			ClientSideSettings.getLogger().severe("Konnte nicht laden");
+			Window.alert("Da ist wohl etwas schief gelaufen");
 		}
 
 		public void onSuccess(ArrayList<Property> result) {
@@ -183,35 +184,73 @@ public class ContactForm extends Widget {
 				if(result.get(i).getName() != "Vorname" || result.get(i).getName() != "Nachname"){
 				propertyArray.add(propertyItem);
 				propertyListBox.addItem(propertyItem.getName());
+				
 				}
 								
 			}
-			
+			propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
 		}
 		
-	}
+	}*/
 	
 // ----Clickhandler für add Button-----
 	private class addNewPropertyClickHandler implements ClickHandler {
 
 		@Override
 		public void onClick(ClickEvent event) {
-			// wennn kein "+" Button dann den addbutton entfernen sonst den "+" Button entfernen 
+			if(propertyListBox !=null) {selectedProperties.add(propertyListBox);}
+			// wennn kein "+" Button dann den addbutton entfernen sonst den "+" Button entfernen
 			if(addButton != null){
-				RootPanel.get("content").remove(addButton);
+				propertyPanel.remove(addButton);
 				addButton = null;
+				
 				
 			}
 			else{
-				RootPanel.get("content").remove(addButton2);
+				propertyPanel.remove(addButton2);
+				addButton2 = null;
 			}
+			propertyListBox = new ListBox();
+			propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
+			propertyListBox.addItem("alles cool");
+			propertyPanel.add(propertyListBox);
+			TextBox propertyTextBox = new TextBox();
+			valuePanel.add(propertyTextBox);
+			addButton2 = new Button("+");
+			propertyPanel.add(addButton2);
+			addButton2.addClickHandler(new addNewPropertyClickHandler());
+			TextBox testBox = new TextBox();
+			for(int i =0 ; i<selectedProperties.size(); i++){
+			testBox.setText(selectedProperties.get(i).getSelectedItemText());
+			valuePanel.add(testBox);
 			
-			ClientSideSettings.getConnectedAdmin().findAllProperties(new findAllPropertiesCallback(){
+			}
+				
+	/*TODO		ClientSideSettings.getConnectedAdmin().findAllProperties(new AsyncCallback<ArrayList<Property>>(){
+				@Override
 				public void onFailure(Throwable caught) {
 					ClientSideSettings.getLogger().severe("Konnte die Eigenschaften nicht laden");
 				}
-				
-				public void onSuccess(Void result) {
+				@Override
+				public void onSuccess(ArrayList<Property> result) {					
+					if(addButton != null){
+						propertyPanel.remove(addButton);
+						addButton = null;
+						
+						
+					}
+					else{
+						propertyPanel.remove(addButton2);
+					}
+					for (int i = 0; i < result.size(); i++) {
+						Property propertyItem = result.get(i);
+						
+						if(result.get(i).getName() != "Vorname" || result.get(i).getName() != "Nachname"){
+						propertyArray.add(propertyItem);
+						propertyListBox.addItem(propertyItem.getName());
+						}
+					}
+					propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
 					propertyPanel.add(propertyListBox);
 					TextBox propertyTextBox = new TextBox();
 					valuePanel.add(propertyTextBox);
@@ -219,6 +258,7 @@ public class ContactForm extends Widget {
 					addButton.addClickHandler(new addNewPropertyClickHandler());
 				}
 			});
+*/
 		}
 	
 			
