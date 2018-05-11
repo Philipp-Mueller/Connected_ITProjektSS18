@@ -2,6 +2,7 @@ package de.hdm.Connected.client.gui;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Vector;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -32,6 +33,7 @@ public class ContactForm extends Widget {
 	Label surnameLabel = new Label("Nachname:");
 	TextBox surnameBox = new TextBox();
 	ListBox propertyListBox = null;
+	TextBox propertyTextBox = null;
 	Button addButton = new Button("weitere Eigenschaften hinzufügen");
 	Button addButton2 = new Button("+");
 	HorizontalPanel itemPanel = new HorizontalPanel();
@@ -42,6 +44,7 @@ public class ContactForm extends Widget {
 	
 	ArrayList<Property> propertyArray = new ArrayList<Property>();
 	ArrayList<ListBox> selectedProperties = new ArrayList<ListBox>();
+	ArrayList<TextBox> insertValue = new ArrayList<TextBox>();
 	
 	/**
 	 * Konstruktor wenn ein Kontakt schon existiert.
@@ -128,6 +131,10 @@ public class ContactForm extends Widget {
 		
 			public void onClick(ClickEvent event){
 				java.sql.Timestamp creationTime = new Timestamp(System.currentTimeMillis());
+				TextArea test = new TextArea();
+				test.setText(selectedProperties.get(0).getSelectedItemText());
+				valuePanel.add(test);
+				
 				
 				 ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(),  
 						 												surnameBox.getText(), creationTime, creationTime,
@@ -139,6 +146,7 @@ public class ContactForm extends Widget {
 					public void onSuccess(Contact result) {
 						
 						RootPanel.get("content").add(new ContactForm(result));
+						String[][] propertyvalue = new String[propertyArray.size()][2];
 						
 					}
 					
@@ -149,6 +157,7 @@ public class ContactForm extends Widget {
 	}); 
 	
 	bottomPanel.add(saveButton);
+	
 	
 	Button cancelButton = new Button("Abbrechen");
 	cancelButton.addClickHandler(new ClickHandler() {
@@ -198,7 +207,7 @@ public class ContactForm extends Widget {
 
 		@Override
 		public void onClick(ClickEvent event) {
-			if(propertyListBox !=null) {selectedProperties.add(propertyListBox);}
+			if(propertyListBox !=null) {selectedProperties.add(propertyListBox); insertValue.add(propertyTextBox);}
 			// wennn kein "+" Button dann den addbutton entfernen sonst den "+" Button entfernen
 			if(addButton != null){
 				propertyPanel.remove(addButton);
@@ -214,17 +223,16 @@ public class ContactForm extends Widget {
 			propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
 			propertyListBox.addItem("alles cool");
 			propertyPanel.add(propertyListBox);
-			TextBox propertyTextBox = new TextBox();
+			propertyTextBox = new TextBox();
 			valuePanel.add(propertyTextBox);
 			addButton2 = new Button("+");
 			propertyPanel.add(addButton2);
 			addButton2.addClickHandler(new addNewPropertyClickHandler());
-			TextBox testBox = new TextBox();
+			/*TextBox testBox = new TextBox();
 			for(int i =0 ; i<selectedProperties.size(); i++){
 			testBox.setText(selectedProperties.get(i).getSelectedItemText());
-			valuePanel.add(testBox);
-			
-			}
+			valuePanel.add(testBox);			
+			}*/
 				
 	/*TODO		ClientSideSettings.getConnectedAdmin().findAllProperties(new AsyncCallback<ArrayList<Property>>(){
 				@Override
