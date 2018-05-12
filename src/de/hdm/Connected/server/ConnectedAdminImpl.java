@@ -259,16 +259,14 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	// Bis hier
 	////////////////////////////////////////////////////////////////////////////////////////
 
-	@Override // fehlt im Mapper
+	@Override
 	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.contactMapper.findByContactListId(contactlistId);
 	}
 
-	@Override // Fehlt im Mapper
+	@Override
 	public ArrayList<Contact> findContactsByValue(String value) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.contactMapper.findByValue(value);
 	}
 
 	@Override
@@ -276,10 +274,9 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return this.contactMapper.findById(id);
 	}
 
-	@Override // Fehlt im Mapper
+	@Override
 	public ArrayList<Contact> findContactsByOwnerId(int id) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.contactMapper.findByUserId(id);
 	}
 
 	@Override
@@ -312,8 +309,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 	@Override
 	public ArrayList<Property> findAllProperties() throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.propertyMapper.findAllProperties();
 	}
 
 }
