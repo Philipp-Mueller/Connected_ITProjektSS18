@@ -1,8 +1,11 @@
 package de.hdm.Connected.server;
 
+import java.util.List;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import de.hdm.Connected.shared.ReportGeneratorService;
+import de.hdm.Connected.shared.bo.Contact;
 
 /**
  * 
@@ -15,7 +18,8 @@ import de.hdm.Connected.shared.ReportGeneratorService;
 public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements ReportGeneratorService{
 
 	@Override
-	public void allContacts() {
+	public List<Contact> allContacts() {
+		return null;
 		// TODO Auto-generated method stub
 		
 	}
