@@ -14,7 +14,7 @@ public interface ReportGeneratorServiceAsync {
 	void allContactsPerUser(AsyncCallback callback);
 	void allSharedContacts(AsyncCallback callback);
 	void allSharedContactsPerUser(AsyncCallback callback);
-	void showContactsBasedOnPropertiesAndValues(AsyncCallback callback);
+	void contactsBasedOnPropertiesAndValues(AsyncCallback callback);
 	
 	
 
