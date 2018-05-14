@@ -78,7 +78,7 @@ public class ContactListMapper {
 			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM contactlist");
 		
 			if (rs.next()) {
-				contactList.setId(rs.getInt("maxid") + 1);
+				contactList.setBoId(rs.getInt("maxid") + 1);
 			}
 			stmt = con.createStatement();
 			/**
@@ -86,7 +86,7 @@ public class ContactListMapper {
 			 * Datenbank.
 			 */
 			
-			stmt.executeUpdate("INSERT INTO contactlist (id, name) VALUES " + "(" + contactList.getId() + ", '"
+			stmt.executeUpdate("INSERT INTO contactlist (id, name) VALUES " + "(" + contactList.getBoId() + ", '"
 					+ contactList.getName() + "')");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -117,7 +117,7 @@ public class ContactListMapper {
 			 * SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in
 			 * der Datenbank.
 			 */
-			stmt.executeUpdate("UPDATE contactlist SET name='" + contactList.getName() + "' WHERE id=" + contactList.getId());
+			stmt.executeUpdate("UPDATE contactlist SET name='" + contactList.getName() + "' WHERE id=" + contactList.getBoId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -145,7 +145,7 @@ public class ContactListMapper {
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
 			 * Datenbank.
 			 */
-			stmt.executeUpdate("DELETE FROM contactlist WHERE id=" + contactList.getId());
+			stmt.executeUpdate("DELETE FROM contactlist WHERE id=" + contactList.getBoId());
 		}
 		
 		/**
@@ -182,7 +182,7 @@ public class ContactListMapper {
 			 */
 			if (rs.next()) {
 				ContactList contactList = new ContactList();
-				contactList.setId(rs.getInt("id"));
+				contactList.setBoId(rs.getInt("id"));
 				contactList.setName(rs.getString("name"));
 				return contactList;			
 		}
@@ -226,7 +226,7 @@ public class ContactListMapper {
 			
 			while (rs.next()) {
 				ContactList contactList = new ContactList();
-				contactList.setId(rs.getInt("id"));
+				contactList.setBoId(rs.getInt("id"));
 				contactList.setName(rs.getString("name"));
 			//	contactList.setUserId(rs.getInt("userId"));
 				result.add(contactList);

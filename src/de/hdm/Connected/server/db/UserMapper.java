@@ -79,7 +79,7 @@ public class UserMapper {
 			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM user");
 
 			if (rs.next()) {
-				user.setId(rs.getInt("maxid") + 1);
+				user.setBoId(rs.getInt("maxid") + 1);
 			}
 			stmt = con.createStatement();
 			/**
@@ -87,8 +87,8 @@ public class UserMapper {
 			 * Datenbank.
 			 */
 
-			stmt.executeUpdate("INSERT INTO user (id, name, email) VALUES " + "(" + user.getId() + ", '"
-					+ user.getName() + "', '" + user.getEmail() + "')");
+			stmt.executeUpdate("INSERT INTO user (id, logEmail) VALUES " + "(" + user.getBoId() + ", '"
+					+ user.getLogEmail() + "')");
 
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -108,6 +108,7 @@ public class UserMapper {
 	 * @return user
 	 */
 
+	// macht es Sinn, die Methode auf logEmail zu beziehen, da es keinen Namen mehr gibt? Oder lieber ganz rauslöschen?
 	public User update(User user) {
 		Connection con = DBConnection.connection();
 
@@ -117,7 +118,7 @@ public class UserMapper {
 			 * SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in
 			 * der Datenbank.
 			 */
-			stmt.executeUpdate("UPDATE user SET name='" + user.getName() + "' WHERE id= " + user.getId());
+			stmt.executeUpdate("UPDATE user SET logEmail='" + user.getLogEmail() + "' WHERE id= " + user.getBoId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -145,7 +146,7 @@ public class UserMapper {
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
 			 * Datenbank.
 			 */
-			stmt.executeUpdate("DELETE FROM user WHERE id=" + user.getId());
+			stmt.executeUpdate("DELETE FROM user WHERE id=" + user.getBoId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -173,7 +174,7 @@ public class UserMapper {
 			 * SQL-Anweisung zum Finden des übergebenen Datensatzes, anhand der
 			 * Id, in der Datenbank.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name FROM user WHERE id=" + id);
+			ResultSet rs = stmt.executeQuery("SELECT id FROM user WHERE id=" + id);
 			/**
 			 * Zu einem eindeutigen Wert exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurückgegeben werden.
@@ -182,9 +183,8 @@ public class UserMapper {
 			 */
 			if (rs.next()) {
 				User user = new User();
-				user.setId(rs.getInt("id"));
-				user.setName(rs.getString("name"));
-				user.setEmail(rs.getString("email"));
+				user.setBoId(rs.getInt("id"));
+				user.setLogEmail(rs.getString("logEmail"));
 				return user;
 			}
 			/**
@@ -197,8 +197,15 @@ public class UserMapper {
 		}
 		return null;
 	}
+	
+	/**
+	 * Findet ein User-Objekt anhand der übergebenen logEmail in der Datenbank.
+	 * 
+	 * @param logEmail
+	 * @return user
+	 */
 
-	public User findByEmail(String email) {
+	public User findByEmail(String logEmail) {
 		Connection con = DBConnection.connection();
 
 		try {
@@ -207,7 +214,7 @@ public class UserMapper {
 			 * SQL-Anweisung zum Finden aller Datensätze, anhand der eMail, in
 			 * der Datenbank.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name, email FROM user WHERE email LIKE '" + email + "'");
+			ResultSet rs = stmt.executeQuery("SELECT id, logEmail FROM user WHERE email LIKE '" + logEmail + "'");
 			/**
 			 * Zu einem eindeutigen Wert exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurückgegeben werden.
@@ -216,9 +223,8 @@ public class UserMapper {
 			 */
 			if (rs.next()) {
 				User user = new User();
-				user.setId(rs.getInt("id"));
-				user.setName(rs.getString("name"));
-				user.setEmail(rs.getString("email"));
+				user.setBoId(rs.getInt("id"));
+				user.setLogEmail(rs.getString("logEmail"));
 				return user;
 			}
 			/**

@@ -1,7 +1,9 @@
 package de.hdm.Connected.server.db;
 
+import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.Property;
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Die Klasse PropertyMapper bildet Property-Objekte auf eine relationale 
@@ -73,7 +75,7 @@ public class PropertyMapper {
 			stmt = con.createStatement();
 			// SQL-Anweisung zum Einfügen des neuen Property-Tupels in die Datenbank
 			stmt.executeUpdate("INSERT INTO property (id, name) VALUES " + "(" + property.getBoId() + ",'"
-					+ property.getDescription() + "')");
+					+ property.getName() + "')");
 			
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -103,7 +105,7 @@ public class PropertyMapper {
 			Statement stmt = con.createStatement();
 			
 			// SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in der Datenbank
-			stmt.executeUpdate("UPDATE property SET name='" + property.getDescription() + "'WHERE id=" + property.getBoId());
+			stmt.executeUpdate("UPDATE property SET name='" + property.getName() + "'WHERE id=" + property.getBoId());
 		
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -170,7 +172,7 @@ public class PropertyMapper {
 				  // Ergebnis-Tupel in Objekt umwandeln
 				  Property property = new Property();
 				  property.setBoId(rs.getInt("id"));
-				  property.setDescription(rs.getString("name"));
+				  property.setName(rs.getString("name"));
 				  return property;
 			  }
 			   /**
@@ -183,4 +185,48 @@ public class PropertyMapper {
 		  }
 			return null;
 	}	
+	 
+	 /**
+		 * Suchen aller Property-Objekte in der Datenbank.
+		 * 
+		 * @return ArrayList<Property>
+		 */
+	 
+		public ArrayList<Property> findAllProperties() {
+			//DB-Verbindung holen
+			Connection con = DBConnection.connection();
+
+			ArrayList<Property> result = new ArrayList<Property>();
+			
+			try {
+				// Leeres SQL-Statement (JDBC) anlegen
+				Statement stmt = con.createStatement();
+				
+				// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der Id in der Datenbank
+				ResultSet rs = stmt.executeQuery("SELECT id, name FROM property ORDER BY id");
+				/**
+				 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
+				 * Tabelle property vorhanden ist, muss das Abfragen des ResultSet so
+				 * oft erfolgen (while-Schleife), bis alle Tupel durchlaufen wurden.
+				 * Die DB-Tupel werden in Java-Objekte transformiert und
+				 * anschliessend der ArrayList hinzugefügt.
+				 */
+
+				while (rs.next()) {
+					Property property = new Property();
+					property.setBoId(rs.getInt("id"));
+					property.setName(rs.getString("name"));
+					result.add(property);
+				}
+				/**
+				 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
+				 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
+				 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
+				 */
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			// Rückgabe der ArrayList
+				return result;
+		}
 }

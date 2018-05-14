@@ -3,6 +3,8 @@
  */
 package de.hdm.Connected.shared.bo;
 
+import java.sql.Timestamp;
+
 /**
  * Klasse um ContactListen darzustellen
  * @author Denise
@@ -24,6 +26,10 @@ public class ContactList extends SharedObject {
 	// Realisierung eine Beziehung zu einer Permission durch Fremdschlüssel
 	
 	private int permissionId = 0;
+	
+	// Realisierung des ModifikationsDatums um Status einer Contactliste kommunizieren zu können
+	
+	private Timestamp modificationDate= null;
 	
 	/**
 	 * @return the name
@@ -76,6 +82,15 @@ public class ContactList extends SharedObject {
 	 */
 	public void setPermissionId(int permissionId) {
 		this.permissionId = permissionId;
+	}
+	
+	public Timestamp getModificationDate(){
+		return modificationDate;
+	}
+	
+	public void setModificationDate(Timestamp modificationDate) {
+		this.modificationDate = modificationDate;
+		
 	}
 	
 	
