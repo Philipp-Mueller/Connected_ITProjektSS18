@@ -1,5 +1,9 @@
 package de.hdm.Connected.shared;
 
+import java.util.List;
+
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 /**
  * 
  * @author Patricia
@@ -8,11 +12,11 @@ package de.hdm.Connected.shared;
 
 public interface ReportGeneratorServiceAsync {
 	
-	void allContacts(asyncCallback callback);
-	void allContactsPerUser(asyncCallback callback);
-	void allSharedContacts(asyncCallback callback);
-	void allSharedContactsPerUser(asyncCallback callback);
-	void showContactsBasedOnPropertiesAndValues(asyncCallback callback);
+	void allContacts(AsyncCallback callback);
+	void allContactsPerUser(AsyncCallback callback);
+	void allSharedContacts(AsyncCallback callback);
+	void allSharedContactsPerUser(AsyncCallback callback);
+	void showContactsBasedOnPropertiesAndValues(AsyncCallback callback);
 	
 	
 
