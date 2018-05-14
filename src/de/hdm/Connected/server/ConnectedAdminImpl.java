@@ -75,8 +75,12 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 	// **** CONTACT****
 
-	public Contact createContact(String prename, String surname, int ownerId) {
+	
+	// erstellt Contact 
+	public Contact createContact(String prename, String surname, Timestamp creationDate, Timestamp modificationDate, int ownerId) {
 		Contact contact = new Contact();
+		contact.setCreationDate(creationDate);
+		contact.setModificationDate(modificationDate);
 		contact.setPrename(prename);
 		contact.setSurname(surname);
 		contact.setCreatorId(ownerId);
@@ -84,46 +88,41 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return this.contactMapper.insert(contact);
 
 	}
-
+	
+	//Updated Contact
+	@Override
 	public void updateContact(Contact contact) throws IllegalArgumentException {
 		contactMapper.update(contact);
 	}
-
-	// löscht Kontakt wenn User entweder Owner ist oder Permission besitzt
-
-	/*
-	 * public void deleteContact(Contact contact, int userId, int permissionId,
-	 * int boId) throws IllegalArgumentException {
-	 * 
-	 * ArrayList<Permission> permissions = this.permissionMapper
-	 * .findByUserId(userId); Contact currentContact =
-	 * this.contactMapper.findById(contact.getBoId());
-	 * System.out.println("current contact objekt: " +
-	 * currentContact.getPrename()); System.out.println("übergebene UserID: " +
-	 * userId); try { // Wenn der User der das Notebookerstellt hat, es löschen
-	 * möchte if (currentContact.getCreatorId()== userId) {
-	 * System.out.println("userID = notebook.getUserId"); } // wenn es
-	 * Permissions gibt if (permissionId !=0) {
-	 * System.out.println("es gibt permissions"); for (Permission
-	 * foundedPermission : permissions) { // lösche zuerst alle Permissions
-	 * this.permissionMapper.delete(foundedPermission); }
-	 * 
-	 * if (contact != null) { this.contactMapper.delete(contact); } else {
-	 * System.out.println("cotenance");} } } }
-	 */
-
-	public ArrayList<Contact> getContacts() throws IllegalArgumentException {
-		return this.contactMapper.findAll();
+	
+	// löscht Kontakt mit Values
+	@Override
+	public void deleteContact(Contact contact)throws IllegalArgumentException {
+		ArrayList<Value> values = this.findValuesByContactId(contact.getBoId());
+		
+		if (values != null){
+			for (Value value: values){
+				this.valueMapper.delete(value);
+			}
+		}
+		this.contactMapper.delete(contact);
 	}
-
-	public ArrayList<Contact> getContactByUser(int userId) throws IllegalArgumentException {
-		// return this.contactMapper.findByUserId(userId);
-		return null;
+	
+	@Override
+	public ArrayList<Contact> findContactsByOwnerId(int id) throws IllegalArgumentException {
+		return this.contactMapper.findByUserId(id);
 	}
-
+	
 	// *** ContactList ***
+	
+	/*
+	public ContactList findContactListById(int id) throws IllegalArgumentException {
+		return this.contactListMapper.findById(id);
+	*/
 
-	public ContactList createContactList(String name) {
+
+	@Override
+	public ContactList createContactList(String name){
 		ContactList contactList = new ContactList();
 
 		return this.contactListMapper.insert(contactList);
@@ -132,19 +131,20 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public void updateContactList(ContactList contactList) throws IllegalArgumentException {
 		contactListMapper.update(contactList);
 	}
+	
 	// fügt einer Kontaktliste einen Kontakt hinzu
-
-	// @Denise bitte an UML orientieren oder siehe ConnectedAdmin Grüßle Mo
-	// AddContactToContactList heißt das glaub
-	public void addContact(Timestamp modificationDate, ContactList cl, int contactId, int userId)
-			throws IllegalArgumentException {
-
-		// if(cl.getPermissionId()==permissionId || userId==cl.getOwnerID()) {
-		cl.setModificationDate(modificationDate);
-		cl.setContactId(contactId);
-		this.contactListMapper.update(cl);
+	
+	@Override
+	public void addContactToContactList(Contact contact, ContactList contactlist) throws IllegalArgumentException {
+		contact.setContactListId(contactlist.getBoId());	
+	}
+	
+	@Override
+	public void removeContactFromContactList(Contact contact, ContactList contactlist) throws IllegalArgumentException {
+		
 
 	}
+	
 
 	// *** User ***
 	@Override
@@ -238,31 +238,24 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 	// Das sind deine! Wurden automatisch erstellt sonst hätte es einen Fehler
 	// gegeben
-	@Override
+	/*@Override
 	public Contact createContact(String prename, String surname, Timestamp creationDate, Timestamp modificationDate,
 			int ownerId) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		return null;
-	}
+		}
+	*/
 
-	@Override
-	public void deleteContact(Contact contact) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
 
-	}
+	
 
-	@Override
-	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-
-	}
 	// Bis hier
-	////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////
 
-	@Override
+	/*@Override
 	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException {
 		return this.contactMapper.findByContactListId(contactlistId);
-	}
+	}*/
 
 	@Override
 	public ArrayList<Contact> findContactsByValue(String value) throws IllegalArgumentException {
@@ -274,10 +267,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return this.contactMapper.findById(id);
 	}
 
-	@Override
-	public ArrayList<Contact> findContactsByOwnerId(int id) throws IllegalArgumentException {
-		return this.contactMapper.findByUserId(id);
-	}
+
 
 	@Override
 	public ArrayList<Value> findValuesByContactId(int id) throws IllegalArgumentException {
@@ -289,17 +279,13 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return this.propertyMapper.findById(id);
 	}
 
-	@Override
+	/*@Override
 	public void addContactToContactList(int contactId, int contactlistId) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 
-	}
+	}*/
 
-	@Override
-	public void removeContactFromContactList(int contactId, int contactlistid) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
 
-	}
 
 	@Override // Delete Permission Redundant?!
 	public void removeAccessToObject(int userId, int shareObjectId) throws IllegalArgumentException {
@@ -310,6 +296,18 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	@Override
 	public ArrayList<Property> findAllProperties() throws IllegalArgumentException {
 		return this.propertyMapper.findAllProperties();
+	}
+
+	@Override
+	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
