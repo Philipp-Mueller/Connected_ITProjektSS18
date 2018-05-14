@@ -27,7 +27,7 @@ public class Contact extends SharedObject{
 	
 	
 	private Timestamp creationDate = new Timestamp(System.currentTimeMillis());
-	private Timestamp modificationDate = new Timestamp(System.currentTimeMillis());
+	
 	
 	/**
 	 * @return the surname
@@ -76,18 +76,6 @@ public class Contact extends SharedObject{
 	 */
 	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
-	}
-	/**
-	 * @return the modificationDate
-	 */
-	public Timestamp getModificationDate() {
-		return modificationDate;
-	}
-	/**
-	 * @param modificationDate the modificationDate to set
-	 */
-	public void setModificationDate(Timestamp modificationDate) {
-		this.modificationDate = modificationDate;
 	}
 	
 }
