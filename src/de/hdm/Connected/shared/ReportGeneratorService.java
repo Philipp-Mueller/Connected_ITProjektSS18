@@ -1,5 +1,7 @@
 package de.hdm.Connected.shared;
 
+import com.google.gwt.user.client.rpc.RemoteService;
+
 /**
  * 
  * @author Patricia
@@ -7,6 +9,19 @@ package de.hdm.Connected.shared;
  */
 
 
-public class ReportGeneratorService {
+public interface ReportGeneratorService extends RemoteService {
+
+	void allContacts();
+
+	void allContactsPerUser();
+
+	void allSharedContacts();
+
+	void allSharedContactsPerUser();
+
+	void contactsBasedOnPropertiesAndValues();
+	
+	
+	
 
 }
