@@ -1,5 +1,9 @@
 package de.hdm.Connected.server;
 
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
+import de.hdm.Connected.shared.ReportGeneratorService;
+
 /**
  * 
  * @author Patricia
@@ -8,6 +12,36 @@ package de.hdm.Connected.server;
  *
  */
 
-public class ReportGeneratorServiceImpl {
+public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements ReportGeneratorService{
+
+	@Override
+	public void allContacts() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void allContactsPerUser() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void allSharedContacts() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void allSharedContactsPerUser() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void contactsBasedOnPropertiesAndValues() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
