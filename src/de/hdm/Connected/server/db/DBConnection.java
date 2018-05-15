@@ -26,7 +26,7 @@ public class DBConnection {
 
 	private static String googleUrl = "";
 
-	private static String TestUrl = "";
+	private static String TestUrl = "jdbc:mysql://localhost:3306/itp_test?user=root&password=12345";
 
 	/**
 	 * Stellt die Verbindung zur Datenbank her.

@@ -82,8 +82,8 @@ public class ContactMapper {
 			/**
 			 * SQL-Anweisung zum Einfuegen des neuen Contact-Tupels in die Datenbank.
 			 */
-			stmt.executeUpdate("INSERT INTO contact (id, prename, surname) VALUES (" + contact.getBoId() + ", '"
-					+ contact.getPrename() + "', " + contact.getSurname() + ")");
+			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, userId) VALUES (" + contact.getBoId() + ", '"
+					+ contact.getPrename() + "', " + contact.getSurname() + "', " + contact.getCreatorId() + ")");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
 			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
