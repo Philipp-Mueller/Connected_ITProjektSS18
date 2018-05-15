@@ -3,6 +3,8 @@ package de.hdm.Connected.client.gui;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -45,6 +47,7 @@ public class ContactForm extends Widget {
 	ArrayList<Property> propertyArray = new ArrayList<Property>();
 	ArrayList<ListBox> selectedProperties = new ArrayList<ListBox>();
 	ArrayList<TextBox> insertValue = new ArrayList<TextBox>();
+	Map <ListBox, TextBox> valuesMap = new HashMap<ListBox, TextBox>();
 	
 	/**
 	 * Konstruktor wenn ein Kontakt schon existiert.
@@ -146,7 +149,7 @@ public class ContactForm extends Widget {
 					public void onSuccess(Contact result) {
 						
 						RootPanel.get("content").add(new ContactForm(result));
-						String[][] propertyvalue = new String[propertyArray.size()][2];
+						
 						
 					}
 					
@@ -207,7 +210,7 @@ public class ContactForm extends Widget {
 
 		@Override
 		public void onClick(ClickEvent event) {
-			if(propertyListBox !=null) {selectedProperties.add(propertyListBox); insertValue.add(propertyTextBox);}
+			//if(propertyListBox !=null) {selectedProperties.add(propertyListBox); insertValue.add(propertyTextBox);}
 			// wennn kein "+" Button dann den addbutton entfernen sonst den "+" Button entfernen
 			if(addButton != null){
 				propertyPanel.remove(addButton);
@@ -220,6 +223,7 @@ public class ContactForm extends Widget {
 				addButton2 = null;
 			}
 			propertyListBox = new ListBox();
+			Property juega = new Property();
 			propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
 			propertyListBox.addItem("alles cool");
 			propertyPanel.add(propertyListBox);
@@ -228,6 +232,8 @@ public class ContactForm extends Widget {
 			addButton2 = new Button("+");
 			propertyPanel.add(addButton2);
 			addButton2.addClickHandler(new addNewPropertyClickHandler());
+			valuesMap.put(propertyListBox, propertyTextBox);
+			//valuesMap.forEach(propertyListBox.getItemText(forEach())));
 			/*TextBox testBox = new TextBox();
 			for(int i =0 ; i<selectedProperties.size(); i++){
 			testBox.setText(selectedProperties.get(i).getSelectedItemText());
