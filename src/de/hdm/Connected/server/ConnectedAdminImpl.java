@@ -297,6 +297,11 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public ArrayList<Property> findAllProperties() throws IllegalArgumentException {
 		return this.propertyMapper.findAllProperties();
 	}
+	
+	@Override
+	public ArrayList<Contact> findAllContacts() throws IllegalArgumentException{
+		return this.contactMapper.findAll();
+	}
 
 	@Override
 	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException {
@@ -310,4 +315,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return null;
 	}
 
+	//public ArrayList<ContactList> findAllContactlists() throws IllegalArgumentException{
+		//return this.contactListMapper.findAll();
+	//}
 }

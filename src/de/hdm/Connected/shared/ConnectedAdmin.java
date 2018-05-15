@@ -252,9 +252,23 @@ public interface ConnectedAdmin extends RemoteService {
 	public void removeAccessToObject(int userId, int shareObjectId) throws IllegalArgumentException;
 	
 	/**
-	 * Gibt alle Properties zurückk
+	 * Gibt alle Properties zurück
 	 * 
 	 * @throws IllegalArgumentException
 	 */
 	public ArrayList<Property> findAllProperties() throws IllegalArgumentException;
+	
+	/**
+	 * Gibt alle Contacts zurück
+	 * 
+	 * @throws IllegalArgumentException
+	 */
+	public ArrayList<Contact> findAllContacts() throws IllegalArgumentException;
+	
+	/**
+	 * Gibt alle Contactlists zurück
+	 * 
+	 * @throws IllegalArgumentException
+	 */
+	public ArrayList<ContactList> findAllContactlists () throws IllegalArgumentException;
 }

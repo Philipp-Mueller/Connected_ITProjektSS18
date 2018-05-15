@@ -78,4 +78,8 @@ public interface ConnectedAdminAsync {
 	
 	void findAllProperties(AsyncCallback<ArrayList<Property>> callback);
 	
+	void findAllContacts(AsyncCallback<ArrayList<Contact>> callback);
+	
+	void findAllContactlists(AsyncCallback<ArrayList<ContactList>> callback);
+	
 }
