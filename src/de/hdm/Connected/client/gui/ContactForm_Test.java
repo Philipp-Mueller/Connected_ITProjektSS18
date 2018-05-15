@@ -197,6 +197,7 @@ public class ContactForm_Test extends Widget{
 				// TODO Auto-generated method stub
 				ClientSideSettings.getLogger().severe("Konnte nicht laden");
 				Window.alert("Da ist wohl etwas schief gelaufen");
+				
 			}
 
 			public void onSuccess(ArrayList<Property> result) {
@@ -214,6 +215,7 @@ public class ContactForm_Test extends Widget{
 									
 				}
 				propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
+				
 			}
 			
 		}
@@ -223,9 +225,12 @@ public class ContactForm_Test extends Widget{
 
 			@Override
 			public void onClick(ClickEvent event) {
-				
+				try{
 				ClientSideSettings.getConnectedAdmin().findAllProperties(new findAllPropertiesCallback());
-				
+				} catch (Exception e) {
+					Window.alert(e.toString());
+					e.printStackTrace();
+				}
 				
 				//if(propertyListBox !=null) {selectedProperties.add(propertyListBox); insertValue.add(valueTextBox);}
 				// wennn kein "+" Button dann den addbutton entfernen sonst den "+" Button entfernen
@@ -246,9 +251,7 @@ public class ContactForm_Test extends Widget{
 				//propertyListBox = new ListBox();
 				valueTextBox = new TextBox();
 			
-								
-				propertyListBox.addItem("laalalla");
-						
+							
 				propertyTable.setWidget(rowCount, 0, propertyListBox);
 				propertyTable.setWidget(rowCount, 1, valueTextBox);
 				propertyTable.setWidget(rowCount, 2, newPropertyBtn);

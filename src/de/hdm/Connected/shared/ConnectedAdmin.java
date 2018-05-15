@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.ContactList;
@@ -18,6 +19,7 @@ import de.hdm.Connected.shared.bo.Value;
  * @author Denise, Moritz
  *
  */
+@RemoteServiceRelativePath("connectedadmin")
 public interface ConnectedAdmin extends RemoteService {
 
 	/**
