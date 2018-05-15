@@ -315,6 +315,12 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return null;
 	}
 
+	@Override
+	public ArrayList<ContactList> findAllContactlists() throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	//public ArrayList<ContactList> findAllContactlists() throws IllegalArgumentException{
 		//return this.contactListMapper.findAll();
 	//}
