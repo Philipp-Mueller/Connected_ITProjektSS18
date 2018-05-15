@@ -25,9 +25,15 @@ public class Contact extends SharedObject{
 	 */
 	private int creatorId= 0;
 	
+	/**
+	 * Realisierung der Beziehung zu einer Contactlist durch einen Fremdschlüssel.
+	 */
+	//@Moritz Musste ich anlegen für die Impl.
+	
+	private int contactListId= 0;
 	
 	private Timestamp creationDate = new Timestamp(System.currentTimeMillis());
-	
+	private Timestamp modificationDate= new Timestamp(System.currentTimeMillis());
 	
 	/**
 	 * @return the surname
@@ -76,6 +82,30 @@ public class Contact extends SharedObject{
 	 */
 	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
+	}
+	/**
+	 * @return the modificationDate
+	 */
+	public Timestamp getModificationDate() {
+		return modificationDate;
+	}
+	/**
+	 * @param modificationDate the modificationDate to set
+	 */
+	public void setModificationDate(Timestamp modificationDate) {
+		this.modificationDate = modificationDate;
+	}
+	/**
+	 * @return the contactListId
+	 */
+	public int getContactListId() {
+		return contactListId;
+	}
+	/**
+	 * @param contactListId the contactListId to set
+	 */
+	public void setContactListId(int contactListId) {
+		this.contactListId = contactListId;
 	}
 	
 }

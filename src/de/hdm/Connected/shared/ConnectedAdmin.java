@@ -233,7 +233,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @param contactId, contactlistId
 	 * @throws IllegalArgumentException
 	 */
-	public void addContactToContactList(int contactId, int contactlistId) throws IllegalArgumentException;
+	public void addContactToContactList(Contact contact, ContactList contactlist) throws IllegalArgumentException;
 	
 	/**
 	 * Entfernt ein Contact einer ContactList
@@ -241,7 +241,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @param contactId, contactlistId
 	 * @throws IllegalArgumentException
 	 */
-	public void removeContactFromContactList(int contactId, int contactlistid) throws IllegalArgumentException;
+	public void removeContactFromContactList(Contact contact, ContactList contactlist) throws IllegalArgumentException;
 	
 	/**
 	 * Löscht die Permission des Users auf das Objekt
