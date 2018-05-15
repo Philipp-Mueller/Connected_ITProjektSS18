@@ -311,5 +311,13 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public ArrayList<Property> findAllProperties() throws IllegalArgumentException {
 		return this.propertyMapper.findAllProperties();
 	}
+	
+	@Override
+	public ArrayList<Contact> findAllContacts() throws IllegalArgumentException{
+		return this.contactMapper.findAll();
+	}
 
+	//public ArrayList<ContactList> findAllContactlists() throws IllegalArgumentException{
+		//return this.contactListMapper.findAll();
+	//}
 }
