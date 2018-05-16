@@ -273,4 +273,6 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public ArrayList<ContactList> findAllContactlists () throws IllegalArgumentException;
+
+	ArrayList<Contact> getContacts() throws IllegalArgumentException;
 }
