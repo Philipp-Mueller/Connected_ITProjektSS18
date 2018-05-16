@@ -90,14 +90,14 @@ public class ContactForm_Test extends Widget{
 					
 			RootPanel.get("content").add(topPanel);
 		
-			propertyPanel.add(new HTML ("<h3> Vorname: </h3>"));	
+			propertyTable.setWidget(0, 0,new HTML ("<h3> Vorname: </h3>"));	
+			propertyTable.setWidget(0, 1, firstNameBox);
+			propertyTable.setWidget(1, 0, new HTML ("<h3> Nachname: </h3>"));
+			propertyTable.setWidget(1, 1, surnameBox);
+			propertyPanel.add(addButton);
 			
-			valuePanel.add(firstNameBox);
 			
-			propertyPanel.add(new HTML ("<h3> Nachname: </h3>"));
-			
-			valuePanel.add(surnameBox);
-			
+	
 			
 			//Eigenschaft "+" hinzufügen mit ListBox für Vorgaben bzw. für eigene des Users
 			
@@ -108,7 +108,7 @@ public class ContactForm_Test extends Widget{
 			
 			RootPanel.get("content").add(itemPanel);
 			RootPanel.get("content").add(propertyTable);
-			propertyTable.setWidget(0, 0, addButton);
+		
 			HorizontalPanel bottomPanel = new HorizontalPanel();
 			
 			/**
@@ -137,7 +137,7 @@ public class ContactForm_Test extends Widget{
 
 						@Override
 						public void onSuccess(Contact result) {
-						
+						try{
 							Iterator<Widget> propertyWidgets = propertyTable.iterator();
 							while(propertyWidgets.hasNext()){
 								Widget ch = propertyWidgets.next();
@@ -152,9 +152,12 @@ public class ContactForm_Test extends Widget{
 							}
 							
 							for(int i = 0; i<selectedProperties.size(); i++){
+								
 								ClientSideSettings.getConnectedAdmin().createValue(values.get(i).getText() ,selectedProperties.get(i).getSelectedIndex(), result.getBoId(), new createValueCallback());
-							}
-									
+																}
+							}catch (Exception e) {
+								Window.alert(e.toString());
+								e.printStackTrace(); }
 							/*for(int i = 0; i<=propertyTable.getRowCount(); i++){
 								widgetMap.put(propertyTable.getWidget(i, 0), propertyTable.getWidget(i,  1));
 							}
@@ -194,7 +197,7 @@ public class ContactForm_Test extends Widget{
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
+			
 				ClientSideSettings.getLogger().severe("Konnte nicht laden");
 				Window.alert("Da ist wohl etwas schief gelaufen");
 				
@@ -202,19 +205,20 @@ public class ContactForm_Test extends Widget{
 
 			public void onSuccess(ArrayList<Property> result) {
 				//alle Eigenschaften in Vektor laden
-				propertyListBox = new ListBox();
+					propertyListBox = new ListBox();
 				for (int i = 0; i < result.size(); i++) {
 					Property propertyItem = result.get(i);
 					
 					if(propertyItem.getName() != "Vorname" || propertyItem.getName() != "Nachname"){
 						
-					propertyArray.add(propertyItem);}
-					propertyListBox.addItem(propertyItem.getName());
+					propertyArray.add(propertyItem);
+					propertyListBox.addItem(propertyItem.getName());}
 					
 					
 									
 				}
 				propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
+			
 				
 			}
 			
@@ -234,9 +238,9 @@ public class ContactForm_Test extends Widget{
 				
 				//if(propertyListBox !=null) {selectedProperties.add(propertyListBox); insertValue.add(valueTextBox);}
 				// wennn kein "+" Button dann den addbutton entfernen sonst den "+" Button entfernen
-				int rowCount = propertyTable.getRowCount();
+				
 				if(addButton != null){
-					propertyTable.remove(addButton);
+				addButton.removeFromParent();
 					//propertyTable.setWidget(rowCount, 0, propertyListBox);
 					addButton = null;
 					
@@ -244,14 +248,14 @@ public class ContactForm_Test extends Widget{
 				}
 				else{
 					newPropertyBtn.removeFromParent();
-					newPropertyBtn = null;
+					newPropertyBtn = null;					
 				}
 			
 				newPropertyBtn = new Button("+");
 				//propertyListBox = new ListBox();
 				valueTextBox = new TextBox();
 			
-							
+				int rowCount = propertyTable.getRowCount();			
 				propertyTable.setWidget(rowCount, 0, propertyListBox);
 				propertyTable.setWidget(rowCount, 1, valueTextBox);
 				propertyTable.setWidget(rowCount, 2, newPropertyBtn);
