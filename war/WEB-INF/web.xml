@@ -12,7 +12,7 @@
     
   
   
-  <!-- Servlets -->
+  <!--connected Servlets -->
   <servlet>
     <servlet-name>connectedAdminImpl</servlet-name>
     <servlet-class>de.hdm.Connected.server.ConnectedAdminImpl</servlet-class>
@@ -20,7 +20,7 @@
   
   <servlet-mapping>
     <servlet-name>connectedAdminImpl</servlet-name>
-    <url-pattern>/connected_itprojektss18/connectedadministration</url-pattern>
+    <url-pattern>/connectedadmin</url-pattern>
   </servlet-mapping>
   
 
