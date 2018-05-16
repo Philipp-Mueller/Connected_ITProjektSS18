@@ -205,7 +205,7 @@ public class ContactForm_Test extends Widget{
 
 			public void onSuccess(ArrayList<Property> result) {
 				//alle Eigenschaften in Vektor laden
-					propertyListBox = new ListBox();
+				propertyListBox = new ListBox();
 				for (int i = 0; i < result.size(); i++) {
 					Property propertyItem = result.get(i);
 					
@@ -218,7 +218,8 @@ public class ContactForm_Test extends Widget{
 									
 				}
 				propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
-			
+				int rowCount = propertyTable.getRowCount();			
+				propertyTable.setWidget(rowCount-1, 0, propertyListBox);
 				
 			}
 			
@@ -229,12 +230,8 @@ public class ContactForm_Test extends Widget{
 
 			@Override
 			public void onClick(ClickEvent event) {
-				try{
+				
 				ClientSideSettings.getConnectedAdmin().findAllProperties(new findAllPropertiesCallback());
-				} catch (Exception e) {
-					Window.alert(e.toString());
-					e.printStackTrace();
-				}
 				
 				//if(propertyListBox !=null) {selectedProperties.add(propertyListBox); insertValue.add(valueTextBox);}
 				// wennn kein "+" Button dann den addbutton entfernen sonst den "+" Button entfernen
@@ -256,7 +253,7 @@ public class ContactForm_Test extends Widget{
 				valueTextBox = new TextBox();
 			
 				int rowCount = propertyTable.getRowCount();			
-				propertyTable.setWidget(rowCount, 0, propertyListBox);
+				//propertyTable.setWidget(rowCount, 0, propertyListBox);
 				propertyTable.setWidget(rowCount, 1, valueTextBox);
 				propertyTable.setWidget(rowCount, 2, newPropertyBtn);
 				
