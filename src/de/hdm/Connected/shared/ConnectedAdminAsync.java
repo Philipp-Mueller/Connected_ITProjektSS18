@@ -81,5 +81,7 @@ public interface ConnectedAdminAsync {
 	void findAllContacts(AsyncCallback<ArrayList<Contact>> callback);
 	
 	void findAllContactlists(AsyncCallback<ArrayList<ContactList>> callback);
+
+	void getContacts(AsyncCallback<ArrayList<Contact>> callback);
 	
 }
