@@ -52,7 +52,8 @@ public class ContactForm_Test extends Widget {
 	FlexTable propertyTable = new FlexTable();
 
 	ArrayList<Property> propertyArray = new ArrayList<Property>();
-	ArrayList<Property> selectedProperties = new ArrayList<Property>();
+	ArrayList<Integer> selectedProperties = new ArrayList<Integer>();
+	ArrayList<String> propertyValueArray = new ArrayList<String>();
 	ArrayList<TextBox> values = new ArrayList<TextBox>();
 	Map<Integer, String> valuesMap = new HashMap<Integer, String>();
 	Map<Widget, Widget> widgetMap = new HashMap<Widget, Widget>();
@@ -92,7 +93,7 @@ public class ContactForm_Test extends Widget {
 		nameTable.setWidget(0, 1, firstNameBox);
 		nameTable.setWidget(1, 0, new HTML("<h3> Nachname: </h3>"));
 		nameTable.setWidget(1, 1, surnameBox);
-		nameTable.setWidget(2, 0 , addButton);
+		nameTable.setWidget(2, 0, addButton);
 		// Eigenschaft "+" hinzufügen mit ListBox für Vorgaben bzw. für eigene
 		// des Users
 
@@ -135,14 +136,16 @@ public class ContactForm_Test extends Widget {
 								try {
 									Iterator<Widget> propertyWidgets = propertyTable.iterator();
 
-									for (int i = 0; i < propertyArray.size();i++) {
+									
 										while (propertyWidgets.hasNext()) {
 											Widget ch = propertyWidgets.next();
 											if (ch instanceof ListBox) {
 												ListBox propertyListBox = (ListBox) ch;
+												for (int i = 0; i < propertyArray.size();i++) {
 												if (propertyListBox.getSelectedItemText() == propertyArray.get(i)
 														.getName()) {
-													selectedProperties.add(propertyArray.get(i));
+													selectedProperties.add(propertyArray.get(i).getBoId());
+												}
 												}
 
 											} else if (ch instanceof TextBox) {
@@ -152,12 +155,12 @@ public class ContactForm_Test extends Widget {
 										Window.alert(Integer.toString(propertyArray.size()));
 										
 										}
-									}
+									
 
 									for (int i = 0; i < selectedProperties.size(); i++) {
 
 										ClientSideSettings.getConnectedAdmin().createValue(values.get(i).getText(),
-												selectedProperties.get(i).getBoId(), result.getBoId(),
+												selectedProperties.get(i), result.getBoId(),
 												new createValueCallback());
 									}
 								} catch (Exception e) {
@@ -212,12 +215,13 @@ public class ContactForm_Test extends Widget {
 
 		public void onSuccess(ArrayList<Property> result) {
 			// alle Eigenschaften in Vektor laden
+
 			propertyListBox = new ListBox();
 			for (int i = 0; i < result.size(); i++) {
 				Property propertyItem = result.get(i);
 
 				if (propertyItem.getName() != "Vorname" || propertyItem.getName() != "Nachname") {
-					
+
 					propertyArray.add(propertyItem);
 					propertyListBox.addItem(propertyArray.get(i).getName());
 				}
@@ -265,6 +269,7 @@ public class ContactForm_Test extends Widget {
 			propertyTable.setWidget(rowCount, 2, newPropertyBtn);
 
 			newPropertyBtn.addClickHandler(new addNewPropertyClickHandler());
+			propertyArray.clear();
 
 			/*
 			 * newPropertyBtn = new Button("+");
