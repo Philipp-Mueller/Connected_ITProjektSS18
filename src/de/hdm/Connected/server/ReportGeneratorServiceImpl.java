@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+import de.hdm.Connected.shared.ConnectedAdmin;
 import de.hdm.Connected.shared.ReportGeneratorService;
 import de.hdm.Connected.shared.bo.Contact;
 
@@ -16,9 +17,27 @@ import de.hdm.Connected.shared.bo.Contact;
  */
 
 public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements ReportGeneratorService{
+	
+	private ConnectedAdmin adminImpl = null;
+	
+	/*
+	 * Init ist eine Initialisierungsmethode, welche für jede Instanz der 
+	 * ReportGeneratorServiceImpl gerufen werden muss.
+	 */
+	public void init() throws IllegalArgumentException {
+		if (adminImpl == null){
+			adminImpl = new ConnectedAdminImpl();
+		}
+				
+	}
+	
+	
+	
 
 	@Override
 	public List<Contact> allContacts() {
+		
+		
 		return null;
 		// TODO Auto-generated method stub
 		
@@ -27,6 +46,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 	@Override
 	public void allContactsPerUser() {
 		// TODO Auto-generated method stub
+		
 		
 	}
 
