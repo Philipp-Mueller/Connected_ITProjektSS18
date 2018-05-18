@@ -22,6 +22,16 @@
     <servlet-name>connectedAdminImpl</servlet-name>
     <url-pattern>/connectedadmin</url-pattern>
   </servlet-mapping>
-  
+
+
+  <servlet>
+    <servlet-name>ReportGeneratorServiceImpl</servlet-name>
+    <servlet-class>de.hdm.Connected.server.ReportGeneratorServiceImpl</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ReportGeneratorServiceImpl</servlet-name>
+    <url-pattern>/connectedreportgenerator</url-pattern>
+  </servlet-mapping>
 
 </web-app>
