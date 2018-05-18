@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import de.hdm.Connected.shared.bo.Contact;
+import de.hdm.Connected.shared.bo.Permission;
 
 /**
  * 
@@ -16,15 +17,10 @@ import de.hdm.Connected.shared.bo.Contact;
 public interface ReportGeneratorService extends RemoteService {
 
 	List<Contact> allContacts();
-	
-
-	void allContactsPerUser();
-
-	void allSharedContacts();
-
-	void allSharedContactsPerUser();
-
-	void contactsBasedOnPropertiesAndValues();
+	List<Contact> allContactsPerUser(int userId);
+	List<Permission> allSharedContacts();
+	List<Permission> allSharedContactsPerUser(int userId);
+	List<Contact> contactsBasedOnPropertiesAndValues(int propertyId, int valueId);
 	
 	
 	
