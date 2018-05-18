@@ -8,6 +8,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import de.hdm.Connected.shared.CommonSettings;
 import de.hdm.Connected.shared.ConnectedAdmin;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
+import de.hdm.Connected.shared.ReportGeneratorService;
+import de.hdm.Connected.shared.ReportGeneratorServiceAsync;
 import de.hdm.Connected.shared.bo.User;
 
 /**
@@ -38,7 +40,7 @@ public class ClientSideSettings extends CommonSettings {
 	   * <code>ReportGenerator</code> hergestellt.
 	   */
 	  
-	//TODO   private static ReportGeneratorAsync reportGenerator = null;
+	 private static ReportGeneratorServiceAsync reportGenerator = null;
 
 	  /**
 	   * Name des Client-Loggers.
@@ -91,10 +93,10 @@ public class ClientSideSettings extends CommonSettings {
 	   * @return eindeutige Instanz des Typs <code>ReportGeneratorAsync</code>
 	   * @author Philipp
 	   */
-	/* TODO wenn Klassen vorhanden  public static ReportGeneratorAsync getReportGenerator() {
+	public static ReportGeneratorServiceAsync getReportGenerator() {
 	    if (reportGenerator == null) {
 	      // Instantiierung von ReportGenerator
-	      reportGenerator = GWT.create(ReportGenerator.class);
+	      reportGenerator = GWT.create(ReportGeneratorService.class);
 
 	      final AsyncCallback<Void> initReportGeneratorCallback = new AsyncCallback<Void>() {
 	        @Override
@@ -116,7 +118,7 @@ public class ClientSideSettings extends CommonSettings {
 	    // Rückgabe des ReportGenerator
 	    return reportGenerator;
 	  }
-*/
+
 	public static User getCurrentUser() {
 		return currentUser;
 	}

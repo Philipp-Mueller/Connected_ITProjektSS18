@@ -21,6 +21,7 @@ public interface ReportGeneratorService extends RemoteService {
 	List<Permission> allSharedContacts();
 	List<Permission> allSharedContactsPerUser(int userId);
 	List<Contact> contactsBasedOnPropertiesAndValues(int propertyId, int valueId);
+	void init();
 	
 	
 	
