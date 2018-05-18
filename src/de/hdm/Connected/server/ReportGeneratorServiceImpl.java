@@ -31,24 +31,20 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 				
 	}
 	
-	
-	
 
 	@Override
-	public List<Contact> allContacts() {
-		
-		
+	public List<Contact> allContacts() {	
 		return null;
 		// TODO Auto-generated method stub
-		
 	}
 
+	
 	@Override
 	public void allContactsPerUser() {
-		// TODO Auto-generated method stub
-		
-		
+		int id= 0;
+		adminImpl.findContactsByOwnerId(id);
 	}
+	
 
 	@Override
 	public void allSharedContacts() {
