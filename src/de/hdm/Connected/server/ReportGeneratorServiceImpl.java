@@ -7,6 +7,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import de.hdm.Connected.shared.ConnectedAdmin;
 import de.hdm.Connected.shared.ReportGeneratorService;
 import de.hdm.Connected.shared.bo.Contact;
+import de.hdm.Connected.shared.bo.Permission;
 
 /**
  * 
@@ -34,32 +35,35 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 
 	@Override
 	public List<Contact> allContacts() {	
+	// TODO
+		//adminImpl.findAllContacts();
+		return null;
+	}
+
+	
+	@Override
+	public List<Contact> allContactsPerUser(int userid) {
+		return adminImpl.findContactsByOwnerId(userid);
+	}
+	
+
+	@Override
+	public List<Permission> allSharedContacts() {
 		return null;
 		// TODO Auto-generated method stub
+		
 	}
 
-	
 	@Override
-	public void allContactsPerUser() {
-		int id= 0;
-		adminImpl.findContactsByOwnerId(id);
-	}
-	
-
-	@Override
-	public void allSharedContacts() {
+	public List<Permission> allSharedContactsPerUser(int userId) {
+		return null;
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void allSharedContactsPerUser() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void contactsBasedOnPropertiesAndValues() {
+	public List<Contact> contactsBasedOnPropertiesAndValues(int propertyId, int valueId) {
+		return null;
 		// TODO Auto-generated method stub
 		
 	}
