@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import com.google.appengine.labs.repackaged.com.google.common.collect.Multiset.Entry;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -39,6 +41,7 @@ public class ContactForm_Test extends Widget {
 	TextBox firstNameBox = new TextBox();
 	Label surnameLabel = new Label("Nachname:");
 	TextBox surnameBox = new TextBox();
+	TextBox newPropertyTextBox = null;
 	ListBox propertyListBox = null;
 	TextBox valueTextBox = null;
 	Button addButton = new Button("weitere Eigenschaften hinzufügen");
@@ -136,32 +139,29 @@ public class ContactForm_Test extends Widget {
 								try {
 									Iterator<Widget> propertyWidgets = propertyTable.iterator();
 
-									
-										while (propertyWidgets.hasNext()) {
-											Widget ch = propertyWidgets.next();
-											if (ch instanceof ListBox) {
-												ListBox propertyListBox = (ListBox) ch;
-												for (int i = 0; i < propertyArray.size();i++) {
+									while (propertyWidgets.hasNext()) {
+										Widget ch = propertyWidgets.next();
+										if (ch instanceof ListBox) {
+											ListBox propertyListBox = (ListBox) ch;
+											for (int i = 0; i < propertyArray.size(); i++) {
 												if (propertyListBox.getSelectedItemText() == propertyArray.get(i)
 														.getName()) {
 													selectedProperties.add(propertyArray.get(i).getBoId());
 												}
-												}
-
-											} else if (ch instanceof TextBox) {
-												TextBox valueTextBox = (TextBox) ch;
-												values.add(valueTextBox);
 											}
-										Window.alert(Integer.toString(propertyArray.size()));
-										
+
+										} else if (ch instanceof TextBox) {
+											TextBox valueTextBox = (TextBox) ch;
+											values.add(valueTextBox);
 										}
-									
+										Window.alert(Integer.toString(propertyArray.size()));
+
+									}
 
 									for (int i = 0; i < selectedProperties.size(); i++) {
 
 										ClientSideSettings.getConnectedAdmin().createValue(values.get(i).getText(),
-												selectedProperties.get(i), result.getBoId(),
-												new createValueCallback());
+												selectedProperties.get(i), result.getBoId(), new createValueCallback());
 									}
 								} catch (Exception e) {
 									Window.alert(e.toString());
@@ -228,6 +228,7 @@ public class ContactForm_Test extends Widget {
 
 			}
 			propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
+			propertyListBox.addChangeHandler(new listBoxChangeHandler());
 			int rowCount = propertyTable.getRowCount();
 			propertyTable.setWidget(rowCount - 1, 0, propertyListBox);
 
@@ -334,4 +335,59 @@ public class ContactForm_Test extends Widget {
 
 	}
 
+	// ---------------------Change Handler der
+	// Eigenschafts-Listboxen------------------------------
+
+	private class listBoxChangeHandler implements ChangeHandler {
+
+		@Override
+		public void onChange(ChangeEvent event) {
+			// TODO Auto-generated method stub
+			if (propertyListBox.getSelectedItemText().equals("oder neue Eigenschaft hinzufügen...")) {
+				int rowCount = propertyTable.getRowCount();
+				propertyTable.removeRow(rowCount - 1);
+				newPropertyTextBox = new TextBox();
+				Button propertySaveButton = new Button("Speichern");
+				propertySaveButton.addClickHandler(new savePropertyClickHandler());
+				propertyTable.setWidget(rowCount, 0, new HTML("Eigenschaftsname:"));
+				propertyTable.setWidget(rowCount, 1, newPropertyTextBox);
+				propertyTable.setWidget(rowCount, 2, propertySaveButton);
+			}
+
+		}
+
+	}
+
+	// ---------------------Click Handler für den neue Eigenschaft speichern
+	// Button----------------------
+
+	private class savePropertyClickHandler implements ClickHandler {
+
+		@Override
+		public void onClick(ClickEvent event) {
+			// TODO Auto-generated method stub
+			ClientSideSettings.getConnectedAdmin().createProperty(newPropertyTextBox.getText(),
+					new AsyncCallback<Property>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert("Eigenschaft nicht gespeichert");
+
+						}
+
+						@Override
+						public void onSuccess(Property result) {
+							propertyArray.add(result);
+							propertyListBox.setItemText(propertyListBox.getItemCount() - 1, result.getName());
+							int rowCount = propertyTable.getRowCount();
+							propertyTable.removeRow(rowCount - 1);
+							propertyTable.setWidget(rowCount, 0, propertyListBox);
+							propertyTable.setWidget(rowCount, 1, valueTextBox);
+							propertyTable.setWidget(rowCount, 2, newPropertyBtn);
+
+						}
+
+					});
+		}
+	}
 }
