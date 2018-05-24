@@ -7,6 +7,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import de.hdm.Connected.server.db.ContactListMapper;
 import de.hdm.Connected.server.db.ContactMapper;
+import de.hdm.Connected.server.db.ContactContactListMapper;
 import de.hdm.Connected.server.db.PermissionMapper;
 import de.hdm.Connected.server.db.PropertyMapper;
 import de.hdm.Connected.server.db.UserMapper;
@@ -99,6 +100,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	// löscht Kontakt mit Values
 	@Override
 	public void deleteContact(Contact contact)throws IllegalArgumentException {
+		// TODO Prüfung Permission bzw kann nur die selbst erstellten Kontakte löschen oder Fremdkontakte bei sich löschen --> eigene Permission löschen
 		ArrayList<Value> values = this.findValuesByContactId(contact.getBoId());
 		
 		if (values != null){
@@ -134,7 +136,8 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public ContactList findContactListById(int id) throws IllegalArgumentException {
 		return this.contactListMapper.findById(id);
 	*/
-
+	
+	//erstellt Kontaktliste
 	@Override
 	public ContactList createContactList(String name){
 		ContactList contactList = new ContactList();
@@ -150,15 +153,19 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	
 	@Override
 	public void addContactToContactList(Contact contact, ContactList contactlist) throws IllegalArgumentException {
-		contact.setContactListId(contactlist.getBoId());	
+		contact.setContactListId(contactlist.getBoId());
 	}
 	
-	@Override
+	
+/*	@Override
 	public void removeContactFromContactList(Contact contact, ContactList contactlist) throws IllegalArgumentException {
-		
-	}
+		Contact currentContact = contact;
+		contact.setContactListId(0);
+		contactMapper.update(currentContact);
+	}*/
 	// Mapper muss erstellt werden für n:m Beziehung contact zu Contactlist
 /*	@Override
+ * 
 	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException {
 		ArrayList <Contact> contacts = this.findAllContacts();
 				
