@@ -19,7 +19,7 @@ public class ContactContactListMapper {
 	 * @return contactList
 	 */
 	
-	public ContactList addContacttoContactList(ContactList contactList, Contact contact) {
+	public void addContacttoContactList(ContactList contactList, Contact contact) {
 		Connection con = DBConnection.connection();
 		
 		try {
@@ -41,7 +41,7 @@ public class ContactContactListMapper {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return contactList;
+		
 	}
 	
 	/**
