@@ -244,6 +244,8 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public void removeContactFromContactList(Contact contact, ContactList contactlist) throws IllegalArgumentException;
+			
+	
 	
 	/**
 	 * Löscht die Permission des Users auf das Objekt
