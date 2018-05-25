@@ -35,8 +35,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 
 	@Override
 	public List<Contact> allContacts() {	
-	// TODO
-		//adminImpl.findAllContacts();
+		adminImpl.findAllContacts();
 		return null;
 	}
 
@@ -49,6 +48,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 
 	@Override
 	public List<Permission> allSharedContacts() {
+		//adminImpl.
 		return null;
 		// TODO Auto-generated method stub
 		
@@ -56,8 +56,8 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 
 	@Override
 	public List<Permission> allSharedContactsPerUser(int userId) {
+		adminImpl.findPermissionsByUserId(userId);
 		return null;
-		// TODO Auto-generated method stub
 		
 	}
 
