@@ -4,7 +4,7 @@
 import java.util.ArrayList;
 
 import de.hdm.Connected.shared.bo.ContactList;
- 
+
  /**
   * Die Klasse ContactListMapper bildet ContactList-Objekte auf eine relationale Datenbank
   * ab. Ebenfalls ist es moeglich aus Datenbank-Tupel Java-Objekte zu erzeugen.
@@ -240,5 +240,49 @@ public class ContactListMapper {
 			e2.printStackTrace();
 	}
 		return result;
-}
+	}
+	
+	/**
+	 * Findet alle ContactList-Objekte in der Datenbank.
+	 * 
+	 * @return ArrayList<ContactList>
+	 */
+	
+	public ArrayList<ContactList> findAllContactLists() {
+		//DB-Verbindung holen
+		Connection con = DBConnection.connection();
+
+		ArrayList<ContactList> result = new ArrayList<ContactList>();
+		
+		try {
+			// Leeres SQL-Statement (JDBC) anlegen
+			Statement stmt = con.createStatement();
+			
+			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der Id in der Datenbank
+			ResultSet rs = stmt.executeQuery("SELECT id, name FROM contactlist ORDER BY id");
+			/**
+			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
+			 * Tabelle contactlist vorhanden ist, muss das Abfragen des ResultSet so
+			 * oft erfolgen (while-Schleife), bis alle Tupel durchlaufen wurden.
+			 * Die DB-Tupel werden in Java-Objekte transformiert und
+			 * anschliessend der ArrayList hinzugefügt.
+			 */
+
+			while (rs.next()) {
+				ContactList contactlist = new ContactList();
+				contactlist.setBoId(rs.getInt("id"));
+				contactlist.setName(rs.getString("name"));
+				result.add(contactlist);
+			}
+			/**
+			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
+			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
+			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
+			 */
+		} catch (SQLException e2) {
+			e2.printStackTrace();
+		}
+		// Rückgabe der ArrayList
+			return result;
+	}
 }
