@@ -1,9 +1,11 @@
 package de.hdm.Connected.server;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+import de.hdm.Connected.server.db.PermissionMapper;
 import de.hdm.Connected.shared.ConnectedAdmin;
 import de.hdm.Connected.shared.ReportGeneratorService;
 import de.hdm.Connected.shared.bo.Contact;
@@ -20,6 +22,7 @@ import de.hdm.Connected.shared.bo.Permission;
 public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements ReportGeneratorService{
 	
 	private ConnectedAdmin adminImpl = null;
+	private PermissionMapper permissionMapper = null;
 	
 	/*
 	 * Init ist eine Initialisierungsmethode, welche für jede Instanz der 
@@ -29,7 +32,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 		if (adminImpl == null){
 			adminImpl = new ConnectedAdminImpl();
 		}
-				
+		this.permissionMapper = permissionMapper.permissionMapper();
 	}
 	
 
@@ -47,10 +50,8 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 	
 
 	@Override
-	public List<Permission> allSharedContacts() {
-		//adminImpl.
-		return null;
-		// TODO Auto-generated method stub
+	public List<Permission> allSharedContacts(int id) throws IllegalArgumentException{
+		return this.permissionMapper.findByContactId(id);
 		
 	}
 

@@ -17,7 +17,7 @@ public interface ReportGeneratorServiceAsync {
 	
 	void allContacts(AsyncCallback callback);
 	void allContactsPerUser(int userId, AsyncCallback<List<Contact>> callback);
-	void allSharedContacts(AsyncCallback callback);
+	void allSharedContacts(int id, AsyncCallback<List<Permission>> callback);
 	void allSharedContactsPerUser(int userId, AsyncCallback<List<Permission>> callback);
 	void contactsBasedOnPropertiesAndValues(int propertyId, int valueId, AsyncCallback<List<Contact>> callback);
 	void init(AsyncCallback<Void> initReportGeneratorCallback);

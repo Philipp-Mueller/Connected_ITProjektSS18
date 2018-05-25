@@ -360,7 +360,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		// TODO Auto-generated method stub
 		
 	}
-
+// (automatisch generiert Päd)
 	@Override
 	public void removeContactFromContactList(Contact contact, ContactList contactlist) throws IllegalArgumentException {
 		// TODO Auto-generated method stub

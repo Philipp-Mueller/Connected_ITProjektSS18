@@ -18,10 +18,10 @@ public interface ReportGeneratorService extends RemoteService {
 
 	List<Contact> allContacts();
 	List<Contact> allContactsPerUser(int userId);
-	List<Permission> allSharedContacts();
 	List<Permission> allSharedContactsPerUser(int userId);
 	List<Contact> contactsBasedOnPropertiesAndValues(int propertyId, int valueId);
 	void init();
+	List<Permission> allSharedContacts(int id) throws IllegalArgumentException;
 	
 	
 	
