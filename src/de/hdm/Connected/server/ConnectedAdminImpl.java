@@ -151,6 +151,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 		return this.contactListMapper.insert(contactList);
 	}
+	
 	@Override
 	public void updateContactList(ContactList contactList) throws IllegalArgumentException {
 		contactListMapper.update(contactList);
@@ -172,32 +173,26 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	}
 	
 	//Löscht Kontaktliste
-	// Prüfung falls UserID ungleich CreatorID ist - Lösche Permission für alle Kontakte aus Kontaktliste 
+	// TODO Prüfung falls UserID ungleich CreatorID ist - Lösche Permission für alle Kontakte aus Kontaktliste 
 	
 	@Override
    	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException {
-		ArrayList <Contact> contacts = this.findContactsByContactListId(contactlist.getBoId());
-						
-		if (contacts != null){
-			for (Contact contact: contacts){
-			}
-		
-		this.contactListMapper.delete(contactlist);
-		}
+			this.contactListMapper.delete(contactlist);
 		}
 		
-	
+		
 
 	@Override
 	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return this.contactMapper.findByContactListId(contactlistId);
+		
 	}
 
 	@Override
 	public ArrayList<ContactList> findAllContactlists() throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return null;
+		return this.contactListMapper.findAllContactLists();
 	}
 
 	/*
