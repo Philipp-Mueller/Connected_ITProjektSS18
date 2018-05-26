@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
+import com.google.appengine.labs.repackaged.com.google.common.collect.Multiset.Entry;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -60,6 +61,10 @@ public class ContactForm_Test extends Widget {
 	Map<Integer, String> valuesMap = new HashMap<Integer, String>();
 	Map<Widget, Widget> widgetMap = new HashMap<Widget, Widget>();
 
+	
+	FlexTable checkboxTable = new FlexTable();
+	CheckBox checkContactlist = new CheckBox();
+	final ListBox contactlist = new ListBox(true);
 	/**
 	 * Konstruktor wenn ein Kontakt schon existiert.
 	 * 
@@ -197,7 +202,38 @@ public class ContactForm_Test extends Widget {
 		});
 
 		bottomPanel.add(cancelButton);
+		
+		
+		checkContactlist.addClickHandler(new ClickHandler() {
 
+			@Override
+			public void onClick(ClickEvent event) {
+			if(checkContactlist.getValue()){
+				contactlist.setEnabled(true);
+				checkboxTable.setWidget(0, 1, new HTML("<h3> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
+			}else {
+				contactlist.setEnabled(false);
+				checkboxTable.setWidget(0, 1, new HTML("<h3 style=\"color:grey;\"> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
+			}
+				
+			}
+			
+		});
+		
+		contactlist.ensureDebugId("cwListBox-multiBox");
+		contactlist.setVisibleItemCount(7);
+		contactlist.addItem("Family");
+		contactlist.addItem("Friends");
+		contactlist.addItem("Relatives");
+		contactlist.setEnabled(false);
+	
+		
+		RootPanel.get("content").add(new HTML("<h3> Kontakt einer Kontaktliste hinzufügen? </h3>"));
+		checkboxTable.setWidget(0, 0, checkContactlist);
+		checkboxTable.setWidget(0, 1, new HTML("<h3 style=\"color:grey;\"> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
+		checkboxTable.setWidget(0, 2, contactlist);
+		
+		RootPanel.get("content").add(checkboxTable);
 		RootPanel.get("content").add(bottomPanel);
 
 	}
