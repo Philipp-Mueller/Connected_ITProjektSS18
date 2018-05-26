@@ -124,12 +124,22 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return this.contactMapper.findByUserId(id);
 	}
 	
-	//Gibt Contact Objekte mit übergebenen Eigenschaftsauprägung zurück
+	//Gibt Contact Objekte mit übergebenen Eigenschaftsausprägung zurück
 	public ArrayList<Contact> findContactsByValue(String value) throws IllegalArgumentException{
 		return this.contactMapper.findByValue(value);
 	}
 	
+	//Gibt Contact Objekte mit übergebenem Vornamen zurück
 	
+	public ArrayList<Contact> findContactsByPrename(String prename) throws IllegalArgumentException {
+		return this.contactMapper.findByPrename(prename);
+	}
+	
+	//Gibt Contact Objekte mit übergebenem Nachnamen zurück 
+	
+	public ArrayList<Contact> findContactsBySurname(String surname)throws IllegalArgumentException {
+		return this.contactMapper.findBySurname(surname);
+	}
 	
 	// *** ContactList ***
 	
@@ -141,7 +151,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 		return this.contactListMapper.insert(contactList);
 	}
-
+	@Override
 	public void updateContactList(ContactList contactList) throws IllegalArgumentException {
 		contactListMapper.update(contactList);
 	}
@@ -348,13 +358,13 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public ArrayList<Property> findAllProperties() throws IllegalArgumentException {
 		return this.propertyMapper.findAllProperties();
 	}
-
+/*
 	@Override
 	public ArrayList<Contact> getContacts() throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		return null;
 	}
-/*
+	
 	@Override
 	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
@@ -367,6 +377,12 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		// TODO Auto-generated method stub
 		
 	} */
+
+	@Override
+	public ArrayList<Contact> getContacts() throws IllegalArgumentException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	/*@Override
 	public ArrayList<Contact> findAllContacts() throws IllegalArgumentException{

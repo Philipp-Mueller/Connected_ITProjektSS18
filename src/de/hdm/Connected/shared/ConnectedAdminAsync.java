@@ -83,5 +83,9 @@ public interface ConnectedAdminAsync {
 	void findAllContactlists(AsyncCallback<ArrayList<ContactList>> callback);
 
 	void getContacts(AsyncCallback<ArrayList<Contact>> callback);
+
+	void findContactsByPrename(String prename, AsyncCallback<ArrayList<Contact>> callback);
+
+	void findContactsBySurname(String surname, AsyncCallback<ArrayList<Contact>> callback);
 	
 }
