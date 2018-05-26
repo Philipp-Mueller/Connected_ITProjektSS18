@@ -57,6 +57,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	private PropertyMapper propertyMapper = null;
 	private UserMapper userMapper = null;
 	private ValueMapper valueMapper = null;
+	private ContactContactListMapper ccMapper = null;
 
 	@Override
 	public void init() throws IllegalArgumentException {
@@ -111,7 +112,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		this.contactMapper.delete(contact);
 	}
 	
-	// gibt alle Contactobjekte zurück
+	// gibt alle Contact Objekte zurück
 	@Override
 	public ArrayList<Contact> findAllContacts() throws IllegalArgumentException{
 		return this.contactMapper.findAll();
@@ -132,10 +133,6 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	
 	// *** ContactList ***
 	
-	/*
-	public ContactList findContactListById(int id) throws IllegalArgumentException {
-		return this.contactListMapper.findById(id);
-	*/
 	
 	//erstellt Kontaktliste
 	@Override
@@ -149,36 +146,37 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		contactListMapper.update(contactList);
 	}
 	
-	// fügt einer Kontaktliste einen Kontakt hinzu
+		// fügt einer Kontaktliste einen Kontakt hinzu
 	
 	@Override
 	public void addContactToContactList(Contact contact, ContactList contactlist) throws IllegalArgumentException {
 		contact.setContactListId(contactlist.getBoId());
+		ccMapper.addContacttoContactList(contactlist, contact);
+	}
+		
+	@Override
+	public void removeContactFromContactList(Contact contact, ContactList contactList) throws IllegalArgumentException {
+		ccMapper.removeContactfromContactList(contactList, contact);
+		contact.setContactListId(0); //TODO Sinnvoll ID auf null zu setzen? 
+		contactMapper.update(contact); // übernimmt er 0 zum updaten?
 	}
 	
+	//Löscht Kontaktliste
+	// Prüfung falls UserID ungleich CreatorID ist - Lösche Permission für alle Kontakte aus Kontaktliste 
 	
-/*	@Override
-	public void removeContactFromContactList(Contact contact, ContactList contactlist) throws IllegalArgumentException {
-		Contact currentContact = contact;
-		contact.setContactListId(0);
-		contactMapper.update(currentContact);
-	}*/
-	// Mapper muss erstellt werden für n:m Beziehung contact zu Contactlist
-/*	@Override
- * 
-	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException {
-		ArrayList <Contact> contacts = this.findAllContacts();
-				
-				
-				ArrayList<Contact> contacts = this.findValuesByContactId(contact.getBoId());
-		
+	@Override
+   	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException {
+		ArrayList <Contact> contacts = this.findContactsByContactListId(contactlist.getBoId());
+						
 		if (contacts != null){
-			for (Value value: contacts(contact);
+			for (Contact contact: contacts){
 			}
-		}
-		this.contactMapper.delete(contact);
 		
-	}*/
+		this.contactListMapper.delete(contactlist);
+		}
+		}
+		
+	
 
 	@Override
 	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException {
@@ -192,8 +190,10 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return null;
 	}
 
-	
-	
+	/*
+	public ContactList findContactListById(int id) throws IllegalArgumentException {
+		return this.contactListMapper.findById(id);
+	*/
 	
 
 	// *** User ***
@@ -354,18 +354,19 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+/*
 	@Override
 	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
+*/
+	// TODO @Patricia bitte wieder löschen - Methode existiert bereits
+	/* @Override
 	public void removeContactFromContactList(Contact contact, ContactList contactlist) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		
-	}
+	} */
 	
 	/*@Override
 	public ArrayList<Contact> findAllContacts() throws IllegalArgumentException{
