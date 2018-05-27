@@ -33,20 +33,25 @@ abstract class BusinessObject implements Serializable {
 	
 		return this.getClass().getName() + " #" + this.boId;
 	}
-	
-	/**
-	 * zu programmieren 
-	 */
-	public boolean equals(Object o) {
-		
-	return false;
-	}
-	
-	/**
-	 * liefert einen eindeutigen Wert zur Identifikation des Objekts
-	 */
+	@Override
 	public int hashCode() {
-		return this.boId;
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + boId;
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BusinessObject other = (BusinessObject) obj;
+		if (boId != other.boId)
+			return false;
+		return true;
 	}
 
 }
