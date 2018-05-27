@@ -3,9 +3,12 @@ package de.hdm.Connected.shared;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import de.hdm.Connected.shared.bo.Contact;
-import de.hdm.Connected.shared.bo.Permission;
+import de.hdm.Connected.shared.bo.Property;
+import de.hdm.Connected.shared.bo.User;
+import de.hdm.Connected.shared.bo.Value;
 
 /**
  * 
@@ -13,15 +16,15 @@ import de.hdm.Connected.shared.bo.Permission;
  *
  */
 
-
+@RemoteServiceRelativePath("connectedreportgenerator")
 public interface ReportGeneratorService extends RemoteService {
 
-	List<Contact> allContacts();
-	List<Contact> allContactsPerUser(int userId);
-	List<Permission> allSharedContactsPerUser(int userId);
+	
 	void init();
-	List<Permission> allSharedContacts(int id) throws IllegalArgumentException;
-	List<Contact> contactsBasedOnPropertiesAndValues(int propertyId, String valueDescription);
+	List<User> allUsers();
+	List<Property> allProperties();
+	List<Value> allValues();
+	List<Contact> searchContacts(boolean allContacts, boolean sharedContacts, String userEmail, Integer propertyId, String valueDescription);
 	
 	
 	

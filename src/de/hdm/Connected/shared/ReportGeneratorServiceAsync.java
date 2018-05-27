@@ -5,7 +5,9 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import de.hdm.Connected.shared.bo.Contact;
-import de.hdm.Connected.shared.bo.Permission;
+import de.hdm.Connected.shared.bo.Property;
+import de.hdm.Connected.shared.bo.User;
+import de.hdm.Connected.shared.bo.Value;
 
 /**
  * 
@@ -15,13 +17,12 @@ import de.hdm.Connected.shared.bo.Permission;
 
 public interface ReportGeneratorServiceAsync {
 	
-	void allContacts(AsyncCallback callback);
-	void allContactsPerUser(int userId, AsyncCallback<List<Contact>> callback);
-	void allSharedContacts(int id, AsyncCallback<List<Permission>> callback);
-	void allSharedContactsPerUser(int userId, AsyncCallback<List<Permission>> callback);
-	void contactsBasedOnPropertiesAndValues(int propertyId, String valueDescription,
-			AsyncCallback<List<Contact>> callback);
 	void init(AsyncCallback<Void> initReportGeneratorCallback);
+	void allUsers(AsyncCallback<List<User>> callback);
+	void allProperties(AsyncCallback<List<Property>> callback);
+	void allValues(AsyncCallback<List<Value>> callback);
+	void searchContacts(boolean allContacts, boolean sharedContacts, String userEmail, Integer propertyId,
+			String valueDescription, AsyncCallback<List<Contact>> callback);
 	
 	
 
