@@ -80,4 +80,32 @@ public abstract class SharedObject extends BusinessObject{
 		this.creationDate = creationDate;
 	}
 
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + creatorId;
+		result = prime * result + modifiyerId;
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SharedObject other = (SharedObject) obj;
+		if (creatorId != other.creatorId)
+			return false;
+		if (modifiyerId != other.modifiyerId)
+			return false;
+		return true;
+	}
+	
+
 }

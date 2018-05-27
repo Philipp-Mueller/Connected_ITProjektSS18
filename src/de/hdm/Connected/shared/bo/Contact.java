@@ -107,5 +107,44 @@ public class Contact extends SharedObject{
 	public void setContactListId(int contactListId) {
 		this.contactListId = contactListId;
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + contactListId;
+		result = prime * result + creatorId;
+		result = prime * result + ((prename == null) ? 0 : prename.hashCode());
+		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Contact other = (Contact) obj;
+		if (contactListId != other.contactListId)
+			return false;
+		if (creatorId != other.creatorId)
+			return false;
+		if (prename == null) {
+			if (other.prename != null)
+				return false;
+		} else if (!prename.equals(other.prename))
+			return false;
+		if (surname == null) {
+			if (other.surname != null)
+				return false;
+		} else if (!surname.equals(other.surname))
+			return false;
+		return true;
+	}
+
+	
+	
+	
 	
 }

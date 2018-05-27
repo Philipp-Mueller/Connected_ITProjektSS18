@@ -365,7 +365,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		// TODO Auto-generated method stub
 		
 	}
-*/
+
 	// TODO @Patricia bitte wieder löschen - Methode existiert bereits
 	/* @Override
 	public void removeContactFromContactList(Contact contact, ContactList contactlist) throws IllegalArgumentException {
