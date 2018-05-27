@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+
+import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.User;
 
 /**
@@ -237,5 +240,46 @@ public class UserMapper {
 		}
 		return null;
 	}
+	
+	/**
+	 * Findet alle User-Objekte in der Datenbank.
+	 * 
+	 * @return ArrayList<Contact>
+	 */
+	public ArrayList<User> findAll() {
+		Connection con = DBConnection.connection();
+
+		ArrayList<User> result = new ArrayList<User>();
+		try {
+			Statement stmt = con.createStatement();
+			/**
+			 * SQL-Anweisung zum Finden aller Datensaetze in der Datenbank, sortiert nach
+			 * der Id.
+			 */
+			ResultSet rs = stmt.executeQuery("SELECT id, email from user ORDER BY id");
+			/**
+			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle contact
+			 * vorhanden ist, muss das Abfragen des ResultSet so oft erfolgen
+			 * (while-Schleife), bis alle Tupel durchlaufen wurden. Die DB-Tupel werden in
+			 * Java-Objekte transformiert und anschliessend der ArrayList hinzugefuegt.
+			 */
+
+			while (rs.next()) {
+				User u = new User();
+				u.setBoId(rs.getInt("id"));
+				u.setLogEmail(rs.getString("email"));
+				result.add(u);
+			}
+			/**
+			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
+			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
+			 * passiert ist und wo im Code es passiert ist.
+			 */
+		} catch (SQLException e2) {
+			e2.printStackTrace();
+		}
+		return result;
+	}
+
 
 }

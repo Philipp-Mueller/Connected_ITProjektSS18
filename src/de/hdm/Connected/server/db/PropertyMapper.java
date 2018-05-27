@@ -204,7 +204,6 @@ public class PropertyMapper {
 		try {
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
-			DBConnection.connection().createStatement().executeQuery("USE itp_test");
 			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der
 			// Id in der Datenbank
 			ResultSet rs = stmt.executeQuery("SELECT id, name FROM property ORDER BY id");

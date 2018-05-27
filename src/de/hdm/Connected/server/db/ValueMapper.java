@@ -350,8 +350,8 @@ public class ValueMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der PropertyId,
 			 * in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId FROM value WHERE propertyId = '"
-					+ propertyId + "AND LOWER(description) LIKE '%"+valueDescription.toLowerCase()+"%'" +"ORDER BY id");
+			ResultSet rs = stmt.executeQuery("SELECT id, description, propertyId, contactId FROM value WHERE propertyId = '"
+					+ propertyId + "' AND LOWER(description) LIKE '%"+valueDescription.toLowerCase()+"%'" +"ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle Value mit dem uebergebenen PropertyId vorhanden ist, muss
@@ -360,6 +360,43 @@ public class ValueMapper {
 			 * Java-Objekte transformiert und anschliessend der ArrayList
 			 * hinzugefuegt.
 			 */
+			while (rs.next()) {
+				Value value = new Value();
+				value.setBoId(rs.getInt("id"));
+				value.setName(rs.getString("description"));
+				value.setPropertyID(rs.getInt("propertyId"));
+				value.setContactID(rs.getInt("contactId"));
+				result.add(value);
+			}
+			/**
+			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
+			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
+			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
+			 */
+		} catch (SQLException e2) {
+			e2.printStackTrace();
+		}
+		return result;
+	}
+	
+	/**
+	 * Findet alle Value-Objekte in der Datenbank.
+	 * 
+	 * @return ArrayList<Value>
+	 */
+	
+	public ArrayList<Value> findAllValues() {
+		Connection con = DBConnection.connection();
+
+		ArrayList<Value> result = new ArrayList<Value>();
+		try {
+			Statement stmt = con.createStatement();
+			/**
+			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der PropertyId,
+			 * in der Datenbank, sortiert nach der Id.
+			 */
+			ResultSet rs = stmt.executeQuery("SELECT id, description, propertyId, contactId FROM value ORDER BY id");
+
 			while (rs.next()) {
 				Value value = new Value();
 				value.setBoId(rs.getInt("id"));
