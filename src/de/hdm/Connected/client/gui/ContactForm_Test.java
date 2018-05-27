@@ -14,12 +14,14 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.WindowScrollListener;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.bo.Contact;
+import de.hdm.Connected.shared.bo.ContactList;
 import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.Value;
 
@@ -43,6 +45,7 @@ public class ContactForm_Test extends Widget {
 	TextBox surnameBox = new TextBox();
 	TextBox newPropertyTextBox = null;
 	ListBox propertyListBox = null;
+
 	TextBox valueTextBox = null;
 	Button addButton = new Button("weitere Eigenschaften hinzufügen");
 	Button newPropertyBtn = new Button("+");
@@ -61,10 +64,10 @@ public class ContactForm_Test extends Widget {
 	Map<Integer, String> valuesMap = new HashMap<Integer, String>();
 	Map<Widget, Widget> widgetMap = new HashMap<Widget, Widget>();
 
-	
 	FlexTable checkboxTable = new FlexTable();
 	CheckBox checkContactlist = new CheckBox();
 	final ListBox contactlist = new ListBox(true);
+
 	/**
 	 * Konstruktor wenn ein Kontakt schon existiert.
 	 * 
@@ -171,18 +174,7 @@ public class ContactForm_Test extends Widget {
 									Window.alert(e.toString());
 									e.printStackTrace();
 								}
-								/*
-								 * for(int i = 0;
-								 * i<=propertyTable.getRowCount(); i++){
-								 * widgetMap.put(propertyTable.getWidget(i, 0),
-								 * propertyTable.getWidget(i, 1)); }
-								 * for(Map.Entry<Widget, Widget> entry :
-								 * widgetMap.entrySet()){
-								 * ClientSideSettings.getConnectedAdmin().
-								 * createValue(entry..getValue(),
-								 * entry.getKey(), result.getBoId(), new
-								 * createValueCallback()); }
-								 */
+							
 							}
 
 						});
@@ -213,25 +205,41 @@ public class ContactForm_Test extends Widget {
 				checkboxTable.setWidget(0, 1, new HTML("<h3> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
 			}else {
 				contactlist.setEnabled(false);
-				checkboxTable.setWidget(0, 1, new HTML("<h3 style=\"color:grey;\"> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
+				checkboxTable.setWidget(0, 1, new HTML("<h3 style=\"color:#D3D3D3;\"> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
 			}
 				
 			}
 			
 		});
-		
+		//multi auswahl freischalten in ListBox
 		contactlist.ensureDebugId("cwListBox-multiBox");
 		contactlist.setVisibleItemCount(7);
-		contactlist.addItem("Family");
-		contactlist.addItem("Friends");
-		contactlist.addItem("Relatives");
+		//Alle Kontaktlisten aus DB abrufen
+		ClientSideSettings.getConnectedAdmin().findAllContactlists(new AsyncCallback<ArrayList<ContactList>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Die Kontaktlisten konnten nicht geladen werden");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<ContactList> result) {
+				for(ContactList cl : result){
+					contactlist.addItem(cl.getName());
+				}
+				
+			}
+			
+		});		
+		//ListBox deaktivieren, da CheckBox nicht aktiviert.
 		contactlist.setEnabled(false);
 	
 		
 		RootPanel.get("content").add(new HTML("<h3> Kontakt einer Kontaktliste hinzufügen? </h3>"));
 		checkboxTable.setWidget(0, 0, checkContactlist);
-		checkboxTable.setWidget(0, 1, new HTML("<h3 style=\"color:grey;\"> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
+		checkboxTable.setWidget(0, 1, new HTML("<h3 style=\"color:#D3D3D3;\"> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
 		checkboxTable.setWidget(0, 2, contactlist);
+		
 		
 		RootPanel.get("content").add(checkboxTable);
 		RootPanel.get("content").add(bottomPanel);
@@ -252,6 +260,7 @@ public class ContactForm_Test extends Widget {
 			// alle Eigenschaften in Vektor laden
 
 			propertyListBox = new ListBox();
+			propertyListBox.setWidth("250px");
 			for (int i = 0; i < result.size(); i++) {
 				Property propertyItem = result.get(i);
 
@@ -307,45 +316,6 @@ public class ContactForm_Test extends Widget {
 			newPropertyBtn.addClickHandler(new addNewPropertyClickHandler());
 			propertyArray.clear();
 
-			/*
-			 * newPropertyBtn = new Button("+");
-			 * propertyPanel.add(newPropertyBtn);
-			 * newPropertyBtn.addClickHandler(new addNewPropertyClickHandler());
-			 * /*for(Property p :propertyArray){
-			 * if(propertyListBox.getSelectedItemText() == p.getName()){
-			 * valuesMap.put(p.getBoId(), valueTextBox.getText()); } }
-			 */
-			/*
-			 * valuesMap.put(propertyArray.get(propertyListBox.getSelectedIndex(
-			 * )).getBoId(), valueTextBox.getText());
-			 */
-
-			/*
-			 * TODO ClientSideSettings.getConnectedAdmin().findAllProperties(new
-			 * AsyncCallback<ArrayList<Property>>(){
-			 * 
-			 * @Override public void onFailure(Throwable caught) {
-			 * ClientSideSettings.getLogger().
-			 * severe("Konnte die Eigenschaften nicht laden"); }
-			 * 
-			 * @Override public void onSuccess(ArrayList<Property> result) {
-			 * if(addButton != null){ propertyPanel.remove(addButton); addButton
-			 * = null;
-			 * 
-			 * 
-			 * } else{ propertyPanel.remove(newPropertyBtn); } for (int i = 0; i
-			 * < result.size(); i++) { Property propertyItem = result.get(i);
-			 * 
-			 * if(result.get(i).getName() != "Vorname" ||
-			 * result.get(i).getName() != "Nachname"){
-			 * propertyArray.add(propertyItem);
-			 * propertyListBox.addItem(propertyItem.getName()); } }
-			 * propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
-			 * propertyPanel.add(propertyListBox); TextBox propertyTextBox = new
-			 * TextBox(); valuePanel.add(propertyTextBox);
-			 * propertyPanel.add(newPropertyBtn); addButton.addClickHandler(new
-			 * addNewPropertyClickHandler()); } });
-			 */
 		}
 
 	}
@@ -411,11 +381,43 @@ public class ContactForm_Test extends Widget {
 						}
 
 						@Override
+
 						public void onSuccess(Property result) {
-							propertyArray.add(result);
-							propertyListBox.setItemText(propertyListBox.getItemCount() - 1, result.getName());
+
 							int rowCount = propertyTable.getRowCount();
+
+							ArrayList<Integer> selectedItems = new ArrayList<Integer>();
+							Iterator<Widget> listBoxWidgets = propertyTable.iterator();
+
+							while (listBoxWidgets.hasNext()) {
+								Widget w = listBoxWidgets.next();
+
+								if (w instanceof ListBox) {
+									ListBox oldListbox = (ListBox) w;
+									selectedItems.add(oldListbox.getSelectedIndex());
+									oldListbox.removeFromParent();
+								}
+							}
+
+							propertyArray.add(result);
+
+							propertyListBox.setItemText(propertyListBox.getItemCount() - 1, result.getName());
+
+							propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
+
 							propertyTable.removeRow(rowCount - 1);
+
+							for (int i = 0; i < selectedItems.size(); i++) {
+								ListBox propertyListBoxnew = new ListBox();
+								propertyListBoxnew.setWidth("250px");
+								for (Property p : propertyArray) {
+									propertyListBoxnew.addItem(p.getName());
+								}
+								propertyTable.setWidget(i, 0, propertyListBoxnew);
+								propertyListBoxnew.setSelectedIndex(selectedItems.get(i));
+								Window.alert(Integer.toString(i));
+							}
+
 							propertyTable.setWidget(rowCount, 0, propertyListBox);
 							propertyTable.setWidget(rowCount, 1, valueTextBox);
 							propertyTable.setWidget(rowCount, 2, newPropertyBtn);
@@ -423,6 +425,7 @@ public class ContactForm_Test extends Widget {
 						}
 
 					});
+
 		}
 	}
 }
