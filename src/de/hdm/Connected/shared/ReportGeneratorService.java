@@ -23,7 +23,7 @@ public interface ReportGeneratorService extends RemoteService {
 	void init();
 	List<User> allUsers();
 	List<Property> allProperties();
-	List<Value> allValues();
+	List<Value> allValues(Integer propertyId);
 	List<Contact> searchContacts(boolean allContacts, boolean sharedContacts, String userEmail, Integer propertyId, String valueDescription);
 	
 	

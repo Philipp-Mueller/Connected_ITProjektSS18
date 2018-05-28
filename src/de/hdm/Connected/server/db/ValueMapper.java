@@ -302,8 +302,8 @@ public class ValueMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der PropertyId,
 			 * in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId FROM value WHERE propertyId LIKE '"
-					+ propertyId + "' ORDER BY id");
+			ResultSet rs = stmt.executeQuery("SELECT id, description, propertyId, contactId FROM value WHERE propertyId = "
+					+ propertyId + " ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle Value mit dem uebergebenen PropertyId vorhanden ist, muss

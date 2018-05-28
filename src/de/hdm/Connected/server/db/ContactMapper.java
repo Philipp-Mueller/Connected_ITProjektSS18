@@ -382,7 +382,7 @@ public class ContactMapper {
 
 			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der userID in der
 			// Datenbank
-			ResultSet rs = stmt.executeQuery("id, prename, surname  FROM contact " + " WHERE userID=" + userID);
+			ResultSet rs = stmt.executeQuery("SELECT id , prename, surname FROM contact WHERE id =" + userID);
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle
 			 * permission vorhanden ist, muss das Abfragen des ResultSet so oft erfolgen
