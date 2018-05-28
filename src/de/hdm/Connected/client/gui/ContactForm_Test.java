@@ -38,6 +38,7 @@ public class ContactForm_Test extends Widget {
 	// ConnectedAdminAsync connectedAdmin =
 	// ClientSideSettings.getConnectedAdmin();
 	private Contact selectedContact = null;
+	private Contact createdContact = null;
 
 	Label firstNameLabel = new Label("Vorname:");
 	TextBox firstNameBox = new TextBox();
@@ -143,6 +144,7 @@ public class ContactForm_Test extends Widget {
 
 							@Override
 							public void onSuccess(Contact result) {
+								createdContact = result;
 								try {
 									Iterator<Widget> propertyWidgets = propertyTable.iterator();
 
@@ -334,6 +336,29 @@ public class ContactForm_Test extends Widget {
 		@Override
 		public void onSuccess(Value result) {
 			Window.alert("Kontakt vollständig angelegt");
+			if(checkContactlist.getValue()){
+				for (int i=0; i< contactlist.getItemCount(); i++){
+					if(contactlist.isItemSelected(i)) {
+						ClientSideSettings.getConnectedAdmin().addContactToContactList(createdContact.getBoId(), i, new AsyncCallback<Void>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+							Window.alert("Kontakt konnte Kontaktliste nicht hinzugefügt werden");
+							}
+
+							@Override
+							public void onSuccess(Void result) {
+							Window.alert("Kontakt wurde angelegt und den Kontaktlisten hinzugefügt!");
+								
+							}
+							
+						});
+					}
+					
+				}
+				
+			}
+		
 			RootPanel.get("content").clear();
 
 		}
