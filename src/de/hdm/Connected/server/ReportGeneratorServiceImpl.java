@@ -35,7 +35,6 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 	 */
 	private static final long serialVersionUID = -7457694965996952587L;
 	private ConnectedAdmin adminImpl = null;
-	private PermissionMapper permissionMapper = null;
 	private ValueMapper valueMapper = null;
 	private ContactMapper contactMapper = null;
 	private UserMapper userMapper = null;
@@ -50,7 +49,6 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 			adminImpl = new ConnectedAdminImpl();
 		}
 		adminImpl.init();
-		this.permissionMapper = PermissionMapper.permissionMapper();
 		this.valueMapper = ValueMapper.valueMapper();
 		this.contactMapper = ContactMapper.contactMapper();
 		this.userMapper = UserMapper.userMapper();
@@ -60,23 +58,19 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 
 	@Override
 	public List<User> allUsers() {
-		
 		return userMapper.findAll();
-		
-		
 	}
 
 
 	@Override
 	public List<Property> allProperties() {
 		return this.propertyMapper.findAllProperties();
-		
 	}
 
 
 	@Override
-	public List<Value> allValues() {
-		return valueMapper.findAllValues();
+	public List<Value> allValues(Integer propertyId) {
+		return valueMapper.findByProperty(propertyId);
 	}
 
 

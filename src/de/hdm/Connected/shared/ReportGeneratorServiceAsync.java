@@ -20,7 +20,7 @@ public interface ReportGeneratorServiceAsync {
 	void init(AsyncCallback<Void> initReportGeneratorCallback);
 	void allUsers(AsyncCallback<List<User>> callback);
 	void allProperties(AsyncCallback<List<Property>> callback);
-	void allValues(AsyncCallback<List<Value>> callback);
+	void allValues(Integer propertyId, AsyncCallback<List<Value>> callback);
 	void searchContacts(boolean allContacts, boolean sharedContacts, String userEmail, Integer propertyId,
 			String valueDescription, AsyncCallback<List<Contact>> callback);
 	
