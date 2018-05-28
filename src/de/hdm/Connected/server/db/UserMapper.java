@@ -217,7 +217,7 @@ public class UserMapper {
 			 * SQL-Anweisung zum Finden aller Datensätze, anhand der eMail, in
 			 * der Datenbank.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, logEmail FROM user WHERE email LIKE '" + logEmail + "'");
+			ResultSet rs = stmt.executeQuery("SELECT id, email FROM user WHERE email LIKE '" + logEmail + "'");
 			/**
 			 * Zu einem eindeutigen Wert exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurückgegeben werden.
@@ -227,7 +227,7 @@ public class UserMapper {
 			if (rs.next()) {
 				User user = new User();
 				user.setBoId(rs.getInt("id"));
-				user.setLogEmail(rs.getString("logEmail"));
+				user.setLogEmail(rs.getString("email"));
 				return user;
 			}
 			/**
