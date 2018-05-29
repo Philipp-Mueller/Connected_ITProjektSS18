@@ -16,22 +16,21 @@ public class ContactContactListMapper {
 	 * Fügt ein Contact-Objekt einer ContactList hinzu.
 	 * 
 	 * @param contactList, contact
-	 * @return contactList
+	 * 
 	 */
 	
-	public void addContacttoContactList(ContactList contactList, Contact contact) {
+	public void addContactToContactList(int contactId, int contactListId) {
 		Connection con = DBConnection.connection();
 		
 		try {
-			
 			Statement stmt = con.createStatement();
 			
 			/**
 			 * SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in
 			 * der Datenbank.
 			 */
-			stmt.executeUpdate("INSERT INTO contactcontactlist (contactlistid, contactid) VALUES " 
-			 + "("+ contactList.getBoId() + ", '" + contact.getBoId() + "')");
+			stmt.executeUpdate("INSERT INTO contactcontactlist (contactid, contactlistid) VALUES " 
+			 + "("+ contactId + ", '" + contactListId + "')");
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -40,17 +39,16 @@ public class ContactContactListMapper {
 		 */
 		catch (SQLException e) {
 			e.printStackTrace();
-		}
-		
+		}	
 	}
 	
 	/**
 	 * Löscht ein Contact-Objekt aus der ContactList.
 	 * 
-	 * @param contactList, contact
+	 * @param contactId, contactListId
 	 */
 
-	public void removeContactfromContactList(ContactList contactList, Contact contact) {
+	public void removeContactFromContactList(int contactId, int contactListId) {
 		Connection con = DBConnection.connection();
 		
 		try {
@@ -59,8 +57,8 @@ public class ContactContactListMapper {
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
 			 * Datenbank.
 			 */
-			stmt.executeUpdate("DELETE FROM contactcontactlist WHERE contactlistid= " + contactList.getBoId() + 
-					" AND " + "contactid= " + contact.getBoId());
+			stmt.executeUpdate("DELETE FROM contactcontactlist WHERE contactid= " + contactId + 
+					" AND " + "contactlistid= " + contactListId);
 		}
 		
 		/**
@@ -81,7 +79,7 @@ public class ContactContactListMapper {
 	 * @return ArrayList <Contact>
 	 */
 	
-	public ArrayList <Contact> findContactsByContactList(int contactListId) {
+	public ArrayList <Contact> findContactsByContactListId(int contactListId) {
 		
 	Connection con = DBConnection.connection();
 	
