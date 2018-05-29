@@ -70,9 +70,9 @@ public interface ConnectedAdminAsync {
 	
 	void deletePermission(Permission permission, AsyncCallback<Void> callback);
 	
-	void addContactToContactList(Contact contact, ContactList contactlist, AsyncCallback<Void> callback);
+	void addContactToContactList(int contact, int contactlist, AsyncCallback<Void> callback);
 	
-	void removeContactFromContactList(Contact contact, ContactList contactlist, AsyncCallback<Void> callback);
+	void removeContactFromContactList(int contactid, int contactlistid, AsyncCallback<Void> callback);
 	
 	void removeAccessToObject(int userId, int shareObjectId, AsyncCallback<Void> callback);
 	
