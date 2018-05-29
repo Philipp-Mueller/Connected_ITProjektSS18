@@ -80,6 +80,8 @@ public class ContactForm_Test extends Widget {
 		this.selectedContact = contact;
 
 		RootPanel.get("content").clear();
+		
+		ClientSideSettings.getConnectedAdmin().findContactById(selectedContact.getBoId(), new ContactCallback());
 
 	}
 
@@ -132,7 +134,7 @@ public class ContactForm_Test extends Widget {
 
 			public void onClick(ClickEvent event) {
 				java.sql.Timestamp creationTime = new Timestamp(System.currentTimeMillis());
-
+				//Zu erst wird das Kontakt-Objekt angelegt.
 				ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
 						creationTime, creationTime, 1, new AsyncCallback<Contact>() {
 
@@ -143,6 +145,7 @@ public class ContactForm_Test extends Widget {
 							}
 
 							@Override
+							//War dies erfolgreich wird dem Kontakt die einzelnen festgelegten Eigeschaften&Ausprägungen zugeordnet bzw. gespeichert.
 							public void onSuccess(Contact result) {
 								createdContact = result;
 								try {
@@ -217,6 +220,7 @@ public class ContactForm_Test extends Widget {
 		contactlist.ensureDebugId("cwListBox-multiBox");
 		contactlist.setVisibleItemCount(7);
 		//Alle Kontaktlisten aus DB abrufen
+		//TODO nur KOntaktlisten des aktuellen Users abrufen!
 		ClientSideSettings.getConnectedAdmin().findAllContactlists(new AsyncCallback<ArrayList<ContactList>>(){
 
 			@Override
@@ -225,6 +229,7 @@ public class ContactForm_Test extends Widget {
 			}
 
 			@Override
+			//jede Kontaktliste wird der ListBox hinzugefügt
 			public void onSuccess(ArrayList<ContactList> result) {
 				for(ContactList cl : result){
 					contactlist.addItem(cl.getName());
@@ -236,9 +241,10 @@ public class ContactForm_Test extends Widget {
 		//ListBox deaktivieren, da CheckBox nicht aktiviert.
 		contactlist.setEnabled(false);
 	
-		
+		//Dies dem FlexTable hinzufügen
 		RootPanel.get("content").add(new HTML("<h3> Kontakt einer Kontaktliste hinzufügen? </h3>"));
 		checkboxTable.setWidget(0, 0, checkContactlist);
+		//Disabled Style
 		checkboxTable.setWidget(0, 1, new HTML("<h3 style=\"color:#D3D3D3;\"> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
 		checkboxTable.setWidget(0, 2, contactlist);
 		
@@ -246,6 +252,21 @@ public class ContactForm_Test extends Widget {
 		RootPanel.get("content").add(checkboxTable);
 		RootPanel.get("content").add(bottomPanel);
 
+	}
+	
+	private class ContactCallback implements AsyncCallback<Contact> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onSuccess(Contact result) {
+		
+		}
+		
 	}
 
 	private class findAllPropertiesCallback implements AsyncCallback<ArrayList<Property>> {
@@ -335,7 +356,9 @@ public class ContactForm_Test extends Widget {
 
 		@Override
 		public void onSuccess(Value result) {
+			//Am Ende wird der Kontakt den ausgewählten Kontaktlisten hinzugefügt.
 			Window.alert("Kontakt vollständig angelegt");
+			//Nur wenn die CheckBox geklickt ist, wird dies ausgeführt, da sonst der Kontakt keiner Liste hinzugefügt werden soll
 			if(checkContactlist.getValue()){
 				for (int i=0; i< contactlist.getItemCount(); i++){
 					if(contactlist.isItemSelected(i)) {
