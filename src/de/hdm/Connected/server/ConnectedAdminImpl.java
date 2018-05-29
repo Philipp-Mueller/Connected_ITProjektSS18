@@ -160,16 +160,13 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		// fügt einer Kontaktliste einen Kontakt hinzu
 	
 	@Override
-	public void addContactToContactList(Contact contact, ContactList contactlist) throws IllegalArgumentException {
-		contact.setContactListId(contactlist.getBoId());
-		ccMapper.addContacttoContactList(contactlist, contact);
+	public void addContactToContactList(int contactid, int contactlistid) throws IllegalArgumentException {
+		ccMapper.addContactToContactList(contactlistid, contactid);
 	}
 		
 	@Override
-	public void removeContactFromContactList(Contact contact, ContactList contactList) throws IllegalArgumentException {
-		ccMapper.removeContactfromContactList(contactList, contact);
-		contact.setContactListId(0); //TODO Sinnvoll ID auf null zu setzen? 
-		contactMapper.update(contact); // übernimmt er 0 zum updaten?
+	public void removeContactFromContactList(int contactid, int contactlistid) throws IllegalArgumentException {
+		ccMapper.removeContactFromContactList(contactlistid, contactid);
 	}
 	
 	//Löscht Kontaktliste
@@ -183,15 +180,13 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		
 
 	@Override
-	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException {
-		
+	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException {	
 		return this.contactMapper.findByContactListId(contactlistId);
-		
 	}
+
 
 	@Override
 	public ArrayList<ContactList> findAllContactlists() throws IllegalArgumentException {
-		// TODO Auto-generated method stub
 		return this.contactListMapper.findAllContactLists();
 	}
 
@@ -287,6 +282,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 	@Override
 	public void deleteProperty(Property property) throws IllegalArgumentException {
+		//TODO wollen wir properties löschen? Wenn ja: Lösche alle Values mit der Property
 		propertyMapper.delete(property);
 
 	}
@@ -307,10 +303,6 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	// Bis hier
 	////////////////////////////////////////////////////////////////////////
 
-	/*@Override
-	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException {
-		return this.contactMapper.findByContactListId(contactlistId);
-	}*/
 
 	/*@Override
 	public ArrayList<Contact> findContactsByValue(String value) throws IllegalArgumentException {
