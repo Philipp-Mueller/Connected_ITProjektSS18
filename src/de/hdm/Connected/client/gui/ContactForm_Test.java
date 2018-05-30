@@ -80,7 +80,7 @@ public class ContactForm_Test extends Widget {
 		this.selectedContact = contact;
 
 		RootPanel.get("content").clear();
-		
+
 		ClientSideSettings.getConnectedAdmin().findContactById(selectedContact.getBoId(), new ContactCallback());
 
 	}
@@ -134,7 +134,7 @@ public class ContactForm_Test extends Widget {
 
 			public void onClick(ClickEvent event) {
 				java.sql.Timestamp creationTime = new Timestamp(System.currentTimeMillis());
-				//Zu erst wird das Kontakt-Objekt angelegt.
+				// Zu erst wird das Kontakt-Objekt angelegt.
 				ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
 						creationTime, creationTime, 1, new AsyncCallback<Contact>() {
 
@@ -145,41 +145,82 @@ public class ContactForm_Test extends Widget {
 							}
 
 							@Override
-							//War dies erfolgreich wird dem Kontakt die einzelnen festgelegten Eigeschaften&Ausprägungen zugeordnet bzw. gespeichert.
+							// War dies erfolgreich wird dem Kontakt die
+							// einzelnen festgelegten Eigeschaften&Ausprägungen
+							// zugeordnet bzw. gespeichert.
 							public void onSuccess(Contact result) {
 								createdContact = result;
-								try {
-									Iterator<Widget> propertyWidgets = propertyTable.iterator();
-
-									while (propertyWidgets.hasNext()) {
-										Widget ch = propertyWidgets.next();
-										if (ch instanceof ListBox) {
-											ListBox propertyListBox = (ListBox) ch;
-											for (int i = 0; i < propertyArray.size(); i++) {
-												if (propertyListBox.getSelectedItemText() == propertyArray.get(i)
-														.getName()) {
-													selectedProperties.add(propertyArray.get(i).getBoId());
-												}
+								int rowCount = propertyTable.getRowCount();
+								int propertyId = 0;
+								String value = "";
+								Window.alert(propertyArray.toString());
+								// try {
+								//Iterator<Widget> propertyWidgets = propertyTable.iterator();
+								// Alle Reihen im FlexTable durchgehen um alles
+								// ListBoxen und TextBoxen zu bekommen
+								Window.alert(Integer.toString(rowCount));
+								try{
+								for (int i = 0; i < rowCount; i++) {
+									if (propertyTable.getWidget(i, 0) instanceof ListBox) {
+										ListBox propertyListBox = (ListBox) propertyTable.getWidget(i, 0);
+										for (int j = 0; j < propertyArray.size(); j++) {
+											// Wenn Name des Properties
+											// übereinstimmt, dann Id des
+											// Property abspeichern
+										
+											if (propertyListBox.getSelectedItemText().equals(propertyArray.get(j)
+													.getName())) {
+												propertyId = propertyArray.get(j).getBoId();
 											}
 
-										} else if (ch instanceof TextBox) {
-											TextBox valueTextBox = (TextBox) ch;
-											values.add(valueTextBox);
 										}
-										Window.alert(Integer.toString(propertyArray.size()));
-
 									}
-
-									for (int i = 0; i < selectedProperties.size(); i++) {
-
-										ClientSideSettings.getConnectedAdmin().createValue(values.get(i).getText(),
-												selectedProperties.get(i), result.getBoId(), new createValueCallback());
+									if (propertyTable.getWidget(i, 1) instanceof TextBox) {
+										TextBox valueTextBox = (TextBox) propertyTable.getWidget(i, 1);
+										value = valueTextBox.getText();
 									}
-								} catch (Exception e) {
-									Window.alert(e.toString());
-									e.printStackTrace();
+									valuesMap.put(propertyId, value);
 								}
-							
+								
+								for(Map.Entry<Integer, String> mapi : valuesMap.entrySet()){
+									Window.alert(mapi.getKey() + " = " + mapi.getValue());
+									}
+								//Durch Map iterieren und jeweils den Value abspeichern
+								for(Map.Entry<Integer, String> entry : valuesMap.entrySet()){
+									ClientSideSettings.getConnectedAdmin().createValue(entry.getValue(), entry.getKey(), result.getBoId(), new createValueCallback());
+								}
+								} catch
+								  (Exception e) { Window.alert(e.toString());
+								  e.printStackTrace(); }
+								/*
+								 * while (propertyWidgets.hasNext()) { Widget ch
+								 * = propertyWidgets.next(); if (ch instanceof
+								 * ListBox) { ListBox propertyListBox =
+								 * (ListBox) ch; for (int i = 0; i <
+								 * propertyArray.size(); i++) { if
+								 * (propertyListBox.getSelectedItemText() ==
+								 * propertyArray.get(i) .getName()) {
+								 * selectedProperties.add(propertyArray.get(i).
+								 * getBoId()); } }
+								 * 
+								 * } else if (ch instanceof TextBox) { TextBox
+								 * valueTextBox = (TextBox) ch;
+								 * values.add(valueTextBox); }
+								 * Window.alert(Integer.toString(propertyArray.
+								 * size()));
+								 * 
+								 * }
+								 * 
+								 * for (int i = 0; i <
+								 * selectedProperties.size(); i++) {
+								 * 
+								 * ClientSideSettings.getConnectedAdmin().
+								 * createValue(values.get(i).getText(),
+								 * selectedProperties.get(i), result.getBoId(),
+								 * new createValueCallback()); } } catch
+								 * (Exception e) { Window.alert(e.toString());
+								 * e.printStackTrace();
+								 */
 							}
 
 						});
@@ -199,29 +240,30 @@ public class ContactForm_Test extends Widget {
 		});
 
 		bottomPanel.add(cancelButton);
-		
-		
+
 		checkContactlist.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-			if(checkContactlist.getValue()){
-				contactlist.setEnabled(true);
-				checkboxTable.setWidget(0, 1, new HTML("<h3> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
-			}else {
-				contactlist.setEnabled(false);
-				checkboxTable.setWidget(0, 1, new HTML("<h3 style=\"color:#D3D3D3;\"> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
+				if (checkContactlist.getValue()) {
+					contactlist.setEnabled(true);
+					checkboxTable.setWidget(0, 1,
+							new HTML("<h3> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
+				} else {
+					contactlist.setEnabled(false);
+					checkboxTable.setWidget(0, 1, new HTML(
+							"<h3 style=\"color:#D3D3D3;\"> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
+				}
+
 			}
-				
-			}
-			
+
 		});
-		//multi auswahl freischalten in ListBox
+		// multi auswahl freischalten in ListBox
 		contactlist.ensureDebugId("cwListBox-multiBox");
 		contactlist.setVisibleItemCount(7);
-		//Alle Kontaktlisten aus DB abrufen
-		//TODO nur KOntaktlisten des aktuellen Users abrufen!
-		ClientSideSettings.getConnectedAdmin().findAllContactlists(new AsyncCallback<ArrayList<ContactList>>(){
+		// Alle Kontaktlisten aus DB abrufen
+		// TODO nur KOntaktlisten des aktuellen Users abrufen!
+		ClientSideSettings.getConnectedAdmin().findAllContactlists(new AsyncCallback<ArrayList<ContactList>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -229,44 +271,44 @@ public class ContactForm_Test extends Widget {
 			}
 
 			@Override
-			//jede Kontaktliste wird der ListBox hinzugefügt
+			// jede Kontaktliste wird der ListBox hinzugefügt
 			public void onSuccess(ArrayList<ContactList> result) {
-				for(ContactList cl : result){
+				for (ContactList cl : result) {
 					contactlist.addItem(cl.getName());
 				}
-				
+
 			}
-			
-		});		
-		//ListBox deaktivieren, da CheckBox nicht aktiviert.
+
+		});
+		// ListBox deaktivieren, da CheckBox nicht aktiviert.
 		contactlist.setEnabled(false);
-	
-		//Dies dem FlexTable hinzufügen
+
+		// Dies dem FlexTable hinzufügen
 		RootPanel.get("content").add(new HTML("<h3> Kontakt einer Kontaktliste hinzufügen? </h3>"));
 		checkboxTable.setWidget(0, 0, checkContactlist);
-		//Disabled Style
-		checkboxTable.setWidget(0, 1, new HTML("<h3 style=\"color:#D3D3D3;\"> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
+		// Disabled Style
+		checkboxTable.setWidget(0, 1,
+				new HTML("<h3 style=\"color:#D3D3D3;\"> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
 		checkboxTable.setWidget(0, 2, contactlist);
-		
-		
+
 		RootPanel.get("content").add(checkboxTable);
 		RootPanel.get("content").add(bottomPanel);
 
 	}
-	
+
 	private class ContactCallback implements AsyncCallback<Contact> {
 
 		@Override
 		public void onFailure(Throwable caught) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onSuccess(Contact result) {
-		
+
 		}
-		
+
 	}
 
 	private class findAllPropertiesCallback implements AsyncCallback<ArrayList<Property>> {
@@ -356,32 +398,34 @@ public class ContactForm_Test extends Widget {
 
 		@Override
 		public void onSuccess(Value result) {
-			//Am Ende wird der Kontakt den ausgewählten Kontaktlisten hinzugefügt.
+			// Am Ende wird der Kontakt den ausgewählten Kontaktlisten
+			// hinzugefügt.
 			Window.alert("Kontakt vollständig angelegt");
-			//Nur wenn die CheckBox geklickt ist, wird dies ausgeführt, da sonst der Kontakt keiner Liste hinzugefügt werden soll
-			if(checkContactlist.getValue()){
-				for (int i=0; i< contactlist.getItemCount(); i++){
-					if(contactlist.isItemSelected(i)) {
-						ClientSideSettings.getConnectedAdmin().addContactToContactList(createdContact.getBoId(), i, new AsyncCallback<Void>() {
+			// Nur wenn die CheckBox geklickt ist, wird dies ausgeführt, da
+			// sonst der Kontakt keiner Liste hinzugefügt werden soll
+			/*if (checkContactlist.getValue()) {
+				for (int i = 0; i < contactlist.getItemCount(); i++) {
+					if (contactlist.isItemSelected(i)) {
+						ClientSideSettings.getConnectedAdmin().addContactToContactList(createdContact.getBoId(), i,
+								new AsyncCallback<Void>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-							Window.alert("Kontakt konnte Kontaktliste nicht hinzugefügt werden");
-							}
+									@Override
+									public void onFailure(Throwable caught) {
+										Window.alert("Kontakt konnte Kontaktliste nicht hinzugefügt werden");
+									}
 
-							@Override
-							public void onSuccess(Void result) {
-							Window.alert("Kontakt wurde angelegt und den Kontaktlisten hinzugefügt!");
-								
-							}
-							
-						});
+									@Override
+									public void onSuccess(Void result) {
+										Window.alert("Kontakt wurde angelegt und den Kontaktlisten hinzugefügt!");
+
+									}
+
+								});
 					}
-					
+
 				}
-				
-			}
-		
+
+			}*/
 			RootPanel.get("content").clear();
 
 		}
