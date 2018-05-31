@@ -2,12 +2,49 @@
 
 
 /** Example rules used by the template application (remove for your app) */
+/**
 h1 {
   font-size: 2em;
   font-weight: bold;
   color: #777777;
   margin: 40px 0px 70px;
   text-align: center;
+}
+*/
+#top {
+	cursor: default;
+	display: flex;
+	width: 100%;
+	flex: 0 1 auto;
+	background: #999 url('http://mindchamps-medical.com/wp-content/uploads/2015/04/Abstract-Background-White.jpg') no-repeat left 50%;
+	background-size: cover;
+	justify-content: space-between;
+	/**padding-right: 30px;*/
+	box-sizing: border-box;
+}
+
+h1 {
+	font-weight: 400;
+	font-size: 16px;
+	width: 20%;
+	box-sizing: border-box;
+	background: url('ConnectedLogo1.png') no-repeat left 50%;
+	background-size: contain;
+	margin-left: 20px;
+	color: rgba(255,255,255,0.0);
+}
+
+h1 a {
+	display: block;
+	color: rgba(255,255,255,0.0);
+	padding: 20px 0px 20px 30px;
+}
+
+#repgen-heading {
+	text-align: left;
+	font-size: 25px;
+	padding: 16px 0px;	
+	width: 70%;
 }
 
 .sendButton {
@@ -28,11 +65,9 @@ h1 {
   color: red;
 }
 
-/** Set ids using widget.getElement().setId("idOfElement") */
 #closeButton {
   margin: 15px 6px 6px;
 }
-/* ### FOOTER ### */
 
 #footer {
 	position:absolute;
@@ -56,3 +91,5 @@ h1 {
     color: #1c9cd8;
     text-decoration: none;
 }
+
+
