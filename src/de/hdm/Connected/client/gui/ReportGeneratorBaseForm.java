@@ -87,7 +87,7 @@ public class ReportGeneratorBaseForm extends Widget {
 													+ "70569 Stuttgart<br /></p>"
 													+ "<p><strong>Projektarbeit innerhalb des Studiengangs "
 													+ "Wirtschaftsinformatik und digitale Medien, "
-													+ "Modul: 335105 IT-Projekt SS 17.</strong></p>"
+													+ "IT-Projekt SS 18.</strong></p>"
 													+ "<h3>Projektteam</h3>"
 													+ "<ul><li>xxx</li>"
 													+ "<li>xxx</li>"
