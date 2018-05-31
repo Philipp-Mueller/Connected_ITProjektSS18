@@ -40,6 +40,31 @@ h1 a {
 	padding: 20px 0px 20px 30px;
 }
 
+#usermenu .gwt-HTML {
+	padding: 20px 0px;
+}
+
+#usermenu p {
+	width: 100%;
+	font-size: 16px;
+	text-align: right;
+	cursor: pointer;
+}
+
+#usermenu p a {
+	margin-left: 10px;
+	padding-left: 10px;
+	text-decoration: none;
+	color: #666;
+	border-left: 1px solid #666;
+}
+
+#usermenu {
+	display: flex;
+	width: 30%;
+	justify-content: flex-end;
+}
+
 #repgen-heading {
 	text-align: left;
 	font-size: 25px;
