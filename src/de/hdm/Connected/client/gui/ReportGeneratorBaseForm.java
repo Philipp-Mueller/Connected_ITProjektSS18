@@ -99,6 +99,7 @@ public class ReportGeneratorBaseForm extends Widget {
 													+ "<p><strong>Telefon:</strong> 0711 8923 10 (Zentrale)</p>"
 													+ "<p><strong>Website:</strong> <a href='http://www.hdm-stuttgart.de' target='_blank'>"
 													+ "www.hdm-stuttgart.de</a></p>"));
+				
 			}
 			
 		});
