@@ -14,8 +14,10 @@ import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSe
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
@@ -48,9 +50,9 @@ public class ReportGeneratorBaseForm extends Widget {
 	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 	private SuggestBox box = new SuggestBox(oracle);
 	private CellTable<Contact> table = new CellTable<Contact>();
-    private ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
+	private ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
 
-    private List<Contact> contactToShowInReport = new ArrayList<>();
+	private List<Contact> contactToShowInReport = new ArrayList<>();
 	private boolean allContacts = false;
 	private boolean sharedContacts = false;
 	private Integer propertyId = null;
@@ -62,7 +64,50 @@ public class ReportGeneratorBaseForm extends Widget {
 		// Zwei horizontal panel in einem V panel
 		vPanel.add(hPanel1);
 		vPanel.add(hPanel2);
+		
+		/*
+		 * Der Footer enthält das Copyright sowie einen Link
+		 * zum Impressum. 
+		 */
+		HorizontalPanel footer = new HorizontalPanel();
+		Anchor connectedLink = new Anchor ("Connected", "Connected_ITProjektSS18.html");
+		HTML copyrightText = new HTML(" | © 2018 Connected | ");
+		Anchor impressumLink = new Anchor("Impressum");
+		
+		
+		impressumLink.addClickHandler(new ClickHandler() {
 
+			@Override
+			public void onClick(ClickEvent event) {
+				RootPanel.get("content").clear();
+				RootPanel.get("content").add(new HTML("<h2>Impressum nach §5 TMG</h2>"
+													+ "<h3>Verantwortlich</h3>"
+													+ "<p>Hochschule der Medien<br />"
+													+ "Nobelstraße 8<br />"
+													+ "70569 Stuttgart<br /></p>"
+													+ "<p><strong>Projektarbeit innerhalb des Studiengangs "
+													+ "Wirtschaftsinformatik und digitale Medien, "
+													+ "Modul: 335105 IT-Projekt SS 17.</strong></p>"
+													+ "<h3>Projektteam</h3>"
+													+ "<ul><li>xxx</li>"
+													+ "<li>xxx</li>"
+													+ "<li>xxx</li>"
+													+ "<li>xxx</li>"
+													+ "<li>xxx</li>"
+													+ "<li>xxx</li></ul>"
+													+ "<h3>Kontakt</h3>"
+													+ "<p><strong>Telefon:</strong> 0711 8923 10 (Zentrale)</p>"
+													+ "<p><strong>Website:</strong> <a href='http://www.hdm-stuttgart.de' target='_blank'>"
+													+ "www.hdm-stuttgart.de</a></p>"));
+			}
+			
+		});
+		footer.add(connectedLink);
+		footer.add(copyrightText);
+		footer.add(impressumLink);
+		RootPanel.get("footer").add(footer);
+		
+		
 		// AllContacts checkbox
 		allContactsCb.setValue(allContacts);
 		allContactsCb.addClickHandler(new ClickHandler() {
@@ -81,10 +126,10 @@ public class ReportGeneratorBaseForm extends Widget {
 		// Userlistbox
 		userListBox.setVisibleItemCount(1);
 		userListBox.addChangeHandler(new ChangeHandler() {
-			
+
 			@Override
 			public void onChange(ChangeEvent event) {
-				userEmail = ((ListBox)event.getSource()).getSelectedItemText();
+				userEmail = ((ListBox) event.getSource()).getSelectedItemText();
 			}
 		});
 		hPanel1.add(userListBox);
@@ -132,27 +177,27 @@ public class ReportGeneratorBaseForm extends Widget {
 				rgsa.searchContacts(allContacts, sharedContacts, userEmail, propertyId, valueDescription,
 						new AsyncCallback<List<Contact>>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Window.alert("Fehler beim lesen aller Kontakte aufgetreten");
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Fehler beim lesen aller Kontakte aufgetreten");
+					}
 
-							@Override
-							public void onSuccess(List<Contact> result) {
-								
-									//Daten in der Tabelle austauschen
-									dataProvider.getList().clear();
-									dataProvider.getList().addAll(result);
-							}
-						});
+					@Override
+					public void onSuccess(List<Contact> result) {
+
+						// Daten in der Tabelle austauschen
+						dataProvider.getList().clear();
+						dataProvider.getList().addAll(result);
+					}
+				});
 			}
 		});
 		hPanel1.add(b);
 
 		// Contact Tabelle
 
-	    // Connect the table to the data provider.
-	    dataProvider.addDataDisplay(table);
+		// Connect the table to the data provider.
+		dataProvider.addDataDisplay(table);
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 		TextColumn<Contact> nameColumn = new TextColumn<Contact>() {
 			@Override
