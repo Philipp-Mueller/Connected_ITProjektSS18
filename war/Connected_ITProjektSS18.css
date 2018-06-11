@@ -11,6 +11,28 @@ h1 {
   text-align: center;
 }
 */
+
+/*
+ * Seitenweite Regeln
+ */
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	display: flex;
+	flex-flow: column;
+	height: 100%;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 300;
+	color: #666;
+	background: #eee;
+}
 #top {
 	cursor: default;
 	display: flex;
@@ -19,7 +41,7 @@ h1 {
 	background: #999 url('http://mindchamps-medical.com/wp-content/uploads/2015/04/Abstract-Background-White.jpg') no-repeat left 50%;
 	background-size: cover;
 	justify-content: space-between;
-	/**padding-right: 30px;*/
+	padding-right: 30px;
 	box-sizing: border-box;
 }
 
@@ -28,7 +50,7 @@ h1 {
 	font-size: 16px;
 	width: 20%;
 	box-sizing: border-box;
-	background: url('ConnectedLogo1.png') no-repeat left 50%;
+	background: url('ConnectedLogo1.png') no-repeat left 80%;
 	background-size: contain;
 	margin-left: 20px;
 	color: rgba(255,255,255,0.0);
@@ -116,5 +138,4 @@ h1 a {
     color: #1c9cd8;
     text-decoration: none;
 }
-
 
