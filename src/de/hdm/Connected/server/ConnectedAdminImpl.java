@@ -148,7 +148,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	@Override
 	public ContactList createContactList(String name){
 		ContactList contactList = new ContactList();
-
+		contactList.setName(name);
 		return this.contactListMapper.insert(contactList);
 	}
 	
