@@ -96,7 +96,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return aktualisiertes Contact-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public void updateContact(Contact contact) throws IllegalArgumentException;
+	public void updateContact(Contact contact, int userId) throws IllegalArgumentException;
 	
 	/**
 	 * Löscht ein Contact-Objekt und alle eventuell darauf basierenden
@@ -281,4 +281,5 @@ public interface ConnectedAdmin extends RemoteService {
 	ArrayList<Contact> findContactsByPrename(String prename) throws IllegalArgumentException;
 
 	ArrayList<Contact> findContactsBySurname(String surname) throws IllegalArgumentException;
+
 }

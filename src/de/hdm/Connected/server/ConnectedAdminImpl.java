@@ -94,7 +94,8 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	
 	//Updated Contact
 	@Override
-	public void updateContact(Contact contact) throws IllegalArgumentException {
+	public void updateContact(Contact contact, int userId) throws IllegalArgumentException {
+		if (contact.getBoId()==permissionMapper.findById(userId).getBoId())
 		contactMapper.update(contact);
 	}
 	

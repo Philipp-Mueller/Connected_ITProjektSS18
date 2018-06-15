@@ -36,7 +36,7 @@ public interface ConnectedAdminAsync {
 	
 	void createContact(String prename, String surname, Timestamp creationDate, Timestamp modificationDate, int ownerId, AsyncCallback<Contact> callback);
 	
-	void updateContact(Contact contact, AsyncCallback<Void> callback);
+	void updateContact(Contact contact, int userId, AsyncCallback<Void> callback);
 	
 	void deleteContact(Contact contact, AsyncCallback<Void> callback);
 	
