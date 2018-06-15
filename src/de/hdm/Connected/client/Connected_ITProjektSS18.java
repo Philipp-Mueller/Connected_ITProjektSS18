@@ -18,6 +18,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.hdm.Connected.client.gui.ContactForm_Test;
 import de.hdm.Connected.client.gui.ContactListForm;
+import de.hdm.Connected.client.gui.ContactListForm2;
+import de.hdm.Connected.client.gui.Test_CellTable;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.FieldVerifier;
 
@@ -61,8 +63,8 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content").clear();
-				ContactListForm newcontactlistForm = new ContactListForm();
-				
+				ContactListForm2 newcontactlistForm = new ContactListForm2();
+				//Test_CellTable newform = new Test_CellTable(); 
 			}
 
 		});
