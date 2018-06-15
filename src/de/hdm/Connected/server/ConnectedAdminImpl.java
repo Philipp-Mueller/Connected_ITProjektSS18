@@ -243,6 +243,19 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public void deletePermission(Permission permission) throws IllegalArgumentException {
 		permissionMapper.delete(permission);
 	}
+	
+	// Prüft ob User über Rechte verfügt
+	
+	public boolean hasPermission(int userId)throws IllegalArgumentException {
+		boolean hp=false;
+			ArrayList<Permission> uPermissions = this.findPermissionsByUserId(userId);{
+				if (uPermissions != null) {
+					hp=true;			 }
+			}
+			return hp;
+											}
+		
+	
 
 	// *** Value ***
 	@Override
