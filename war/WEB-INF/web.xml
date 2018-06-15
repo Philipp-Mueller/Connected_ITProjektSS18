@@ -20,7 +20,7 @@
   
   <servlet-mapping>
     <servlet-name>connectedAdminImpl</servlet-name>
-    <url-pattern>/connectedadmin</url-pattern>
+    <url-pattern>/connected_itprojektss18/connectedadmin</url-pattern>
   </servlet-mapping>
 
 
