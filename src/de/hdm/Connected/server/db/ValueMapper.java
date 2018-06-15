@@ -71,7 +71,7 @@ public class ValueMapper {
 			 * aktuelle id wird um eins erhoeht. Statement ausfuellen und als
 			 * Query an die Datenbank senden.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM value");
+			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
 
 			if (rs.next()) {
 				value.setBoId(rs.getInt("maxid") + 1);
@@ -81,7 +81,11 @@ public class ValueMapper {
 			 * SQL-Anweisung zum Einfuegen des neuen Value-Tupels in die
 			 * Datenbank.
 			 */
-						
+			
+			//ID in Sharedobject einfügen
+			
+			stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES (" + value.getBoId() + ")");
+			
 			stmt.executeUpdate("INSERT INTO value (id, name, propertyId, contactId) VALUES (" + value.getBoId()
 			+ ", '" + value.getName() + "', " + value.getPropertyID()+ ", " + value.getContactID() + ")");
 			/**
