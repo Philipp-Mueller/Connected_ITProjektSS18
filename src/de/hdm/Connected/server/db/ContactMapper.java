@@ -71,9 +71,9 @@ public class ContactMapper {
 			/**
 			 * Abfrage des zuletzt hinzugefuegten Primaerschluessel (id). Die aktuelle id
 			 * wird um eins erhoeht. Statement ausfuellen und als Query an die Datenbank
-			 * senden.
+			 * senden. Da Contact ein SharedObject ist wird der maxid von SharedObject ermittelt, damit jedes SharedObject ein eindeutigen ID besitzen.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM contact");
+			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
 
 			if (rs.next()) {
 				contact.setBoId(rs.getInt("maxid") + 1);
@@ -82,6 +82,9 @@ public class ContactMapper {
 			/**
 			 * SQL-Anweisung zum Einfuegen des neuen Contact-Tupels in die Datenbank.
 			 */
+			//ID in Sharedobject einfügen
+			stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES (" + contact.getBoId() + ")");
+			
 			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, userId) VALUES (" + contact.getBoId() + ", '"
 					+ contact.getPrename() + "', " + contact.getSurname() + "', " + contact.getCreatorId() + ")");
 			/**
