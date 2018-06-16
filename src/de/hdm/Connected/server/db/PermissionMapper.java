@@ -512,7 +512,7 @@ public class PermissionMapper {
 	 * @return ArrayList<Permission>
 	 */
 	
-	public ArrayList<Permission> findAll (int receiverUserID) {
+	public ArrayList<Permission> findAll () {
 		// DB-Verbindung holen
 		Connection con = DBConnection.connection();
 		
