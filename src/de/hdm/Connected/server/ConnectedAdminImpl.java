@@ -21,6 +21,7 @@ import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
 
 
+
 /**
  * Implemetierungsklasse des Interface ConnectedAdmin. Sie enthält die
  * Applikationslogik, stellt die Zusammenhänge konstistent dar und ist zuständig
@@ -75,6 +76,84 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		this.valueMapper = ValueMapper.valueMapper();
 
 	}
+	
+	// *** Permission ***
+	@Override
+	public Permission createPermission(int shareUserId, int shareObjectId, int receiverUserId)
+			throws IllegalArgumentException {
+		Permission permission = new Permission();
+		permission.setShareUserID(shareUserId);
+		permission.setSharedObjectId(shareObjectId);
+		permission.setReceiverUserID(receiverUserId);
+
+		return this.permissionMapper.insert(permission);
+	}
+	
+
+	@Override
+	public void deletePermission(Permission permission) throws IllegalArgumentException {
+		permissionMapper.delete(permission);
+	}
+	
+	@Override
+	public void updatePermission(Permission permission) throws IllegalArgumentException{
+		permissionMapper.update(permission);
+		
+	}
+	
+	@Override
+	public ArrayList<Permission> getAllPermissions() throws IllegalArgumentException {
+		return this.permissionMapper.findAll();
+	} 
+	
+	@Override
+	public ArrayList<Permission> getPermissionsByContactId(int contactID) throws IllegalArgumentException {
+		return this.permissionMapper.findByContactId(contactID);
+	}
+		
+	@Override
+	public ArrayList<Permission> getPermissionsByContactListId(int contactListID) throws IllegalArgumentException {
+		return this.permissionMapper.findByContactId(contactListID);
+	}
+		
+	@Override
+	public ArrayList<Permission> getPermissionsByRecieveUserId(int recieveUId) throws IllegalArgumentException {
+		return this.permissionMapper.findByContactId(recieveUId);
+	}
+	
+	@Override
+	public ArrayList<Permission> getPermissionsByShareUserId(int shareUId) throws IllegalArgumentException {
+		return this.permissionMapper.findByContactId(shareUId);
+	}
+	
+	@Override
+	public ArrayList<Permission> getPermissionsBySharedOject(int sharedOId) throws IllegalArgumentException {
+		return this.permissionMapper.findByContactId(sharedOId);
+	}
+	
+	@Override
+	public ArrayList<Permission> getPermissionsByValueId(int valueId) throws IllegalArgumentException {
+		return this.permissionMapper.findByContactId(valueId);
+	}
+	
+	@Override
+	public Permission getPermissionById(int id) throws IllegalArgumentException{
+		return this.permissionMapper.findById(id);
+	}
+	
+	
+	// Prüft ob User über Rechte verfügt
+	
+	public boolean hasPermission(int userId)throws IllegalArgumentException {
+		boolean hp=false;
+			ArrayList<Permission> uPermissions = this.findPermissionsByUserId(userId);{
+				if (uPermissions != null) {
+					hp=true;			 }
+			}
+			return hp;
+											}
+		
+	
 
 	// **** CONTACT****
 
@@ -88,9 +167,15 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		contact.setPrename(prename);
 		contact.setSurname(surname);
 		contact.setCreatorId(ownerId);
-
+		
+//TODO Check wg seperation of concerns zulässig??	
+		Permission autoPermission = new Permission();
+		autoPermission.setReceiverUserID(ownerId);
+		autoPermission.setSharedObjectId(contact.getBoId());
+		autoPermission.setShareUserID(ownerId);
+	
 		return this.contactMapper.insert(contact);
-
+		
 	}
 	
 	//Updated Contact
@@ -155,6 +240,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return this.contactMapper.findBySurname(surname);
 	}
 	
+
 	// *** ContactList ***
 	
 	
@@ -242,35 +328,6 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return this.permissionMapper.findByUserId(userId);
 	}
 
-	// *** Permission ***
-	@Override
-	public Permission createPermission(int shareUserId, int shareObjectId, int receiverUserId)
-			throws IllegalArgumentException {
-		Permission permission = new Permission();
-		permission.setShareUserID(shareUserId);
-		permission.setSharedObjectId(shareObjectId);
-		permission.setReceiverUserID(receiverUserId);
-
-		return this.permissionMapper.insert(permission);
-	}
-
-	@Override
-	public void deletePermission(Permission permission) throws IllegalArgumentException {
-		permissionMapper.delete(permission);
-	}
-	
-	// Prüft ob User über Rechte verfügt
-	
-	public boolean hasPermission(int userId)throws IllegalArgumentException {
-		boolean hp=false;
-			ArrayList<Permission> uPermissions = this.findPermissionsByUserId(userId);{
-				if (uPermissions != null) {
-					hp=true;			 }
-			}
-			return hp;
-											}
-		
-	
 
 	// *** Value ***
 	@Override

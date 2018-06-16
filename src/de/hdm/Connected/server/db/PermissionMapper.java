@@ -94,7 +94,7 @@ public class PermissionMapper {
 	 * @return permission
 	 */
 	
-	public Permission update (Permission permission) {
+	public void update (Permission permission) {
 		// DB-Verbindung holen
 			Connection con = DBConnection.connection();
 
@@ -114,8 +114,7 @@ public class PermissionMapper {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			// Rückgabe der Permission
-			return permission;
+			
 	
 	}
 	/**
