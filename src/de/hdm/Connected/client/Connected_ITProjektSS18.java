@@ -21,7 +21,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import de.hdm.Connected.client.gui.ContactForm_Test;
 import de.hdm.Connected.client.gui.ContactListForm;
 import de.hdm.Connected.client.gui.ContactListForm2;
-import de.hdm.Connected.client.gui.Test_CellTable;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.FieldVerifier;
 

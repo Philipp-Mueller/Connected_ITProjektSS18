@@ -59,7 +59,7 @@ public class ContactListForm2 extends Widget {
 	ListBox contactListBox = new ListBox();
 	Button addContactButton = new Button("Kontakt hinzufügen");
 	Button createListButton = new Button("Liste erstellen", new createContactListClickhandler());
-	Button visitbutton = new Button("Visit");
+	Button visitbutton = null;
 
 	HorizontalPanel namePanel = new HorizontalPanel();
 	HorizontalPanel contactsPanel = new HorizontalPanel();
@@ -97,7 +97,9 @@ public class ContactListForm2 extends Widget {
 				for (ContactList cl : result) {
 //					contactlist.addItem(cl.getName());
 					clGrid.setWidget(i, 0, new Label(cl.getName()));
-					clGrid.setWidget(i, 1, new Button("Visit"), new visitClickhandler());
+					visitbutton = new Button("Visit");
+					visitbutton.addClickHandler(new visitClickhandler());
+					clGrid.setWidget(i, 1, visitbutton);
 					i = i +1;
 					Window.alert(Integer.toString(i));
 				}
@@ -120,6 +122,8 @@ public class ContactListForm2 extends Widget {
 			//Oben 2 buttons mit cl bearbeiten und cl löschen
 			//Kontakt cl hinzufügen button
 			//Cl teilen button
+			RootPanel.get("content").clear();
+			ContactForm_Test newcontactForm = new ContactForm_Test();
 
 		}
 	}
