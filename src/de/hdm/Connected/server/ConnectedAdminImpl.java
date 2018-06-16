@@ -257,30 +257,57 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		contactListMapper.update(contactList);
 	}
 	
-		// fügt einer Kontaktliste einen Kontakt hinzu
+	// fügt einer Kontaktliste einen Kontakt hinzu
 	
 	@Override
 	public void addContactToContactList(int contactid, int contactlistid) throws IllegalArgumentException {
 		ccMapper.addContactToContactList(contactlistid, contactid);
 	}
 		
+	//Löscht einen Kontakt von einer Kontaktliste
+	
 	@Override
 	public void removeContactFromContactList(int contactid, int contactlistid) throws IllegalArgumentException {
-		ccMapper.removeContactFromContactList(contactlistid, contactid);
+			ccMapper.removeContactFromContactList(contactlistid, contactid);
 	}
 	
-	//Löscht Kontaktliste
-	// TODO Prüfung falls UserID ungleich CreatorID ist - Lösche Permission für alle Kontakte aus Kontaktliste 
-	
+	// Löscht KontaktListen und zugehörige Kontakte inkl. Values 	
 	@Override
    	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException {
 			this.contactListMapper.delete(contactlist);
 		}
 		
+	public void deleteContactList(ContactList contactList, User cUser)throws IllegalArgumentException {
+		int sharedObjectId = permissionMapper.findById(permissionMapper.findById(cUser.getBoId()).getReceiverUserID()).getBoId();
+							
+			if (cUser.getBoId()==permissionMapper.findById(cUser.getBoId()).getShareUserID()
+					&& permissionMapper.findById(contactList.getBoId()).getBoId() == contactList.getBoId()){
+					
+						Permission cPermission = permissionMapper.findById(sharedObjectId);
+							permissionMapper.delete(cPermission);
+							}
+																							
+			else {
+				ArrayList<Contact> contacts = this.findContactsByOwnerId(cUser.getBoId());
+				if (contacts != null){
+					for (Contact contact: contacts){
+						this.ccMapper.removeContactFromContactList(contact.getBoId(), contactList.getBoId());
+						this.contactMapper.delete(contact);
+																
+				ArrayList<Value> values = this.findValuesByContactId(contact.getBoId());
+			
+					if (values != null){
+						for (Value value: values){
+							this.valueMapper.delete(value);
+												  }
+							   		   }
+				 					   }
+				}}
+																									}
 		
 	@Override
 	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException {	
-		return this.contactMapper.findByContactListId(contactlistId);
+		return this.ccMapper.findContactsByContactListId(contactlistId);
 	}
 
 	// TODO ? zeigt alle Kontaktlisten eines Users anhand der User ID und Permissions
