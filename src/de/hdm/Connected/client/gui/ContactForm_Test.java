@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Timer;
 import java.util.Vector;
 
 //import com.google.appengine.labs.repackaged.com.google.common.collect.Multiset.Entry;
@@ -58,7 +59,7 @@ public class ContactForm_Test extends Widget {
 	FlexTable nameTable = new FlexTable();
 	FlexTable propertyTable = new FlexTable();
 
-	ArrayList<Property> propertyArray = new ArrayList<Property>();
+	private ArrayList<Property> propertyArray = new ArrayList<Property>();
 	ArrayList<Integer> selectedProperties = new ArrayList<Integer>();
 	ArrayList<String> propertyValueArray = new ArrayList<String>();
 	ArrayList<TextBox> values = new ArrayList<TextBox>();
@@ -68,6 +69,7 @@ public class ContactForm_Test extends Widget {
 	FlexTable checkboxTable = new FlexTable();
 	CheckBox checkContactlist = new CheckBox();
 	final ListBox contactlist = new ListBox(true);
+
 
 	/**
 	 * Konstruktor wenn ein Kontakt schon existiert.
@@ -81,7 +83,22 @@ public class ContactForm_Test extends Widget {
 
 		RootPanel.get("content").clear();
 
-		ClientSideSettings.getConnectedAdmin().findContactById(selectedContact.getBoId(), new ContactCallback());
+		ClientSideSettings.getConnectedAdmin().findContactById(selectedContact.getBoId(), new AsyncCallback<Contact>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onSuccess(Contact result) {
+				//Wenn Kontakt gefunden, dann die Values dazu finden.
+				ClientSideSettings.getConnectedAdmin().findAllProperties(new findAllPropertiesCallback());
+				
+			}
+			
+		});
 
 	}
 
@@ -296,7 +313,7 @@ public class ContactForm_Test extends Widget {
 
 	}
 
-	private class ContactCallback implements AsyncCallback<Contact> {
+	private class findValueCallback implements AsyncCallback<ArrayList<Value>> {
 
 		@Override
 		public void onFailure(Throwable caught) {
@@ -305,10 +322,60 @@ public class ContactForm_Test extends Widget {
 		}
 
 		@Override
-		public void onSuccess(Contact result) {
-
-		}
-
+		public void onSuccess(ArrayList<Value> result) {
+			
+			propertyTable = new FlexTable();
+			
+			
+			
+			try{
+			for(int i =0; i<result.size(); i++){
+				int rowCount = propertyTable.getRowCount();
+				propertyListBox = new ListBox();
+				for(int j =0; j<propertyArray.size();j++){
+					propertyListBox.addItem(propertyArray.get(j).getName());
+					
+				}	
+				//int rowCount = propertyTable.getRowCount();
+				ClientSideSettings.getConnectedAdmin().findPropertyByPropertyId(result.get(i).getPropertyID(), new AsyncCallback<Property>(){
+					
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Die Eigenschaft konnte nicht geladen werden!");
+						
+					}
+					
+					@Override
+					public void onSuccess(Property result) {
+					
+											
+						Window.alert(Integer.toString(propertyListBox.getItemCount()));
+				
+						//Window.alert(Integer.toString(propertyArray.size()));
+					/*propertyListBox = new ListBox();
+					for(int j = 0; j<propertyArray.size();j++){
+						propertyListBox.addItem(propertyArray.get(j).getName());
+						
+					}*/
+					//Die Eigenschaften werden nach Reihenfolge der ID reingeladen, also Index = Id - 1	
+					
+									
+					}
+					
+					
+				});	
+				valueTextBox = new TextBox();
+				valueTextBox.setText(result.get(i).getName());
+				
+				propertyTable.setWidget(rowCount, 0, propertyListBox);
+				propertyTable.setWidget(rowCount, 1, valueTextBox);
+			}
+			RootPanel.get("content").add(propertyTable);
+		
+		} 	 catch  (Exception e) { Window.alert(e.toString());
+		  e.printStackTrace(); }
+	
+	}
 	}
 
 	private class findAllPropertiesCallback implements AsyncCallback<ArrayList<Property>> {
@@ -323,7 +390,21 @@ public class ContactForm_Test extends Widget {
 
 		public void onSuccess(ArrayList<Property> result) {
 			// alle Eigenschaften in Vektor laden
+			if(selectedContact != null){
+				propertyArray = new ArrayList<Property>();
+				for (int i = 0; i < result.size(); i++) {
+					Property propertyItem = result.get(i);
 
+					if (propertyItem.getName() != "Vorname" || propertyItem.getName() != "Nachname") {
+
+						propertyArray.add(propertyItem);				
+						
+					}
+					
+				}
+				ClientSideSettings.getConnectedAdmin().findValuesByContactId(selectedContact.getBoId(), new findValueCallback());
+			}else {
+				
 			propertyListBox = new ListBox();
 			propertyListBox.setWidth("250px");
 			for (int i = 0; i < result.size(); i++) {
@@ -339,10 +420,13 @@ public class ContactForm_Test extends Widget {
 			propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
 			propertyListBox.addChangeHandler(new listBoxChangeHandler());
 			int rowCount = propertyTable.getRowCount();
+			
+		//	if(selectedContact == null){
 			propertyTable.setWidget(rowCount - 1, 0, propertyListBox);
-
+			
+		
 		}
-
+		}
 	}
 
 	// ----Clickhandler für add Button-----
@@ -520,4 +604,5 @@ public class ContactForm_Test extends Widget {
 
 		}
 	}
+
 }
