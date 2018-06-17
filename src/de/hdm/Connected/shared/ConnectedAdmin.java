@@ -227,7 +227,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @param permission
 	 * @throws IllegalArgumentException
 	 */
-	public void deletePermission(Permission permission) throws IllegalArgumentException;
+	public void deletePermission(Permission permission, User cUser) throws IllegalArgumentException;
 	
 	/**
 	 * Fügt ein Contact einer ContactList hinzu
