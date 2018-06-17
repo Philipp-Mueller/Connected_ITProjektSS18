@@ -105,7 +105,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @param contact
 	 * @throws IllegalArgumentException
 	 */
-	public void deleteContact(Contact contact) throws IllegalArgumentException;
+	public void deleteContact(Contact contact, User cUser) throws IllegalArgumentException;
 	
 	/**
 	 * Erstellt ein neues Value-Objekt.
@@ -227,7 +227,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @param permission
 	 * @throws IllegalArgumentException
 	 */
-	public void deletePermission(Permission permission) throws IllegalArgumentException;
+	public void deletePermission(Permission permission, User cUser) throws IllegalArgumentException;
 	
 	/**
 	 * Fügt ein Contact einer ContactList hinzu
@@ -281,5 +281,23 @@ public interface ConnectedAdmin extends RemoteService {
 	ArrayList<Contact> findContactsByPrename(String prename) throws IllegalArgumentException;
 
 	ArrayList<Contact> findContactsBySurname(String surname) throws IllegalArgumentException;
+
+	ArrayList<Permission> getAllPermissions() throws IllegalArgumentException;
+
+	ArrayList<Permission> getPermissionsByContactId(int contactID) throws IllegalArgumentException;
+
+	ArrayList<Permission> getPermissionsByContactListId(int contactListID) throws IllegalArgumentException;
+
+	ArrayList<Permission> getPermissionsByRecieveUserId(int recieveUId) throws IllegalArgumentException;
+
+	ArrayList<Permission> getPermissionsByShareUserId(int shareUId) throws IllegalArgumentException;
+
+	ArrayList<Permission> getPermissionsBySharedOject(int sharedOId) throws IllegalArgumentException;
+
+	ArrayList<Permission> getPermissionsByValueId(int valueId) throws IllegalArgumentException;
+
+	void updatePermission(Permission permission) throws IllegalArgumentException;
+
+	Permission getPermissionById(int id) throws IllegalArgumentException;
 
 }

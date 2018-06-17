@@ -21,6 +21,7 @@ import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
 
 
+
 /**
  * Implemetierungsklasse des Interface ConnectedAdmin. Sie enthält die
  * Applikationslogik, stellt die Zusammenhänge konstistent dar und ist zuständig
@@ -75,11 +76,104 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		this.valueMapper = ValueMapper.valueMapper();
 
 	}
+	
+	
+	// *** Permission ***
+	
+	
+	@Override
+	public Permission createPermission(int shareUserId, int shareObjectId, int receiverUserId)
+			throws IllegalArgumentException {
+		Permission permission = new Permission();
+		permission.setShareUserID(shareUserId);
+		permission.setSharedObjectId(shareObjectId);
+		permission.setReceiverUserID(receiverUserId);
+
+		return this.permissionMapper.insert(permission);
+	}
+	
+	//löscht eine Permission wenn User sie selbst erstellt hat
+	@Override
+	public void deletePermission(Permission permission, User cUser) throws IllegalArgumentException {
+			
+		if (cUser.getBoId()==permissionMapper.findById(cUser.getBoId()).getShareUserID()){
+				
+						permissionMapper.delete(permission, cUser);						 }
+																						
+																									}
+						 	
+	@Override
+	public void updatePermission(Permission permission) throws IllegalArgumentException{
+		permissionMapper.update(permission);
+		
+	}
+	
+	// gibt alle Permsission-Objekte aus der DB zurück
+	@Override
+	public ArrayList<Permission> getAllPermissions() throws IllegalArgumentException {
+		return this.permissionMapper.findAll();
+	} 
+	
+	// Gibt alle PermissionObjekte für einen bestimmten Kontakt zurück
+	@Override
+	public ArrayList<Permission> getPermissionsByContactId(int contactID) throws IllegalArgumentException {
+		return this.permissionMapper.findByContactId(contactID);
+	}
+	
+	// Gibt alle Permission-Objekte für eine Contaktliste zurück
+	@Override
+	public ArrayList<Permission> getPermissionsByContactListId(int contactListID) throws IllegalArgumentException {
+		return this.permissionMapper.findByContactId(contactListID);
+	}
+	
+	// Gibt alle Permission-Objekte für einen User (Empfänger) zurück
+	@Override
+	public ArrayList<Permission> getPermissionsByRecieveUserId(int recieveUId) throws IllegalArgumentException {
+		return this.permissionMapper.findByContactId(recieveUId);
+	}
+	
+	// Gibt alle Permission-Objekte für einen User (Teilender) zurück
+	@Override
+	public ArrayList<Permission> getPermissionsByShareUserId(int shareUId) throws IllegalArgumentException {
+		return this.permissionMapper.findByContactId(shareUId);
+	}
+	// Gibt alle Permission-Objekte für ein geteiltes Objekt zurück
+	@Override
+	public ArrayList<Permission> getPermissionsBySharedOject(int sharedOId) throws IllegalArgumentException {
+		return this.permissionMapper.findByContactId(sharedOId);
+	}
+	
+	// Gibt alle Permission-Objekte für eine Eigenschaft zurück
+	@Override
+	public ArrayList<Permission> getPermissionsByValueId(int valueId) throws IllegalArgumentException {
+		return this.permissionMapper.findByContactId(valueId);
+	}
+	
+	// Gibt eine Permission-Objekt anhand seiner Id zurück
+	@Override
+	public Permission getPermissionById(int id) throws IllegalArgumentException{
+		return this.permissionMapper.findById(id);
+	}
+	
+	
+	// Prüft ob User über irgendwelche Rechte verfügt
+	
+	public boolean hasPermission(int userId)throws IllegalArgumentException {
+		boolean hp=false;
+			ArrayList<Permission> uPermissions = this.findPermissionsByUserId(userId);{
+				if (uPermissions != null) {
+					hp=true;			 }
+			}
+			return hp;
+											}
+		
+	
 
 	// **** CONTACT****
 
 	
 	// erstellt Contact 
+	
 	public Contact createContact(String prename, String surname, Timestamp creationDate, Timestamp modificationDate, int ownerId) {
 		Contact contact = new Contact();
 		contact.setCreationDate(creationDate);
@@ -87,9 +181,15 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		contact.setPrename(prename);
 		contact.setSurname(surname);
 		contact.setCreatorId(ownerId);
-
+		
+//TODO Check wg seperation of concerns zulässig??	
+		Permission autoPermission = new Permission();
+		autoPermission.setReceiverUserID(ownerId);
+		autoPermission.setSharedObjectId(contact.getBoId());
+		autoPermission.setShareUserID(ownerId);
+	
 		return this.contactMapper.insert(contact);
-
+		
 	}
 	
 	//Updated Contact
@@ -99,20 +199,33 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		contactMapper.update(contact);
 	}
 	
-	// löscht Kontakt mit Values
-	@Override
-	public void deleteContact(Contact contact)throws IllegalArgumentException {
-		// TODO Prüfung Permission bzw kann nur die selbst erstellten Kontakte löschen oder Fremdkontakte bei sich löschen --> eigene Permission löschen
-		ArrayList<Value> values = this.findValuesByContactId(contact.getBoId());
-		
-		if (values != null){
-			for (Value value: values){
-				this.valueMapper.delete(value);
-			}
-		}
-		this.contactMapper.delete(contact);
-	}
+	// löscht Kontakt mit Values 
+	// Editor-GUI dar nur Kontakte anzeigen mit find by Shared User und find by RecieverUser anzeigen
+	//Permission bzw kann nur die selbst erstellten Kontakte löschen sonst --> eigene Permission löschen
 	
+	@Override
+	public void deleteContact(Contact contact, User cUser)throws IllegalArgumentException {
+		int sharedObjectId = permissionMapper.findById(permissionMapper.findById(cUser.getBoId()).getReceiverUserID()).getBoId();
+							
+			if (cUser.getBoId()==permissionMapper.findById(cUser.getBoId()).getShareUserID()
+					&& permissionMapper.findById(contact.getBoId()).getBoId() == contact.getBoId()){
+					
+						Permission cPermission = permissionMapper.findById(sharedObjectId);
+							permissionMapper.delete(cPermission, cUser);									}
+																							
+			else {
+				ArrayList<Value> values = this.findValuesByContactId(contact.getBoId());
+			
+				if (values != null){
+				for (Value value: values){
+					this.valueMapper.delete(value);
+										 }
+							   		}
+				
+			this.contactMapper.delete(contact);
+				 }
+																						}
+		
 	// gibt alle Contact Objekte zurück
 	@Override
 	public ArrayList<Contact> findAllContacts() throws IllegalArgumentException{
@@ -142,6 +255,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return this.contactMapper.findBySurname(surname);
 	}
 	
+
 	// *** ContactList ***
 	
 	
@@ -158,33 +272,60 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		contactListMapper.update(contactList);
 	}
 	
-		// fügt einer Kontaktliste einen Kontakt hinzu
+	// fügt einer Kontaktliste einen Kontakt hinzu
 	
 	@Override
 	public void addContactToContactList(int contactid, int contactlistid) throws IllegalArgumentException {
 		ccMapper.addContactToContactList(contactlistid, contactid);
 	}
 		
+	//Löscht einen Kontakt von einer Kontaktliste
+	
 	@Override
 	public void removeContactFromContactList(int contactid, int contactlistid) throws IllegalArgumentException {
-		ccMapper.removeContactFromContactList(contactlistid, contactid);
+			ccMapper.removeContactFromContactList(contactlistid, contactid);
 	}
 	
-	//Löscht Kontaktliste
-	// TODO Prüfung falls UserID ungleich CreatorID ist - Lösche Permission für alle Kontakte aus Kontaktliste 
-	
+	// Löscht KontaktListen und zugehörige Kontakte inkl. Values 	
 	@Override
    	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException {
 			this.contactListMapper.delete(contactlist);
 		}
 		
-		
-
+	public void deleteContactList(ContactList contactList, User cUser)throws IllegalArgumentException {
+		int sharedObjectId = permissionMapper.findById(permissionMapper.findById(cUser.getBoId()).getReceiverUserID()).getBoId();
+							
+			if (cUser.getBoId()==permissionMapper.findById(cUser.getBoId()).getShareUserID()
+					&& permissionMapper.findById(contactList.getBoId()).getBoId() == contactList.getBoId()){
+					
+						Permission cPermission = permissionMapper.findById(sharedObjectId);
+							permissionMapper.delete(cPermission,cUser);
+							}
+											
+			else {
+				ArrayList<Contact> contacts = this.findContactsByOwnerId(cUser.getBoId());
+				if (contacts != null){
+					for (Contact contact: contacts){
+						this.ccMapper.removeContactFromContactList(contact.getBoId(), contactList.getBoId());
+						this.contactMapper.delete(contact);
+																
+				ArrayList<Value> values = this.findValuesByContactId(contact.getBoId());
+			
+					if (values != null){
+						for (Value value: values){
+							this.valueMapper.delete(value);
+												  }
+							   		   }
+				 					   }
+				}}
+																									}	
 	@Override
 	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException {	
-		return this.contactMapper.findByContactListId(contactlistId);
+		return this.ccMapper.findContactsByContactListId(contactlistId);
 	}
 
+	// TODO ? zeigt alle Kontaktlisten eines Users anhand der User ID und Permissions
+		
 
 	@Override
 	public ArrayList<ContactList> findAllContactlists() throws IllegalArgumentException {
@@ -217,7 +358,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 		if (permissions != null) {
 			for (Permission permission : permissions) {
-				this.permissionMapper.delete(permission);
+				this.permissionMapper.delete(permission, user);
 			}
 		}
 		this.userMapper.delete(user);
@@ -228,35 +369,6 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return this.permissionMapper.findByUserId(userId);
 	}
 
-	// *** Permission ***
-	@Override
-	public Permission createPermission(int shareUserId, int shareObjectId, int receiverUserId)
-			throws IllegalArgumentException {
-		Permission permission = new Permission();
-		permission.setShareUserID(shareUserId);
-		permission.setSharedObjectId(shareObjectId);
-		permission.setReceiverUserID(receiverUserId);
-
-		return this.permissionMapper.insert(permission);
-	}
-
-	@Override
-	public void deletePermission(Permission permission) throws IllegalArgumentException {
-		permissionMapper.delete(permission);
-	}
-	
-	// Prüft ob User über Rechte verfügt
-	
-	public boolean hasPermission(int userId)throws IllegalArgumentException {
-		boolean hp=false;
-			ArrayList<Permission> uPermissions = this.findPermissionsByUserId(userId);{
-				if (uPermissions != null) {
-					hp=true;			 }
-			}
-			return hp;
-											}
-		
-	
 
 	// *** Value ***
 	@Override

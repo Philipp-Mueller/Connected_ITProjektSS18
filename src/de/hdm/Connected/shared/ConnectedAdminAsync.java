@@ -38,7 +38,7 @@ public interface ConnectedAdminAsync {
 	
 	void updateContact(Contact contact, int userId, AsyncCallback<Void> callback);
 	
-	void deleteContact(Contact contact, AsyncCallback<Void> callback);
+	void deleteContact(Contact contact, User cUser, AsyncCallback<Void> callback);
 	
 	void createValue(String name, int propertyId, int contactId, AsyncCallback<Value> callback);
 	
@@ -68,7 +68,7 @@ public interface ConnectedAdminAsync {
 	
 	void createPermission(int shareUserId, int shareObjectId, int receiverUserId, AsyncCallback<Permission> callback);
 	
-	void deletePermission(Permission permission, AsyncCallback<Void> callback);
+	void deletePermission(Permission permission, User cUser, AsyncCallback<Void> callback);
 	
 	void addContactToContactList(int contact, int contactlist, AsyncCallback<Void> callback);
 	
@@ -87,5 +87,23 @@ public interface ConnectedAdminAsync {
 	void findContactsByPrename(String prename, AsyncCallback<ArrayList<Contact>> callback);
 
 	void findContactsBySurname(String surname, AsyncCallback<ArrayList<Contact>> callback);
+
+	void getAllPermissions(AsyncCallback<ArrayList<Permission>> callback);
+
+	void getPermissionsByContactId(int contactID, AsyncCallback<ArrayList<Permission>> callback);
+
+	void getPermissionsByContactListId(int contactListID, AsyncCallback<ArrayList<Permission>> callback);
+
+	void getPermissionsByRecieveUserId(int recieveUId, AsyncCallback<ArrayList<Permission>> callback);
+
+	void getPermissionsByShareUserId(int shareUId, AsyncCallback<ArrayList<Permission>> callback);
+
+	void getPermissionsBySharedOject(int sharedOId, AsyncCallback<ArrayList<Permission>> callback);
+
+	void getPermissionsByValueId(int valueId, AsyncCallback<ArrayList<Permission>> callback);
+
+	void updatePermission(Permission permission, AsyncCallback<Void> callback);
+
+	void getPermissionById(int id, AsyncCallback<Permission> callback);
 	
 }

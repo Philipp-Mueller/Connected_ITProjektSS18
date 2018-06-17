@@ -1,6 +1,8 @@
 package de.hdm.Connected.server.db;
 
 import de.hdm.Connected.shared.bo.Permission;
+import de.hdm.Connected.shared.bo.User;
+
 import java.util.ArrayList;
 import java.sql.*;
 
@@ -94,7 +96,7 @@ public class PermissionMapper {
 	 * @return permission
 	 */
 	
-	public Permission update (Permission permission) {
+	public void update (Permission permission) {
 		// DB-Verbindung holen
 			Connection con = DBConnection.connection();
 
@@ -114,8 +116,7 @@ public class PermissionMapper {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			// Rückgabe der Permission
-			return permission;
+			
 	
 	}
 	/**
@@ -123,7 +124,7 @@ public class PermissionMapper {
 	 * 
 	 * @param permission
 	 */
-	public void delete (Permission permission) {
+	public void delete (Permission permission, User cUser) {
 		//DB-Verbindung holen
 		Connection con = DBConnection.connection();
 		
@@ -505,7 +506,53 @@ public class PermissionMapper {
 		
 	}
 	
+	/**
+	 * Findet alle Permission-Objekte in der Datenbank.
+	 * 
+	 *
+	 * @return ArrayList<Permission>
+	 */
 	
+	public ArrayList<Permission> findAll () {
+		// DB-Verbindung holen
+		Connection con = DBConnection.connection();
+		
+		ArrayList<Permission> result = new ArrayList<Permission>();
+		
+		try{
+			// Leeres SQL-Statement (JDBC) anlegen
+			Statement stmt = con.createStatement();
+
+			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der UserId in der Datenbank
+			ResultSet rs = stmt.executeQuery("SELECT id, sharedObjectID, receiverUserID, shareUserID FROM permission ORDER BY id");
+			/**
+			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
+			 * Tabelle permission vorhanden ist, muss das Abfragen des ResultSet so
+			 * oft erfolgen (while-Schleife), bis alle Tupel durchlaufen wurden.
+			 * Die DB-Tupel werden in Java-Objekte transformiert und
+			 * anschliessend der ArrayList hinzugefügt.
+			 */
+			
+			while (rs.next()) {
+				Permission permission = new Permission();
+				permission.setBoId(rs.getInt("id"));
+				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
+				permission.setReceiverUserID(rs.getInt("receiverUserID"));
+				permission.setShareUserID(rs.getInt("shareUserID"));
+				result.add(permission);
+			}
+			/**
+			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
+			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen dazu
+			 * ausgegeben, was passiert ist und wo im Code es passiert ist.
+			 */	
+		} catch (SQLException e) {
+			e.printStackTrace();
+	}	
+		// Rückgabe der ArrayList
+		return result;
+	
+	}
 	
 	
 }
