@@ -1,6 +1,8 @@
 package de.hdm.Connected.server.db;
 
 import de.hdm.Connected.shared.bo.Permission;
+import de.hdm.Connected.shared.bo.User;
+
 import java.util.ArrayList;
 import java.sql.*;
 
@@ -122,7 +124,7 @@ public class PermissionMapper {
 	 * 
 	 * @param permission
 	 */
-	public void delete (Permission permission) {
+	public void delete (Permission permission, User cUser) {
 		//DB-Verbindung holen
 		Connection con = DBConnection.connection();
 		

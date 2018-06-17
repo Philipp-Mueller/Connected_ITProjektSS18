@@ -68,7 +68,7 @@ public interface ConnectedAdminAsync {
 	
 	void createPermission(int shareUserId, int shareObjectId, int receiverUserId, AsyncCallback<Permission> callback);
 	
-	void deletePermission(Permission permission, AsyncCallback<Void> callback);
+	void deletePermission(Permission permission, User cUser, AsyncCallback<Void> callback);
 	
 	void addContactToContactList(int contact, int contactlist, AsyncCallback<Void> callback);
 	
