@@ -23,6 +23,7 @@ import de.hdm.Connected.client.gui.ContactListForm;
 import de.hdm.Connected.client.gui.ContactListForm2;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.FieldVerifier;
+import de.hdm.Connected.shared.bo.Contact;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -47,6 +48,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	public void onModuleLoad() {
 
 		Button newContactButton = new Button("Neuen Kontakt anlegen");
+		Button editContactButton = new Button ("Kontakt 8 bearbeiten");
 
 		newContactButton.addClickHandler(new ClickHandler() {
 
@@ -69,8 +71,34 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			}
 
 		});
+		editContactButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				ClientSideSettings.getConnectedAdmin().findContactById(10, new AsyncCallback<Contact>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void onSuccess(Contact result) {
+						RootPanel.get("content").clear();
+						ContactForm_Test newcontactForm = new ContactForm_Test(result);
+						//Test_CellTable newform = new Test_CellTable(); 
+					}
+					
+				});
+				
+			}
+
+		});
+		
 		RootPanel.get("content").add(newContactButton);
 		RootPanel.get("content").add(newContactListButton);
+		RootPanel.get("content").add(editContactButton);
 		
 		HorizontalPanel footer = new HorizontalPanel();
 		Anchor startPage = new Anchor ("Startseite", "Connected_ITProjektSS18.html");
