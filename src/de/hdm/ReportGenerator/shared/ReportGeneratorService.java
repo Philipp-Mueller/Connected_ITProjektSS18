@@ -1,4 +1,4 @@
-package de.hdm.Connected.shared;
+package de.hdm.ReportGenerator.shared;
 
 import java.util.List;
 

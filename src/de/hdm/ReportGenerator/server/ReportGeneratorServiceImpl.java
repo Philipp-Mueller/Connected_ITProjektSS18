@@ -1,4 +1,4 @@
-package de.hdm.Connected.server;
+package de.hdm.ReportGenerator.server;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,18 +7,19 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+import de.hdm.Connected.server.ConnectedAdminImpl;
 import de.hdm.Connected.server.db.ContactMapper;
 import de.hdm.Connected.server.db.PermissionMapper;
 import de.hdm.Connected.server.db.PropertyMapper;
 import de.hdm.Connected.server.db.UserMapper;
 import de.hdm.Connected.server.db.ValueMapper;
 import de.hdm.Connected.shared.ConnectedAdmin;
-import de.hdm.Connected.shared.ReportGeneratorService;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.Permission;
 import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
+import de.hdm.ReportGenerator.shared.ReportGeneratorService;
 
 /**
  * 
