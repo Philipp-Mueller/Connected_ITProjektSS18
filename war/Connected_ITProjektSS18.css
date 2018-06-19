@@ -11,7 +11,7 @@ h1 {
   text-align: center;
 }
 */
-
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 /*
  * Seitenweite Regeln
  */
@@ -85,6 +85,28 @@ h1 a {
 	display: flex;
 	width: 30%;
 	justify-content: flex-end;
+}
+
+#content button {
+    border: none;
+    background: #009999;
+    color: #fff;
+    padding: 5px 10px;
+    cursor: pointer;	
+}
+
+#content button:hover,
+#content button:active {
+	background: #007575;
+}
+
+#content button.delete {
+    background: #d8581c;	
+}
+
+#content button.delete:hover,
+#content button.delete:active {
+    background: #ab4616;	
 }
 
 #repgen-heading {
