@@ -323,7 +323,14 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 																									}	
 	@Override
 	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException {	
-		return this.ccMapper.findContactsByContactListId(contactlistId);
+		
+		ArrayList<Contact> contactsInList = new ArrayList<Contact>();
+		
+		for(int i =0; i<ccMapper.findContactsByContactListId(contactlistId).size(); i++){
+			contactsInList.add(findContactById(findContactsByContactListId(contactlistId).get(i).getBoId()));					
+		}
+		
+		return contactsInList;
 	}
 
 	// TODO ? zeigt alle Kontaktlisten eines Users anhand der User ID und Permissions

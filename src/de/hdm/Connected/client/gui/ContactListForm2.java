@@ -131,7 +131,7 @@ public class ContactListForm2 extends Widget {
 
 	private class visitClickhandler implements ClickHandler {
 		public void onClick(ClickEvent event) {
-
+			contactArray = new ArrayList<Contact>();
 			RootPanel.get("content").clear();
 			RootPanel.get("content").add(topPanel);
 			topPanel.clear();
@@ -141,7 +141,12 @@ public class ContactListForm2 extends Widget {
 																		// ContactList
 
 			ClientSideSettings.getConnectedAdmin().findContactsByContactListId(idvonCl, new getContactContactListRelationCallback());
-
+			try{
+			Window.alert(Integer.toString(contactArray.size()));
+			
+			
+			} 	 catch  (Exception e) { Window.alert(e.toString());
+		  e.printStackTrace(); }
 			// Window.alert(Integer.toString(row));
 			// Contaktliste anzeigen (id aus tabelle = id aus result Array -> id
 			// von cl)
