@@ -76,7 +76,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		this.propertyMapper = PropertyMapper.propertyMapper();
 		this.userMapper = UserMapper.userMapper();
 		this.valueMapper = ValueMapper.valueMapper();
-
+		this.ccMapper = ContactContactListMapper.contactContactListMapper();
 	}
 	
 	
