@@ -2,6 +2,7 @@ package de.hdm.Connected.shared;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -299,5 +300,7 @@ public interface ConnectedAdmin extends RemoteService {
 	void updatePermission(Permission permission) throws IllegalArgumentException;
 
 	Permission getPermissionById(int id) throws IllegalArgumentException;
+
+	Map<String, String> findValueAndProperty(int id) throws IllegalArgumentException;
 
 }

@@ -2,6 +2,7 @@ package de.hdm.Connected.shared;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -105,5 +106,7 @@ public interface ConnectedAdminAsync {
 	void updatePermission(Permission permission, AsyncCallback<Void> callback);
 
 	void getPermissionById(int id, AsyncCallback<Permission> callback);
+
+	void findValueAndProperty(int id, AsyncCallback<Map<String, String>> callback);
 	
 }

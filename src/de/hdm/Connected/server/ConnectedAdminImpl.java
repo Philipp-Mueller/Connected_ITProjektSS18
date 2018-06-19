@@ -2,6 +2,8 @@ package de.hdm.Connected.server;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -445,9 +447,24 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 	@Override
 	public ArrayList<Value> findValuesByContactId(int id) throws IllegalArgumentException {
+				
 		return this.valueMapper.findByContactId(id);
 	}
 
+	
+	@Override
+	public Map<String, String> findValueAndProperty(int id) throws IllegalArgumentException {
+		Map<String, String> mapi = new HashMap<String, String>();
+		for(int i=0; i<findValuesByContactId(id).size();i++){
+			String value = findValuesByContactId(id).get(i).getName();
+			String property = findPropertyByPropertyId(findValuesByContactId(id).get(i).getPropertyID()).getName();
+			mapi.put(property, value);
+		}
+		
+		
+		return mapi;
+		
+	}
 	@Override
 	public Property findPropertyByPropertyId(int id) throws IllegalArgumentException {
 		return this.propertyMapper.findById(id);
