@@ -77,6 +77,7 @@ public class ContactListForm2 extends Widget {
 	CellTable<Contact> contacttable = new CellTable<Contact>();
 
 	Grid clGrid = new Grid();
+	public int row;
 
 	private ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
 	Set<Contact> set1 = null;
@@ -135,7 +136,7 @@ public class ContactListForm2 extends Widget {
 			RootPanel.get("content").clear();
 			RootPanel.get("content").add(topPanel);
 			topPanel.clear();
-			int row = (clGrid.getCellForEvent(event).getRowIndex());
+			row = (clGrid.getCellForEvent(event).getRowIndex());
 			Window.alert(Integer.toString(clArray.get(row).getBoId())); // id
 			int idvonCl = 	clArray.get(row).getBoId();					// von
 																		// ContactList
@@ -157,58 +158,7 @@ public class ContactListForm2 extends Widget {
 			// RootPanel.get("content").clear();
 			// ContactForm_Test newcontactForm = new ContactForm_Test();
 
-			TextColumn<Contact> prenameColumn = new TextColumn<Contact>() {
-				public String getValue(Contact contact) {
-					return contact.getPrename();
-				}
-			};
-			TextColumn<Contact> surnameColumn = new TextColumn<Contact>() {
-				public String getValue(Contact contact) {
-					return contact.getSurname();
-				}
-			};
-
-			// Contact c1 = new Contact();
-			// c1.setPrename("Frank");
-			// c1.setSurname("herbert");
-			// Contact c2 = new Contact();
-			// c2.setPrename("Addi");
-			// c2.setSurname("Bert");
-
-			topPanel.add( new HTML("<h2> Kontaktliste " + clArray.get(row).getName() + ": </h2>"		));
-			topPanel.add(contacttable);
-
-			final MultiSelectionModel<Contact> selectionModel = new MultiSelectionModel<Contact>(Contact.KEY_PROVIDER);
-			contacttable.setSelectionModel(selectionModel,
-					DefaultSelectionEventManager.<Contact>createCheckboxManager());
-
-			Column<Contact, Boolean> checkColumn = new Column<Contact, Boolean>(new CheckboxCell(false, false)) {
-				@Override
-				public Boolean getValue(Contact object) {
-					// Get the value from the selection model.
-					return selectionModel.isSelected(object);
-				}
-
-			};
-			contacttable.addColumn(checkColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
-			contacttable.setColumnWidth(checkColumn, 40, Unit.PX);
-
-			contacttable.addColumn(prenameColumn, "Vorname");
-			contacttable.addColumn(surnameColumn, "Nachname");
-
-			// List<Contact> listcontacts = result;
-
-			dataProvider.getList().clear();
-			dataProvider.getList().addAll(contactArray);
-			dataProvider.addDataDisplay(contacttable);
-
-			// Set<Contact> selectedObjects = selectionModel.getSelectedSet();
-			set1 = selectionModel.getSelectedSet();
-			// set1.add(selectionModel.getSelectedObject());
-			// set1 = selectionModel.
-			// set1 = selectionModel.getSelectedSet();
-			int setSize = set1.size();
-			sizeSt = Integer.toString(setSize);
+			
 
 		}
 	}
@@ -267,9 +217,63 @@ public class ContactListForm2 extends Widget {
 		public void onSuccess(ArrayList<Contact> result) {
 			Window.alert("Contactlist gefunden");
 
-			for (Contact cid : result) {
-				ClientSideSettings.getConnectedAdmin().findContactById(cid.getBoId(), new getContactCallback());
-			}
+//			for (Contact cid : result) {
+//				ClientSideSettings.getConnectedAdmin().findContactById(cid.getBoId(), new getContactCallback());
+//			}
+			
+			TextColumn<Contact> prenameColumn = new TextColumn<Contact>() {
+				public String getValue(Contact contact) {
+					return contact.getPrename();
+				}
+			};
+			TextColumn<Contact> surnameColumn = new TextColumn<Contact>() {
+				public String getValue(Contact contact) {
+					return contact.getSurname();
+				}
+			};
+
+			// Contact c1 = new Contact();
+			// c1.setPrename("Frank");
+			// c1.setSurname("herbert");
+			// Contact c2 = new Contact();
+			// c2.setPrename("Addi");
+			// c2.setSurname("Bert");
+
+			topPanel.add( new HTML("<h2> Kontaktliste " + clArray.get(row).getName() + ": </h2>"		));
+			topPanel.add(contacttable);
+
+			final MultiSelectionModel<Contact> selectionModel = new MultiSelectionModel<Contact>(Contact.KEY_PROVIDER);
+			contacttable.setSelectionModel(selectionModel,
+					DefaultSelectionEventManager.<Contact>createCheckboxManager());
+
+			Column<Contact, Boolean> checkColumn = new Column<Contact, Boolean>(new CheckboxCell(false, false)) {
+				@Override
+				public Boolean getValue(Contact object) {
+					// Get the value from the selection model.
+					return selectionModel.isSelected(object);
+				}
+
+			};
+			contacttable.addColumn(checkColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
+			contacttable.setColumnWidth(checkColumn, 40, Unit.PX);
+
+			contacttable.addColumn(prenameColumn, "Vorname");
+			contacttable.addColumn(surnameColumn, "Nachname");
+
+			// List<Contact> listcontacts = result;
+
+			dataProvider.getList().clear();
+			dataProvider.getList().addAll(result);
+			dataProvider.addDataDisplay(contacttable);
+
+			// Set<Contact> selectedObjects = selectionModel.getSelectedSet();
+			set1 = selectionModel.getSelectedSet();
+			// set1.add(selectionModel.getSelectedObject());
+			// set1 = selectionModel.
+			// set1 = selectionModel.getSelectedSet();
+			int setSize = set1.size();
+			sizeSt = Integer.toString(setSize);
+			topPanel.add(contacttable);
 
 		}
 

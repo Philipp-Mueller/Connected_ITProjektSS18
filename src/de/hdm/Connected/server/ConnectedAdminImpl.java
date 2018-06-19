@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import de.hdm.Connected.server.db.ContactListMapper;
@@ -325,9 +326,10 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException {	
 		
 		ArrayList<Contact> contactsInList = new ArrayList<Contact>();
-		
-		for(int i =0; i<ccMapper.findContactsByContactListId(contactlistId).size(); i++){
-			contactsInList.add(findContactById(findContactsByContactListId(contactlistId).get(i).getBoId()));					
+		int length = ccMapper.findContactsByContactListId(contactlistId).size();
+		for(int i =0; i< length; i++){
+			int contactid = ccMapper.findContactsByContactListId(contactlistId).get(i).getBoId();
+			contactsInList.add(findContactById(contactid));					
 		}
 		
 		return contactsInList;
