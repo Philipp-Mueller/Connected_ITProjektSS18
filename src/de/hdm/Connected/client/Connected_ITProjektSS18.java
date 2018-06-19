@@ -59,14 +59,14 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			}
 
 		});
-		Button newContactListButton = new Button("Neue Kontaktliste anlegen");
+		Button myContactListsButton = new Button("Meine Kontaktlisten");
 
-		newContactListButton.addClickHandler(new ClickHandler() {
+		myContactListsButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content").clear();
-				ContactListForm2 newcontactlistForm = new ContactListForm2();
+				ContactListForm2 mycontactlistForm = new ContactListForm2();
 				//Test_CellTable newform = new Test_CellTable(); 
 			}
 
@@ -97,7 +97,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		});
 		
 		RootPanel.get("content").add(newContactButton);
-		RootPanel.get("content").add(newContactListButton);
+		RootPanel.get("content").add(myContactListsButton);
 		RootPanel.get("content").add(editContactButton);
 		
 		HorizontalPanel footer = new HorizontalPanel();
