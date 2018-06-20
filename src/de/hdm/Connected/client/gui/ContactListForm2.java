@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.CheckboxCell;
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -43,6 +46,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.ContactList;
+import de.hdm.Connected.shared.bo.User;
 
 /**
  * Klasse für die Bereistellung eines Formulars zum Anlegen/Bearbeiten einer
@@ -60,10 +64,12 @@ public class ContactListForm2 extends Widget {
 	ListBox contactListBox = new ListBox();
 	Button newContactListButton = new Button("Neue Kontaktliste erstellen", new newContactListClickhandler());
 	Button uptdateContactListButton = new Button("Kontaktliste bearbeiten");
-	Button shareContavtListButton = new Button("Kontaktliste teilen");
+	Button shareContactListButton = new Button("Kontaktliste teilen", new shareCotactListClickhandler());
+	Button sharePartOfClButton = new Button("Kontakte von Kontaktliste teilen", new sharePartofClClickhandler());
 	Button addContactButton = new Button("Kontakt hinzufügen");
 	Button createListButton = new Button("Liste erstellen", new createContactListClickhandler());
 	Button visitbutton = null;
+	Button shareSeletedContactsButton = new Button("Auswahl teilen", new shareSelectedContactsClickhandler());
 
 	VerticalPanel topPanel = new VerticalPanel();
 	HorizontalPanel namePanel = new HorizontalPanel();
@@ -74,29 +80,31 @@ public class ContactListForm2 extends Widget {
 	// Array, das Contact CL beziehung hält
 	ArrayList<Contact> contactArray = null;
 	ArrayList<Contact> c = null;
+	ArrayList<Contact> globalContactArray = null;
 	CellTable<Contact> contacttable = new CellTable<Contact>();
+	CellTable<Contact> contacttable2 = new CellTable<Contact>();
+	final ListBox userListbox = new ListBox(true);
 
 	Grid clGrid = new Grid();
 	public int row;
 
 	private ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
-	Set<Contact> set1 = null;
+	Set<Contact> set1 = new HashSet<Contact>();
 	String sizeSt;
 
 	public ContactListForm2() {
 
-//		namePanel.add(nameLabel);
-//		namePanel.add(nameBox);
-//
+		// namePanel.add(nameLabel);
+		// namePanel.add(nameBox);
+		//
 		buttonPanel.add(new HTML("<h2>Deine Kontaktlisten:</h2>"));
 		buttonPanel.add(newContactListButton);
-		
-		//Share kommt erst in die einzelansicht einer CL
-		buttonPanel.add(shareContavtListButton);
-//		topPanel.add(namePanel);
-//		topPanel.add(addContactButton);
-//		topPanel.add(createListButton);
-		
+
+		// Share kommt erst in die einzelansicht einer CL
+		// buttonPanel.add(shareContactListButton);
+		// topPanel.add(namePanel);
+		// topPanel.add(addContactButton);
+		// topPanel.add(createListButton);
 
 		RootPanel.get("content").add(buttonPanel);
 		RootPanel.get("content").add(topPanel);
@@ -138,16 +146,17 @@ public class ContactListForm2 extends Widget {
 			topPanel.clear();
 			row = (clGrid.getCellForEvent(event).getRowIndex());
 			Window.alert(Integer.toString(clArray.get(row).getBoId())); // id
-			int idvonCl = 	clArray.get(row).getBoId();					// von
-																		// ContactList
+			int idvonCl = clArray.get(row).getBoId(); // von
+														// ContactList
 
-			ClientSideSettings.getConnectedAdmin().findContactsByContactListId(idvonCl, new getContactContactListRelationCallback());
-			try{
-			Window.alert(Integer.toString(contactArray.size()));
-			
-			
-			} 	 catch  (Exception e) { Window.alert(e.toString());
-		  e.printStackTrace(); }
+			ClientSideSettings.getConnectedAdmin().findContactsByContactListId(idvonCl, new showContactListCallback());
+			try {
+				Window.alert(Integer.toString(contactArray.size()));
+
+			} catch (Exception e) {
+				Window.alert(e.toString());
+				e.printStackTrace();
+			}
 			// Window.alert(Integer.toString(row));
 			// Contaktliste anzeigen (id aus tabelle = id aus result Array -> id
 			// von cl)
@@ -157,8 +166,6 @@ public class ContactListForm2 extends Widget {
 
 			// RootPanel.get("content").clear();
 			// ContactForm_Test newcontactForm = new ContactForm_Test();
-
-			
 
 		}
 	}
@@ -172,7 +179,7 @@ public class ContactListForm2 extends Widget {
 
 		}
 	};
-	
+
 	private class newContactListClickhandler implements ClickHandler {
 
 		public void onClick(ClickEvent event) {
@@ -188,7 +195,6 @@ public class ContactListForm2 extends Widget {
 			topPanel.add(namePanel);
 			topPanel.add(addContactButton);
 			topPanel.add(createListButton);
-			
 
 		}
 	};
@@ -207,20 +213,23 @@ public class ContactListForm2 extends Widget {
 
 	}
 
-	private class getContactContactListRelationCallback implements AsyncCallback<ArrayList<Contact>> {
+	private class showContactListCallback implements AsyncCallback<ArrayList<Contact>> {
 
 		public void onFailure(Throwable caught) {
 			Window.alert("Da ist wohl etwas schief gelaufen 1");
 
 		}
 
-		public void onSuccess(ArrayList<Contact> result) {
+		public void onSuccess(final ArrayList<Contact> result) {
 			Window.alert("Contactlist gefunden");
 
-//			for (Contact cid : result) {
-//				ClientSideSettings.getConnectedAdmin().findContactById(cid.getBoId(), new getContactCallback());
-//			}
-			
+			globalContactArray = new ArrayList<Contact>();
+			globalContactArray = result;
+			// for (Contact cid : result) {
+			// ClientSideSettings.getConnectedAdmin().findContactById(cid.getBoId(),
+			// new getContactCallback());
+			// }
+
 			TextColumn<Contact> prenameColumn = new TextColumn<Contact>() {
 				public String getValue(Contact contact) {
 					return contact.getPrename();
@@ -231,6 +240,25 @@ public class ContactListForm2 extends Widget {
 					return contact.getSurname();
 				}
 			};
+			ButtonCell buttonCell = new ButtonCell();
+			Column buttonColumn = new Column<Contact, String>(buttonCell) {
+				@Override
+				public String getValue(Contact object) {
+					// The value to display in the button.
+					return "Visit";
+				}
+			};
+
+			buttonColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
+				public void update(int index, Contact object, String value) {
+					// Value is the button value. Object is the row object.
+					Window.alert("You clicked: " + index);
+					clGrid.clear();
+					// ClientSideSettings.getConnectedAdmin().findValueAndProperty(result.get(index).getBoId(),
+					// callback);
+
+				}
+			});
 
 			// Contact c1 = new Contact();
 			// c1.setPrename("Frank");
@@ -239,14 +267,18 @@ public class ContactListForm2 extends Widget {
 			// c2.setPrename("Addi");
 			// c2.setSurname("Bert");
 
-			topPanel.add( new HTML("<h2> Kontaktliste " + clArray.get(row).getName() + ": </h2>"		));
+			RootPanel.get("content").add(buttonPanel);
+			buttonPanel.clear();
+			buttonPanel.add(shareContactListButton);
+			buttonPanel.add(sharePartOfClButton);
+			topPanel.add(new HTML("<h2> Kontaktliste " + clArray.get(row).getName() + ": </h2>"));
 			topPanel.add(contacttable);
 
 			final MultiSelectionModel<Contact> selectionModel = new MultiSelectionModel<Contact>(Contact.KEY_PROVIDER);
 			contacttable.setSelectionModel(selectionModel,
 					DefaultSelectionEventManager.<Contact>createCheckboxManager());
 
-			Column<Contact, Boolean> checkColumn = new Column<Contact, Boolean>(new CheckboxCell(false, false)) {
+			Column<Contact, Boolean> checkColumn = new Column<Contact, Boolean>(new CheckboxCell(true, false)) {
 				@Override
 				public Boolean getValue(Contact object) {
 					// Get the value from the selection model.
@@ -254,11 +286,13 @@ public class ContactListForm2 extends Widget {
 				}
 
 			};
-			contacttable.addColumn(checkColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
-			contacttable.setColumnWidth(checkColumn, 40, Unit.PX);
+			// contacttable.addColumn(checkColumn,
+			// SafeHtmlUtils.fromSafeConstant("<br/>"));
+			// contacttable.setColumnWidth(checkColumn, 40, Unit.PX);
 
 			contacttable.addColumn(prenameColumn, "Vorname");
 			contacttable.addColumn(surnameColumn, "Nachname");
+			contacttable.addColumn(buttonColumn, "");
 
 			// List<Contact> listcontacts = result;
 
@@ -279,32 +313,130 @@ public class ContactListForm2 extends Widget {
 
 	}
 
-	private class getContactCallback implements AsyncCallback<Contact> {
+	private class sharePartofClClickhandler implements ClickHandler {
+
+		public void onClick(ClickEvent event) {
+			RootPanel.get("content").clear();
+			RootPanel.get("content").add(topPanel);
+			topPanel.clear();
+
+			TextColumn<Contact> prenameColumn = new TextColumn<Contact>() {
+				public String getValue(Contact contact) {
+					return contact.getPrename();
+				}
+			};
+			TextColumn<Contact> surnameColumn = new TextColumn<Contact>() {
+				public String getValue(Contact contact) {
+					return contact.getSurname();
+				}
+			};
+
+			topPanel.add(new HTML("<h2> Kontakte von Kontaktliste " + clArray.get(row).getName() + " auswählen </h2>"));
+			topPanel.add(contacttable2);
+
+			final MultiSelectionModel<Contact> selectionModel = new MultiSelectionModel<Contact>(Contact.KEY_PROVIDER);
+			contacttable2.setSelectionModel(selectionModel,
+					DefaultSelectionEventManager.<Contact>createCheckboxManager());
+
+			Column<Contact, Boolean> checkColumn = new Column<Contact, Boolean>(new CheckboxCell(false, false)) {
+				@Override
+				public Boolean getValue(Contact object) {
+					// Get the value from the selection model.
+					return selectionModel.isSelected(object);
+				}
+			};
+
+			contacttable2.addColumn(checkColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
+			contacttable2.setColumnWidth(checkColumn, 40, Unit.PX);
+
+			contacttable2.addColumn(prenameColumn, "Vorname");
+			contacttable2.addColumn(surnameColumn, "Nachname");
+
+			// List<Contact> listcontacts = result;
+
+			dataProvider.getList().clear();
+			dataProvider.getList().addAll(globalContactArray);
+			dataProvider.addDataDisplay(contacttable2);
+
+			// Set<Contact> selectedObjects = selectionModel.getSelectedSet();
+			set1 = selectionModel.getSelectedSet();
+			// set1.add(selectionModel.getSelectedObject());
+			// set1 = selectionModel.
+			// set1 = selectionModel.getSelectedSet();
+			int setSize = set1.size();
+			sizeSt = Integer.toString(setSize);
+			topPanel.add(contacttable2);
+			topPanel.add(shareSeletedContactsButton);
+
+		}
+	};
+
+	private class getContactCallback implements AsyncCallback<Map> {
 
 		public void onFailure(Throwable caught) {
 			Window.alert("Da ist wohl etwas schief gelaufen 2");
 		}
 
-		public void onSuccess(Contact contact) {
-			Window.alert("Contact gefunden");
-			contactArray.add(contact);
+		public void onSuccess(Map mapi) {
 
 		}
 
 	}
 
-	// private class getContactListCallback implements
-	// AsyncCallback<ArrayList<Contact>> {
-	//
-	// public void onFailure(Throwable caught) {
-	// Window.alert("Da ist wohl etwas schief gelaufen 1");
-	// }
-	//
-	// public void onSuccess(ArrayList<Contact> result) {
-	// Window.alert("Contactlist gefunden");
-	//
-	//
-	// }
-	// }
+	private class visitContactClickhandler implements ClickHandler {
+		public void onClick(ClickEvent event) {
+			row = (clGrid.getCellForEvent(event).getRowIndex());
+			Window.alert(Integer.toString(row));
+		}
+	}
+
+	private class shareSelectedContactsClickhandler implements ClickHandler {
+
+		public void onClick(ClickEvent event) {
+			Window.alert(Integer.toString(set1.size()));
+
+		}
+	};
+
+	private class shareCotactListClickhandler implements ClickHandler {
+
+		public void onClick(ClickEvent event) {
+
+			RootPanel.get("content").clear();
+			topPanel.clear();
+			buttonPanel.clear();
+			RootPanel.get("content").add(topPanel);
+			RootPanel.get("content").add(buttonPanel);
+
+			topPanel.add(new HTML("<h2> Teilen von " + clArray.get(row).getName()));
+			topPanel.add(userListbox);
+
+			userListbox.setEnabled(true);
+
+			// multi auswahl freischalten in ListBox
+			userListbox.ensureDebugId("cwListBox-multiBox");
+			userListbox.setVisibleItemCount(7);
+			// Alle Kontaktlisten aus DB abrufen
+			// TODO nur KOntaktlisten des aktuellen Users abrufen!
+			ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					Window.alert("Die Kontaktlisten konnten nicht geladen werden");
+				}
+
+				@Override
+				// jede Kontaktliste wird der ListBox hinzugefügt
+				public void onSuccess(ArrayList<User> result) {
+					for (User u : result) {
+						userListbox.addItem(u.getLogEmail());
+					}
+
+				}
+
+			});
+
+		}
+	};
 
 }

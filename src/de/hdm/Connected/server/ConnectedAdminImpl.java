@@ -379,6 +379,10 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public ArrayList<Permission> findPermissionsByUserId(int userId) throws IllegalArgumentException {
 		return this.permissionMapper.findByUserId(userId);
 	}
+	
+	public ArrayList<User> findAllUser() throws IllegalArgumentException {
+		return this.userMapper.findAll();
+	}
 
 
 	// *** Value ***
