@@ -64,6 +64,16 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return neu erstelltes Property-Objekt
 	 * @throws IllegalArgumentException
 	 */
+	
+	public ArrayList<User> findAllUser() throws IllegalArgumentException;
+	/**
+	 * Gibt alle User zurück
+	 * 
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	
+	
 	public Property createProperty(String name) throws IllegalArgumentException;
 	
 	/**

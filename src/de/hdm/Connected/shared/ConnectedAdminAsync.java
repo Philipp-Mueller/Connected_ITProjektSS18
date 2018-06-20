@@ -29,6 +29,8 @@ public interface ConnectedAdminAsync {
 	
 	void deleteUser(User user, AsyncCallback<Void> callback);
 	
+	void findAllUser(AsyncCallback<ArrayList<User>> callback);
+	
 	void createProperty(String name, AsyncCallback<Property> callback);
 	
 	void updateProperty(Property property, AsyncCallback<Void> callback);

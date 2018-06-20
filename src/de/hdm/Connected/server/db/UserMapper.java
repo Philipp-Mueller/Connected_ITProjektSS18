@@ -217,7 +217,7 @@ public class UserMapper {
 			 * SQL-Anweisung zum Finden aller Datensätze, anhand der eMail, in
 			 * der Datenbank.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, email FROM user WHERE email LIKE '" + logEmail + "'");
+			ResultSet rs = stmt.executeQuery("SELECT id, logEmail FROM user WHERE logEmail LIKE '" + logEmail + "'");
 			/**
 			 * Zu einem eindeutigen Wert exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurückgegeben werden.
@@ -227,7 +227,7 @@ public class UserMapper {
 			if (rs.next()) {
 				User user = new User();
 				user.setBoId(rs.getInt("id"));
-				user.setLogEmail(rs.getString("email"));
+				user.setLogEmail(rs.getString("logEmail"));
 				return user;
 			}
 			/**
@@ -256,7 +256,7 @@ public class UserMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze in der Datenbank, sortiert nach
 			 * der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, email from user ORDER BY id");
+			ResultSet rs = stmt.executeQuery("SELECT id, logEmail from user ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle contact
 			 * vorhanden ist, muss das Abfragen des ResultSet so oft erfolgen
@@ -267,7 +267,7 @@ public class UserMapper {
 			while (rs.next()) {
 				User u = new User();
 				u.setBoId(rs.getInt("id"));
-				u.setLogEmail(rs.getString("email"));
+				u.setLogEmail(rs.getString("logEmail"));
 				result.add(u);
 			}
 			/**
