@@ -313,4 +313,6 @@ public interface ConnectedAdmin extends RemoteService {
 
 	Map<String, String> findValueAndProperty(int id) throws IllegalArgumentException;
 
+	ArrayList<Value> findValueByValue(String value) throws IllegalArgumentException;
+
 }

@@ -405,7 +405,11 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public void deleteValue(Value value) throws IllegalArgumentException {
 		valueMapper.delete(value);
 	}
-
+	
+	@Override
+	public ArrayList<Value> findValueByValue(String value) throws IllegalArgumentException {
+		return this.valueMapper.findByValue(value);
+	}
 	// *** Property ***
 	@Override
 	public Property createProperty(String name) throws IllegalArgumentException {

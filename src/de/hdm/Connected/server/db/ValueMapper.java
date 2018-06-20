@@ -77,7 +77,7 @@ public class ValueMapper {
 				value.setBoId(rs.getInt("maxid") + 1);
 			}
 			stmt = con.createStatement();
-			/**
+			/*
 			 * SQL-Anweisung zum Einfuegen des neuen Value-Tupels in die
 			 * Datenbank.
 			 */
