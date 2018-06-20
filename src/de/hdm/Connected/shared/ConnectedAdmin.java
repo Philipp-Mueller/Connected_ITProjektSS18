@@ -315,4 +315,6 @@ public interface ConnectedAdmin extends RemoteService {
 
 	ArrayList<Value> findValueByValue(String value) throws IllegalArgumentException;
 
+	Value findValueById(int id) throws IllegalArgumentException;
+
 }

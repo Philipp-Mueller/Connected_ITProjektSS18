@@ -112,5 +112,7 @@ public interface ConnectedAdminAsync {
 	void findValueAndProperty(int id, AsyncCallback<Map<String, String>> callback);
 
 	void findValueByValue(String value, AsyncCallback<ArrayList<Value>> callback);
+
+	void findValueById(int id, AsyncCallback<Value> callback);
 	
 }

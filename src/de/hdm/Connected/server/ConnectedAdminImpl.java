@@ -410,6 +410,11 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public ArrayList<Value> findValueByValue(String value) throws IllegalArgumentException {
 		return this.valueMapper.findByValue(value);
 	}
+	
+	@Override
+	public Value findValueById(int id) throws IllegalArgumentException {
+		return this.valueMapper.findById(id);
+	}
 	// *** Property ***
 	@Override
 	public Property createProperty(String name) throws IllegalArgumentException {
