@@ -226,7 +226,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 					@Override
 					public void onSuccess(Contact result) {
 						RootPanel.get("content").clear();
-						ContactForm_Test newcontactForm = new ContactForm_Test(result);
+						ContactForm newcontactForm = new ContactForm(result);
 						//Test_CellTable newform = new Test_CellTable(); 
 					}
 					
