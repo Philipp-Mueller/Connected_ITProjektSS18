@@ -34,8 +34,6 @@
     <url-pattern>/connected_itprojektss18reportgenerator/connectedreportgenerator</url-pattern>
   </servlet-mapping>
 
-<<<<<<< HEAD
-=======
  <servlet>
     <servlet-name>loginService</servlet-name>
     <servlet-class>de.hdm.Connected.server.LoginServiceImpl</servlet-class>
@@ -46,6 +44,4 @@
     <url-pattern>/connected/login</url-pattern>
   </servlet-mapping>
   
-  
->>>>>>> 1a791da8b582dab625ab8a934a1118a0d6a61401
 </web-app>
