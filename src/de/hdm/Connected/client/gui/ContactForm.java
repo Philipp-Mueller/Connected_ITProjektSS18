@@ -75,6 +75,7 @@ public class ContactForm extends Widget {
 	String propertyName = "";
 	ArrayList<Value> valuesArray = new ArrayList<Value>();
 	Value updatingValue = null;
+	
 	ArrayList<ContactList> contactListArray = null;
 
 	/**
@@ -308,7 +309,7 @@ public class ContactForm extends Widget {
 
 	}
 
-	private class findValueAndPropertyCallback implements AsyncCallback<Map<String, String>> {
+	private class findValueCallback implements AsyncCallback<ArrayList<Value>> {
 
 		@Override
 		public void onFailure(Throwable caught) {
@@ -317,43 +318,161 @@ public class ContactForm extends Widget {
 		}
 
 		@Override
-		public void onSuccess(Map<String, String> result) {
+		public void onSuccess(ArrayList<Value> result) {
 
 			propertyTable = new FlexTable();
-
+			RootPanel.get("content").add(propertyTable);
+			ArrayList<Value> valuesByContact = result;
+		
 			try {
-				for (Map.Entry<String, String> mapi : result.entrySet()) {
+				for(final Value v: valuesByContact){
 					propertyListBox = new ListBox();
-					propertyListBox.setWidth("250px");
-
-					for (int j = 0; j < propertyArray.size(); j++) {
-						propertyListBox.addItem(propertyArray.get(j).getName());
-						if (propertyArray.get(j).getName().equals(mapi.getKey())) {
-							propertyListBox.setSelectedIndex(j);
+					final Value updatingOldValue = v;
+					ClientSideSettings.getConnectedAdmin().findPropertyByPropertyId(updatingOldValue.getPropertyID(), new AsyncCallback<Property>(){
+						
+						@Override
+						public void onFailure(Throwable caught) {
+							// TODO Auto-generated method stub
+							
 						}
 
-					}
+						@Override
+						public void onSuccess(Property result) {
+							Property p = result;
+							int rowCount = propertyTable.getRowCount();
+							
+							updateBtn = new Button("Eigenschaft bearbeiten");
+							updateBtn.addClickHandler(new ClickHandler(){
 
-					TextBox valueBox = new TextBox();
-					valueBox.setText(mapi.getValue());
+								@Override
+								public void onClick(ClickEvent event) {
+									eventRow = propertyTable.getCellForEvent(event).getRowIndex();
+									final TextBox valueChangeTextBox = new TextBox();
+									valueChangeTextBox.setText(updatingOldValue.getName());
+									
+									ClientSideSettings.getConnectedAdmin().findPropertyByPropertyId(updatingOldValue.getPropertyID(),
+											new AsyncCallback<Property>() {
+												@Override
+												public void onFailure(Throwable caught) {
+													// TODO Auto-generated method stub
 
-					int rowCount = propertyTable.getRowCount();
-					propertyTable.setWidget(rowCount, 0, propertyListBox);
-					propertyTable.setWidget(rowCount, 1, valueBox);
+												}
 
+												@Override
+												public void onSuccess(Property result) {
+													final Property changingProperty = result;
+													final ListBox propertyChangeListBox = new ListBox();
+													propertyChangeListBox.addChangeHandler(new listBoxChangeHandler());
+
+													for (int i = 0; i < propertyArray.size(); i++) {
+														propertyChangeListBox.addItem(propertyArray.get(i).getName());
+														if ((propertyArray.get(i).getName()).equals(changingProperty.getName())) {
+															propertyChangeListBox.setSelectedIndex(i);
+														}
+													}
+
+													Button saveChangesButton = new Button("Änderungen speichern");
+													saveChangesButton.addClickHandler(new ClickHandler() {
+
+														@Override
+														public void onClick(ClickEvent event) {
+															int propertyId = 0;
+
+															for (Property p : propertyArray) {
+																if ((propertyChangeListBox.getSelectedItemText()).equals(p.getName())) {
+																	propertyId = p.getBoId();
+																}
+															}
+
+															updatingOldValue.setName(valueChangeTextBox.getText());
+															updatingOldValue.setPropertyID(propertyId);
+															ClientSideSettings.getConnectedAdmin().updateValue(updatingOldValue,
+																	new AsyncCallback<Value>() {
+
+																		@Override
+																		public void onFailure(Throwable caught) {
+																			Window.alert("Geht nicht updaten");
+																		}
+
+																		@Override
+																		public void onSuccess(final Value result) {
+																			updatingValue = result;
+																			// TODO
+																			// Auto-generated
+																			// method stub
+																			updateBtn = new Button("Eigenschaft bearbeiten");
+																			updateBtn.addClickHandler(new updateBtnClickHandler());
+																			deleteBtn = new Button("Eigenschaft entfernen");
+																			deleteBtn.addClickHandler(new deleteBtnClickHandler());
+																			propertyTable.setWidget(eventRow, 0,
+																					new HTML("<p><strong>"
+																							+ propertyChangeListBox
+																									.getSelectedItemText()
+																							+ "</strong></p>"));
+																			propertyTable.setWidget(eventRow, 1, new HTML(
+																					"<p>" + valueChangeTextBox.getText() + "</p>"));
+																			propertyTable.setWidget(eventRow, 2, updateBtn);
+																			propertyTable.setWidget(eventRow, 3, deleteBtn);
+
+																		}
+
+																	});
+														}
+
+													});
+													propertyTable.removeCell(eventRow, 3);
+													propertyTable.setWidget(eventRow, 0, propertyChangeListBox);
+													propertyTable.setWidget(eventRow, 1, valueChangeTextBox);
+													propertyTable.setWidget(eventRow, 2, saveChangesButton);
+												}
+
+											});
+								}
+								
+							});
+							
+							deleteBtn = new Button("Eigenschaft entfernen");
+							deleteBtn.addClickHandler(new ClickHandler() {
+
+								@Override
+								public void onClick(ClickEvent event) {
+									eventRow = propertyTable.getCellForEvent(event).getRowIndex();
+
+									ClientSideSettings.getConnectedAdmin().deleteValue(updatingOldValue, new AsyncCallback<Void>() {
+
+										@Override
+										public void onFailure(Throwable caught) {
+											// TODO Auto-generated method stub
+
+										}
+
+										@Override
+										public void onSuccess(Void result) {
+											Window.alert("Eigenschaft wurde gelöscht!");
+											propertyTable.removeRow(eventRow);
+										}
+
+									});
+								}
+
+							});
+					      
+							propertyTable.setWidget(rowCount, 0, new HTML("<p><strong>"	+ p.getName() + "</strong></p>"));
+							propertyTable.setWidget(rowCount, 1, new HTML (updatingOldValue.getName()));
+							propertyTable.setWidget(rowCount, 2, updateBtn);
+							propertyTable.setWidget(rowCount, 3, deleteBtn);
+							
+						}
+						
+					});
 				}
-
-				int rowCount = propertyTable.getRowCount();
-				newPropertyBtn = new Button("+");
-				newPropertyBtn.addClickHandler(new addNewPropertyClickHandler());
-
-				propertyTable.setWidget(rowCount - 1, 2, newPropertyBtn);
-				RootPanel.get("content").add(propertyTable);
-
-				HorizontalPanel bottomPanel = new HorizontalPanel();
-				Button saveButton = new Button("Änderungen speichern");
-				RootPanel.get("content").add(saveButton);
-
+				
+				
+				
+				
+				
+				
+				
 			} catch (Exception e) {
 				Window.alert(e.toString());
 				e.printStackTrace();
@@ -386,8 +505,8 @@ public class ContactForm extends Widget {
 					}
 
 				}
-				ClientSideSettings.getConnectedAdmin().findValueAndProperty(selectedContact.getBoId(),
-						new findValueAndPropertyCallback());
+				ClientSideSettings.getConnectedAdmin().findValuesByContactId(selectedContact.getBoId(),
+						new findValueCallback());
 			} else {
 
 				propertyListBox = new ListBox();
@@ -565,6 +684,7 @@ public class ContactForm extends Widget {
 															updateBtn = new Button("Eigenschaft bearbeiten");
 															updateBtn.addClickHandler(new updateBtnClickHandler());
 															deleteBtn = new Button("Eigenschaft entfernen");
+															
 															propertyTable.setWidget(eventRow, 0,
 																	new HTML("<p><strong>"
 																			+ propertyChangeListBox
