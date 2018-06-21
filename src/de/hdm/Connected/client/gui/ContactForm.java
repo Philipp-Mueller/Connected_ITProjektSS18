@@ -38,8 +38,6 @@ public class ContactForm extends Widget {
 	 *
 	 */
 
-	// ConnectedAdminAsync connectedAdmin =
-	// ClientSideSettings.getConnectedAdmin();
 	private Contact selectedContact = null;
 	private Contact createdContact = null;
 
@@ -78,6 +76,7 @@ public class ContactForm extends Widget {
 	ArrayList<Value> valuesArray = new ArrayList<Value>();
 	Value updatingValue = null;
 	ArrayList<ContactList> contactListArray = null;
+
 	/**
 	 * Konstruktor wenn ein Kontakt schon existiert.
 	 * 
@@ -161,54 +160,58 @@ public class ContactForm extends Widget {
 			public void onClick(ClickEvent event) {
 				// Nur wenn die CheckBox geklickt ist, wird dies ausgeführt, da
 				// sonst der Kontakt keiner Liste hinzugefügt werden soll
-				if(addButton != null){
+				if (addButton != null) {
 					java.sql.Timestamp creationTime = new Timestamp(System.currentTimeMillis());
-					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(), creationTime, creationTime, 1, new AsyncCallback<Contact>(){
+					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
+							creationTime, creationTime, 1, new AsyncCallback<Contact>() {
 
-						@Override
-						public void onFailure(Throwable caught) {
-							// TODO Auto-generated method stub
-							Window.alert("Das ging nicht ohne Eigen");
-						}
+								@Override
+								public void onFailure(Throwable caught) {
+									// TODO Auto-generated method stub
+									Window.alert("Das ging nicht ohne Eigen");
+								}
 
-						@Override
-						public void onSuccess(Contact result) {
-							if (checkContactlist.getValue()) {
-								for (int i = 0; i < contactlist.getItemCount(); i++) {
-									if (contactlist.isItemSelected(i)) {
-															Window.alert(Integer.toString(contactListArray.get(i).getBoId()));
-										ClientSideSettings.getConnectedAdmin().addContactToContactList(result.getBoId(), contactListArray.get(i).getBoId(),
-												new AsyncCallback<Void>() {
+								@Override
+								public void onSuccess(Contact result) {
+									if (checkContactlist.getValue()) {
+										for (int i = 0; i < contactlist.getItemCount(); i++) {
+											if (contactlist.isItemSelected(i)) {
+												Window.alert(Integer.toString(contactListArray.get(i).getBoId()));
+												ClientSideSettings.getConnectedAdmin().addContactToContactList(
+														result.getBoId(), contactListArray.get(i).getBoId(),
+														new AsyncCallback<Void>() {
 
-													@Override
-													public void onFailure(Throwable caught) {
-														Window.alert("Kontakt konnte Kontaktliste nicht hinzugefügt werden");
-													}
+															@Override
+															public void onFailure(Throwable caught) {
+																Window.alert(
+																		"Kontakt konnte Kontaktliste nicht hinzugefügt werden");
+															}
 
-													@Override
-													public void onSuccess(Void result) {
-														Window.alert("Kontakt wurde angelegt und den Kontaktlisten hinzugefügt!");
-														Window.Location.reload();
+															@Override
+															public void onSuccess(Void result) {
+																Window.alert(
+																		"Kontakt wurde angelegt und den Kontaktlisten hinzugefügt!");
+																Window.Location.reload();
 
-													}
+															}
 
-												});
+														});
+											}
+
+										}
+
 									}
 
 								}
 
-							}
-							
-						}
-						
-					});
+							});
 				}
 				if (checkContactlist.getValue()) {
 					for (int i = 0; i < contactlist.getItemCount(); i++) {
 						if (contactlist.isItemSelected(i)) {
-												Window.alert(Integer.toString(contactListArray.get(i).getBoId()));
-							ClientSideSettings.getConnectedAdmin().addContactToContactList(createdContact.getBoId(), contactListArray.get(i).getBoId(),
-									new AsyncCallback<Void>() {
+							Window.alert(Integer.toString(contactListArray.get(i).getBoId()));
+							ClientSideSettings.getConnectedAdmin().addContactToContactList(createdContact.getBoId(),
+									contactListArray.get(i).getBoId(), new AsyncCallback<Void>() {
 
 										@Override
 										public void onFailure(Throwable caught) {
@@ -227,12 +230,10 @@ public class ContactForm extends Widget {
 
 					}
 
-				}else {
+				} else {
 					Window.alert("Kontakt angelegt!");
 					Window.Location.reload();
 				}
-				
-				// RootPanel.get("content").clear();
 
 			}
 
@@ -352,7 +353,6 @@ public class ContactForm extends Widget {
 				HorizontalPanel bottomPanel = new HorizontalPanel();
 				Button saveButton = new Button("Änderungen speichern");
 				RootPanel.get("content").add(saveButton);
-				// bottomPanel.add(saveButton);
 
 			} catch (Exception e) {
 				Window.alert(e.toString());
@@ -406,7 +406,6 @@ public class ContactForm extends Widget {
 				propertyListBox.addChangeHandler(new listBoxChangeHandler());
 				int rowCount = propertyTable.getRowCount();
 
-				// if(selectedContact == null){
 				propertyTable.setWidget(rowCount - 1, 0, propertyListBox);
 
 			}
@@ -445,15 +444,12 @@ public class ContactForm extends Widget {
 								createdContact = result;
 								Window.alert("Hier bin ich");
 								addButton.removeFromParent();
-								// propertyTable.setWidget(rowCount, 0,
-								// propertyListBox);
+
 								addButton = null;
-								// propertyTable = new FlexTable();
 
 								ClientSideSettings.getConnectedAdmin()
 										.findAllProperties(new findAllPropertiesCallback());
-								// propertyTable.setWidget(rowCount, 0,
-								// propertyListBox);
+
 								int rowCount = propertyTable.getRowCount();
 								newPropertyBtn = new Button("+");
 								newPropertyBtn.addClickHandler(new addNewPropertyClickHandler());
@@ -478,10 +474,6 @@ public class ContactForm extends Widget {
 			}
 
 		}
-
-		// wennn kein "+" Button dann den addbutton entfernen sonst den
-		// "+"
-		// Button entfernen
 
 	}
 
@@ -626,9 +618,6 @@ public class ContactForm extends Widget {
 				}
 
 			});
-			// propertyTable.clear();
-
-			// int rowCount = propertyTable.getRowCount();
 
 			propertyTable.setWidget(eventRow, 0, new HTML("<p><strong>" + propertyLabel.getText() + "</strong></p>"));
 			propertyTable.setWidget(eventRow, 1, valueLabel);
