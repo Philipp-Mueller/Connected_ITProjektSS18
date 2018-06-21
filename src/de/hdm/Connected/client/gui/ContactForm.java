@@ -573,8 +573,12 @@ public class ContactForm extends Widget {
 								newPropertyBtn = new Button("+");
 								newPropertyBtn.addClickHandler(new addNewPropertyClickHandler());
 								valueTextBox = new TextBox();
-								propertyTable.setWidget(rowCount, 1, valueTextBox);
-								propertyTable.setWidget(rowCount, 2, newPropertyBtn);
+								
+								
+								propertyTable.setWidget(rowCount , 0, new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
+								
+								propertyTable.setWidget(rowCount+1, 1, valueTextBox);
+								propertyTable.setWidget(rowCount+1, 2, newPropertyBtn);
 							}
 						});
 			} else {
@@ -614,6 +618,7 @@ public class ContactForm extends Widget {
 			Window.alert("Kontakt vollständig angelegt");
 			Label propertyLabel = new Label(propertyName);
 			Label valueLabel = new Label(result.getName());
+			propertyTable.removeRow(eventRow);
 
 			valueTextBox = new TextBox();
 
@@ -684,7 +689,7 @@ public class ContactForm extends Widget {
 															updateBtn = new Button("Eigenschaft bearbeiten");
 															updateBtn.addClickHandler(new updateBtnClickHandler());
 															deleteBtn = new Button("Eigenschaft entfernen");
-															
+															deleteBtn.addClickHandler(new deleteBtnClickHandler());
 															propertyTable.setWidget(eventRow, 0,
 																	new HTML("<p><strong>"
 																			+ propertyChangeListBox
@@ -738,12 +743,15 @@ public class ContactForm extends Widget {
 				}
 
 			});
+		
+			propertyTable.setWidget(eventRow-1, 0, new HTML("<p><strong>" + propertyLabel.getText() + "</strong></p>"));
+			propertyTable.setWidget(eventRow-1, 1, valueLabel);
+			propertyTable.setWidget(eventRow-1, 2, updateBtn);
+			propertyTable.setWidget(eventRow-1, 3, deleteBtn);
 
-			propertyTable.setWidget(eventRow, 0, new HTML("<p><strong>" + propertyLabel.getText() + "</strong></p>"));
-			propertyTable.setWidget(eventRow, 1, valueLabel);
-			propertyTable.setWidget(eventRow, 2, updateBtn);
-			propertyTable.setWidget(eventRow, 3, deleteBtn);
-
+			
+			propertyTable.setWidget(eventRow , 0, new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
+			
 			propertyTable.setWidget(eventRow + 1, 0, propertyListBox);
 			propertyTable.setWidget(eventRow + 1, 1, valueTextBox);
 			propertyTable.setWidget(eventRow + 1, 2, newPropertyBtn);
