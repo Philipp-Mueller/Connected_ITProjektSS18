@@ -39,6 +39,7 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.DefaultSelectionEventManager.SelectAction;
 import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.ProvidesKey;
+import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 import com.google.gwt.view.client.SelectionModel;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -81,12 +82,14 @@ public class ContactListForm2 extends Widget {
 	ArrayList<ContactList> clArray = null;
 	// Array, das Contact CL beziehung hält
 	ArrayList<Contact> contactArray = null;
+	ArrayList <Contact> cArray = new ArrayList<Contact>();
 	ArrayList<Contact> c = null;
 	ArrayList<User> publicUserArray = null;
 	ArrayList<Contact> globalContactArray = null;
 	CellTable<Contact> contacttable = new CellTable<Contact>();
 	CellTable<Contact> contacttable2 = new CellTable<Contact>();
 	final ListBox userListbox = new ListBox(true);
+	final ListBox userListbox2 = new ListBox(true);
 
 	Grid clGrid = new Grid();
 	public int row;
@@ -303,14 +306,14 @@ public class ContactListForm2 extends Widget {
 
 	RootPanel.get("content").add(buttonPanel);buttonPanel.clear();buttonPanel.add(shareContactListButton);buttonPanel.add(sharePartOfClButton);topPanel.add(new HTML("<h2> Kontaktliste "+clArray.get(row).getName()+": </h2>"));topPanel.add(contacttable);
 
-	final MultiSelectionModel<Contact> selectionModel = new MultiSelectionModel<Contact>(
-			Contact.KEY_PROVIDER);contacttable.setSelectionModel(selectionModel,DefaultSelectionEventManager.<Contact>createCheckboxManager());
+//	final MultiSelectionModel<Contact> selectionModel = new MultiSelectionModel<Contact>(
+//			Contact.KEY_PROVIDER);contacttable.setSelectionModel(selectionModel,DefaultSelectionEventManager.<Contact>createCheckboxManager());
 
-	Column<Contact, Boolean> checkColumn=new Column<Contact,Boolean>(new CheckboxCell(true,false)){@Override public Boolean getValue(Contact object){
-		// Get the value from the selection model.
-		return selectionModel.isSelected(object);}
-
-		};
+//	Column<Contact, Boolean> checkColumn=new Column<Contact,Boolean>(new CheckboxCell(true,false)){@Override public Boolean getValue(Contact object){
+//		// Get the value from the selection model.
+//		return selectionModel.isSelected(object);}
+//
+//		};
 		// contacttable.addColumn(checkColumn,
 		// SafeHtmlUtils.fromSafeConstant("<br/>"));
 		// contacttable.setColumnWidth(checkColumn, 40, Unit.PX);
@@ -322,7 +325,7 @@ public class ContactListForm2 extends Widget {
 		dataProvider.getList().clear();dataProvider.getList().addAll(result);dataProvider.addDataDisplay(contacttable);
 
 		// Set<Contact> selectedObjects = selectionModel.getSelectedSet();
-		set1=selectionModel.getSelectedSet();
+//		set1=selectionModel.getSelectedSet();
 		// set1.add(selectionModel.getSelectedObject());
 		// set1 = selectionModel.
 		// set1 = selectionModel.getSelectedSet();
@@ -355,6 +358,13 @@ private class sharePartofClClickhandler implements ClickHandler {
 
 		final MultiSelectionModel<Contact> selectionModel = new MultiSelectionModel<Contact>(Contact.KEY_PROVIDER);
 		contacttable2.setSelectionModel(selectionModel, DefaultSelectionEventManager.<Contact>createCheckboxManager());
+		selectionModel.addSelectionChangeHandler(new Handler(){
+			 @Override
+			    public void onSelectionChange(SelectionChangeEvent event) {
+			        set1 = selectionModel.getSelectedSet();
+
+			    }
+		});
 
 		Column<Contact, Boolean> checkColumn = new Column<Contact, Boolean>(new CheckboxCell(false, false)) {
 			@Override
@@ -377,17 +387,96 @@ private class sharePartofClClickhandler implements ClickHandler {
 		dataProvider.addDataDisplay(contacttable2);
 
 		// Set<Contact> selectedObjects = selectionModel.getSelectedSet();
-		set1 = selectionModel.getSelectedSet();
+		//set1 = selectionModel.getSelectedSet();
 		// set1.add(selectionModel.getSelectedObject());
 		// set1 = selectionModel.
 		// set1 = selectionModel.getSelectedSet();
-		int setSize = set1.size();
-		sizeSt = Integer.toString(setSize);
+		//int setSize = set1.size();
+		//sizeSt = Integer.toString(setSize);
+		
+		userListbox2.setEnabled(true);
+
+		// multi auswahl freischalten in ListBox
+		userListbox2.ensureDebugId("cwListBox-multiBox");
+		userListbox2.setVisibleItemCount(7);
+		// Alle Kontaktlisten aus DB abrufen
+
+		
+		// TODO nur KOntaktlisten des aktuellen Users abrufen!
+		ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Die User konnten nicht geladen werden");
+			}
+
+			@Override
+			// jede Kontaktliste wird der ListBox hinzugefügt
+			public void onSuccess(ArrayList<User> result) {
+				publicUserArray = result;
+				for (User u : result) {
+					userListbox2.addItem(u.getLogEmail());
+				}
+
+			}
+
+		});
+		
+		
+		
 		topPanel.add(contacttable2);
+		topPanel.add(new HTML("<h2> User auswählen, mit denen die Kontaktliste geteilt werden soll </h2>"));
+		
+		topPanel.add(userListbox2);
+		
+		publicUserArray = new ArrayList<User>();
+	
+		
 		topPanel.add(shareSeletedContactsButton);
+		
+		set1 = selectionModel.getSelectedSet();
+		ArrayList <Contact> cArray = new ArrayList<Contact>();
+		cArray = (ArrayList<Contact>) selectionModel.getSelectedSet();
+		
 
 	}
 };
+
+private class shareSelectedContactsClickhandler implements ClickHandler {
+
+	public void onClick(ClickEvent event) {
+		Window.alert(Integer.toString(set1.size()));
+		ArrayList <User> uArray = new ArrayList<User>();
+		
+		for (int i = 0; i < userListbox.getItemCount(); i++) {
+			if (userListbox.isItemSelected(i)) {
+				uArray.add(i, publicUserArray.get(i));
+			}
+			}
+		ClientSideSettings.getConnectedAdmin().givePermissonToUsers(cArray, uArray, 1, new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Permissions angelegt Fehlgeschlagen");
+			}
+
+			@Override
+			// jede Kontaktliste wird der ListBox hinzugefügt
+			public void onSuccess(Void result) {
+				Window.alert("Alle Permissions angelegt");
+				
+
+			}
+
+		});
+
+	}
+};
+
+
+
+
+
 
 private class getContactCallback implements AsyncCallback<Map> {
 
@@ -408,13 +497,7 @@ private class visitContactClickhandler implements ClickHandler {
 	}
 }
 
-private class shareSelectedContactsClickhandler implements ClickHandler {
 
-	public void onClick(ClickEvent event) {
-		Window.alert(Integer.toString(set1.size()));
-
-	}
-};
 
 private class shareCotactListClickhandler implements ClickHandler {
 
@@ -423,6 +506,7 @@ private class shareCotactListClickhandler implements ClickHandler {
 		RootPanel.get("content").clear();
 		topPanel.clear();
 		buttonPanel.clear();
+		userListbox.clear();
 		RootPanel.get("content").add(topPanel);
 		RootPanel.get("content").add(buttonPanel);
 
@@ -443,7 +527,7 @@ private class shareCotactListClickhandler implements ClickHandler {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Die Kontaktlisten konnten nicht geladen werden");
+				Window.alert("Die User konnten nicht geladen werden");
 			}
 
 			@Override
@@ -463,10 +547,26 @@ private class shareCotactListClickhandler implements ClickHandler {
 
 private class shareContactListwithUserClickhandler implements ClickHandler {
 	public void onClick(ClickEvent event) {
-		List userArray = new ArrayList<User>();
+		List emailArray = new ArrayList<User>();
 		for (int i = 0; i < userListbox.getItemCount(); i++) {
 			if (userListbox.isItemSelected(i)) {
-				userArray.add(userListbox.getItemText(i));
+				//emailArray.add(userListbox.getItemText(i));				
+				ClientSideSettings.getConnectedAdmin().createPermission(1, clArray.get(row).getBoId(), publicUserArray.get(i).getBoId(),
+						new AsyncCallback<Permission>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Window.alert("Teilen klappt nicht");
+							}
+
+							@Override
+							// jede Kontaktliste wird der ListBox hinzugefügt
+							public void onSuccess(Permission result) {
+								Window.alert("Teilen klappt" + Integer.toString(clArray.get(row).getBoId()));
+
+							}
+
+						});
 			}
 		}
 		// publicUserArray verwenden um am die id der selecteten items der
@@ -474,23 +574,23 @@ private class shareContactListwithUserClickhandler implements ClickHandler {
 
 		// int shareUserId, int shareObjectId, int receiverUserId,
 		// AsyncCallback<Permission> callback
-		Window.alert(Integer.toString(clArray.get(row).getBoId()));
-		ClientSideSettings.getConnectedAdmin().createPermission(1, clArray.get(row).getBoId(), 2,
-				new AsyncCallback<Permission>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("Teilen klappt nicht");
-					}
-
-					@Override
-					// jede Kontaktliste wird der ListBox hinzugefügt
-					public void onSuccess(Permission result) {
-						Window.alert("Teilen klappt");
-
-					}
-
-				});
+//		Window.alert(Integer.toString(clArray.get(row).getBoId()));
+//		ClientSideSettings.getConnectedAdmin().createPermission(1, clArray.get(row).getBoId(), 2,
+//				new AsyncCallback<Permission>() {
+//
+//					@Override
+//					public void onFailure(Throwable caught) {
+//						Window.alert("Teilen klappt nicht");
+//					}
+//
+//					@Override
+//					// jede Kontaktliste wird der ListBox hinzugefügt
+//					public void onSuccess(Permission result) {
+//						Window.alert("Teilen klappt");
+//
+//					}
+//
+//				});
 
 	}
 }};

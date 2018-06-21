@@ -317,4 +317,7 @@ public interface ConnectedAdmin extends RemoteService {
 
 	Value findValueById(int id) throws IllegalArgumentException;
 
+	public void givePermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid)
+			throws IllegalArgumentException;
+
 }

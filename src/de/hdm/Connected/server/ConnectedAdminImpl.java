@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -287,6 +288,20 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	@Override
 	public void removeContactFromContactList(int contactid, int contactlistid) throws IllegalArgumentException {
 			ccMapper.removeContactFromContactList(contactid, contactlistid);
+	}
+	
+	//Anlegen von Permissions auf Array von Contacts für Array von User
+	@Override
+	public void givePermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException{
+		Permission p = new Permission();
+		for(int i=0; i < contactArray.size(); i++){
+			for(int j=0; j< userArray.size(); j++){
+				p.setSharedObjectId(contactArray.get(i).getBoId());
+				p.setReceiverUserID(userArray.get(j).getBoId());
+				p.setShareUserID(shareuserid);
+				permissionMapper.insert(p);
+			}
+		}
 	}
 	
 	// Löscht KontaktListen und zugehörige Kontakte inkl. Values 	
