@@ -50,12 +50,12 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	/**
 	 * Login Panel
 	 */
-	private LoginInfo loginInfo = null;
+	/*private LoginInfo loginInfo = null;
 	private VerticalPanel loginPanel = new VerticalPanel();
 	private Label loginLabel = new Label(
 			"Please sign in to your Google Account to access the Connected application.");
 	private Anchor signInLink = new Anchor("Sign In");
-
+*/
 	/**
 	 * This is the entry point method.
 	 */
@@ -63,7 +63,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	public void onModuleLoad() {
 
 		
-		// Check login status using login service.
+	/*	// Check login status using login service.
 	   LoginServiceAsync loginService = GWT.create(LoginService.class);
 	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
 	      public void onFailure(Throwable error) {
@@ -79,7 +79,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	      }
 	      
 	    });
-	    
+	    */
 		Button newContactButton = new Button("Neuen Kontakt anlegen");
 		Button editContactButton = new Button ("Kontakt 8 bearbeiten");
 
@@ -119,7 +119,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 					@Override
 					public void onSuccess(Contact result) {
 						RootPanel.get("content").clear();
-						ContactForm_Test newcontactForm = new ContactForm_Test(result);
+						ContactForm newcontactForm = new ContactForm(result);
 						//Test_CellTable newform = new Test_CellTable(); 
 					}
 					
@@ -174,12 +174,12 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		});
 		RootPanel.get("footer").add(footer);
 	}
-	  private void loadLogin() {
+	 /* private void loadLogin() {
 		    // Assemble login panel.
 		    signInLink.setHref(loginInfo.getLoginUrl());
 		    loginPanel.add(loginLabel);
 		    loginPanel.add(signInLink);
 		    RootPanel.get("content").add(loginPanel);
-		  }
+		  }*/
 		  
 }
