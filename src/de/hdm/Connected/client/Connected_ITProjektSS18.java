@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Anchor;
 
 import de.hdm.Connected.client.gui.ContactForm;
 import de.hdm.Connected.client.gui.ContactForm_Test;
@@ -25,6 +26,9 @@ import de.hdm.Connected.client.gui.ContactListForm2;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.FieldVerifier;
 import de.hdm.Connected.shared.bo.Contact;
+import de.hdm.Connected.client.LoginInfo;
+import de.hdm.Connected.shared.LoginService;
+import de.hdm.Connected.shared.LoginServiceAsync;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -42,12 +46,40 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	 * service.
 	 */
 	private final ConnectedAdminAsync connectedAdmin = ClientSideSettings.getConnectedAdmin();
+	
+	/**
+	 * Login Panel
+	 */
+	private LoginInfo loginInfo = null;
+	private VerticalPanel loginPanel = new VerticalPanel();
+	private Label loginLabel = new Label(
+			"Please sign in to your Google Account to access the Connected application.");
+	private Anchor signInLink = new Anchor("Sign In");
 
 	/**
 	 * This is the entry point method.
 	 */
+	
 	public void onModuleLoad() {
 
+		
+		// Check login status using login service.
+	   LoginServiceAsync loginService = GWT.create(LoginService.class);
+	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
+	      public void onFailure(Throwable error) {
+	      }
+
+	      public void onSuccess(LoginInfo result) {
+	        loginInfo = result;
+	        if(loginInfo.isLoggedIn()) {
+	          //onModuleLoad();
+	        } else {
+	          loadLogin();
+	        }
+	      }
+	      
+	    });
+	    
 		Button newContactButton = new Button("Neuen Kontakt anlegen");
 		Button editContactButton = new Button ("Kontakt 8 bearbeiten");
 
@@ -142,4 +174,12 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		});
 		RootPanel.get("footer").add(footer);
 	}
+	  private void loadLogin() {
+		    // Assemble login panel.
+		    signInLink.setHref(loginInfo.getLoginUrl());
+		    loginPanel.add(loginLabel);
+		    loginPanel.add(signInLink);
+		    RootPanel.get("content").add(loginPanel);
+		  }
+		  
 }
