@@ -74,8 +74,8 @@ public class PermissionMapper {
 			}
 			stmt = con.createStatement();
 			// SQL-Anweisung zum Einfügen des neuen Permission-Tupels in die Datenbank
-			stmt.executeUpdate("INSERT INTO permission (id, sharedObjectID, receiverUserID, shareUserID) VALUES " + "(" + permission.getBoId() + ", '"
-					+ permission.getSharedObjectId() + ", '"+ permission.getReceiverUserID() + ", '" + permission.getShareUserID() + "')");
+			stmt.executeUpdate("INSERT INTO permission (id, sharedObjectID, receiverUserID, shareUserID) VALUES " + "(" + permission.getBoId() + ", "
+					+ permission.getSharedObjectId() + ", "+ permission.getReceiverUserID() + ", " + permission.getShareUserID() + ")");
 			
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
