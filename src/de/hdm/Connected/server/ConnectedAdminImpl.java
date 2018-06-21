@@ -279,14 +279,14 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	
 	@Override
 	public void addContactToContactList(int contactid, int contactlistid) throws IllegalArgumentException {
-		ccMapper.addContactToContactList(contactlistid, contactid);
+		ccMapper.addContactToContactList(contactid, contactlistid);
 	}
 		
 	//Löscht einen Kontakt von einer Kontaktliste
 	
 	@Override
 	public void removeContactFromContactList(int contactid, int contactlistid) throws IllegalArgumentException {
-			ccMapper.removeContactFromContactList(contactlistid, contactid);
+			ccMapper.removeContactFromContactList(contactid, contactlistid);
 	}
 	
 	// Löscht KontaktListen und zugehörige Kontakte inkl. Values 	

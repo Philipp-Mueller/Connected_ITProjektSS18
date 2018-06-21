@@ -58,7 +58,7 @@ public class ContactContactListMapper {
 			 * der Datenbank.
 			 */
 			stmt.executeUpdate("INSERT INTO contactcontactlist (contactid, contactlistid) VALUES " 
-			 + "("+ contactId + ", '" + contactListId + "')");
+			 + "("+ contactId + ", " + contactListId + ")");
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
