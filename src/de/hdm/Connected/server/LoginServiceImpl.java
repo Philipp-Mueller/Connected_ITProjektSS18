@@ -3,8 +3,6 @@ package de.hdm.Connected.server;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gwt.sample.stockwatcher.client.LoginInfo;
-import com.google.gwt.sample.stockwatcher.client.LoginService;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import de.hdm.Connected.client.LoginInfo;
 import de.hdm.Connected.shared.LoginService;
