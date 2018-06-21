@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.hdm.Connected.client.gui.ContactForm;
 import de.hdm.Connected.client.gui.ContactForm_Test;
 import de.hdm.Connected.client.gui.ContactListForm;
 import de.hdm.Connected.client.gui.ContactListForm2;
@@ -55,7 +56,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content").clear();
-				ContactForm_Test newcontactForm = new ContactForm_Test();
+				ContactForm newcontactForm = new ContactForm();
 			}
 
 		});

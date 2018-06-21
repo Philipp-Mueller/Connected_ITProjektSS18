@@ -397,8 +397,8 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	}
 
 	@Override
-	public void updateValue(Value value) throws IllegalArgumentException {
-		valueMapper.update(value);
+	public Value updateValue(Value value) throws IllegalArgumentException {
+		return this.valueMapper.update(value);
 	}
 
 	@Override
