@@ -60,6 +60,7 @@ public class ContactForm extends Widget {
 
 	FlexTable nameTable = new FlexTable();
 	FlexTable propertyTable = new FlexTable();
+	FlexTable newPropertyTable = new FlexTable();
 
 	private ArrayList<Property> propertyArray = new ArrayList<Property>();
 	ArrayList<Integer> selectedProperties = new ArrayList<Integer>();
@@ -321,7 +322,9 @@ public class ContactForm extends Widget {
 		public void onSuccess(ArrayList<Value> result) {
 
 			propertyTable = new FlexTable();
+			newPropertyTable = new FlexTable();
 			RootPanel.get("content").add(propertyTable);
+			RootPanel.get("content").add(newPropertyTable);
 			ArrayList<Value> valuesByContact = result;
 		
 			try {
@@ -462,12 +465,28 @@ public class ContactForm extends Widget {
 							propertyTable.setWidget(rowCount, 2, updateBtn);
 							propertyTable.setWidget(rowCount, 3, deleteBtn);
 							
+							
+							
 						}
 						
 					});
 				}
 				
+				for(Property property : propertyArray){
+					propertyListBox.addItem(property.getName());
+				}
+				propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
+				propertyListBox.addChangeHandler(new listBoxChangeHandler());
 				
+				newPropertyBtn = new Button ("neue Eigenschaft hinzufügen");
+				newPropertyBtn.addClickHandler(new addNewPropertyClickHandler());
+				
+				valueTextBox = new TextBox();							
+				
+				newPropertyTable.setWidget(0 , 0, new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
+				newPropertyTable.setWidget(0, 0, propertyListBox);
+				newPropertyTable.setWidget(0, 1, valueTextBox);
+				newPropertyTable.setWidget(0, 2, newPropertyBtn);	
 				
 				
 				
@@ -536,6 +555,33 @@ public class ContactForm extends Widget {
 
 		@Override
 		public void onClick(ClickEvent event) {
+			
+			if(selectedContact!= null){
+				int propertyId =0;
+				for (Property p : propertyArray) {
+					if ((propertyListBox.getSelectedItemText()).equals(p.getName())) {
+						propertyId = p.getBoId();
+					}
+				}
+				ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId, selectedContact.getBoId(), new AsyncCallback<Value>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void onSuccess(Value result) {
+						Window.alert("Neue Eigenschaft wurde gespeichert!");
+						ContactForm contactForm = new ContactForm(selectedContact);
+						RootPanel.get("content").clear();
+					}
+					
+				});
+			}else{
+			
+			
 			if (newPropertyBtn != null) {
 
 				eventRow = propertyTable.getCellForEvent(event).getRowIndex();
@@ -595,7 +641,7 @@ public class ContactForm extends Widget {
 				ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId,
 						createdContact.getBoId(), new createValueCallback());
 			}
-
+			}
 		}
 
 	}
