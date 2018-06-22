@@ -293,15 +293,29 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	//Anlegen von Permissions auf Array von Contacts für Array von User
 	@Override
 	public void givePermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException{
-		Permission p = new Permission();
+		
 		for(int i=0; i < contactArray.size(); i++){
 			for(int j=0; j< userArray.size(); j++){
+				Permission p = new Permission();
 				p.setSharedObjectId(contactArray.get(i).getBoId());
 				p.setReceiverUserID(userArray.get(j).getBoId());
 				p.setShareUserID(shareuserid);
 				permissionMapper.insert(p);
 			}
 		}
+	}
+	//Anlegen von Permission auf ContactList für Array an User
+	@Override
+	public void giveCLPermissionToUsers(int clid, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException
+	{
+		for(int i = 0; i<userArray.size(); i++){
+			Permission p = new Permission();
+			p.setSharedObjectId(clid);
+			p.setReceiverUserID(userArray.get(i).getBoId());
+			p.setShareUserID(shareuserid);
+			permissionMapper.insert(p);
+		}
+		
 	}
 	
 	// Löscht KontaktListen und zugehörige Kontakte inkl. Values 	

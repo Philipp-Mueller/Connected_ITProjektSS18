@@ -117,4 +117,6 @@ public interface ConnectedAdminAsync {
 	
 	void givePermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid, AsyncCallback<Void> callback);
 	
+	void giveCLPermissionToUsers(int clid, ArrayList<User> userArray, int shareuserid, AsyncCallback<Void> callback);
+	
 }
