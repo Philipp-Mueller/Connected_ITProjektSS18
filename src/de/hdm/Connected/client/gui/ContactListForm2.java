@@ -16,6 +16,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.Constants;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.thirdparty.javascript.jscomp.Result;
 import com.google.gwt.user.cellview.client.CellTable;
@@ -24,8 +25,10 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -95,11 +98,14 @@ public class ContactListForm2 extends Widget {
 
 	Grid clGrid = new Grid();
 	public int row;
+	public int globalIndex;
 
 	private ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
 	Set<Contact> set1 = new HashSet<Contact>();
 	String sizeSt;
 
+
+	
 	public ContactListForm2() {
 
 		// namePanel.add(nameLabel);
@@ -223,6 +229,8 @@ public class ContactListForm2 extends Widget {
 
 	private class showContactListCallback implements AsyncCallback<ArrayList<Contact>> {
 
+		
+		
 		public void onFailure(Throwable caught) {
 			Window.alert("Da ist wohl etwas schief gelaufen 1");
 
@@ -267,10 +275,12 @@ public class ContactListForm2 extends Widget {
 			visitbuttonColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
 				public void update(int index, Contact object, String value) {
 					// Value is the button value. Object is the row object.
-					Window.alert("You clicked: " + index);
+					Window.alert("You clicked:" + index);
 					clGrid.clear();
-					// ClientSideSettings.getConnectedAdmin().findValueAndProperty(result.get(index).getBoId(),
-					// callback);
+					globalIndex = index;
+					MyDialog d = new MyDialog();
+					d.center();
+					d.show();
 
 				}
 			});
@@ -301,6 +311,10 @@ public class ContactListForm2 extends Widget {
 					clGrid.clear();
 				}
 			});
+			
+			
+			
+
 
 			// Contact c1 = new Contact();
 			// c1.setPrename("Frank");
@@ -353,6 +367,30 @@ public class ContactListForm2 extends Widget {
 			topPanel.add(contacttable);
 
 		}
+		
+		private class MyDialog extends DialogBox {
+
+		    public MyDialog() {
+		      // Set the dialog box's caption.
+		      setText("My First Dialog" + globalContactArray.get(globalIndex).getBoId());
+
+		      // Enable animation.
+		      setAnimationEnabled(true);
+
+		      // Enable glass background.
+		      setGlassEnabled(true);
+
+		      // DialogBox is a SimplePanel, so you have to set its widget property to
+		      // whatever you want its contents to be.
+		      Button ok = new Button("OK");
+		      ok.addClickHandler(new ClickHandler() {
+		        public void onClick(ClickEvent event) {
+		          MyDialog.this.hide();
+		        }
+		      });
+		      setWidget(ok);
+		    }
+		  }
 
 	}
 
@@ -620,5 +658,21 @@ public class ContactListForm2 extends Widget {
 			
 		}
 	}
+	
+
+
+//	  public void onModuleLoad() {
+//	    Button b = new Button("Click me");
+//	    b.addClickHandler( new ClickHandler()
+//	    		{
+//	    	public void onClick(ClickEvent event) {
+//	    	    // Instantiate the dialog box and show it.
+//	    	    new MyDialog().show();
+//	    	  }
+//	    		}
+//	    	);
+//
+//	    RootPanel.get().add(b);
+//	  }
 	
 };
