@@ -504,11 +504,11 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 	
 	@Override
-	public Map<String, String> findValueAndProperty(int id) throws IllegalArgumentException {
-		Map<String, String> mapi = new HashMap<String, String>();
+	public Map<Property, Value> findValueAndProperty(int id) throws IllegalArgumentException {
+		Map<Property, Value> mapi = new HashMap<Property, Value>();
 		for(int i=0; i<findValuesByContactId(id).size();i++){
-			String value = findValuesByContactId(id).get(i).getName();
-			String property = findPropertyByPropertyId(findValuesByContactId(id).get(i).getPropertyID()).getName();
+			Property property = findPropertyByPropertyId(findValuesByContactId(id).get(i).getPropertyID());
+			Value value = findValuesByContactId(id).get(i);			
 			mapi.put(property, value);
 		}
 		

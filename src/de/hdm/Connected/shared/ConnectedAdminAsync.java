@@ -109,7 +109,7 @@ public interface ConnectedAdminAsync {
 
 	void getPermissionById(int id, AsyncCallback<Permission> callback);
 
-	void findValueAndProperty(int id, AsyncCallback<Map<String, String>> callback);
+	void findValueAndProperty(int id, AsyncCallback<Map<Property, Value>> callback);
 
 	void findValueByValue(String value, AsyncCallback<ArrayList<Value>> callback);
 
