@@ -2,6 +2,7 @@ package de.hdm.Connected.client.gui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,9 @@ import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.ContactList;
 import de.hdm.Connected.shared.bo.Permission;
+import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
+import de.hdm.Connected.shared.bo.Value;
 
 /**
  * Klasse für die Bereistellung eines Formulars zum Anlegen/Bearbeiten einer
@@ -229,7 +232,7 @@ public class ContactListForm2 extends Widget {
 
 	private class showContactListCallback implements AsyncCallback<ArrayList<Contact>> {
 
-		
+		Map<Property, Value> propertyValueMap = new HashMap<Property, Value>();
 		
 		public void onFailure(Throwable caught) {
 			Window.alert("Da ist wohl etwas schief gelaufen 1");
@@ -275,12 +278,31 @@ public class ContactListForm2 extends Widget {
 			visitbuttonColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
 				public void update(int index, Contact object, String value) {
 					// Value is the button value. Object is the row object.
-					Window.alert("You clicked:" + index);
+					ClientSideSettings.getConnectedAdmin().findValueAndProperty(globalContactArray.get(index).getBoId(), new AsyncCallback<Map<Property, Value>>() {
+
+						public void onFailure(Throwable caught) {
+							Window.alert("Da ist wohl etwas schief gelaufen 2");
+						}
+
+						public void onSuccess(Map<Property, Value> result) {
+							propertyValueMap = result;
+							Window.alert("Coolio");
+//							Window.alert(Integer.toString(result.size()));
+//							Window.alert(Integer.toString(globalIndex));
+							MyDialog d = new MyDialog();
+							d.center();
+							d.show();
+
+							
+						}
+
+					});
+//					Window.alert("You clicked:" + index);
 					clGrid.clear();
 					globalIndex = index;
-					MyDialog d = new MyDialog();
-					d.center();
-					d.show();
+//					MyDialog d = new MyDialog();
+//					d.center();
+//					d.show();
 
 				}
 			});
@@ -372,23 +394,49 @@ public class ContactListForm2 extends Widget {
 
 		    public MyDialog() {
 		      // Set the dialog box's caption.
-		      setText("My First Dialog" + globalContactArray.get(globalIndex).getBoId());
+		      setText(globalContactArray.get(globalIndex).getPrename() + " " + globalContactArray.get(globalIndex).getSurname());
 
 		      // Enable animation.
 		      setAnimationEnabled(true);
 
 		      // Enable glass background.
 		      setGlassEnabled(true);
-
-		      // DialogBox is a SimplePanel, so you have to set its widget property to
-		      // whatever you want its contents to be.
+		      
 		      Button ok = new Button("OK");
 		      ok.addClickHandler(new ClickHandler() {
 		        public void onClick(ClickEvent event) {
 		          MyDialog.this.hide();
 		        }
 		      });
-		      setWidget(ok);
+//		      for(int i = 0; i< propertyValueMap.size(); i++)
+//		      {
+//		    	  Label propertyLabel = new Label(entry.getKey().getName());
+//		    	  Label valueLabel = new Label(entry.getKey().getName());
+//		    	  HorizontalPanel h = new HorizontalPanel();
+//		    	  h.add(propertyLabel);
+//		    	  h.add(valueLabel);
+//		    	  setWidget(h);
+//		      		}
+		      VerticalPanel v = new VerticalPanel();
+		      
+		      for(Map.Entry<Property, Value> entry : propertyValueMap.entrySet())
+		      {
+		    	  Label propertyLabel = new Label(entry.getKey().getName());
+		    	  Label valueLabel = new Label(entry.getValue().getName());
+		    	  HorizontalPanel h = new  HorizontalPanel();
+		    	  h.add(propertyLabel);
+		    	  h.add(new Label(": "));
+		    	  h.add(valueLabel);
+		    	  v.add(h);
+		    	  
+		      }
+		      if (propertyValueMap.size() == 0){
+		    	  v.add(new Label ("Keine Eigenschaften gespeichert"));
+		      }
+		      
+		      v.add(ok);
+		      setWidget(v);
+
 		    }
 		  }
 
