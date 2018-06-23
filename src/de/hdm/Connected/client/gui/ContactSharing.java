@@ -3,6 +3,7 @@ package de.hdm.Connected.client.gui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -21,6 +22,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
@@ -33,20 +35,25 @@ import com.google.gwt.view.client.SelectionChangeEvent.HasSelectionChangedHandle
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.Property;
+import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
 
 public class ContactSharing extends Widget {
 
 	private ListDataProvider<Entry<Property, Value>> dataProvider = new ListDataProvider<Entry<Property, Value>>();
 	private CellTable<Entry<Property, Value>> propertyValueTable = new CellTable<Entry<Property, Value>>();
-	private Set<Entry<Property,Value>> set1 = new HashSet<Entry<Property,Value>>();
+	private Set<Entry<Property,Value>> selectedSet = new HashSet<Entry<Property,Value>>();
+	ArrayList<User> allUsers = null;
+	final ListBox userListBox = new ListBox(true);
 	
 	//Map<Property, Value> propertyValueMap = new HashMap<Property, Value>();
 	
 	
-	public ContactSharing(Contact sharingContact){
+	public ContactSharing(final Contact sharingContact){
 		
-		RootPanel.get("content").add(new HTML("<h3> Kontakt <i>" + sharingContact.getPrename() + " " + sharingContact.getSurname() + "</i> teilen</h3>" ));
+		RootPanel.get("content").add(new HTML("<h3> Kontakt <i>" + sharingContact.getPrename() + " " + sharingContact.getSurname() + "</i> teilen</h3><br />" ));
+		
+		RootPanel.get("content").add(new HTML("Bitte wählen Sie die Eigenschaften aus, die Sie teilen möchten:<br />" ));
 		
 		ClientSideSettings.getConnectedAdmin().findValueAndProperty(sharingContact.getBoId(), new AsyncCallback<Map<Property, Value>>(){
 
@@ -58,28 +65,13 @@ public class ContactSharing extends Widget {
 
 			@Override
 			public void onSuccess(Map<Property, Value> result) {
-				// TODO Auto-generated method stub
-				ArrayList<Object> propertyValueArray = new ArrayList<Object>();
-				ArrayList<Property> propertyArray = new ArrayList<Property>();
-				//ArrayList<Value> valueArray = new ArrayList<Value>();
-				List<Entry<Property, Value>> listEntry = new ArrayList<Entry<Property, Value>>();				
-				for(Map.Entry<Property, Value> entry : result.entrySet()){
-					listEntry.add(entry);
-					
-					/*propertyArray.add(entry.getKey());
-					propertyValueArray.add(entry.getKey());
-					propertyValueArray.add(entry.getValue());*/
-					
-					Label propertyLabel = new Label(entry.getKey().getName());
-					Label valueLabel = new Label (entry.getValue().getName());
-					RootPanel.get("content").add(propertyLabel);
-					RootPanel.get("content").add(valueLabel);
-					
-					// for (Contact cid : result) {
-					// ClientSideSettings.getConnectedAdmin().findContactById(cid.getBoId(),
-					// }
-				}
+				//List für DataProvider mit den Properties und Values
+				List<Entry<Property, Value>> propertiesAndValues = new ArrayList<Entry<Property, Value>>();		
 				
+				for(Map.Entry<Property, Value> entry : result.entrySet()){
+					propertiesAndValues.add(entry);				
+				}
+							
 				
 				TextColumn<Entry<Property, Value>> propertyColumn = new TextColumn<Entry<Property, Value>>() {
 					public String getValue(Entry<Property, Value> property) {
@@ -99,7 +91,7 @@ public class ContactSharing extends Widget {
 				 selectionModel.addSelectionChangeHandler(new Handler() {
 					@Override
 					public void onSelectionChange(SelectionChangeEvent event) {
-						set1 = selectionModel.getSelectedSet();
+						selectedSet = selectionModel.getSelectedSet();
 
 					}
 				});
@@ -122,18 +114,86 @@ public class ContactSharing extends Widget {
 					propertyValueTable.addColumn(valueColumn, "Ausprägung");
 							
 					dataProvider.getList().clear();
-					dataProvider.getList().addAll(listEntry);
+					dataProvider.getList().addAll(propertiesAndValues);
 					dataProvider.addDataDisplay(propertyValueTable);
-					Window.alert(Integer.toString(propertyValueArray.size()));
+					
+					// multi auswahl freischalten in ListBox
+					userListBox.ensureDebugId("cwListBox-multiBox");
+					userListBox.setVisibleItemCount(7);
+					
+					ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>(){
+						
+						@Override
+						public void onFailure(Throwable caught) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public void onSuccess(ArrayList<User> result) {
+							allUsers = result;
+							for(User u : result){
+								//Eigenen User nicht in Liste laden
+								//TODO if(u.getLogEmail() != ClientSideSettings.getCurrentUser().getLogEmail()){
+								userListBox.addItem(u.getLogEmail());//}
+							}
+						}
+						
+					});
 					
 					RootPanel.get("content").add(propertyValueTable);
+					
+					RootPanel.get("content").add(new HTML("<br />Bitte wählen Sie die/den User aus, mit dem Sie diesen Kontakt teilen möchten:<br />" ));
+					
+					RootPanel.get("content").add(userListBox);
+					
 					Button selected = new Button("Zeig was ist ausgwählt");
 					selected.addClickHandler(new ClickHandler(){
 
 						@Override
 						public void onClick(ClickEvent event) {
 							// TODO Auto-generated method stub
-							Window.alert(Integer.toString(set1.size()));
+							Window.alert(Integer.toString(selectedSet.size()));
+							ArrayList<Integer> selectedValues = new ArrayList<Integer>();
+							ArrayList<Integer> selectedUsers = new ArrayList<Integer>();
+							selectedValues.add(sharingContact.getBoId());
+							Iterator<Entry<Property, Value>> iterator = selectedSet.iterator();
+							
+							while(iterator.hasNext()){
+								Map.Entry<Property,Value> entry = iterator.next();
+								selectedValues.add(entry.getValue().getBoId());								
+							}
+							
+							
+							
+							for(int i=0; i<userListBox.getItemCount();i++){
+								if(userListBox.isItemSelected(i)){
+									for(User u: allUsers){
+										if(userListBox.getItemText(i).equals(u.getLogEmail())){
+											selectedUsers.add(u.getBoId());
+										}
+									}
+								}
+							}
+							
+							
+							
+							ClientSideSettings.getConnectedAdmin().createPermission(3, selectedValues, selectedUsers, new AsyncCallback<Void>(){
+
+								@Override
+								public void onFailure(Throwable caught) {
+									// TODO Auto-generated method stub
+									
+								}
+
+								@Override
+								public void onSuccess(Void result) {
+									// TODO Auto-generated method stub
+									Window.alert("Values wurden geshared");
+								}
+								
+							});
+							
 						}
 						
 					});
