@@ -321,6 +321,15 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	// Löscht KontaktListen und zugehörige Kontakte inkl. Values 	
 	@Override
    	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException {
+
+		ArrayList<Contact> contactArray = new ArrayList<Contact>();
+		contactArray = ccMapper.findContactsByContactListId(contactlist.getBoId());
+		
+		for( int i = 0; i <contactArray.size(); i++)
+		{
+			ccMapper.removeContactFromContactList(contactArray.get(i).getBoId(), contactlist.getBoId());
+		}		
+		
 			this.contactListMapper.delete(contactlist);
 		}
 		

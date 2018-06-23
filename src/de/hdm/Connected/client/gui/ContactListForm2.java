@@ -74,7 +74,7 @@ public class ContactListForm2 extends Widget {
 	Button uptdateContactListButton = new Button("Kontaktliste bearbeiten");
 	Button shareContactListButton = new Button("Kontaktliste teilen", new shareCotactListClickhandler());
 	Button sharePartOfClButton = new Button("Kontakte von Kontaktliste teilen", new sharePartofClClickhandler());
-	Button addContactButton = new Button("Kontakt hinzufügen");
+	//Button addContactButton = new Button("Kontakt hinzufügen", new addContactsToContatListClickHandler());
 	Button createListButton = new Button("Liste erstellen", new createContactListClickhandler());
 	Button visitbutton = null;
 	Button shareSeletedContactsButton = new Button("Auswahl teilen", new shareSelectedContactsClickhandler());
@@ -210,7 +210,7 @@ public class ContactListForm2 extends Widget {
 
 			topPanel.add(new HTML("<h2> Neue Kontaktliste erstellen</h2>"));
 			topPanel.add(namePanel);
-			topPanel.add(addContactButton);
+			//topPanel.add(addContactButton);
 			topPanel.add(createListButton);
 
 		}
@@ -708,19 +708,4 @@ public class ContactListForm2 extends Widget {
 	}
 	
 
-
-//	  public void onModuleLoad() {
-//	    Button b = new Button("Click me");
-//	    b.addClickHandler( new ClickHandler()
-//	    		{
-//	    	public void onClick(ClickEvent event) {
-//	    	    // Instantiate the dialog box and show it.
-//	    	    new MyDialog().show();
-//	    	  }
-//	    		}
-//	    	);
-//
-//	    RootPanel.get().add(b);
-//	  }
-	
 };
