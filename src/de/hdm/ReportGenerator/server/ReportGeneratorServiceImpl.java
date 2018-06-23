@@ -25,7 +25,7 @@ import de.hdm.ReportGenerator.shared.ReportGeneratorService;
  * 
  * @author Patricia
  * Applikationslogik des Report Generators zur Wiedergabe aller Kontakte, aller Kontakte per Nutzer,
- * aller geteilten Kontakte, alle geteilte Kontakte per Nutzer, Abfrage von Eigenschaften anhand Aussprägungen.
+ * aller geteilten Kontakte, aller geteilten Kontakte per Nutzer, Abfrage von Eigenschaften anhand Aussprägungen.
  *
  */
 
@@ -81,7 +81,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 
 		List<Contact> result = new ArrayList<Contact>();
 		
-		//Wenn nicht nach allen Kontakten gesucht werden soll, und ein Nutzer gesetzt ist
+		//Wenn nicht nach allen Kontakten gesucht werden soll und ein Nutzer gesetzt ist
 		if(!allContacts&&userEmail!=null && !userEmail.isEmpty()){
 			
 			User u = userMapper.findByEmail(userEmail);

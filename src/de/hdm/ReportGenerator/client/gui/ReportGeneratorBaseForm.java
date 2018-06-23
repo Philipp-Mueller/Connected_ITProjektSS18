@@ -61,13 +61,12 @@ public class ReportGeneratorBaseForm extends Widget {
 
 	public ReportGeneratorBaseForm() {
 
-		// Zwei horizontal panel in einem V panel
+		// Zwei horizontal panel in einem Vertical panel
 		vPanel.add(hPanel1);
 		vPanel.add(hPanel2);
 		
 		/*
-		 * Der Footer enthält das Copyright sowie einen Link
-		 * zum Impressum. 
+		 * Der Footer enthält das Copyright sowie einen Link zum Impressum. 
 		 */
 		HorizontalPanel footer = new HorizontalPanel();
 		Anchor connectedLink = new Anchor ("Connected", "Connected_ITProjektSS18.html");
@@ -197,7 +196,7 @@ public class ReportGeneratorBaseForm extends Widget {
 
 		// Contact Tabelle
 
-		// Connect the table to the data provider.
+		// Verbindet die Tabelle mit dem Data Provider.
 		dataProvider.addDataDisplay(table);
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 		TextColumn<Contact> nameColumn = new TextColumn<Contact>() {
@@ -230,12 +229,14 @@ public class ReportGeneratorBaseForm extends Widget {
 		table.setRowData(0, contactToShowInReport);
 		hPanel2.add(table);
 
-		// Nachdem die UI erstellt ist daten für die Dropdowns und Suggestbox
-		// laden
+		/*
+		 *  Nachdem die UI erstellt ist werden die Daten für das Dropdown und die Suggestbox geladen
+		 */
 		loadDataForFiltering();
 
-		// Vertical panel dem contect RootPanel hinzufügen (Somit wirds
-		// sichtbar)
+		/*
+		 *  Vertical panel wird dem RootPanel hinzugefügt (Somit wirds sichtbar)
+		 */
 		RootPanel.get("content").add(vPanel);
 
 	}
@@ -275,8 +276,9 @@ public class ReportGeneratorBaseForm extends Widget {
 				}
 				ReportGeneratorBaseForm.this.propertyId = Integer.valueOf(propertyListBox.getSelectedValue());
 
-				// Jetzt wo die Properties geladen sind, lade die Values für die
-				// Suggestion box zum ersten Eintrag in der PropertyDropdown
+				/*
+				 * Die Properties sind geladen, jetzt werden die Values für die Suggestbox im Property-Dropdown geladen
+				 */
 				loadValuesForSuggestion();
 			}
 		});
@@ -284,7 +286,7 @@ public class ReportGeneratorBaseForm extends Widget {
 	}
 
 	private void loadValuesForSuggestion() {
-		// All Values for suggestbox
+		// Alle Values für suggestbox
 		rgsa.allValues(ReportGeneratorBaseForm.this.propertyId, new AsyncCallback<List<Value>>() {
 			@Override
 			public void onFailure(Throwable caught) {
