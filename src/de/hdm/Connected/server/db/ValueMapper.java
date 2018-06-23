@@ -77,7 +77,7 @@ public class ValueMapper {
 				value.setBoId(rs.getInt("maxid") + 1);
 			}
 			stmt = con.createStatement();
-			/**
+			/*
 			 * SQL-Anweisung zum Einfuegen des neuen Value-Tupels in die
 			 * Datenbank.
 			 */
@@ -272,7 +272,7 @@ public class ValueMapper {
 			while (rs.next()) {
 				Value value = new Value();
 				value.setBoId(rs.getInt("id"));
-				value.setName(rs.getString("description"));
+				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
 				result.add(value);

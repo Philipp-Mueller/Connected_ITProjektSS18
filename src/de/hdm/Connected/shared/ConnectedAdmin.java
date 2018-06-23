@@ -2,6 +2,7 @@ package de.hdm.Connected.shared;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -63,6 +64,16 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return neu erstelltes Property-Objekt
 	 * @throws IllegalArgumentException
 	 */
+	
+	public ArrayList<User> findAllUser() throws IllegalArgumentException;
+	/**
+	 * Gibt alle User zurück
+	 * 
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	
+	
 	public Property createProperty(String name) throws IllegalArgumentException;
 	
 	/**
@@ -121,7 +132,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return aktualisiertes Value-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public void updateValue(Value value) throws IllegalArgumentException;
+	public Value updateValue(Value value) throws IllegalArgumentException;
 	
 	/**
 	 * Löscht ein Value-Objekt und alle eventuell darauf basierenden
@@ -213,14 +224,8 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public ArrayList<Permission> findPermissionsByUserId(int id) throws IllegalArgumentException;
-	/**
-	 * Erstellt ein neues Permission-Objekt.
-	 * 
-	 * @return neu erstelltes Permission-Objekt
-	 * @throws IllegalArgumentException
-	 */
-	public Permission createPermission(int shareUserId, int shareObjectId, int receiverUserId) throws IllegalArgumentException;
 	
+
 	/**
 	 * Löscht ein Permission-Objekt 
 	 * 
@@ -299,5 +304,25 @@ public interface ConnectedAdmin extends RemoteService {
 	void updatePermission(Permission permission) throws IllegalArgumentException;
 
 	Permission getPermissionById(int id) throws IllegalArgumentException;
+
+	Map<Property, Value> findValueAndProperty(int id) throws IllegalArgumentException;
+
+	ArrayList<Value> findValueByValue(String value) throws IllegalArgumentException;
+
+	Value findValueById(int id) throws IllegalArgumentException;
+
+	public void givePermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid)
+			throws IllegalArgumentException;
+	
+	public void giveCLPermissionToUsers(int clid, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException;
+
+	/**
+	 * Erstellt ein neues Permission-Objekt.
+	 * 
+	 * @return neu erstelltes Permission-Objekt
+	 * @throws IllegalArgumentException
+	 */
+	void createPermission(int shareUserId, ArrayList<Integer> shareObjectId, ArrayList<Integer> receiverUserId)
+			throws IllegalArgumentException;
 
 }

@@ -2,6 +2,7 @@ package de.hdm.Connected.shared;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -28,6 +29,8 @@ public interface ConnectedAdminAsync {
 	
 	void deleteUser(User user, AsyncCallback<Void> callback);
 	
+	void findAllUser(AsyncCallback<ArrayList<User>> callback);
+	
 	void createProperty(String name, AsyncCallback<Property> callback);
 	
 	void updateProperty(Property property, AsyncCallback<Void> callback);
@@ -42,7 +45,7 @@ public interface ConnectedAdminAsync {
 	
 	void createValue(String name, int propertyId, int contactId, AsyncCallback<Value> callback);
 	
-	void updateValue(Value value, AsyncCallback<Void> callback);
+	void updateValue(Value value, AsyncCallback<Value> callback);
 	
 	void deleteValue(Value value, AsyncCallback<Void> callback);
 	
@@ -66,7 +69,7 @@ public interface ConnectedAdminAsync {
 	
 	void findPermissionsByUserId(int id, AsyncCallback <ArrayList<Permission>> callback);
 	
-	void createPermission(int shareUserId, int shareObjectId, int receiverUserId, AsyncCallback<Permission> callback);
+	void createPermission(int shareUserId, ArrayList<Integer> shareObjectId, ArrayList<Integer> receiverUserId, AsyncCallback<Void> callback);
 	
 	void deletePermission(Permission permission, User cUser, AsyncCallback<Void> callback);
 	
@@ -105,5 +108,15 @@ public interface ConnectedAdminAsync {
 	void updatePermission(Permission permission, AsyncCallback<Void> callback);
 
 	void getPermissionById(int id, AsyncCallback<Permission> callback);
+
+	void findValueAndProperty(int id, AsyncCallback<Map<Property, Value>> callback);
+
+	void findValueByValue(String value, AsyncCallback<ArrayList<Value>> callback);
+
+	void findValueById(int id, AsyncCallback<Value> callback);
+	
+	void givePermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid, AsyncCallback<Void> callback);
+	
+	void giveCLPermissionToUsers(int clid, ArrayList<User> userArray, int shareuserid, AsyncCallback<Void> callback);
 	
 }

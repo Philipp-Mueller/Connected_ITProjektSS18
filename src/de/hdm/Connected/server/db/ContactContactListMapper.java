@@ -19,6 +19,34 @@ public class ContactContactListMapper {
 	 * 
 	 */
 	
+	
+	private static ContactContactListMapper contactContactListMapper = null;
+
+	/**
+	 * Geschützter Konstruktor verhindert die Möglichkeit für das erneute
+	 * Erzeugen von weiteren Instanzen dieser Klasse.
+	 */
+
+	protected ContactContactListMapper() {
+	}
+
+	/**
+	 * Statische Methode zum Sicherstellen der Singleton-Eigenschaft. Sie sorgt
+	 * dafür, dass nur eine einzige Instanz der PropertyMapper-Klasse
+	 * exsistiert. Aufgerufen wird die Klasse somit über
+	 * PropertyMapper.propertyMapper() und nicht über den New-Operator.
+	 * 
+	 * @return propertyMapper
+	 */
+
+	public static ContactContactListMapper contactContactListMapper() {
+		if (contactContactListMapper == null) {
+			contactContactListMapper = new ContactContactListMapper();
+		}
+		return contactContactListMapper;
+	}
+
+	
 	public void addContactToContactList(int contactId, int contactListId) {
 		Connection con = DBConnection.connection();
 		
@@ -30,7 +58,7 @@ public class ContactContactListMapper {
 			 * der Datenbank.
 			 */
 			stmt.executeUpdate("INSERT INTO contactcontactlist (contactid, contactlistid) VALUES " 
-			 + "("+ contactId + ", '" + contactListId + "')");
+			 + "("+ contactId + ", " + contactListId + ")");
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
