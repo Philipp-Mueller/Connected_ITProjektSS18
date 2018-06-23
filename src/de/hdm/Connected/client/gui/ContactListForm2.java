@@ -162,27 +162,19 @@ public class ContactListForm2 extends Widget {
 			RootPanel.get("content").add(topPanel);
 			topPanel.clear();
 			row = (clGrid.getCellForEvent(event).getRowIndex());
-			Window.alert(Integer.toString(clArray.get(row).getBoId())); // id
+			//Window.alert(Integer.toString(clArray.get(row).getBoId())); // id
 			int idvonCl = clArray.get(row).getBoId(); // von
 														// ContactList
 
 			ClientSideSettings.getConnectedAdmin().findContactsByContactListId(idvonCl, new showContactListCallback());
 			try {
-				Window.alert(Integer.toString(contactArray.size()));
+				//Window.alert(Integer.toString(contactArray.size()));
 
 			} catch (Exception e) {
 				Window.alert(e.toString());
 				e.printStackTrace();
 			}
-			// Window.alert(Integer.toString(row));
-			// Contaktliste anzeigen (id aus tabelle = id aus result Array -> id
-			// von cl)
-			// Oben 2 buttons mit cl bearbeiten und cl löschen
-			// Kontakt cl hinzufügen button
-			// Cl teilen button
 
-			// RootPanel.get("content").clear();
-			// ContactForm_Test newcontactForm = new ContactForm_Test();
 
 		}
 	}
@@ -219,11 +211,11 @@ public class ContactListForm2 extends Widget {
 	private class createContactListCallback implements AsyncCallback<ContactList> {
 
 		public void onFailure(Throwable caught) {
-			Window.alert("Da ist wohl etwas schief gelaufen");
+			Window.alert("Ops, da ist etwas schief gelaufen!");
 		}
 
 		public void onSuccess(ContactList result) {
-			Window.alert("Contactlist angelegt");
+			Window.alert("Contactlist erfolgreich angelegt!");
 			RootPanel.get("content").clear();
 
 		}
@@ -235,12 +227,12 @@ public class ContactListForm2 extends Widget {
 		Map<Property, Value> propertyValueMap = new HashMap<Property, Value>();
 		
 		public void onFailure(Throwable caught) {
-			Window.alert("Da ist wohl etwas schief gelaufen 1");
+			Window.alert("Ops, da ist etwas schief gelaufen!");
 
 		}
 
 		public void onSuccess(final ArrayList<Contact> result) {
-			Window.alert("Contactlist gefunden");
+			//Window.alert("Contactlist gefunden");
 
 			globalContactArray = new ArrayList<Contact>();
 			globalContactArray = result;
@@ -281,12 +273,11 @@ public class ContactListForm2 extends Widget {
 					ClientSideSettings.getConnectedAdmin().findValueAndProperty(globalContactArray.get(index).getBoId(), new AsyncCallback<Map<Property, Value>>() {
 
 						public void onFailure(Throwable caught) {
-							Window.alert("Da ist wohl etwas schief gelaufen 2");
+							Window.alert("Ops, da ist etwas schief gelaufen!");
 						}
 
 						public void onSuccess(Map<Property, Value> result) {
 							propertyValueMap = result;
-							Window.alert("Coolio");
 //							Window.alert(Integer.toString(result.size()));
 //							Window.alert(Integer.toString(globalIndex));
 							MyDialog d = new MyDialog();
@@ -310,7 +301,7 @@ public class ContactListForm2 extends Widget {
 			deletebuttonColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
 				public void update(final int index, Contact object, String value) {
 					// Value is the button value. Object is the row object.
-					Window.alert("You clicked: " + index);
+					//Window.alert("You clicked: " + index);
 					ClientSideSettings.getConnectedAdmin().removeContactFromContactList(
 							globalContactArray.get(index).getBoId(), clArray.get(row).getBoId(),
 							new AsyncCallback<Void>() {
@@ -318,12 +309,11 @@ public class ContactListForm2 extends Widget {
 								public int boIdvonCL = clArray.get(row).getBoId();
 
 								public void onFailure(Throwable caught) {
-									Window.alert("Da ist wohl etwas schief gelaufen 2");
+									Window.alert("Ops, da ist etwas schief gelaufen!");
 								}
 
 								public void onSuccess(Void result) {
-									Window.alert("Kontakt von Cl gelöscht" + Integer.toString(boIdvonContact)
-											+ Integer.toString(boIdvonCL));
+									Window.alert("Kontakt erfolgreich von Kontaktliste entfernt");
 									dataProvider.getList().remove(index);
 									dataProvider.refresh();
 									
@@ -335,15 +325,7 @@ public class ContactListForm2 extends Widget {
 			});
 			
 			
-			
-
-
-			// Contact c1 = new Contact();
-			// c1.setPrename("Frank");
-			// c1.setSurname("herbert");
-			// Contact c2 = new Contact();
-			// c2.setPrename("Addi");
-			// c2.setSurname("Bert");
+		
 
 			RootPanel.get("content").add(buttonPanel);
 			buttonPanel.clear();
@@ -353,20 +335,7 @@ public class ContactListForm2 extends Widget {
 			topPanel.add(new HTML("<h2> Kontaktliste " + clArray.get(row).getName() + ": </h2>"));
 			topPanel.add(contacttable);
 
-			// final MultiSelectionModel<Contact> selectionModel = new
-			// MultiSelectionModel<Contact>(
-			// Contact.KEY_PROVIDER);contacttable.setSelectionModel(selectionModel,DefaultSelectionEventManager.<Contact>createCheckboxManager());
 
-			// Column<Contact, Boolean> checkColumn=new
-			// Column<Contact,Boolean>(new CheckboxCell(true,false)){@Override
-			// public Boolean getValue(Contact object){
-			// // Get the value from the selection model.
-			// return selectionModel.isSelected(object);}
-			//
-			// };
-			// contacttable.addColumn(checkColumn,
-			// SafeHtmlUtils.fromSafeConstant("<br/>"));
-			// contacttable.setColumnWidth(checkColumn, 40, Unit.PX);
 
 			contacttable.addColumn(prenameColumn, "Vorname");
 			contacttable.addColumn(surnameColumn, "Nachname");
@@ -379,11 +348,7 @@ public class ContactListForm2 extends Widget {
 			dataProvider.getList().addAll(result);
 			dataProvider.addDataDisplay(contacttable);
 
-			// Set<Contact> selectedObjects = selectionModel.getSelectedSet();
-			// set1=selectionModel.getSelectedSet();
-			// set1.add(selectionModel.getSelectedObject());
-			// set1 = selectionModel.
-			// set1 = selectionModel.getSelectedSet();
+
 			int setSize = set1.size();
 			sizeSt = Integer.toString(setSize);
 			topPanel.add(contacttable);
@@ -408,15 +373,7 @@ public class ContactListForm2 extends Widget {
 		          MyDialog.this.hide();
 		        }
 		      });
-//		      for(int i = 0; i< propertyValueMap.size(); i++)
-//		      {
-//		    	  Label propertyLabel = new Label(entry.getKey().getName());
-//		    	  Label valueLabel = new Label(entry.getKey().getName());
-//		    	  HorizontalPanel h = new HorizontalPanel();
-//		    	  h.add(propertyLabel);
-//		    	  h.add(valueLabel);
-//		    	  setWidget(h);
-//		      		}
+
 		      VerticalPanel v = new VerticalPanel();
 		      
 		      for(Map.Entry<Property, Value> entry : propertyValueMap.entrySet())
@@ -494,13 +451,7 @@ public class ContactListForm2 extends Widget {
 			dataProvider.getList().addAll(globalContactArray);
 			dataProvider.addDataDisplay(contacttable2);
 
-			// Set<Contact> selectedObjects = selectionModel.getSelectedSet();
-			// set1 = selectionModel.getSelectedSet();
-			// set1.add(selectionModel.getSelectedObject());
-			// set1 = selectionModel.
-			// set1 = selectionModel.getSelectedSet();
-			// int setSize = set1.size();
-			// sizeSt = Integer.toString(setSize);
+
 
 			userListbox2.setEnabled(true);
 
@@ -546,7 +497,7 @@ public class ContactListForm2 extends Widget {
 	private class shareSelectedContactsClickhandler implements ClickHandler {
 
 		public void onClick(ClickEvent event) {
-			Window.alert(Integer.toString(set1.size()));
+			//Window.alert(Integer.toString(set1.size()));
 
 			for (int i = 0; i < userListbox2.getItemCount(); i++) {
 				if (userListbox2.isItemSelected(i)) {
@@ -565,15 +516,15 @@ public class ContactListForm2 extends Widget {
 
 				@Override
 				public void onFailure(Throwable caught) {
-					Window.alert("Permissions angelegt Fehlgeschlagen");
+					Window.alert("Ops, da ist etwas schief gelaufen!");
 				}
 
 				@Override
 				// jede Kontaktliste wird der ListBox hinzugefügt
 				public void onSuccess(Void result) {
-					Window.alert("Alle Permissions angelegt");
-					Window.alert(Integer.toString(cArray.size()));
-					Window.alert(Integer.toString(uArray.size()));
+					Window.alert("Alle Kontakte erfolgreich geteilt!");
+					//Window.alert(Integer.toString(cArray.size()));
+					//Window.alert(Integer.toString(uArray.size()));
 
 				}
 
@@ -586,24 +537,7 @@ public class ContactListForm2 extends Widget {
 		}
 	};
 
-	private class getContactCallback implements AsyncCallback<Map> {
 
-		public void onFailure(Throwable caught) {
-			Window.alert("Da ist wohl etwas schief gelaufen 2");
-		}
-
-		public void onSuccess(Map mapi) {
-
-		}
-
-	}
-
-	private class visitContactClickhandler implements ClickHandler {
-		public void onClick(ClickEvent event) {
-			row = (clGrid.getCellForEvent(event).getRowIndex());
-			Window.alert(Integer.toString(row));
-		}
-	}
 
 	private class shareCotactListClickhandler implements ClickHandler {
 
@@ -666,14 +600,14 @@ public class ContactListForm2 extends Widget {
 			
 						@Override
 						public void onFailure(Throwable caught) {
-							Window.alert("Teilen klappt nicht");
+							Window.alert("Ops, da ist etwas schief gelaufen!");
 						}
 
 						@Override
 						// jede Kontaktliste wird der ListBox
 						// hinzugefügt
 						public void onSuccess(Void result) {
-							Window.alert("Teilen klappt" + clArray.get(row).getName());
+							Window.alert("Teilen von " + clArray.get(row).getName()+ " war erfolgreich!");
 
 						}
 
@@ -691,14 +625,14 @@ public class ContactListForm2 extends Widget {
 			
 						@Override
 						public void onFailure(Throwable caught) {
-							Window.alert("Teilen klappt nicht");
+							Window.alert("Ops, da ist etwas schief gelaufen!");
 						}
 
 						@Override
 						// jede Kontaktliste wird der ListBox
 						// hinzugefügt
 						public void onSuccess(Void result) {
-							Window.alert("Löschen klappt" + clArray.get(row).getName());
+							Window.alert("Löschen von " + clArray.get(row).getName() + " war erfolgreich!");
 
 						}
 
