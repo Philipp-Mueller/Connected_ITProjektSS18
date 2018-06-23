@@ -224,14 +224,8 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public ArrayList<Permission> findPermissionsByUserId(int id) throws IllegalArgumentException;
-	/**
-	 * Erstellt ein neues Permission-Objekt.
-	 * 
-	 * @return neu erstelltes Permission-Objekt
-	 * @throws IllegalArgumentException
-	 */
-	public Permission createPermission(int shareUserId, int shareObjectId, int receiverUserId) throws IllegalArgumentException;
 	
+
 	/**
 	 * Löscht ein Permission-Objekt 
 	 * 
@@ -321,5 +315,14 @@ public interface ConnectedAdmin extends RemoteService {
 			throws IllegalArgumentException;
 	
 	public void giveCLPermissionToUsers(int clid, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException;
+
+	/**
+	 * Erstellt ein neues Permission-Objekt.
+	 * 
+	 * @return neu erstelltes Permission-Objekt
+	 * @throws IllegalArgumentException
+	 */
+	void createPermission(int shareUserId, ArrayList<Integer> shareObjectId, ArrayList<Integer> receiverUserId)
+			throws IllegalArgumentException;
 
 }

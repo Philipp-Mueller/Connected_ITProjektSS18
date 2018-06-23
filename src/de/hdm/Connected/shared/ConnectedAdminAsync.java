@@ -69,7 +69,7 @@ public interface ConnectedAdminAsync {
 	
 	void findPermissionsByUserId(int id, AsyncCallback <ArrayList<Permission>> callback);
 	
-	void createPermission(int shareUserId, int shareObjectId, int receiverUserId, AsyncCallback<Permission> callback);
+	void createPermission(int shareUserId, ArrayList<Integer> shareObjectId, ArrayList<Integer> receiverUserId, AsyncCallback<Void> callback);
 	
 	void deletePermission(Permission permission, User cUser, AsyncCallback<Void> callback);
 	

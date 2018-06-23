@@ -85,15 +85,21 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	// *** Permission ***
 	
 	
+	
 	@Override
-	public Permission createPermission(int shareUserId, int shareObjectId, int receiverUserId)
+	public void createPermission(int shareUserId, ArrayList<Integer> shareObjectId, ArrayList<Integer> receiverUserId)
 			throws IllegalArgumentException {
-		Permission permission = new Permission();
-		permission.setShareUserID(shareUserId);
-		permission.setSharedObjectId(shareObjectId);
-		permission.setReceiverUserID(receiverUserId);
-
-		return this.permissionMapper.insert(permission);
+		
+		for(int i =0; i<shareObjectId.size();i++){
+			for(int j=0; j<receiverUserId.size();j++){
+			Permission permission = new Permission();
+			permission.setShareUserID(shareUserId);
+			permission.setSharedObjectId(shareObjectId.get(i));
+			permission.setReceiverUserID(receiverUserId.get(j));
+			permissionMapper.insert(permission);
+			}
+		}
+		
 	}
 	
 	//löscht eine Permission wenn User sie selbst erstellt hat
