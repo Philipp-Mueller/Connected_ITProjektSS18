@@ -26,7 +26,7 @@
 
   <servlet>
     <servlet-name>ReportGeneratorServiceImpl</servlet-name>
-    <servlet-class>de.hdm.Connected.server.ReportGeneratorServiceImpl</servlet-class>
+    <servlet-class>de.hdm.ReportGenerator.server.ReportGeneratorServiceImpl</servlet-class>
   </servlet>
 
   <servlet-mapping>
