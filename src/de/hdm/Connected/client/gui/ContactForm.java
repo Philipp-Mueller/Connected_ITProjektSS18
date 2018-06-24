@@ -563,7 +563,7 @@ public class ContactForm extends Widget {
 						propertyId = p.getBoId();
 					}
 				}
-				ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId, selectedContact.getBoId(), new AsyncCallback<Value>(){
+				ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId, selectedContact.getBoId(), 1, new AsyncCallback<Value>(){
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -639,7 +639,7 @@ public class ContactForm extends Widget {
 				}
 
 				ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId,
-						createdContact.getBoId(), new createValueCallback());
+						createdContact.getBoId(), 1, new createValueCallback());
 			}
 			}
 		}

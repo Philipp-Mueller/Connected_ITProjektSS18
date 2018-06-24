@@ -219,7 +219,7 @@ public class ContactForm_Test extends Widget {
 								for (int k = 0; k < propertyIDs.size(); k++) {
 
 									ClientSideSettings.getConnectedAdmin().createValue(values.get(k),
-											propertyIDs.get(k), result.getBoId(), new createValueCallback());
+											propertyIDs.get(k), result.getBoId(), 1, new createValueCallback());
 								}
 
 								for (int l = 0; l < propertyIDs.size(); l++) {
@@ -530,7 +530,7 @@ public class ContactForm_Test extends Widget {
 									}
 
 									ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(),
-											propertyId, createdContact.getBoId(), new createValueCallback());
+											propertyId, createdContact.getBoId(), 1, new createValueCallback());
 								}
 
 							}

@@ -49,7 +49,7 @@ public interface ConnectedAdminAsync {
 	
 	void deleteValue(Value value, AsyncCallback<Void> callback);
 	
-	void createContactList(String name, int OwnerI, AsyncCallback<ContactList> callback); 
+	void createContactList(String name, int ownerId, AsyncCallback<ContactList> callback); 
 	
 	void updateContactList(ContactList contactlist, AsyncCallback<Void> callback);
 	

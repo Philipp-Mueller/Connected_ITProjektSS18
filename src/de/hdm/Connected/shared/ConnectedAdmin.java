@@ -149,7 +149,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return neu erstelltes ContactList-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public ContactList createContactList(String name, int OwnerId) throws IllegalArgumentException;
+	public ContactList createContactList(String name, int ownerId) throws IllegalArgumentException;
 	
 	/**
 	 * Aktuallisiert ein ContactList-Objekt.
