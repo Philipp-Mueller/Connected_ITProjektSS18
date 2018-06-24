@@ -1,4 +1,4 @@
-package de.hdm.ReportGenerator.client.gui;
+package de.hdm.Connected.client.gui.ReportGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +30,11 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
 import de.hdm.Connected.client.ClientSideSettings;
+import de.hdm.Connected.shared.ReportGenerator.ReportGeneratorServiceAsync;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
-import de.hdm.ReportGenerator.shared.ReportGeneratorServiceAsync;
 
 public class ReportGeneratorBaseForm extends Widget {
 

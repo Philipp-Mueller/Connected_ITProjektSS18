@@ -1,12 +1,11 @@
-package de.hdm.ReportGenerator.client;
+package de.hdm.Connected.client.ReportGenerator;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import de.hdm.Connected.client.ClientSideSettings;
-import de.hdm.ReportGenerator.client.gui.ReportGeneratorBaseForm;
-import de.hdm.ReportGenerator.shared.ReportGeneratorServiceAsync;
+import de.hdm.Connected.client.gui.ReportGenerator.ReportGeneratorBaseForm;
+import de.hdm.Connected.shared.ReportGenerator.ReportGeneratorServiceAsync;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.

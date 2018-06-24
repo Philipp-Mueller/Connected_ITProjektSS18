@@ -1,4 +1,4 @@
-package de.hdm.ReportGenerator.server;
+package de.hdm.Connected.server.ReportGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,12 +14,12 @@ import de.hdm.Connected.server.db.PropertyMapper;
 import de.hdm.Connected.server.db.UserMapper;
 import de.hdm.Connected.server.db.ValueMapper;
 import de.hdm.Connected.shared.ConnectedAdmin;
+import de.hdm.Connected.shared.ReportGenerator.ReportGeneratorService;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.Permission;
 import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
-import de.hdm.ReportGenerator.shared.ReportGeneratorService;
 
 /**
  * 

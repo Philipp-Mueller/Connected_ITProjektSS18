@@ -8,9 +8,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import de.hdm.Connected.shared.CommonSettings;
 import de.hdm.Connected.shared.ConnectedAdmin;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
+import de.hdm.Connected.shared.ReportGenerator.ReportGeneratorService;
+import de.hdm.Connected.shared.ReportGenerator.ReportGeneratorServiceAsync;
 import de.hdm.Connected.shared.bo.User;
-import de.hdm.ReportGenerator.shared.ReportGeneratorService;
-import de.hdm.ReportGenerator.shared.ReportGeneratorServiceAsync;
 
 /**
  * Diese Klasse enthält Dienste und Eigenschaften, die für Klassen des client-Packages 

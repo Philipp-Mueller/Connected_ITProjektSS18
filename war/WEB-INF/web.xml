@@ -21,12 +21,12 @@
   <servlet-mapping>
     <servlet-name>connectedAdminImpl</servlet-name>
     <url-pattern>/connected_itprojektss18/connectedadmin</url-pattern>
-  </servlet-mapping>
+  </servlet-mapping> 
 
 
   <servlet>
     <servlet-name>ReportGeneratorServiceImpl</servlet-name>
-    <servlet-class>de.hdm.ReportGenerator.server.ReportGeneratorServiceImpl</servlet-class>
+    <servlet-class>de.hdm.Connected.server.ReportGenerator.ReportGeneratorServiceImpl</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -34,7 +34,7 @@
     <url-pattern>/connected_itprojektss18reportgenerator/connectedreportgenerator</url-pattern>
   </servlet-mapping>
 
- <servlet>
+ <servlet> 
     <servlet-name>loginService</servlet-name>
     <servlet-class>de.hdm.Connected.server.LoginServiceImpl</servlet-class>
   </servlet>
