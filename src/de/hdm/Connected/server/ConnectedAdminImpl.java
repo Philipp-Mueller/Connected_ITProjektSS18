@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import de.hdm.Connected.server.db.ContactListMapper;
@@ -43,15 +42,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 	Timestamp ts = new Timestamp(System.currentTimeMillis());
 
-	/*
-	 * public void init() { this.contactListMapper =
-	 * ContactListMapper.contactListMapper(); this.contactMapper =
-	 * ContactMapper.contactMapper(); this.permissionMapper =
-	 * PermissionMapper.permissionMapper(); this.propertyMapper =
-	 * PropertyMapper.propertyMapper(); this.valueMapper =
-	 * ValueMapper.valueMapper(); this.userMapper = UserMapper.userMapper(); };
-	 */
-
+	
 	/**
 	 * Referenzen auf die DatenbankMapper, die Objekte mit der Datenbank
 	 * abgleicht.
@@ -110,8 +101,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 				
 						permissionMapper.delete(permission, cUser);						 }
 																						
-																									}
-						 	
+																				}				 	
 	@Override
 	public void updatePermission(Permission permission) throws IllegalArgumentException{
 		permissionMapper.update(permission);
@@ -165,24 +155,12 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return this.permissionMapper.findById(id);
 	}
 	
-	
-	// Prüft ob User über irgendwelche Rechte verfügt
-	
-	public boolean hasPermission(int userId)throws IllegalArgumentException {
-		boolean hp=false;
-			ArrayList<Permission> uPermissions = this.findPermissionsByUserId(userId);{
-				if (uPermissions != null) {
-					hp=true;			 }
-			}
-			return hp;
-											}
 		
-	
 
 	// **** CONTACT****
 
 	
-	// erstellt Contact 
+	// erstellt Contact und fügt eine Berechtigung für User hinzu, der Contact erstellt hat
 	
 	public Contact createContact(String prename, String surname, Timestamp creationDate, Timestamp modificationDate, int ownerId) {
 		Contact contact = new Contact();
@@ -192,7 +170,6 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		contact.setSurname(surname);
 		contact.setCreatorId(ownerId);
 		
-//TODO Check wg seperation of concerns zulässig??	
 		Permission autoPermission = new Permission();
 		autoPermission.setReceiverUserID(ownerId);
 		autoPermission.setSharedObjectId(contact.getBoId());
@@ -269,13 +246,23 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	// *** ContactList ***
 	
 	
-	//erstellt Kontaktliste
+	//erstellt Kontaktliste 
+	// und fügt eine Berechtigung für User hinzu, der ContactList erstellt hat
+	
 	@Override
-	public ContactList createContactList(String name){
+	public ContactList createContactList(String name, int ownerId){
 		ContactList contactList = new ContactList();
 		contactList.setName(name);
-		return this.contactListMapper.insert(contactList);
+				
+			Permission autoPermission = new Permission();
+			autoPermission.setReceiverUserID(ownerId);
+			autoPermission.setSharedObjectId(contactList.getBoId());
+			autoPermission.setShareUserID(ownerId);
+	
+				return this.contactListMapper.insert(contactList);
 	}
+	
+	// updatet Kontaktliste
 	
 	@Override
 	public void updateContactList(ContactList contactList) throws IllegalArgumentException {
@@ -296,7 +283,8 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 			ccMapper.removeContactFromContactList(contactid, contactlistid);
 	}
 	
-	//Anlegen von Permissions auf Array von Contacts für Array von User
+	//Anlegen von Permissions auf Array von Contacts für Array von User TODO @MoritzBittner --bitte verständlicher formulieren
+	
 	@Override
 	public void givePermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException{
 		
@@ -310,7 +298,9 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 			}
 		}
 	}
+	
 	//Anlegen von Permission auf ContactList für Array an User
+	
 	@Override
 	public void giveCLPermissionToUsers(int clid, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException
 	{
@@ -324,7 +314,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		
 	}
 	
-	// Löscht KontaktListen und zugehörige Kontakte inkl. Values 	
+	// Löscht KontaktListen und zugehörige Kontakte 
 	@Override
    	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException {
 
@@ -379,19 +369,11 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return contactsInList;
 	}
 
-	// TODO ? zeigt alle Kontaktlisten eines Users anhand der User ID und Permissions
-		
 
 	@Override
 	public ArrayList<ContactList> findAllContactlists() throws IllegalArgumentException {
 		return this.contactListMapper.findAllContactLists();
 	}
-
-	/*
-	public ContactList findContactListById(int id) throws IllegalArgumentException {
-		return this.contactListMapper.findById(id);
-	*/
-	
 
 	// *** User ***
 	@Override
@@ -431,11 +413,16 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 	// *** Value ***
 	@Override
-	public Value createValue(String name, int propertyId, int contactId) throws IllegalArgumentException {
+	public Value createValue(String name, int propertyId, int contactId, int ownerId) throws IllegalArgumentException {
 		Value value = new Value();
 		value.setName(name);
 		value.setPropertyID(propertyId);
 		value.setContactID(contactId);
+		
+			Permission autoPermission = new Permission();
+			autoPermission.setReceiverUserID(ownerId);
+			autoPermission.setSharedObjectId(value.getBoId());
+			autoPermission.setShareUserID(ownerId);
 
 		return this.valueMapper.insert(value);
 	}
@@ -481,19 +468,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 	}
 
-	// Das sind deine! Wurden automatisch erstellt sonst hätte es einen Fehler
-	// gegeben
-	/*@Override
-	public Contact createContact(String prename, String surname, Timestamp creationDate, Timestamp modificationDate,
-			int ownerId) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
-		}
-	*/
-
-
 	
-
 	// Bis hier
 	////////////////////////////////////////////////////////////////////////
 

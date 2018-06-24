@@ -43,13 +43,13 @@ public interface ConnectedAdminAsync {
 	
 	void deleteContact(Contact contact, User cUser, AsyncCallback<Void> callback);
 	
-	void createValue(String name, int propertyId, int contactId, AsyncCallback<Value> callback);
+	void createValue(String name, int propertyId, int contactId, int ownerId, AsyncCallback<Value> callback);
 	
 	void updateValue(Value value, AsyncCallback<Value> callback);
 	
 	void deleteValue(Value value, AsyncCallback<Void> callback);
 	
-	void createContactList(String name, AsyncCallback<ContactList> callback); 
+	void createContactList(String name, int OwnerI, AsyncCallback<ContactList> callback); 
 	
 	void updateContactList(ContactList contactlist, AsyncCallback<Void> callback);
 	
