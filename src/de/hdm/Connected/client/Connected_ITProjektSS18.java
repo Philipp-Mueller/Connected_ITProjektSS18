@@ -27,6 +27,7 @@ import de.hdm.Connected.client.gui.ContactForm_Test;
 import de.hdm.Connected.client.gui.ContactListForm;
 import de.hdm.Connected.client.gui.ContactListForm2;
 import de.hdm.Connected.client.gui.ContactSharing;
+import de.hdm.Connected.client.gui.StartPage;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.FieldVerifier;
 import de.hdm.Connected.shared.bo.Contact;
@@ -191,6 +192,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		Button newContactButton = new Button("Neuen Kontakt anlegen");
 		Button editContactButton = new Button ("Kontakt 8 bearbeiten");
 		Button shareContactButton = new Button ("Kontakt teilen");
+		Button overviewPageButton = new Button ("Übersichtsseite");
 
 		newContactButton.addClickHandler(new ClickHandler() {
 
@@ -213,6 +215,18 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			}
 
 		});
+		
+		overviewPageButton.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				RootPanel.get("content").clear();
+				StartPage startPage = new StartPage();
+				//Test_CellTable newform = new Test_CellTable(); 
+			}
+
+		});
+		
 		editContactButton.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -269,7 +283,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		RootPanel.get("content").add(myContactListsButton);
 		RootPanel.get("content").add(editContactButton);
 		RootPanel.get("content").add(shareContactButton);
-		
+		RootPanel.get("content").add(overviewPageButton);
 		HorizontalPanel footer = new HorizontalPanel();
 		Anchor startPage = new Anchor ("Startseite", "Connected_ITProjektSS18.html");
 		HTML copyrightText1 = new HTML(" | ");
