@@ -7,9 +7,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
@@ -22,12 +25,18 @@ import com.google.gwt.user.cellview.client.DataGrid;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.Range;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.bo.Contact;
@@ -43,6 +52,8 @@ public class StartPage extends Widget {
 	CellTable<Contact> overview = new CellTable<Contact>();
 	private ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
 	private ArrayList<Contact> allContacts = new ArrayList<Contact>();
+	private Set<Contact> selectedContacts = new HashSet<Contact>();
+	private Button selectedButton = new Button("Was ist den ausgewählt, hmm?!");
 	 /**
 	   * The pager used to change the range of data.
 	   */
@@ -79,7 +90,7 @@ public class StartPage extends Widget {
 			                return contact.getPrename();
 			            }
 			        };
-			        overview.addColumn(prenameColumn, "Vorname");
+			       
 			        
 			        TextColumn<Contact> surnameColumn = new TextColumn<Contact>() {
 
@@ -87,10 +98,51 @@ public class StartPage extends Widget {
 			                return contact.getSurname();
 			            }
 			        };
+			        
+			      
+			     
+			    	final MultiSelectionModel<Contact> selectionModel = new MultiSelectionModel<Contact>();
+					overview.setSelectionModel(selectionModel,
+							DefaultSelectionEventManager.<Contact>createCheckboxManager());
+					
+					 selectionModel.addSelectionChangeHandler(new Handler() {
+						@Override
+						public void onSelectionChange(SelectionChangeEvent event) {
+							selectedContacts = selectionModel.getSelectedSet();
+							
+
+						}
+					});
+					 
+					 
+					Column<Contact, Boolean> checkColumn = new Column<Contact, Boolean>(new CheckboxCell(false, false)) {
+						@Override
+						public Boolean getValue(Contact object) {
+							// Get the value from the selection model.
+							return selectionModel.isSelected(object);
+						}
+					};
+					
+					selectedButton.addClickHandler(new ClickHandler(){
+
+						@Override
+						public void onClick(ClickEvent event) {
+							
+							for(Contact c: allContacts){
+								if(!selectionModel.isSelected(c)){
+								selectionModel.setSelected(c, true);
+								}else {selectionModel.setSelected(c,false);}
+							}
+							Window.alert(Integer.toString(selectedContacts.size()));
+						}
+						
+					});
+					
+			        overview.addColumn(checkColumn);
+			     
+			        overview.addColumn(prenameColumn, "Vorname");
 			        overview.addColumn(surnameColumn, "Nachname");
 			        overview.setVisibleRange(new Range(0, 25));
-			        overview.getColumnSortList();
-			        
 					
 					dataProvider.getList().clear();
 					dataProvider.getList().addAll(allContacts);
@@ -104,7 +156,7 @@ public class StartPage extends Widget {
 		  });
 		  RootPanel.get("content").add(overview);
 		  RootPanel.get("content").add(pager);
-	
+		  RootPanel.get("content").add(selectedButton);
 	      
 }
 }
