@@ -124,7 +124,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return neu erstelltes Value-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public Value createValue(String name, int propertyId, int contactId) throws IllegalArgumentException;
+	public Value createValue(String name, int propertyId, int contactId, int ownerId) throws IllegalArgumentException;
 	
 	/**
 	 * Aktuallisiert ein Value-Objekt.
@@ -149,7 +149,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return neu erstelltes ContactList-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public ContactList createContactList(String name) throws IllegalArgumentException;
+	public ContactList createContactList(String name, int OwnerId) throws IllegalArgumentException;
 	
 	/**
 	 * Aktuallisiert ein ContactList-Objekt.
