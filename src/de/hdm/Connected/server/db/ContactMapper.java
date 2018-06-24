@@ -206,7 +206,7 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze in der Datenbank, sortiert nach
 			 * der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname FROM contact ORDER BY id");
+			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname FROM contact ORDER BY prename");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle contact
 			 * vorhanden ist, muss das Abfragen des ResultSet so oft erfolgen
