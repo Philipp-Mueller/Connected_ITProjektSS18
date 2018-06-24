@@ -160,7 +160,7 @@ public class ContactListForm extends Widget {
 
 		public void onClick(ClickEvent event) {
 
-			ClientSideSettings.getConnectedAdmin().createContactList(nameBox.getText(),
+			ClientSideSettings.getConnectedAdmin().createContactList(nameBox.getText(), 1, 
 					new createContactListCallback());
 			Window.alert(sizeSt);
 		}

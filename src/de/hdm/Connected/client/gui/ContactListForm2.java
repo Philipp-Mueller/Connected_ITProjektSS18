@@ -183,7 +183,7 @@ public class ContactListForm2 extends Widget {
 
 		public void onClick(ClickEvent event) {
 
-			ClientSideSettings.getConnectedAdmin().createContactList(nameBox.getText(),
+			ClientSideSettings.getConnectedAdmin().createContactList(nameBox.getText(), 1, 
 					new createContactListCallback());
 
 		}
@@ -217,6 +217,8 @@ public class ContactListForm2 extends Widget {
 		public void onSuccess(ContactList result) {
 			Window.alert("Contactlist erfolgreich angelegt!");
 			RootPanel.get("content").clear();
+			Window.Location.reload();
+
 
 		}
 
@@ -525,7 +527,7 @@ public class ContactListForm2 extends Widget {
 					Window.alert("Alle Kontakte erfolgreich geteilt!");
 					//Window.alert(Integer.toString(cArray.size()));
 					//Window.alert(Integer.toString(uArray.size()));
-
+					Window.Location.reload();
 				}
 
 			});}
@@ -535,6 +537,8 @@ public class ContactListForm2 extends Widget {
 				  e.printStackTrace(); }
 
 		}
+		
+		//ContactListForm2 s12= new ContactListForm2();
 	};
 
 
@@ -608,7 +612,7 @@ public class ContactListForm2 extends Widget {
 						// hinzugefügt
 						public void onSuccess(Void result) {
 							Window.alert("Teilen von " + clArray.get(row).getName()+ " war erfolgreich!");
-
+							Window.Location.reload();
 						}
 
 					});
@@ -633,6 +637,7 @@ public class ContactListForm2 extends Widget {
 						// hinzugefügt
 						public void onSuccess(Void result) {
 							Window.alert("Löschen von " + clArray.get(row).getName() + " war erfolgreich!");
+							Window.Location.reload();
 
 						}
 
