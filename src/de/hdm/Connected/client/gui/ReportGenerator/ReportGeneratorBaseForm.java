@@ -3,6 +3,7 @@ package de.hdm.Connected.client.gui.ReportGenerator;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -38,77 +39,65 @@ import de.hdm.Connected.shared.bo.Value;
 
 public class ReportGeneratorBaseForm extends Widget {
 
+	//Attributt ClientSiedeSetting
 	private ReportGeneratorServiceAsync rgsa = ClientSideSettings.getReportGenerator();
 
-	private VerticalPanel vPanel = new VerticalPanel();
+	//Attribute Vertical Panel
+	private VerticalPanel vPanel1 = new VerticalPanel();
+	private VerticalPanel vPanel2 = new VerticalPanel();
+	
+	//Attribute Horizontal Panel
 	private HorizontalPanel hPanel1 = new HorizontalPanel();
 	private HorizontalPanel hPanel2 = new HorizontalPanel();
-	private CheckBox allContactsCb = new CheckBox("All Contacts");
-	private CheckBox sharedContactsCb = new CheckBox("Shared Contacts");
+	private HorizontalPanel hPanel3 = new HorizontalPanel();
+	private HorizontalPanel hPanel4 = new HorizontalPanel();
+	
+	//Attribute Checkboxen
+	private CheckBox allContactsCb = new CheckBox(" Alle Kontakte anzeigen");
+	private CheckBox sharedContactsCb = new CheckBox(" Alle getelten Kontakte anzeigen");
+	
+	//Attribute Listboxen
 	private ListBox userListBox = new ListBox();
 	private ListBox propertyListBox = new ListBox();
+	
+	//Attribute
 	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 	private SuggestBox box = new SuggestBox(oracle);
 	private CellTable<Contact> table = new CellTable<Contact>();
 	private ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
 
+	//Attribute
 	private List<Contact> contactToShowInReport = new ArrayList<>();
 	private boolean allContacts = false;
 	private boolean sharedContacts = false;
 	private Integer propertyId = null;
 	private String valueDescription = "";
 	protected String userEmail = "";
+	
+	//Attribute Content
+	private HTML property = new HTML(" Suchen Sie hier nach bestimmten Eigenschaften: ");
+	private HTML user = new HTML (" Nutzer wählen: ");
 
+	
+	
+	//Footer Attribute
+	private HorizontalPanel footer = new HorizontalPanel();
+	private Anchor connectedLink = new Anchor ("Connected", "Connected_ITProjektSS18.html");
+	private HTML copyrightText = new HTML(" | © 2018 Connected | ");
+	private Anchor impressumLink = new Anchor("Impressum");
+
+	
 	public ReportGeneratorBaseForm() {
 
-		// Zwei horizontal panel in einem Vertical panel
-		vPanel.add(hPanel1);
-		vPanel.add(hPanel2);
-		
-		/*
-		 * Der Footer enthält das Copyright sowie einen Link zum Impressum. 
-		 */
-		HorizontalPanel footer = new HorizontalPanel();
-		Anchor connectedLink = new Anchor ("Connected", "Connected_ITProjektSS18.html");
-		HTML copyrightText = new HTML(" | © 2018 Connected | ");
-		Anchor impressumLink = new Anchor("Impressum");
-		
-		
-		impressumLink.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				RootPanel.get("content").clear();
-				RootPanel.get("content").add(new HTML("<h2>Impressum nach §5 TMG</h2>"
-													+ "<h3>Verantwortlich</h3>"
-													+ "<p>Hochschule der Medien<br />"
-													+ "Nobelstraße 8<br />"
-													+ "70569 Stuttgart<br /></p>"
-													+ "<p><strong>Projektarbeit innerhalb des Studiengangs "
-													+ "Wirtschaftsinformatik und digitale Medien, "
-													+ "IT-Projekt SS 18.</strong></p>"
-													+ "<h3>Projektteam</h3>"
-													+ "<ul><li>xxx</li>"
-													+ "<li>xxx</li>"
-													+ "<li>xxx</li>"
-													+ "<li>xxx</li>"
-													+ "<li>xxx</li>"
-													+ "<li>xxx</li></ul>"
-													+ "<h3>Kontakt</h3>"
-													+ "<p><strong>Telefon:</strong> 0711 8923 10 (Zentrale)</p>"
-													+ "<p><strong>Website:</strong> <a href='http://www.hdm-stuttgart.de' target='_blank'>"
-													+ "www.hdm-stuttgart.de</a></p>"));
-				
-			}
-			
-		});
-		footer.add(connectedLink);
-		footer.add(copyrightText);
-		footer.add(impressumLink);
-		RootPanel.get("footer").add(footer);
+		// Horizontal Panels in Vertical Panels
+		vPanel1.add(hPanel1);
+		vPanel1.add(hPanel2);
+		vPanel1.add(hPanel3);
+		vPanel1.add(hPanel4);
 		
 		
 		// AllContacts checkbox
+		allContactsCb.getElement().getStyle().setMarginBottom(2, Unit.EM);
 		allContactsCb.setValue(allContacts);
 		allContactsCb.addClickHandler(new ClickHandler() {
 			@Override
@@ -122,19 +111,10 @@ public class ReportGeneratorBaseForm extends Widget {
 			}
 		});
 		hPanel1.add(allContactsCb);
-
-		// Userlistbox
-		userListBox.setVisibleItemCount(1);
-		userListBox.addChangeHandler(new ChangeHandler() {
-
-			@Override
-			public void onChange(ChangeEvent event) {
-				userEmail = ((ListBox) event.getSource()).getSelectedItemText();
-			}
-		});
-		hPanel1.add(userListBox);
+		
 
 		// SharedContact checkbox
+		sharedContactsCb.getElement().getStyle().setMarginBottom(2, Unit.EM);
 		sharedContactsCb.setValue(sharedContacts);
 		sharedContactsCb.addClickHandler(new ClickHandler() {
 			@Override
@@ -143,9 +123,36 @@ public class ReportGeneratorBaseForm extends Widget {
 
 			}
 		});
-		hPanel1.add(sharedContactsCb);
+		hPanel2.add(sharedContactsCb);
+		
+		//Abstand zur userListbox und Aufforderungstext zur User-Auswahl
+		user.getElement().getStyle().setMarginRight(1, Unit.EM);
+		user.getElement().getStyle().setMarginTop(1, Unit.EM);
+		hPanel3.add(user);
 
-		// Property list box
+		// Userlistbox
+			userListBox.getElement().getStyle().setMarginBottom(5, Unit.EM);
+			userListBox.getElement().getStyle().setMarginTop(1, Unit.EM);
+			userListBox.setVisibleItemCount(1);
+			userListBox.addChangeHandler(new ChangeHandler() {
+
+					@Override
+					public void onChange(ChangeEvent event) {
+						userEmail = ((ListBox) event.getSource()).getSelectedItemText();
+					}
+				});
+				hPanel3.add(userListBox);
+		
+				
+		//Abstand und Aufforderungstext zur interaktion mit denn Eigenschaften
+		property.getElement().getStyle().setMarginLeft(19, Unit.EM);
+		property.getElement().getStyle().setMarginBottom(2, Unit.EM);
+		
+		hPanel1.add(property);
+				
+		// Abstand Property list box
+		propertyListBox.getElement().getStyle().setMarginLeft(15, Unit.EM);
+		
 		propertyListBox.setVisibleItemCount(1);
 		propertyListBox.addChangeHandler(new ChangeHandler() {
 
@@ -156,9 +163,11 @@ public class ReportGeneratorBaseForm extends Widget {
 				loadValuesForSuggestion();
 			}
 		});
-		hPanel1.add(propertyListBox);
+		hPanel2.add(propertyListBox);
 
-		// ValueDescription suggestbox
+		//Abstand und ValueDescription suggestbox
+		box.getElement().getStyle().setMarginLeft(1, Unit.EM);
+		
 		box.addKeyUpHandler(new KeyUpHandler() {
 
 			@Override
@@ -166,9 +175,10 @@ public class ReportGeneratorBaseForm extends Widget {
 				valueDescription = ((SuggestBox) event.getSource()).getText();
 			}
 		});
-		hPanel1.add(box);
+		hPanel2.add(box);
 
 		// Suchen button
+		
 		Button b = new Button("Suchen", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
@@ -192,7 +202,11 @@ public class ReportGeneratorBaseForm extends Widget {
 				});
 			}
 		});
-		hPanel1.add(b);
+		//Abstand und Panel hinzufügen
+		b.getElement().getStyle().setMarginLeft(35, Unit.EM);
+		b.getElement().getStyle().setMarginTop(1, Unit.EM);
+		b.getElement().getStyle().setMarginBottom(5, Unit.EM);
+		hPanel3.add(b);
 
 		// Contact Tabelle
 
@@ -227,7 +241,7 @@ public class ReportGeneratorBaseForm extends Widget {
 		});
 		table.setRowCount(contactToShowInReport.size(), true);
 		table.setRowData(0, contactToShowInReport);
-		hPanel2.add(table);
+		hPanel4.add(table);
 
 		/*
 		 *  Nachdem die UI erstellt ist werden die Daten für das Dropdown und die Suggestbox geladen
@@ -237,8 +251,41 @@ public class ReportGeneratorBaseForm extends Widget {
 		/*
 		 *  Vertical panel wird dem RootPanel hinzugefügt (Somit wirds sichtbar)
 		 */
-		RootPanel.get("content").add(vPanel);
+		RootPanel.get("content").add(vPanel1);
+		RootPanel.get("content").add(vPanel2);
 
+		impressumLink.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				RootPanel.get("content").clear();
+				RootPanel.get("content").add(new HTML("<h2>Impressum nach §5 TMG</h2>"
+						+ "<h3>Verantwortlich</h3>"
+						+ "<p>Hochschule der Medien<br />"
+						+ "Nobelstraße 8<br />"
+						+ "70569 Stuttgart<br /></p>"
+						+ "<p><strong>Projektarbeit innerhalb des Studiengangs "
+						+ "Wirtschaftsinformatik und digitale Medien, "
+						+ "IT-Projekt SS 18.</strong></p>"
+						+ "<h3>Projektteam</h3>"
+						+ "<ul><li>xxx</li>"
+						+ "<li>xxx</li>"
+						+ "<li>xxx</li>"
+						+ "<li>xxx</li>"
+						+ "<li>xxx</li>"
+						+ "<li>xxx</li></ul>"
+						+ "<h3>Kontakt</h3>"
+						+ "<p><strong>Telefon:</strong> 0711 8923 10 (Zentrale)</p>"
+						+ "<p><strong>Website:</strong> <a href='http://www.hdm-stuttgart.de' target='_blank'>"
+						+ "www.hdm-stuttgart.de</a></p>"));
+				
+			}
+			
+		});
+		footer.add(connectedLink);
+		footer.add(copyrightText);
+		footer.add(impressumLink);
+		RootPanel.get("footer").add(footer);
 	}
 
 	private void loadDataForFiltering() {
