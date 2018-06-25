@@ -27,6 +27,7 @@ import de.hdm.Connected.client.gui.ContactForm_Test;
 import de.hdm.Connected.client.gui.ContactListForm;
 import de.hdm.Connected.client.gui.ContactListForm2;
 import de.hdm.Connected.client.gui.ContactSharing;
+import de.hdm.Connected.client.gui.ContactsTable;
 import de.hdm.Connected.client.gui.StartPage;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.FieldVerifier;
@@ -222,6 +223,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content").clear();
 				StartPage startPage = new StartPage();
+				//ContactsTable welli = new ContactsTable();
 				//Test_CellTable newform = new Test_CellTable(); 
 			}
 

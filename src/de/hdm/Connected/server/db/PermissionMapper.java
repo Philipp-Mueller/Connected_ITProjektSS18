@@ -201,7 +201,7 @@ public class PermissionMapper {
 			Statement stmt = con.createStatement();
 			
 			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der ContactId in der Datenbank
-			ResultSet rs = stmt.executeQuery("SELECT id, sharedObjectID, receiverUserID, shareUserID FROM permission " + "WHERE contactID=" + contactID);
+			ResultSet rs = stmt.executeQuery("SELECT id, sharedObjectID, receiverUserID, shareUserID FROM permission " + "WHERE sharedObjectID=" + contactID);
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle permission vorhanden ist, muss das Abfragen des ResultSet so

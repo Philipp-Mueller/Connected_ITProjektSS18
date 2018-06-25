@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.Vector;
 
+import com.google.gwt.dev.javac.Shared;
 //import com.google.appengine.labs.repackaged.com.google.common.collect.Multiset.Entry;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -25,7 +26,9 @@ import de.hdm.Connected.client.Connected_ITProjektSS18;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.ContactList;
+import de.hdm.Connected.shared.bo.Permission;
 import de.hdm.Connected.shared.bo.Property;
+import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
 
 public class ContactForm extends Widget {
@@ -162,6 +165,7 @@ public class ContactForm extends Widget {
 			public void onClick(ClickEvent event) {
 				// Nur wenn die CheckBox geklickt ist, wird dies ausgeführt, da
 				// sonst der Kontakt keiner Liste hinzugefügt werden soll
+				final ArrayList<ContactList> contactListToAdd = new ArrayList<ContactList>();
 				if (addButton != null) {
 					java.sql.Timestamp creationTime = new Timestamp(System.currentTimeMillis());
 					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
@@ -175,12 +179,22 @@ public class ContactForm extends Widget {
 
 								@Override
 								public void onSuccess(Contact result) {
+									ArrayList<Contact> contacts= new ArrayList<Contact>();
+									contacts.add(result);
+									
 									if (checkContactlist.getValue()) {
 										for (int i = 0; i < contactlist.getItemCount(); i++) {
 											if (contactlist.isItemSelected(i)) {
-												Window.alert(Integer.toString(contactListArray.get(i).getBoId()));
-												ClientSideSettings.getConnectedAdmin().addContactToContactList(
-														result.getBoId(), contactListArray.get(i).getBoId(),
+												for(ContactList cl:contactListArray){
+													if(contactlist.getItemText(i).equals(cl.getName())){
+														contactListToAdd.add(cl);
+													}
+												}
+											}
+											}							
+												
+												ClientSideSettings.getConnectedAdmin().addContactsToContactList( contacts,
+														contactListToAdd,
 														new AsyncCallback<Void>() {
 
 															@Override
@@ -193,6 +207,7 @@ public class ContactForm extends Widget {
 															public void onSuccess(Void result) {
 																Window.alert(
 																		"Kontakt wurde angelegt und den Kontaktlisten hinzugefügt!");
+																Window.alert(Integer.toString(contactListToAdd.size()));
 																Window.Location.reload();
 
 															}
@@ -200,15 +215,15 @@ public class ContactForm extends Widget {
 														});
 											}
 
-										}
+										
 
 									}
 
-								}
+								
 
 							});
 				}
-				if (checkContactlist.getValue()) {
+				/*if (checkContactlist.getValue()) {
 					for (int i = 0; i < contactlist.getItemCount(); i++) {
 						if (contactlist.isItemSelected(i)) {
 							Window.alert(Integer.toString(contactListArray.get(i).getBoId()));
@@ -232,7 +247,7 @@ public class ContactForm extends Widget {
 
 					}
 
-				} else {
+				}*/ else {
 					Window.alert("Kontakt angelegt!");
 					Window.Location.reload();
 				}
@@ -341,9 +356,15 @@ public class ContactForm extends Widget {
 
 						@Override
 						public void onSuccess(Property result) {
-							Property p = result;
+							final Property p = result;
 							int rowCount = propertyTable.getRowCount();
-							
+							if(result.getName().equals("Geburtsdatum")){
+								for(int i=0; i<propertyListBox.getItemCount(); i++){
+									if(propertyListBox.getItemText(i).equals("Geburtsdatum")){
+										propertyListBox.removeItem(i);
+									}
+								}
+							}
 							updateBtn = new Button("Eigenschaft bearbeiten");
 							updateBtn.addClickHandler(new ClickHandler(){
 
@@ -453,6 +474,14 @@ public class ContactForm extends Widget {
 										public void onSuccess(Void result) {
 											Window.alert("Eigenschaft wurde gelöscht!");
 											propertyTable.removeRow(eventRow);
+											if(p.getName().equals("Geburtsdatum")){
+												propertyListBox.clear();
+												for(Property p: propertyArray){
+												propertyListBox.addItem(p.getName());
+												}
+												propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
+
+											}
 										}
 
 									});
@@ -516,7 +545,7 @@ public class ContactForm extends Widget {
 				propertyArray = new ArrayList<Property>();
 				for (int i = 0; i < result.size(); i++) {
 					Property propertyItem = result.get(i);
-
+					
 					if (propertyItem.getName() != "Vorname" || propertyItem.getName() != "Nachname") {
 
 						propertyArray.add(propertyItem);
@@ -561,6 +590,9 @@ public class ContactForm extends Widget {
 				for (Property p : propertyArray) {
 					if ((propertyListBox.getSelectedItemText()).equals(p.getName())) {
 						propertyId = p.getBoId();
+						if(p.getName().equals("Geburtsdatum")){
+							propertyListBox.removeItem(propertyListBox.getSelectedIndex());
+						}
 					}
 				}
 				ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId, selectedContact.getBoId(), 1, new AsyncCallback<Value>(){
@@ -573,9 +605,11 @@ public class ContactForm extends Widget {
 
 					@Override
 					public void onSuccess(Value result) {
-						Window.alert("Neue Eigenschaft wurde gespeichert!");
-						ContactForm contactForm = new ContactForm(selectedContact);
-						RootPanel.get("content").clear();
+						//TODO hier Dialogbox einfügen um zu fragen ob neue Eigenschaft direkt geteilt werden soll^
+						ContactSharing shareValue = new ContactSharing(selectedContact, result);
+						//shareNewValue.show();
+						
+						
 					}
 					
 				});
@@ -635,6 +669,7 @@ public class ContactForm extends Widget {
 				for (Property p : propertyArray) {
 					if ((propertyListBox.getSelectedItemText()).equals(p.getName())) {
 						propertyId = p.getBoId();
+						propertyListBox.removeItem(propertyListBox.getSelectedIndex());
 					}
 				}
 
@@ -662,7 +697,7 @@ public class ContactForm extends Widget {
 			// Am Ende wird der Kontakt den ausgewählten Kontaktlisten
 			// hinzugefügt.
 			Window.alert("Kontakt vollständig angelegt");
-			Label propertyLabel = new Label(propertyName);
+			final Label propertyLabel = new Label(propertyName);
 			Label valueLabel = new Label(result.getName());
 			propertyTable.removeRow(eventRow);
 
@@ -729,9 +764,7 @@ public class ContactForm extends Widget {
 														@Override
 														public void onSuccess(final Value result) {
 															updatingValue = result;
-															// TODO
-															// Auto-generated
-															// method stub
+															
 															updateBtn = new Button("Eigenschaft bearbeiten");
 															updateBtn.addClickHandler(new updateBtnClickHandler());
 															deleteBtn = new Button("Eigenschaft entfernen");
@@ -783,6 +816,13 @@ public class ContactForm extends Widget {
 						public void onSuccess(Void result) {
 							Window.alert("Eigenschaft wurde gelöscht!");
 							propertyTable.removeRow(eventRow);
+							if(propertyLabel.getText().equals("Geburtsdatum")){
+								propertyListBox.clear();
+								for(Property p: propertyArray){
+								propertyListBox.addItem(p.getName());
+								}
+								propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
+							}
 						}
 
 					});
@@ -825,7 +865,7 @@ public class ContactForm extends Widget {
 				propertyTable.setWidget(rowCount, 1, newPropertyTextBox);
 				propertyTable.setWidget(rowCount, 2, propertySaveButton);
 				Window.alert(Integer.toString(rowCount));
-			}
+			} 
 
 		}
 
@@ -980,7 +1020,7 @@ public class ContactForm extends Widget {
 															new HTML("<p>" + valueChangeTextBox.getText() + "</p>"));
 													propertyTable.setWidget(eventRow, 2, updateBtn);
 													propertyTable.setWidget(eventRow, 3, deleteBtn);
-
+													
 												}
 
 											});
@@ -1018,9 +1058,11 @@ public class ContactForm extends Widget {
 				public void onSuccess(Void result) {
 					Window.alert("Eigenschaft wurde gelöscht!");
 					propertyTable.removeRow(eventRow);
+					
 				}
 			});
 		}
 
 	}
+
 }

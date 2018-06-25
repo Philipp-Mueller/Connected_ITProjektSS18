@@ -240,7 +240,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @param contactId, contactlistId
 	 * @throws IllegalArgumentException
 	 */
-	public void addContactToContactList(int contactid, int contactlistid) throws IllegalArgumentException;
+	public void addContactsToContactList(ArrayList<Contact> contactArray, ArrayList<ContactList> contactlistArray) throws IllegalArgumentException;
 	
 	/**
 	 * Entfernt ein Contact einer ContactList
@@ -311,10 +311,10 @@ public interface ConnectedAdmin extends RemoteService {
 
 	Value findValueById(int id) throws IllegalArgumentException;
 
-	public void givePermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid)
+	public void giveContactPermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid)
 			throws IllegalArgumentException;
 	
-	public void giveCLPermissionToUsers(int clid, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException;
+	public void givePermissionToUsers(int shareObjectId, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException;
 
 	/**
 	 * Erstellt ein neues Permission-Objekt.
@@ -324,5 +324,9 @@ public interface ConnectedAdmin extends RemoteService {
 	 */
 	void createPermission(int shareUserId, ArrayList<Integer> shareObjectId, ArrayList<Integer> receiverUserId)
 			throws IllegalArgumentException;
+
+	User findUserById(int userId) throws IllegalArgumentException;
+
+	User findUserByEmail(String email) throws IllegalArgumentException;
 
 }

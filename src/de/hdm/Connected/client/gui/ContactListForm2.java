@@ -514,7 +514,7 @@ public class ContactListForm2 extends Widget {
 			
 			
 			try{
-			ClientSideSettings.getConnectedAdmin().givePermissonToUsers(cArray, uArray, 1, new AsyncCallback<Void>() {
+			ClientSideSettings.getConnectedAdmin().giveContactPermissonToUsers(cArray, uArray, 1, new AsyncCallback<Void>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -599,7 +599,7 @@ public class ContactListForm2 extends Widget {
 				}
 			}
 			
-			ClientSideSettings.getConnectedAdmin().giveCLPermissionToUsers(clArray.get(row).getBoId(), uArray,
+			ClientSideSettings.getConnectedAdmin().givePermissionToUsers(clArray.get(row).getBoId(), uArray,
 					1 , new AsyncCallback<Void>() {
 			
 						@Override
