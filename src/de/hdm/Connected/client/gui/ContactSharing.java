@@ -20,10 +20,13 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.ListDataProvider;
@@ -34,6 +37,7 @@ import com.google.gwt.view.client.SelectionChangeEvent.HasSelectionChangedHandle
 
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.bo.Contact;
+import de.hdm.Connected.shared.bo.Permission;
 import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
@@ -204,4 +208,127 @@ public class ContactSharing extends Widget {
 		});
 	
 }
+	
+	public ContactSharing(Contact contact, Value value){
+		
+		MyDialog shareNewValue = new MyDialog(contact, value);
+		shareNewValue.center();
+		
+		
+	}
+	
+	private class MyDialog extends DialogBox {
+
+	    public MyDialog(final Contact contact, final Value value) {
+	    	final ArrayList<User> permissionUser = new ArrayList<User>();
+	    	VerticalPanel v = new VerticalPanel();
+	    	HorizontalPanel h = new HorizontalPanel();
+	      // Set the dialog box's caption.
+	      setText("Neue Eigenschaft für Kontakt " + contact.getPrename() + " " + contact.getSurname() + " an Teilhaber teilen?");
+
+	      // Enable animation.
+	      setAnimationEnabled(true);
+
+	      // Enable glass background.
+	      setGlassEnabled(true);
+	      
+	      final ListBox userPermissionList = new ListBox(true);
+	      
+	      Button noButton = new Button("Nein");
+	      noButton.addClickHandler(new ClickHandler() {
+	        public void onClick(ClickEvent event) {
+	        	Window.alert("Neue Eigenschaft wurde gespeichert!");
+	        	MyDialog.this.hide();
+				RootPanel.get("content").clear();
+				ContactForm contactForm = new ContactForm(contact);
+	        }
+	      });
+	      
+	      Button yesButton = new Button("Ja, ausgewählten Kontakten teilen");
+	      yesButton.addClickHandler(new ClickHandler() {
+	        public void onClick(ClickEvent event) {
+	        	final ArrayList<User> userArray = new ArrayList<User>();
+	        	for(int i=0; i<userPermissionList.getItemCount(); i++){
+	        		if(userPermissionList.isItemSelected(i)){
+	        			for(User u : permissionUser){
+	        				if(u.getLogEmail().equals(userPermissionList.getItemText(i))){
+	        					userArray.add(u);
+	        				}
+	        			}
+	        		}
+	        	}
+	        	
+	          ClientSideSettings.getConnectedAdmin().givePermissionToUsers(value.getBoId(), userArray, 3, new AsyncCallback<Void>(){
+
+				@Override
+				public void onFailure(Throwable caught) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void onSuccess(Void result) {
+					Window.alert(Integer.toString(userArray.size()));
+					Window.alert("Die Eigenschaft wurde erstellt und geteilt");
+					MyDialog.this.hide();
+					RootPanel.get("content").clear();
+					ContactForm contactForm = new ContactForm(contact);
+					
+				}
+	        	  
+	          });
+	        }
+	      });
+
+	      
+	      userPermissionList .ensureDebugId("cwListBox-multiBox");
+	      userPermissionList .setVisibleItemCount(7);
+	    
+	      v.add(new HTML("Dieser Kontakt wurde schon anderen User geteilt, wollen Sie diese neu erstellte Eigenschaft direkt an einen dieser User teilen?"));
+	      
+	      
+	      ClientSideSettings.getConnectedAdmin().getPermissionsByContactId(contact.getBoId(), new AsyncCallback<ArrayList<Permission>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				
+				
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Permission> result) {
+				
+				for (Permission p : result){
+					ClientSideSettings.getConnectedAdmin().findUserById(p.getReceiverUserID(), new AsyncCallback<User>(){
+
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert("Leider konnte der User nicht gefunden werden.");
+							
+						}
+
+						@Override
+						public void onSuccess(User result) {
+							userPermissionList.addItem(result.getLogEmail());
+							permissionUser.add(result);				
+											}
+						
+					});
+				}
+				
+			
+			}
+	    	  
+	      });
+	      	      
+	      
+	      v.add(userPermissionList);
+	      v.add(h);
+	      h.add(yesButton);
+	      h.add(noButton);	      
+	      setWidget(v);
+	      this.show();
+
+	    }
+	  }
 }

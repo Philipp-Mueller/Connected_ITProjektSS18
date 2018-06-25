@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.Vector;
 
+import com.google.gwt.dev.javac.Shared;
 //import com.google.appengine.labs.repackaged.com.google.common.collect.Multiset.Entry;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -25,7 +26,9 @@ import de.hdm.Connected.client.Connected_ITProjektSS18;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.ContactList;
+import de.hdm.Connected.shared.bo.Permission;
 import de.hdm.Connected.shared.bo.Property;
+import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
 
 public class ContactForm extends Widget {
@@ -516,7 +519,7 @@ public class ContactForm extends Widget {
 				propertyArray = new ArrayList<Property>();
 				for (int i = 0; i < result.size(); i++) {
 					Property propertyItem = result.get(i);
-
+					
 					if (propertyItem.getName() != "Vorname" || propertyItem.getName() != "Nachname") {
 
 						propertyArray.add(propertyItem);
@@ -573,9 +576,11 @@ public class ContactForm extends Widget {
 
 					@Override
 					public void onSuccess(Value result) {
-						Window.alert("Neue Eigenschaft wurde gespeichert!");
-						ContactForm contactForm = new ContactForm(selectedContact);
-						RootPanel.get("content").clear();
+						//TODO hier Dialogbox einfügen um zu fragen ob neue Eigenschaft direkt geteilt werden soll^
+						ContactSharing shareValue = new ContactSharing(selectedContact, result);
+						//shareNewValue.show();
+						
+						
 					}
 					
 				});
@@ -1023,4 +1028,5 @@ public class ContactForm extends Widget {
 		}
 
 	}
+
 }
