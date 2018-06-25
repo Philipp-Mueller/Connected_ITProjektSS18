@@ -344,9 +344,15 @@ public class ContactForm extends Widget {
 
 						@Override
 						public void onSuccess(Property result) {
-							Property p = result;
+							final Property p = result;
 							int rowCount = propertyTable.getRowCount();
-							
+							if(result.getName().equals("Geburtsdatum")){
+								for(int i=0; i<propertyListBox.getItemCount(); i++){
+									if(propertyListBox.getItemText(i).equals("Geburtsdatum")){
+										propertyListBox.removeItem(i);
+									}
+								}
+							}
 							updateBtn = new Button("Eigenschaft bearbeiten");
 							updateBtn.addClickHandler(new ClickHandler(){
 
@@ -456,6 +462,14 @@ public class ContactForm extends Widget {
 										public void onSuccess(Void result) {
 											Window.alert("Eigenschaft wurde gelöscht!");
 											propertyTable.removeRow(eventRow);
+											if(p.getName().equals("Geburtsdatum")){
+												propertyListBox.clear();
+												for(Property p: propertyArray){
+												propertyListBox.addItem(p.getName());
+												}
+												propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
+
+											}
 										}
 
 									});
@@ -564,6 +578,9 @@ public class ContactForm extends Widget {
 				for (Property p : propertyArray) {
 					if ((propertyListBox.getSelectedItemText()).equals(p.getName())) {
 						propertyId = p.getBoId();
+						if(p.getName().equals("Geburtsdatum")){
+							propertyListBox.removeItem(propertyListBox.getSelectedIndex());
+						}
 					}
 				}
 				ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId, selectedContact.getBoId(), 1, new AsyncCallback<Value>(){
@@ -640,6 +657,7 @@ public class ContactForm extends Widget {
 				for (Property p : propertyArray) {
 					if ((propertyListBox.getSelectedItemText()).equals(p.getName())) {
 						propertyId = p.getBoId();
+						propertyListBox.removeItem(propertyListBox.getSelectedIndex());
 					}
 				}
 
@@ -667,7 +685,7 @@ public class ContactForm extends Widget {
 			// Am Ende wird der Kontakt den ausgewählten Kontaktlisten
 			// hinzugefügt.
 			Window.alert("Kontakt vollständig angelegt");
-			Label propertyLabel = new Label(propertyName);
+			final Label propertyLabel = new Label(propertyName);
 			Label valueLabel = new Label(result.getName());
 			propertyTable.removeRow(eventRow);
 
@@ -734,9 +752,7 @@ public class ContactForm extends Widget {
 														@Override
 														public void onSuccess(final Value result) {
 															updatingValue = result;
-															// TODO
-															// Auto-generated
-															// method stub
+															
 															updateBtn = new Button("Eigenschaft bearbeiten");
 															updateBtn.addClickHandler(new updateBtnClickHandler());
 															deleteBtn = new Button("Eigenschaft entfernen");
@@ -788,6 +804,13 @@ public class ContactForm extends Widget {
 						public void onSuccess(Void result) {
 							Window.alert("Eigenschaft wurde gelöscht!");
 							propertyTable.removeRow(eventRow);
+							if(propertyLabel.getText().equals("Geburtsdatum")){
+								propertyListBox.clear();
+								for(Property p: propertyArray){
+								propertyListBox.addItem(p.getName());
+								}
+								propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
+							}
 						}
 
 					});
@@ -830,7 +853,7 @@ public class ContactForm extends Widget {
 				propertyTable.setWidget(rowCount, 1, newPropertyTextBox);
 				propertyTable.setWidget(rowCount, 2, propertySaveButton);
 				Window.alert(Integer.toString(rowCount));
-			}
+			} 
 
 		}
 
@@ -985,7 +1008,7 @@ public class ContactForm extends Widget {
 															new HTML("<p>" + valueChangeTextBox.getText() + "</p>"));
 													propertyTable.setWidget(eventRow, 2, updateBtn);
 													propertyTable.setWidget(eventRow, 3, deleteBtn);
-
+													
 												}
 
 											});
@@ -1023,6 +1046,7 @@ public class ContactForm extends Widget {
 				public void onSuccess(Void result) {
 					Window.alert("Eigenschaft wurde gelöscht!");
 					propertyTable.removeRow(eventRow);
+					
 				}
 			});
 		}
