@@ -28,8 +28,13 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.ListDataProvider;
@@ -41,6 +46,7 @@ import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.Property;
+import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
 
 public class StartPage extends Widget {
@@ -53,7 +59,12 @@ public class StartPage extends Widget {
 	private ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
 	private ArrayList<Contact> allContacts = new ArrayList<Contact>();
 	private Set<Contact> selectedContacts = new HashSet<Contact>();
+	private ArrayList<Contact> selectedContactsArray = new ArrayList<Contact>();
+	private ArrayList<User> allUsers = new ArrayList<User>();
+	private ArrayList<User> selectedUser = new ArrayList<User>();
 	private Button selectedButton = new Button("Was ist den ausgewählt, hmm?!");
+	private Button shareSelectedContacts = new Button("Ausgewählte Kontakte teilen");
+	private final ListBox userListbox = new ListBox(true);
 	 /**
 	   * The pager used to change the range of data.
 	   */
@@ -111,6 +122,7 @@ public class StartPage extends Widget {
 							selectedContacts = selectionModel.getSelectedSet();
 							
 
+
 						}
 					});
 					 
@@ -138,6 +150,22 @@ public class StartPage extends Widget {
 						
 					});
 					
+					shareSelectedContacts.addClickHandler(new ClickHandler(){
+
+						@Override
+						public void onClick(ClickEvent event) {
+							
+							for(Contact c : selectedContacts){
+								selectedContactsArray.add(c);
+							}
+							
+							MyDialog popup = new MyDialog();
+							popup.center();
+							popup.show();
+						}
+						
+					});
+					
 			        overview.addColumn(checkColumn);
 			     
 			        overview.addColumn(prenameColumn, "Vorname");
@@ -157,6 +185,95 @@ public class StartPage extends Widget {
 		  RootPanel.get("content").add(overview);
 		  RootPanel.get("content").add(pager);
 		  RootPanel.get("content").add(selectedButton);
+		  RootPanel.get("content").add(shareSelectedContacts);
+		  
+		  
 	      
 }
+	  
+		private class MyDialog extends DialogBox {
+
+		    public MyDialog() {
+		      // Set the dialog box's caption.
+		      setText("Mit wem möchtest Du die ausgewählten Kontakte teilen?");
+
+		      // Enable animation.
+		      setAnimationEnabled(true);
+
+		      // Enable glass background.
+		      setGlassEnabled(true);
+		      
+		      Button ok = new Button("Teilen");
+		      ok.addClickHandler(new ClickHandler() {
+		        public void onClick(ClickEvent event) {
+		          
+		          
+					for (int i = 0; i < userListbox.getItemCount(); i++) {
+						if (userListbox.isItemSelected(i)) {
+							selectedUser.add(allUsers.get(i));
+						}
+					}
+					
+		          if(selectedContactsArray.size() > 1){
+					ClientSideSettings.getConnectedAdmin().givePermissonToUsers(selectedContactsArray, selectedUser, 1, new AsyncCallback<Void>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert("Ops, da ist etwas schief gelaufen!");
+						}
+
+						@Override
+						// jede Kontaktliste wird der ListBox hinzugefügt
+						public void onSuccess(Void result) {
+							Window.alert("Alle Kontakte erfolgreich geteilt!");
+							Window.alert(Integer.toString(selectedContactsArray.size()));
+							Window.alert(Integer.toString(selectedUser.size()));
+							//Window.alert(Integer.toString(cArray.size()));
+							//Window.alert(Integer.toString(uArray.size()));
+							Window.Location.reload();
+						}
+
+					});
+		          }
+		          else{
+		        	  ContactSharing fiki = new ContactSharing(selectedContactsArray.get(1).getBoId(), selectedUser);
+		          }
+					
+					MyDialog.this.hide();
+		        }
+		      });
+
+		      VerticalPanel v = new VerticalPanel();
+		      
+				userListbox.ensureDebugId("cwListBox-multiBox");
+				userListbox.setVisibleItemCount(7);
+		      
+				ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Die User konnten nicht geladen werden");
+					}
+
+					@Override
+					// jede Kontaktliste wird der ListBox hinzugefügt
+					public void onSuccess(ArrayList<User> result) {
+						allUsers = result;
+						for (User u : result) {
+							userListbox.addItem(u.getLogEmail());
+						}
+
+					}
+
+				});
+				
+
+				
+
+		      v.add(userListbox);
+		      v.add(ok);
+		      setWidget(v);
+
+		    }
+		  }
 }
