@@ -1,7 +1,9 @@
 package de.hdm.Connected.client.gui.ReportGenerator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -39,54 +41,53 @@ import de.hdm.Connected.shared.bo.Value;
 
 public class ReportGeneratorBaseForm extends Widget {
 
-	//Attributt ClientSiedeSetting
+	// Attributt ClientSiedeSetting
 	private ReportGeneratorServiceAsync rgsa = ClientSideSettings.getReportGenerator();
 
-	//Attribute Vertical Panel
+	// Attribute Vertical Panel
 	private VerticalPanel vPanel1 = new VerticalPanel();
 	private VerticalPanel vPanel2 = new VerticalPanel();
-	
-	//Attribute Horizontal Panel
+
+	// Attribute Horizontal Panel
 	private HorizontalPanel hPanel1 = new HorizontalPanel();
 	private HorizontalPanel hPanel2 = new HorizontalPanel();
 	private HorizontalPanel hPanel3 = new HorizontalPanel();
 	private HorizontalPanel hPanel4 = new HorizontalPanel();
-	
-	//Attribute Checkboxen
+
+	// Attribute Checkboxen
 	private CheckBox allContactsCb = new CheckBox(" Alle Kontakte anzeigen");
 	private CheckBox sharedContactsCb = new CheckBox(" Alle getelten Kontakte anzeigen");
-	
-	//Attribute Listboxen
+
+	// Attribute Listboxen
 	private ListBox userListBox = new ListBox();
 	private ListBox propertyListBox = new ListBox();
-	
-	//Attribute
+	private ListBox lb = new ListBox();
+
+	// Attribute
 	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 	private SuggestBox box = new SuggestBox(oracle);
 	private CellTable<Contact> table = new CellTable<Contact>();
 	private ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
 
-	//Attribute
+	// Attribute
 	private List<Contact> contactToShowInReport = new ArrayList<>();
 	private boolean allContacts = false;
 	private boolean sharedContacts = false;
 	private Integer propertyId = null;
 	private String valueDescription = "";
 	protected String userEmail = "";
-	
-	//Attribute Content
-	private HTML property = new HTML(" Suchen Sie hier nach bestimmten Eigenschaften: ");
-	private HTML user = new HTML (" Nutzer wählen: ");
+	private Map<Integer, String> propertyValueMap = new HashMap<>();
 
-	
-	
-	//Footer Attribute
+	// Attribute Content
+	private HTML property = new HTML(" Suchen Sie hier nach bestimmten Eigenschaften: ");
+	private HTML user = new HTML(" Nutzer wählen: ");
+
+	// Footer Attribute
 	private HorizontalPanel footer = new HorizontalPanel();
-	private Anchor connectedLink = new Anchor ("Connected", "Connected_ITProjektSS18.html");
+	private Anchor connectedLink = new Anchor("Connected", "Connected_ITProjektSS18.html");
 	private HTML copyrightText = new HTML(" | © 2018 Connected | ");
 	private Anchor impressumLink = new Anchor("Impressum");
 
-	
 	public ReportGeneratorBaseForm() {
 
 		// Horizontal Panels in Vertical Panels
@@ -94,8 +95,7 @@ public class ReportGeneratorBaseForm extends Widget {
 		vPanel1.add(hPanel2);
 		vPanel1.add(hPanel3);
 		vPanel1.add(hPanel4);
-		
-		
+
 		// AllContacts checkbox
 		allContactsCb.getElement().getStyle().setMarginBottom(2, Unit.EM);
 		allContactsCb.setValue(allContacts);
@@ -111,7 +111,6 @@ public class ReportGeneratorBaseForm extends Widget {
 			}
 		});
 		hPanel1.add(allContactsCb);
-		
 
 		// SharedContact checkbox
 		sharedContactsCb.getElement().getStyle().setMarginBottom(2, Unit.EM);
@@ -124,35 +123,34 @@ public class ReportGeneratorBaseForm extends Widget {
 			}
 		});
 		hPanel2.add(sharedContactsCb);
-		
-		//Abstand zur userListbox und Aufforderungstext zur User-Auswahl
+
+		// Abstand zur userListbox und Aufforderungstext zur User-Auswahl
 		user.getElement().getStyle().setMarginRight(1, Unit.EM);
 		user.getElement().getStyle().setMarginTop(1, Unit.EM);
 		hPanel3.add(user);
 
 		// Userlistbox
-			userListBox.getElement().getStyle().setMarginBottom(5, Unit.EM);
-			userListBox.getElement().getStyle().setMarginTop(1, Unit.EM);
-			userListBox.setVisibleItemCount(1);
-			userListBox.addChangeHandler(new ChangeHandler() {
+		userListBox.getElement().getStyle().setMarginBottom(5, Unit.EM);
+		userListBox.getElement().getStyle().setMarginTop(1, Unit.EM);
+		userListBox.setVisibleItemCount(1);
+		userListBox.addChangeHandler(new ChangeHandler() {
 
-					@Override
-					public void onChange(ChangeEvent event) {
-						userEmail = ((ListBox) event.getSource()).getSelectedItemText();
-					}
-				});
-				hPanel3.add(userListBox);
-		
-				
-		//Abstand und Aufforderungstext zur interaktion mit denn Eigenschaften
+			@Override
+			public void onChange(ChangeEvent event) {
+				userEmail = ((ListBox) event.getSource()).getSelectedItemText();
+			}
+		});
+		hPanel3.add(userListBox);
+
+		// Abstand und Aufforderungstext zur interaktion mit denn Eigenschaften
 		property.getElement().getStyle().setMarginLeft(19, Unit.EM);
 		property.getElement().getStyle().setMarginBottom(2, Unit.EM);
-		
+
 		hPanel1.add(property);
-				
+
 		// Abstand Property list box
 		propertyListBox.getElement().getStyle().setMarginLeft(15, Unit.EM);
-		
+
 		propertyListBox.setVisibleItemCount(1);
 		propertyListBox.addChangeHandler(new ChangeHandler() {
 
@@ -165,9 +163,9 @@ public class ReportGeneratorBaseForm extends Widget {
 		});
 		hPanel2.add(propertyListBox);
 
-		//Abstand und ValueDescription suggestbox
+		// Abstand und ValueDescription suggestbox
 		box.getElement().getStyle().setMarginLeft(1, Unit.EM);
-		
+
 		box.addKeyUpHandler(new KeyUpHandler() {
 
 			@Override
@@ -177,39 +175,82 @@ public class ReportGeneratorBaseForm extends Widget {
 		});
 		hPanel2.add(box);
 
+		Button newPropertySelection = new Button("+");
+		newPropertySelection.getElement().getStyle().setWidth(2, Unit.EM);
+		newPropertySelection.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				String value = box.getText();
+				String propertyText = propertyListBox.getSelectedItemText();
+
+				/*
+				 *  Werte aus der Listbox Anzeige in die HashMap für Übertragung an den Server merken
+				 */
+				propertyValueMap.put(propertyId, value);
+
+				lb.addItem(propertyText + ": " + value, propertyId.toString());
+
+			}
+		});
+		Button removePropertySelection = new Button("-");
+		removePropertySelection.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				Integer selektionsProperties = lb.getSelectedIndex();
+				/*
+				 *  Werte aus der Hash Map für die Server Übertragung wieder entfernen, da nicht mehr Relevant für die Selektion
+				 */
+				propertyValueMap.remove(Integer.valueOf(lb.getSelectedValue()));
+				lb.removeItem(selektionsProperties);
+			}
+		});
+		removePropertySelection.getElement().getStyle().setWidth(2, Unit.EM);
+		removePropertySelection.getElement().getStyle().setMarginTop(1, Unit.EM);
+
+		VerticalPanel vButtons = new VerticalPanel();
+		vButtons.add(newPropertySelection);
+		vButtons.add(removePropertySelection);
+		vButtons.getElement().getStyle().setMarginLeft(1, Unit.EM);
+		hPanel2.add(vButtons);
+
+		lb.setVisibleItemCount(5);
+		lb.getElement().getStyle().setMarginLeft(1, Unit.EM);
+		lb.getElement().getStyle().setWidth(20, Unit.EM);
+		hPanel2.add(lb);
+
 		// Suchen button
-		
 		Button b = new Button("Suchen", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
 				ReportGeneratorBaseForm.this.valueDescription = box.getText();
 
-				rgsa.searchContacts(allContacts, sharedContacts, userEmail, propertyId, valueDescription,
-						new AsyncCallback<List<Contact>>() {
+					rgsa.searchContacts(allContacts, sharedContacts, userEmail, propertyValueMap,
+							new AsyncCallback<List<Contact>>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("Fehler beim lesen aller Kontakte aufgetreten");
-					}
+								@Override
+								public void onFailure(Throwable caught) {
+									Window.alert("Fehler beim lesen aller Kontakte aufgetreten");
+								}
 
-					@Override
-					public void onSuccess(List<Contact> result) {
+								@Override
+								public void onSuccess(List<Contact> result) {
 
-						// Daten in der Tabelle austauschen
-						dataProvider.getList().clear();
-						dataProvider.getList().addAll(result);
-					}
-				});
+									// Daten in der Tabelle austauschen
+									dataProvider.getList().clear();
+									dataProvider.getList().addAll(result);
+								}
+							});
 			}
 		});
-		//Abstand und Panel hinzufügen
+		// Abstand und Panel hinzufügen
 		b.getElement().getStyle().setMarginLeft(35, Unit.EM);
 		b.getElement().getStyle().setMarginTop(1, Unit.EM);
 		b.getElement().getStyle().setMarginBottom(5, Unit.EM);
 		hPanel3.add(b);
 
 		// Contact Tabelle
-
 		// Verbindet die Tabelle mit dem Data Provider.
 		dataProvider.addDataDisplay(table);
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
@@ -244,43 +285,35 @@ public class ReportGeneratorBaseForm extends Widget {
 		hPanel4.add(table);
 
 		/*
-		 *  Nachdem die UI erstellt ist werden die Daten für das Dropdown und die Suggestbox geladen
+		 * Nachdem die UI erstellt ist werden die Daten für das Dropdown und die
+		 * Suggestbox geladen
 		 */
 		loadDataForFiltering();
 
 		/*
-		 *  Vertical panel wird dem RootPanel hinzugefügt (Somit wirds sichtbar)
+		 * Vertical panel wird dem RootPanel hinzugefügt (Somit wirds sichtbar)
 		 */
 		RootPanel.get("content").add(vPanel1);
 		RootPanel.get("content").add(vPanel2);
 
 		impressumLink.addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content").clear();
-				RootPanel.get("content").add(new HTML("<h2>Impressum nach §5 TMG</h2>"
-						+ "<h3>Verantwortlich</h3>"
-						+ "<p>Hochschule der Medien<br />"
-						+ "Nobelstraße 8<br />"
-						+ "70569 Stuttgart<br /></p>"
-						+ "<p><strong>Projektarbeit innerhalb des Studiengangs "
-						+ "Wirtschaftsinformatik und digitale Medien, "
-						+ "IT-Projekt SS 18.</strong></p>"
-						+ "<h3>Projektteam</h3>"
-						+ "<ul><li>xxx</li>"
-						+ "<li>xxx</li>"
-						+ "<li>xxx</li>"
-						+ "<li>xxx</li>"
-						+ "<li>xxx</li>"
-						+ "<li>xxx</li></ul>"
-						+ "<h3>Kontakt</h3>"
-						+ "<p><strong>Telefon:</strong> 0711 8923 10 (Zentrale)</p>"
-						+ "<p><strong>Website:</strong> <a href='http://www.hdm-stuttgart.de' target='_blank'>"
-						+ "www.hdm-stuttgart.de</a></p>"));
-				
+				RootPanel.get("content")
+						.add(new HTML("<h2>Impressum nach §5 TMG</h2>" + "<h3>Verantwortlich</h3>"
+								+ "<p>Hochschule der Medien<br />" + "Nobelstraße 8<br />" + "70569 Stuttgart<br /></p>"
+								+ "<p><strong>Projektarbeit innerhalb des Studiengangs "
+								+ "Wirtschaftsinformatik und digitale Medien, " + "IT-Projekt SS 18.</strong></p>"
+								+ "<h3>Projektteam</h3>" + "<ul><li>xxx</li>" + "<li>xxx</li>" + "<li>xxx</li>"
+								+ "<li>xxx</li>" + "<li>xxx</li>" + "<li>xxx</li></ul>" + "<h3>Kontakt</h3>"
+								+ "<p><strong>Telefon:</strong> 0711 8923 10 (Zentrale)</p>"
+								+ "<p><strong>Website:</strong> <a href='http://www.hdm-stuttgart.de' target='_blank'>"
+								+ "www.hdm-stuttgart.de</a></p>"));
+
 			}
-			
+
 		});
 		footer.add(connectedLink);
 		footer.add(copyrightText);
@@ -324,7 +357,8 @@ public class ReportGeneratorBaseForm extends Widget {
 				ReportGeneratorBaseForm.this.propertyId = Integer.valueOf(propertyListBox.getSelectedValue());
 
 				/*
-				 * Die Properties sind geladen, jetzt werden die Values für die Suggestbox im Property-Dropdown geladen
+				 * Die Properties sind geladen, jetzt werden die Values für die
+				 * Suggestbox im Property-Dropdown geladen
 				 */
 				loadValuesForSuggestion();
 			}
