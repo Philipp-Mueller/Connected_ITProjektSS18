@@ -115,8 +115,12 @@ public interface ConnectedAdminAsync {
 
 	void findValueById(int id, AsyncCallback<Value> callback);
 	
-	void givePermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid, AsyncCallback<Void> callback);
+	void giveContactPermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid, AsyncCallback<Void> callback);
 	
-	void giveCLPermissionToUsers(int clid, ArrayList<User> userArray, int shareuserid, AsyncCallback<Void> callback);
+	void givePermissionToUsers(int shareObjectId, ArrayList<User> userArray, int shareuserid, AsyncCallback<Void> callback);
+
+	void findUserById(int userId, AsyncCallback<User> callback);
+
+	void findUserByEmail(String email, AsyncCallback<User> callback);
 	
 }

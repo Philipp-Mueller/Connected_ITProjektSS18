@@ -286,7 +286,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	//Anlegen von Permissions auf Array von Contacts für Array von User TODO @MoritzBittner --bitte verständlicher formulieren
 	
 	@Override
-	public void givePermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException{
+	public void giveContactPermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException{
 		
 		for(int i=0; i < contactArray.size(); i++){
 			for(int j=0; j< userArray.size(); j++){
@@ -302,11 +302,11 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	//Anlegen von Permission auf ContactList für Array an User
 	
 	@Override
-	public void giveCLPermissionToUsers(int clid, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException
+	public void givePermissionToUsers(int shareObjectId, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException
 	{
 		for(int i = 0; i<userArray.size(); i++){
 			Permission p = new Permission();
-			p.setSharedObjectId(clid);
+			p.setSharedObjectId(shareObjectId);
 			p.setReceiverUserID(userArray.get(i).getBoId());
 			p.setShareUserID(shareuserid);
 			permissionMapper.insert(p);
@@ -409,7 +409,15 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public ArrayList<User> findAllUser() throws IllegalArgumentException {
 		return this.userMapper.findAll();
 	}
-
+	@Override
+	public User findUserById(int userId) throws IllegalArgumentException{
+		return this.userMapper.findById(userId);
+	}
+	
+	@Override
+	public User findUserByEmail(String email) throws IllegalArgumentException{
+		return this.userMapper.findByEmail(email);
+	}
 
 	// *** Value ***
 	@Override
