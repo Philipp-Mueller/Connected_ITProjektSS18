@@ -165,6 +165,7 @@ public class ContactForm extends Widget {
 			public void onClick(ClickEvent event) {
 				// Nur wenn die CheckBox geklickt ist, wird dies ausgeführt, da
 				// sonst der Kontakt keiner Liste hinzugefügt werden soll
+				final ArrayList<ContactList> contactListToAdd = new ArrayList<ContactList>();
 				if (addButton != null) {
 					java.sql.Timestamp creationTime = new Timestamp(System.currentTimeMillis());
 					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
@@ -178,12 +179,22 @@ public class ContactForm extends Widget {
 
 								@Override
 								public void onSuccess(Contact result) {
+									ArrayList<Contact> contacts= new ArrayList<Contact>();
+									contacts.add(result);
+									
 									if (checkContactlist.getValue()) {
 										for (int i = 0; i < contactlist.getItemCount(); i++) {
 											if (contactlist.isItemSelected(i)) {
-												Window.alert(Integer.toString(contactListArray.get(i).getBoId()));
-												ClientSideSettings.getConnectedAdmin().addContactToContactList(
-														result.getBoId(), contactListArray.get(i).getBoId(),
+												for(ContactList cl:contactListArray){
+													if(contactlist.getItemText(i).equals(cl.getName())){
+														contactListToAdd.add(cl);
+													}
+												}
+											}
+											}							
+												
+												ClientSideSettings.getConnectedAdmin().addContactsToContactList( contacts,
+														contactListToAdd,
 														new AsyncCallback<Void>() {
 
 															@Override
@@ -196,6 +207,7 @@ public class ContactForm extends Widget {
 															public void onSuccess(Void result) {
 																Window.alert(
 																		"Kontakt wurde angelegt und den Kontaktlisten hinzugefügt!");
+																Window.alert(Integer.toString(contactListToAdd.size()));
 																Window.Location.reload();
 
 															}
@@ -203,15 +215,15 @@ public class ContactForm extends Widget {
 														});
 											}
 
-										}
+										
 
 									}
 
-								}
+								
 
 							});
 				}
-				if (checkContactlist.getValue()) {
+				/*if (checkContactlist.getValue()) {
 					for (int i = 0; i < contactlist.getItemCount(); i++) {
 						if (contactlist.isItemSelected(i)) {
 							Window.alert(Integer.toString(contactListArray.get(i).getBoId()));
@@ -235,7 +247,7 @@ public class ContactForm extends Widget {
 
 					}
 
-				} else {
+				}*/ else {
 					Window.alert("Kontakt angelegt!");
 					Window.Location.reload();
 				}
