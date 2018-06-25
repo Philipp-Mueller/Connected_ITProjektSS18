@@ -2,21 +2,20 @@ package de.hdm.Connected.server.ReportGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import de.hdm.Connected.server.ConnectedAdminImpl;
 import de.hdm.Connected.server.db.ContactMapper;
-import de.hdm.Connected.server.db.PermissionMapper;
 import de.hdm.Connected.server.db.PropertyMapper;
 import de.hdm.Connected.server.db.UserMapper;
 import de.hdm.Connected.server.db.ValueMapper;
 import de.hdm.Connected.shared.ConnectedAdmin;
 import de.hdm.Connected.shared.ReportGenerator.ReportGeneratorService;
 import de.hdm.Connected.shared.bo.Contact;
-import de.hdm.Connected.shared.bo.Permission;
 import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
@@ -76,8 +75,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 
 
 	@Override
-	public List<Contact> searchContacts(boolean allContacts, boolean sharedContacts, String userEmail, Integer propertyId,
-			String valueDescription) {
+	public List<Contact> searchContacts(boolean allContacts, boolean sharedContacts, String userEmail, Map<Integer, String> propertyValueMap) {
 
 		List<Contact> result = new ArrayList<Contact>();
 		
@@ -98,10 +96,19 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 		}
 		
 		//Jetzt noch die property value filter prüfen...
-		if(propertyId!=null && valueDescription !=null && !valueDescription.isEmpty()){
-			List<Contact> valuesAndProperties = contactsBasedOnPropertiesAndValues(propertyId, valueDescription);
+		
+		//Wenn es property filter gibt dann noch filtern...
+		if(!propertyValueMap.isEmpty()){
+
+			//Hier holen wir uns alle Property Ids aus der HashMap
+			Set<Integer> propertyIds = propertyValueMap.keySet();
 			
-			result. retainAll(valuesAndProperties);
+			//Für jeden Key (PropertyId) aus der HashMap suchen wir die Kontakte welche genau 
+			//die werte zu einer Property haben
+			for(Integer propertyKey : propertyIds){
+				List<Contact> valuesAndProperties = contactsBasedOnPropertiesAndValues(propertyKey, propertyValueMap.get(propertyKey));
+				result.retainAll(valuesAndProperties);
+			}
 		}
 		return result;
 		

@@ -1,6 +1,7 @@
 package de.hdm.Connected.shared.ReportGenerator;
 
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -24,7 +25,7 @@ public interface ReportGeneratorService extends RemoteService {
 	List<User> allUsers();
 	List<Property> allProperties();
 	List<Value> allValues(Integer propertyId);
-	List<Contact> searchContacts(boolean allContacts, boolean sharedContacts, String userEmail, Integer propertyId, String valueDescription);
+	List<Contact> searchContacts(boolean allContacts, boolean sharedContacts, String userEmail, Map<Integer, String> propertyValueMap);
 	
 	
 	
