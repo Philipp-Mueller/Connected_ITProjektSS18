@@ -2,12 +2,118 @@
 
 
 /** Example rules used by the template application (remove for your app) */
+/**
 h1 {
   font-size: 2em;
   font-weight: bold;
   color: #777777;
   margin: 40px 0px 70px;
   text-align: center;
+}
+*/
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
+/*
+ * Seitenweite Regeln
+ */
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	display: flex;
+	flex-flow: column;
+	height: 100%;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 300;
+	color: #666;
+	background: #eee;
+}
+#top {
+	cursor: default;
+	display: flex;
+	width: 100%;
+	flex: 0 1 auto;
+	background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
+	background-size: cover;
+	justify-content: space-between;
+	padding-right: 30px;
+	box-sizing: border-box;
+}
+
+h1 {
+	font-weight: 400;
+	font-size: 16px;
+	width: 20%;
+	box-sizing: border-box;
+	background: url('ConnectedLogo1.png') no-repeat left 80%;
+	background-size: contain;
+	margin-left: 20px;
+	color: rgba(255,255,255,0.0);
+}
+
+h1 a {
+	display: block;
+	color: rgba(255,255,255,0.0);
+	padding: 20px 0px 20px 30px;
+}
+
+#usermenu .gwt-HTML {
+	padding: 20px 0px;
+}
+
+#usermenu p {
+	width: 100%;
+	font-size: 16px;
+	text-align: right;
+	cursor: pointer;
+}
+
+#usermenu p a {
+	margin-left: 10px;
+	padding-left: 10px;
+	text-decoration: none;
+	color: #666;
+	border-left: 1px solid #666;
+}
+
+#usermenu {
+	display: flex;
+	width: 30%;
+	justify-content: flex-end;
+}
+
+#content button {
+    border: none;
+    background: #009999;
+    color: #fff;
+    padding: 5px 10px;
+    cursor: pointer;	
+}
+
+#content button:hover,
+#content button:active {
+	background: #007575;
+}
+
+#content button.delete {
+    background: #d8581c;	
+}
+
+#content button.delete:hover,
+#content button.delete:active {
+    background: #ab4616;	
+}
+
+#repgen-heading {
+	text-align: left;
+	font-size: 25px;
+	padding: 16px 0px;	
+	width: 70%;
 }
 
 .sendButton {
@@ -28,7 +134,233 @@ h1 {
   color: red;
 }
 
-/** Set ids using widget.getElement().setId("idOfElement") */
 #closeButton {
   margin: 15px 6px 6px;
 }
+
+#footer {
+	position:absolute;
+    bottom: 0;
+    padding: 10px 0px;
+    text-align: center;
+    color: #777;
+    font-size: 80%;
+    width: 100%;
+   	display: flex;
+   	justify-content: center;
+    background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
+    
+}
+
+#footer .gwt-HTML {
+	margin: 0px 5px;
+}
+
+#footer a {
+    color: #1c9cd8;
+    text-decoration: none;
+}
+
+table {
+	min-height: 100%;
+	max-width: 1280px;
+	margin: 0 auto;
+}
+
+.lblInfoName{
+	color: red;
+	font-weight: bold;
+}
+
+
+.headerPanel{
+	width: 1280px;
+}
+.footerPanel{
+	width: 1070px;
+	background-color: #90A4AE;
+	padding: 8px;
+}
+
+.lbheadlineNoteit {
+	font-family: 'Marck Script', cursive;
+	text-align: center;
+	color: rgba(255, 255, 255, .6);
+	font-size: 4rem;
+	font-weight: 700;
+	padding: 3%;
+}
+
+.lblWelcome {
+	font-family: 'Marck Script', cursive;
+	text-align: center;
+	color: #90A4AE;
+	font-size: 4rem;
+	font-weight: 700;
+	padding: 3%;
+}
+
+.lblImpressum{
+	padding: 8px;
+}
+.impressumHeadline{
+	text-align: center;
+	font-size: 1rem;
+	font-weight: 700;
+	padding-bottom: 10px;
+}
+.lblCopyright{
+	text-align: right;
+	margin-top: 8px;
+}
+
+.headlinePanel {
+	background-color: #607D8B;
+}
+.com-google-gwt-user-cellview-client-CellList-Style-cellListKeyboardSelectedItem{
+	background-color: #90A4AE !important;
+	color: white
+}
+
+table.vpLeft{
+	padding-right: 8px;
+border-right: 1px solid #90A4AE;
+height: 473px
+}
+
+table.vpRight{
+	padding-left: 8px;
+	
+}
+
+.gwt-Button{
+	margin-right: 10px !important;
+}
+
+img.addImage{
+	vertical-align: middle;
+	
+}
+
+.lblPermissionText{
+	margin-top:20px;
+}
+
+span.addImageText{
+	vertical-align: middle;
+	height: 30px;
+	padding-left: 4px
+}
+div.gwt-PushButton.gwt-PushButton-up, img.gwt-Image{
+	width:12px;
+	outline: none
+}
+
+.navPanel {
+	background-color: #90A4AE;
+	padding: 8px;
+}
+
+.navLeftPanel {
+	display:block;
+	float: left;
+	height: 100%;
+	background-color: #90A4AE;
+}
+
+.navRightPanel {
+	background-color: #90A4AE;
+}
+
+.vpLeft {
+	display:block;
+	float: left;
+	height: 100%;
+	
+}
+
+iframe.gwt-RichTextArea{
+	margin-bottom: 20px;
+}
+
+.menu {
+	background-color: #90A4AE;
+	padding-right: 8px;
+	float: right;
+}
+
+tr .headerPanel {
+	width: 100%;
+}
+
+.contentPanel {
+	padding: 8px;
+	background: #fff;
+}
+
+.headerDetailView {
+	width: 98%;
+	border-bottom: 1px solid #90A4AE;
+	margin-left: 8px;
+	
+}
+
+.lblHeaderTitel {
+	float: left;
+	font-weight: bold;
+}
+
+.showDetailContent {
+	padding-top: 8px;
+	padding-left: 8px;
+}
+
+.vpRightDetailContent{
+	padding-left: 8px;
+}
+
+}
+
+input.gwt-TextBox, input.gwt-DateBox, input.gwt-SuggestBox{
+border: 0px;
+border-bottom: 1px solid #90A4AE;
+height: 30px;
+margin-bottom: 20px;
+padding-left:0px
+}
+
+
+input:focus, textarea:focus {
+    outline: none;
+}
+input.gwt-TextBox:focus, input.gwt-DateBox:focus, input.gwt-SuggestBox:focus{
+
+
+border-bottom: 1px solid #3a4b54;
+height: 30px;
+margin-bottom: 20px;
+}
+
+iframe.gwt-RichTextArea{
+	border: 1px solid #90A4AE;
+}
+iframe.gwt-RichTextArea:focus{
+	border: 1px solid #3a4b54;
+}
+
+
+.com-google-gwt-user-cellview-client-CellBrowser-Style-cellBrowserOpenItem{
+	background: #90A4AE;
+}
+
+span.dffasfs{
+	color: #9199a1;
+}
+span.dateBefore{
+	color: red;
+}
+span.dateToday{
+	color: green;
+}
+
+

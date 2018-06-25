@@ -75,7 +75,7 @@ public class ContactListMapper {
 			 * Query an die Datenbank senden.
 			 */
 		
-			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM contactlist");
+			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
 		
 			if (rs.next()) {
 				contactList.setBoId(rs.getInt("maxid") + 1);
@@ -85,6 +85,8 @@ public class ContactListMapper {
 			 * SQL-Anweisung zum Einfügen des neuen ContactList-Tupels in die
 			 * Datenbank.
 			 */
+			//ID in Sharedobject einfügen
+			stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES (" + contactList.getBoId() + ")");
 			
 			stmt.executeUpdate("INSERT INTO contactlist (id, name) VALUES " + "(" + contactList.getBoId() + ", '"
 					+ contactList.getName() + "')");

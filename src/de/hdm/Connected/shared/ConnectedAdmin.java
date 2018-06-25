@@ -2,6 +2,7 @@ package de.hdm.Connected.shared;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -63,6 +64,16 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return neu erstelltes Property-Objekt
 	 * @throws IllegalArgumentException
 	 */
+	
+	public ArrayList<User> findAllUser() throws IllegalArgumentException;
+	/**
+	 * Gibt alle User zurück
+	 * 
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	
+	
 	public Property createProperty(String name) throws IllegalArgumentException;
 	
 	/**
@@ -96,7 +107,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return aktualisiertes Contact-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public void updateContact(Contact contact) throws IllegalArgumentException;
+	public void updateContact(Contact contact, int userId) throws IllegalArgumentException;
 	
 	/**
 	 * Löscht ein Contact-Objekt und alle eventuell darauf basierenden
@@ -105,7 +116,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @param contact
 	 * @throws IllegalArgumentException
 	 */
-	public void deleteContact(Contact contact) throws IllegalArgumentException;
+	public void deleteContact(Contact contact, User cUser) throws IllegalArgumentException;
 	
 	/**
 	 * Erstellt ein neues Value-Objekt.
@@ -113,7 +124,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return neu erstelltes Value-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public Value createValue(String name, int propertyId, int contactId) throws IllegalArgumentException;
+	public Value createValue(String name, int propertyId, int contactId, int ownerId) throws IllegalArgumentException;
 	
 	/**
 	 * Aktuallisiert ein Value-Objekt.
@@ -121,7 +132,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return aktualisiertes Value-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public void updateValue(Value value) throws IllegalArgumentException;
+	public Value updateValue(Value value) throws IllegalArgumentException;
 	
 	/**
 	 * Löscht ein Value-Objekt und alle eventuell darauf basierenden
@@ -138,7 +149,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return neu erstelltes ContactList-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public ContactList createContactList(String name) throws IllegalArgumentException;
+	public ContactList createContactList(String name, int ownerId) throws IllegalArgumentException;
 	
 	/**
 	 * Aktuallisiert ein ContactList-Objekt.
@@ -213,21 +224,15 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public ArrayList<Permission> findPermissionsByUserId(int id) throws IllegalArgumentException;
-	/**
-	 * Erstellt ein neues Permission-Objekt.
-	 * 
-	 * @return neu erstelltes Permission-Objekt
-	 * @throws IllegalArgumentException
-	 */
-	public Permission createPermission(int shareUserId, int shareObjectId, int receiverUserId) throws IllegalArgumentException;
 	
+
 	/**
 	 * Löscht ein Permission-Objekt 
 	 * 
 	 * @param permission
 	 * @throws IllegalArgumentException
 	 */
-	public void deletePermission(Permission permission) throws IllegalArgumentException;
+	public void deletePermission(Permission permission, User cUser) throws IllegalArgumentException;
 	
 	/**
 	 * Fügt ein Contact einer ContactList hinzu
@@ -281,4 +286,43 @@ public interface ConnectedAdmin extends RemoteService {
 	ArrayList<Contact> findContactsByPrename(String prename) throws IllegalArgumentException;
 
 	ArrayList<Contact> findContactsBySurname(String surname) throws IllegalArgumentException;
+
+	ArrayList<Permission> getAllPermissions() throws IllegalArgumentException;
+
+	ArrayList<Permission> getPermissionsByContactId(int contactID) throws IllegalArgumentException;
+
+	ArrayList<Permission> getPermissionsByContactListId(int contactListID) throws IllegalArgumentException;
+
+	ArrayList<Permission> getPermissionsByRecieveUserId(int recieveUId) throws IllegalArgumentException;
+
+	ArrayList<Permission> getPermissionsByShareUserId(int shareUId) throws IllegalArgumentException;
+
+	ArrayList<Permission> getPermissionsBySharedOject(int sharedOId) throws IllegalArgumentException;
+
+	ArrayList<Permission> getPermissionsByValueId(int valueId) throws IllegalArgumentException;
+
+	void updatePermission(Permission permission) throws IllegalArgumentException;
+
+	Permission getPermissionById(int id) throws IllegalArgumentException;
+
+	Map<Property, Value> findValueAndProperty(int id) throws IllegalArgumentException;
+
+	ArrayList<Value> findValueByValue(String value) throws IllegalArgumentException;
+
+	Value findValueById(int id) throws IllegalArgumentException;
+
+	public void givePermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid)
+			throws IllegalArgumentException;
+	
+	public void giveCLPermissionToUsers(int clid, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException;
+
+	/**
+	 * Erstellt ein neues Permission-Objekt.
+	 * 
+	 * @return neu erstelltes Permission-Objekt
+	 * @throws IllegalArgumentException
+	 */
+	void createPermission(int shareUserId, ArrayList<Integer> shareObjectId, ArrayList<Integer> receiverUserId)
+			throws IllegalArgumentException;
+
 }

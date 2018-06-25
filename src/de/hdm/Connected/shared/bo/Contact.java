@@ -2,6 +2,8 @@ package de.hdm.Connected.shared.bo;
 
 import java.sql.Timestamp;
 
+import com.google.gwt.view.client.ProvidesKey;
+
 /**
  * 
  * @author Moritz Realisierung eines Kontakts
@@ -29,6 +31,14 @@ public class Contact extends SharedObject{
 	 * Realisierung der Beziehung zu einer Contactlist durch einen Fremdschlüssel.
 	 */
 	//@Moritz Musste ich anlegen für die Impl.
+	
+	public static final ProvidesKey<Contact> KEY_PROVIDER = new ProvidesKey<Contact>() {
+	      @Override
+	      public Object getKey(Contact item) {
+	        return item == null ? null : item.getBoId();
+	      }
+	    };
+	
 	
 	private int contactListId= 0;
 	

@@ -71,9 +71,9 @@ public class ContactMapper {
 			/**
 			 * Abfrage des zuletzt hinzugefuegten Primaerschluessel (id). Die aktuelle id
 			 * wird um eins erhoeht. Statement ausfuellen und als Query an die Datenbank
-			 * senden.
+			 * senden. Da Contact ein SharedObject ist wird der maxid von SharedObject ermittelt, damit jedes SharedObject ein eindeutigen ID besitzen.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM contact");
+			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
 
 			if (rs.next()) {
 				contact.setBoId(rs.getInt("maxid") + 1);
@@ -82,8 +82,11 @@ public class ContactMapper {
 			/**
 			 * SQL-Anweisung zum Einfuegen des neuen Contact-Tupels in die Datenbank.
 			 */
+			//ID in Sharedobject einfügen
+			stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES (" + contact.getBoId() + ")");
+			
 			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, userId) VALUES (" + contact.getBoId() + ", '"
-					+ contact.getPrename() + "', " + contact.getSurname() + "', " + contact.getCreatorId() + ")");
+					+ contact.getPrename() + "', '" + contact.getSurname() + "', " + contact.getCreatorId() + ")");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
 			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
@@ -203,7 +206,7 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze in der Datenbank, sortiert nach
 			 * der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname FROM contact ORDER BY id");
+			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname FROM contact ORDER BY prename");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle contact
 			 * vorhanden ist, muss das Abfragen des ResultSet so oft erfolgen
