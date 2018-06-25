@@ -272,8 +272,14 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	// fügt einer Kontaktliste einen Kontakt hinzu
 	
 	@Override
-	public void addContactToContactList(int contactid, int contactlistid) throws IllegalArgumentException {
-		ccMapper.addContactToContactList(contactid, contactlistid);
+	public void addContactsToContactList(ArrayList<Contact> contactArray, ArrayList<ContactList> contactlistArray) throws IllegalArgumentException {
+		
+		for(int i=0; i<contactArray.size(); i++){
+			for( int j=0; j<contactlistArray.size(); j++){
+				ccMapper.addContactToContactList(contactArray.get(i).getBoId(), contactlistArray.get(j).getBoId());
+			}
+		}
+		
 	}
 		
 	//Löscht einen Kontakt von einer Kontaktliste

@@ -45,6 +45,7 @@ import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.bo.Contact;
+import de.hdm.Connected.shared.bo.ContactList;
 import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
@@ -62,9 +63,13 @@ public class StartPage extends Widget {
 	private ArrayList<Contact> selectedContactsArray = new ArrayList<Contact>();
 	private ArrayList<User> allUsers = new ArrayList<User>();
 	private ArrayList<User> selectedUser = new ArrayList<User>();
+	private ArrayList<ContactList> allCLs = new ArrayList<ContactList>();
+	private ArrayList<ContactList> selectedCLs = new ArrayList<ContactList>();	
 	private Button selectedButton = new Button("Was ist den ausgewählt, hmm?!");
 	private Button shareSelectedContacts = new Button("Ausgewählte Kontakte teilen");
+	private Button addContactstoCL = new Button("Kontakte einer Kontaktliste hinzufügen");
 	private final ListBox userListbox = new ListBox(true);
+	private final ListBox contactlistListbox = new ListBox(true);
 	 /**
 	   * The pager used to change the range of data.
 	   */
@@ -166,6 +171,21 @@ public class StartPage extends Widget {
 						
 					});
 					
+					addContactstoCL.addClickHandler(new ClickHandler(){
+						@Override
+						public void onClick(ClickEvent event){
+							
+							for(Contact c : selectedContacts){
+								selectedContactsArray.add(c);
+							}
+							
+							MyDialog2 popup2 = new MyDialog2();
+							popup2.center();
+							popup2.show();
+											
+						}
+					});
+					
 			        overview.addColumn(checkColumn);
 			     
 			        overview.addColumn(prenameColumn, "Vorname");
@@ -186,6 +206,7 @@ public class StartPage extends Widget {
 		  RootPanel.get("content").add(pager);
 		  RootPanel.get("content").add(selectedButton);
 		  RootPanel.get("content").add(shareSelectedContacts);
+		  RootPanel.get("content").add(addContactstoCL);
 		  
 		  
 	      
@@ -202,6 +223,16 @@ public class StartPage extends Widget {
 
 		      // Enable glass background.
 		      setGlassEnabled(true);
+		      Button zurück = new Button ("Zurück");
+		      zurück.addClickHandler(new ClickHandler(){
+		    	  public void onClick(ClickEvent event) {
+		    		  selectedUser.clear();
+		    		  selectedContactsArray.clear();
+		    		  userListbox.clear();
+		    		  MyDialog.this.hide();
+		    	  }
+		    	  });
+		      
 		      
 		      Button ok = new Button("Teilen");
 		      ok.addClickHandler(new ClickHandler() {
@@ -215,7 +246,7 @@ public class StartPage extends Widget {
 					}
 					
 		          if(selectedContactsArray.size() > 1){
-					ClientSideSettings.getConnectedAdmin().givePermissonToUsers(selectedContactsArray, selectedUser, 1, new AsyncCallback<Void>() {
+					ClientSideSettings.getConnectedAdmin().giveContactPermissonToUsers(selectedContactsArray, selectedUser, 1, new AsyncCallback<Void>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
@@ -236,7 +267,7 @@ public class StartPage extends Widget {
 					});
 		          }
 		          else{
-		        	  ContactSharing fiki = new ContactSharing(selectedContactsArray.get(1).getBoId(), selectedUser);
+		        	  //ContactSharing fiki = new ContactSharing(selectedContactsArray.get(1).getBoId(), selectedUser);
 		          }
 					
 					MyDialog.this.hide();
@@ -244,6 +275,7 @@ public class StartPage extends Widget {
 		      });
 
 		      VerticalPanel v = new VerticalPanel();
+		      HorizontalPanel buttonPanel = new HorizontalPanel();
 		      
 				userListbox.ensureDebugId("cwListBox-multiBox");
 				userListbox.setVisibleItemCount(7);
@@ -269,9 +301,108 @@ public class StartPage extends Widget {
 				
 
 				
-
+				buttonPanel.add(ok);
+				buttonPanel.add(zurück);
 		      v.add(userListbox);
-		      v.add(ok);
+		      v.add(buttonPanel);
+		      setWidget(v);
+
+		    }
+		  }
+		
+		private class MyDialog2 extends DialogBox {
+
+		    public MyDialog2() {
+		      // Set the dialog box's caption.
+		      setText("Welchen Listen möchtest Du die Kontakte hinzufügen?");
+
+		      // Enable animation.
+		      setAnimationEnabled(true);
+
+		      // Enable glass background.
+		      setGlassEnabled(true);
+		      Button zurück = new Button ("Zurück");
+		      zurück.addClickHandler(new ClickHandler(){
+		    	  public void onClick(ClickEvent event) {
+		    		  selectedCLs.clear();
+		    		  selectedContactsArray.clear();
+		    		  contactlistListbox.clear();
+		    		  MyDialog2.this.hide();
+		    	  }
+		    	  });
+		      
+		      
+		      Button ok = new Button("Hinzufügen");
+		      ok.addClickHandler(new ClickHandler() {
+		        public void onClick(ClickEvent event) {
+		          
+		          
+					for (int i = 0; i < contactlistListbox.getItemCount(); i++) {
+						if (contactlistListbox.isItemSelected(i)) {
+							selectedCLs.add(allCLs.get(i));
+						}
+					}
+					
+		          if(selectedContactsArray.size() > 1){
+					ClientSideSettings.getConnectedAdmin().addContactsToContactList(selectedContactsArray, selectedCLs,  new AsyncCallback<Void>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert("Ops, da ist etwas schief gelaufen!");
+						}
+
+						@Override
+						// jede Kontaktliste wird der ListBox hinzugefügt
+						public void onSuccess(Void result) {
+							Window.alert("Alle Kontakte erfolgreich geteilt!");
+							Window.alert(Integer.toString(selectedContactsArray.size()));
+							Window.alert(Integer.toString(selectedCLs.size()));
+							//Window.alert(Integer.toString(cArray.size()));
+							//Window.alert(Integer.toString(uArray.size()));
+							Window.Location.reload();
+						}
+
+					});
+		          }
+		          else{
+		        	  //ContactSharing fiki = new ContactSharing(selectedContactsArray.get(1).getBoId(), selectedUser);
+		          }
+					
+					MyDialog2.this.hide();
+		        }
+		      });
+
+		      VerticalPanel v = new VerticalPanel();
+		      HorizontalPanel buttonPanel = new HorizontalPanel();
+		      
+		      contactlistListbox.ensureDebugId("cwListBox-multiBox");
+		      contactlistListbox.setVisibleItemCount(7);
+		      
+				ClientSideSettings.getConnectedAdmin().findAllContactlists(new AsyncCallback<ArrayList<ContactList>>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Die Cls konnten nicht geladen werden");
+					}
+
+					@Override
+					// jede Kontaktliste wird der ListBox hinzugefügt
+					public void onSuccess(ArrayList<ContactList> result) {
+						allCLs = result;
+						for (ContactList cl : result) {
+							contactlistListbox.addItem(cl.getName());
+						}
+
+					}
+
+				});
+				
+
+				
+				buttonPanel.add(ok);
+				buttonPanel.add(zurück);
+		      v.add(userListbox);
+		      v.add(buttonPanel);
 		      setWidget(v);
 
 		    }

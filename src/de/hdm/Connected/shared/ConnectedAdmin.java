@@ -240,7 +240,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @param contactId, contactlistId
 	 * @throws IllegalArgumentException
 	 */
-	public void addContactToContactList(int contactid, int contactlistid) throws IllegalArgumentException;
+	public void addContactsToContactList(ArrayList<Contact> contactArray, ArrayList<ContactList> contactlistArray) throws IllegalArgumentException;
 	
 	/**
 	 * Entfernt ein Contact einer ContactList
