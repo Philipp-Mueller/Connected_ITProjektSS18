@@ -73,7 +73,7 @@ public class ContactListForm2 extends Widget {
 	Button newContactListButton = new Button("Neue Kontaktliste erstellen", new newContactListClickhandler());
 	Button uptdateContactListButton = new Button("Kontaktliste bearbeiten");
 	Button shareContactListButton = new Button("Kontaktliste teilen", new shareCotactListClickhandler());
-	Button sharePartOfClButton = new Button("Kontakte von Kontaktliste teilen", new sharePartofClClickhandler());
+	//Button sharePartOfClButton = new Button("Kontakte von Kontaktliste teilen", new sharePartofClClickhandler());
 	//Button addContactButton = new Button("Kontakt hinzufügen", new addContactsToContatListClickHandler());
 	Button createListButton = new Button("Liste erstellen", new createContactListClickhandler());
 	Button visitbutton = null;
@@ -81,7 +81,9 @@ public class ContactListForm2 extends Widget {
 	Button shareContactList = new Button("Teilen", new shareContactListwithUserClickhandler());
 	Button deleteCLButton = new Button("Kontaktliste löschen", new deleteContactListClickhandler());
 
+	HorizontalPanel masterPanel = new HorizontalPanel();
 	VerticalPanel topPanel = new VerticalPanel();
+	VerticalPanel contentPanel = new VerticalPanel();
 	HorizontalPanel namePanel = new HorizontalPanel();
 	HorizontalPanel contactsPanel = new HorizontalPanel();
 	HorizontalPanel buttonPanel = new HorizontalPanel();
@@ -98,6 +100,8 @@ public class ContactListForm2 extends Widget {
 	CellTable<Contact> contacttable2 = new CellTable<Contact>();
 	final ListBox userListbox = new ListBox(true);
 	final ListBox userListbox2 = new ListBox(true);
+	
+	Map<Property, Value> propertyValueMap = new HashMap<Property, Value>();
 
 	Grid clGrid = new Grid();
 	public int row;
@@ -114,17 +118,21 @@ public class ContactListForm2 extends Widget {
 		// namePanel.add(nameLabel);
 		// namePanel.add(nameBox);
 		//
-		buttonPanel.add(new HTML("<h2>Deine Kontaktlisten:</h2>"));
-		buttonPanel.add(newContactListButton);
+		//buttonPanel.add(new HTML("<h2>Deine Kontaktlisten:</h2>"));
+		//buttonPanel.add(newContactListButton);
 
 		// Share kommt erst in die einzelansicht einer CL
 		// buttonPanel.add(shareContactListButton);
 		// topPanel.add(namePanel);
 		// topPanel.add(addContactButton);
 		// topPanel.add(createListButton);
-
 		RootPanel.get("content").add(buttonPanel);
-		RootPanel.get("content").add(topPanel);
+		buttonPanel.add(newContactListButton);
+
+		RootPanel.get("content").add(masterPanel);
+		
+		masterPanel.add(topPanel);
+		masterPanel.add(contentPanel);
 		// Muss später findContactlists per User id sein
 		ClientSideSettings.getConnectedAdmin().findAllContactlists(new AsyncCallback<ArrayList<ContactList>>() {
 			int i = 0;
@@ -143,7 +151,7 @@ public class ContactListForm2 extends Widget {
 				for (ContactList cl : result) {
 					// contactlist.addItem(cl.getName());
 					clGrid.setWidget(i, 0, new Label(cl.getName()));
-					visitbutton = new Button("Visit");
+					visitbutton = new Button(">>");
 					visitbutton.addClickHandler(new visitClickhandler());
 					clGrid.setWidget(i, 1, visitbutton);
 					i = i + 1;
@@ -153,14 +161,103 @@ public class ContactListForm2 extends Widget {
 
 		});
 
+		TextColumn<Contact> prenameColumn = new TextColumn<Contact>() {
+			public String getValue(Contact contact) {
+				return contact.getPrename();
+			}
+		};
+		TextColumn<Contact> surnameColumn = new TextColumn<Contact>() {
+			public String getValue(Contact contact) {
+				return contact.getSurname();
+			}
+		};
+		ButtonCell visitButtonCell = new ButtonCell();
+		ButtonCell deleteButtonCell = new ButtonCell();
+		Column visitbuttonColumn = new Column<Contact, String>(visitButtonCell) {
+			@Override
+			public String getValue(Contact object) {
+				// The value to display in the button.
+				return "Visit";
+			}
+		};
+		Column deletebuttonColumn = new Column<Contact, String>(visitButtonCell) {
+			@Override
+			public String getValue(Contact object) {
+				// The value to display in the button.
+				return "Delete";
+			}
+		};
+
+		visitbuttonColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
+			public void update(int index, Contact object, String value) {
+				// Value is the button value. Object is the row object.
+				ClientSideSettings.getConnectedAdmin().findValueAndProperty(globalContactArray.get(index).getBoId(), new AsyncCallback<Map<Property, Value>>() {
+
+					public void onFailure(Throwable caught) {
+						Window.alert("Ops, da ist etwas schief gelaufen!");
+					}
+
+					public void onSuccess(Map<Property, Value> result) {
+						propertyValueMap = result;
+//						Window.alert(Integer.toString(result.size()));
+//						Window.alert(Integer.toString(globalIndex));
+						MyDialog d = new MyDialog();
+						d.center();
+						d.show();
+
+						
+					}
+
+				});
+//				Window.alert("You clicked:" + index);
+				//clGrid.clear();
+				globalIndex = index;
+//				MyDialog d = new MyDialog();
+//				d.center();
+//				d.show();
+
+			}
+		});
+
+		deletebuttonColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
+			public void update(final int index, Contact object, String value) {
+				// Value is the button value. Object is the row object.
+				//Window.alert("You clicked: " + index);
+				ClientSideSettings.getConnectedAdmin().removeContactFromContactList(
+						globalContactArray.get(index).getBoId(), clArray.get(row).getBoId(),
+						new AsyncCallback<Void>() {
+							public int boIdvonContact = globalContactArray.get(index).getBoId();
+							public int boIdvonCL = clArray.get(row).getBoId();
+
+							public void onFailure(Throwable caught) {
+								Window.alert("Ops, da ist etwas schief gelaufen!");
+							}
+
+							public void onSuccess(Void result) {
+								Window.alert("Kontakt erfolgreich von Kontaktliste entfernt");
+								dataProvider.getList().remove(index);
+								dataProvider.refresh();
+								
+							}
+
+						});
+				//clGrid.clear();
+			}
+		});
+		contacttable.addColumn(prenameColumn, "Vorname");
+		contacttable.addColumn(surnameColumn, "Nachname");
+		contacttable.addColumn(visitbuttonColumn, "");
+		contacttable.addColumn(deletebuttonColumn, "");
+		
+		
 	}
 
 	private class visitClickhandler implements ClickHandler {
 		public void onClick(ClickEvent event) {
 			contactArray = new ArrayList<Contact>();
-			RootPanel.get("content").clear();
-			RootPanel.get("content").add(topPanel);
-			topPanel.clear();
+			//RootPanel.get("content").clear();
+			masterPanel.add(contentPanel);
+			contentPanel.clear();
 			row = (clGrid.getCellForEvent(event).getRowIndex());
 			//Window.alert(Integer.toString(clArray.get(row).getBoId())); // id
 			int idvonCl = clArray.get(row).getBoId(); // von
@@ -185,6 +282,9 @@ public class ContactListForm2 extends Widget {
 
 			ClientSideSettings.getConnectedAdmin().createContactList(nameBox.getText(), 1, 
 					new createContactListCallback());
+			
+			RootPanel.get("content").clear();
+			ContactListForm2 neuLaden = new ContactListForm2();
 
 		}
 	};
@@ -216,8 +316,9 @@ public class ContactListForm2 extends Widget {
 
 		public void onSuccess(ContactList result) {
 			Window.alert("Contactlist erfolgreich angelegt!");
-			RootPanel.get("content").clear();
-			Window.Location.reload();
+			//RootPanel.get("content").clear();
+			
+
 
 
 		}
@@ -226,7 +327,8 @@ public class ContactListForm2 extends Widget {
 
 	private class showContactListCallback implements AsyncCallback<ArrayList<Contact>> {
 
-		Map<Property, Value> propertyValueMap = new HashMap<Property, Value>();
+		
+		
 		
 		public void onFailure(Throwable caught) {
 			Window.alert("Ops, da ist etwas schief gelaufen!");
@@ -235,114 +337,31 @@ public class ContactListForm2 extends Widget {
 
 		public void onSuccess(final ArrayList<Contact> result) {
 			//Window.alert("Contactlist gefunden");
-
+			
 			globalContactArray = new ArrayList<Contact>();
 			globalContactArray = result;
 			// for (Contact cid : result) {
 			// ClientSideSettings.getConnectedAdmin().findContactById(cid.getBoId(),
 			// }
 
-			TextColumn<Contact> prenameColumn = new TextColumn<Contact>() {
-				public String getValue(Contact contact) {
-					return contact.getPrename();
-				}
-			};
-			TextColumn<Contact> surnameColumn = new TextColumn<Contact>() {
-				public String getValue(Contact contact) {
-					return contact.getSurname();
-				}
-			};
-			ButtonCell visitButtonCell = new ButtonCell();
-			ButtonCell deleteButtonCell = new ButtonCell();
-			Column visitbuttonColumn = new Column<Contact, String>(visitButtonCell) {
-				@Override
-				public String getValue(Contact object) {
-					// The value to display in the button.
-					return "Visit";
-				}
-			};
-			Column deletebuttonColumn = new Column<Contact, String>(visitButtonCell) {
-				@Override
-				public String getValue(Contact object) {
-					// The value to display in the button.
-					return "Delete";
-				}
-			};
-
-			visitbuttonColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
-				public void update(int index, Contact object, String value) {
-					// Value is the button value. Object is the row object.
-					ClientSideSettings.getConnectedAdmin().findValueAndProperty(globalContactArray.get(index).getBoId(), new AsyncCallback<Map<Property, Value>>() {
-
-						public void onFailure(Throwable caught) {
-							Window.alert("Ops, da ist etwas schief gelaufen!");
-						}
-
-						public void onSuccess(Map<Property, Value> result) {
-							propertyValueMap = result;
-//							Window.alert(Integer.toString(result.size()));
-//							Window.alert(Integer.toString(globalIndex));
-							MyDialog d = new MyDialog();
-							d.center();
-							d.show();
-
-							
-						}
-
-					});
-//					Window.alert("You clicked:" + index);
-					clGrid.clear();
-					globalIndex = index;
-//					MyDialog d = new MyDialog();
-//					d.center();
-//					d.show();
-
-				}
-			});
-
-			deletebuttonColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
-				public void update(final int index, Contact object, String value) {
-					// Value is the button value. Object is the row object.
-					//Window.alert("You clicked: " + index);
-					ClientSideSettings.getConnectedAdmin().removeContactFromContactList(
-							globalContactArray.get(index).getBoId(), clArray.get(row).getBoId(),
-							new AsyncCallback<Void>() {
-								public int boIdvonContact = globalContactArray.get(index).getBoId();
-								public int boIdvonCL = clArray.get(row).getBoId();
-
-								public void onFailure(Throwable caught) {
-									Window.alert("Ops, da ist etwas schief gelaufen!");
-								}
-
-								public void onSuccess(Void result) {
-									Window.alert("Kontakt erfolgreich von Kontaktliste entfernt");
-									dataProvider.getList().remove(index);
-									dataProvider.refresh();
-									
-								}
-
-							});
-					clGrid.clear();
-				}
-			});
+			
 			
 			
 		
 
-			RootPanel.get("content").add(buttonPanel);
-			buttonPanel.clear();
-			buttonPanel.add(shareContactListButton);
-			buttonPanel.add(sharePartOfClButton);
-			buttonPanel.add(deleteCLButton);
-			topPanel.add(new HTML("<h2> Kontaktliste " + clArray.get(row).getName() + ": </h2>"));
-			topPanel.add(contacttable);
+			//masterPanel.add(buttonPanel);
+//		buttonPanel.clear();
+//			buttonPanel.add(newContactListButton);
+		buttonPanel.add(shareContactListButton);
+//			//buttonPanel.add(sharePartOfClButton);
+		buttonPanel.add(deleteCLButton);
+			
+			//contentPanel.add(new HTML("<h2> Kontaktliste " + clArray.get(row).getName() + ": </h2>"));
+			contentPanel.add(contacttable);
 
 
 
-			contacttable.addColumn(prenameColumn, "Vorname");
-			contacttable.addColumn(surnameColumn, "Nachname");
-			contacttable.addColumn(visitbuttonColumn, "");
-			contacttable.addColumn(deletebuttonColumn, "");
+
 
 			// List<Contact> listcontacts = result;
 
@@ -353,193 +372,14 @@ public class ContactListForm2 extends Widget {
 
 			int setSize = set1.size();
 			sizeSt = Integer.toString(setSize);
-			topPanel.add(contacttable);
+			contentPanel.add(contacttable);
 
 		}
 		
-		private class MyDialog extends DialogBox {
 
-		    public MyDialog() {
-		      // Set the dialog box's caption.
-		      setText(globalContactArray.get(globalIndex).getPrename() + " " + globalContactArray.get(globalIndex).getSurname());
-
-		      // Enable animation.
-		      setAnimationEnabled(true);
-
-		      // Enable glass background.
-		      setGlassEnabled(true);
-		      
-		      Button ok = new Button("OK");
-		      ok.addClickHandler(new ClickHandler() {
-		        public void onClick(ClickEvent event) {
-		          MyDialog.this.hide();
-		        }
-		      });
-
-		      VerticalPanel v = new VerticalPanel();
-		      
-		      for(Map.Entry<Property, Value> entry : propertyValueMap.entrySet())
-		      {
-		    	  Label propertyLabel = new Label(entry.getKey().getName());
-		    	  Label valueLabel = new Label(entry.getValue().getName());
-		    	  HorizontalPanel h = new  HorizontalPanel();
-		    	  h.add(propertyLabel);
-		    	  h.add(new Label(": "));
-		    	  h.add(valueLabel);
-		    	  v.add(h);
-		    	  
-		      }
-		      if (propertyValueMap.size() == 0){
-		    	  v.add(new Label ("Keine Eigenschaften gespeichert"));
-		      }
-		      
-		      v.add(ok);
-		      setWidget(v);
-
-		    }
-		  }
 
 	}
 
-	private class sharePartofClClickhandler implements ClickHandler {
-
-		public void onClick(ClickEvent event) {
-			RootPanel.get("content").clear();
-			RootPanel.get("content").add(topPanel);
-			topPanel.clear();
-
-			TextColumn<Contact> prenameColumn = new TextColumn<Contact>() {
-				public String getValue(Contact contact) {
-					return contact.getPrename();
-				}
-			};
-			TextColumn<Contact> surnameColumn = new TextColumn<Contact>() {
-				public String getValue(Contact contact) {
-					return contact.getSurname();
-				}
-			};
-
-			topPanel.add(new HTML("<h2> Kontakte von Kontaktliste " + clArray.get(row).getName() + " auswählen </h2>"));
-			topPanel.add(contacttable2);
-
-			final MultiSelectionModel<Contact> selectionModel = new MultiSelectionModel<Contact>(Contact.KEY_PROVIDER);
-			contacttable2.setSelectionModel(selectionModel,
-					DefaultSelectionEventManager.<Contact>createCheckboxManager());
-			selectionModel.addSelectionChangeHandler(new Handler() {
-				@Override
-				public void onSelectionChange(SelectionChangeEvent event) {
-					set1 = selectionModel.getSelectedSet();
-
-				}
-			});
-
-			Column<Contact, Boolean> checkColumn = new Column<Contact, Boolean>(new CheckboxCell(false, false)) {
-				@Override
-				public Boolean getValue(Contact object) {
-					// Get the value from the selection model.
-					return selectionModel.isSelected(object);
-				}
-			};
-
-			contacttable2.addColumn(checkColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
-			contacttable2.setColumnWidth(checkColumn, 40, Unit.PX);
-
-			contacttable2.addColumn(prenameColumn, "Vorname");
-			contacttable2.addColumn(surnameColumn, "Nachname");
-
-			// List<Contact> listcontacts = result;
-
-			dataProvider.getList().clear();
-			dataProvider.getList().addAll(globalContactArray);
-			dataProvider.addDataDisplay(contacttable2);
-
-
-
-			userListbox2.setEnabled(true);
-
-			// multi auswahl freischalten in ListBox
-			userListbox2.ensureDebugId("cwListBox-multiBox");
-			userListbox2.setVisibleItemCount(7);
-			// Alle Kontaktlisten aus DB abrufen
-
-			// TODO nur KOntaktlisten des aktuellen Users abrufen!
-			ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>() {
-
-				@Override
-				public void onFailure(Throwable caught) {
-					Window.alert("Die User konnten nicht geladen werden");
-				}
-
-				@Override
-				// jede Kontaktliste wird der ListBox hinzugefügt
-				public void onSuccess(ArrayList<User> result) {
-					publicUserArray = result;
-					for (User u : result) {
-						userListbox2.addItem(u.getLogEmail());
-					}
-
-				}
-
-			});
-
-			topPanel.add(contacttable2);
-			topPanel.add(new HTML("<h2> User auswählen, mit denen die Kontaktliste geteilt werden soll </h2>"));
-
-			topPanel.add(userListbox2);
-
-			topPanel.add(shareSeletedContactsButton);
-
-			set1 = selectionModel.getSelectedSet();
-
-
-
-		}
-	};
-
-	private class shareSelectedContactsClickhandler implements ClickHandler {
-
-		public void onClick(ClickEvent event) {
-			//Window.alert(Integer.toString(set1.size()));
-
-			for (int i = 0; i < userListbox2.getItemCount(); i++) {
-				if (userListbox2.isItemSelected(i)) {
-					uArray.add(publicUserArray.get(i));
-				}
-			}
-			//cArray = (ArrayList<Contact>) set1;
-			for(Contact c : set1)
-			{
-				cArray.add(c);
-			}
-			
-			
-			try{
-			ClientSideSettings.getConnectedAdmin().giveContactPermissonToUsers(cArray, uArray, 1, new AsyncCallback<Void>() {
-
-				@Override
-				public void onFailure(Throwable caught) {
-					Window.alert("Ops, da ist etwas schief gelaufen!");
-				}
-
-				@Override
-				// jede Kontaktliste wird der ListBox hinzugefügt
-				public void onSuccess(Void result) {
-					Window.alert("Alle Kontakte erfolgreich geteilt!");
-					//Window.alert(Integer.toString(cArray.size()));
-					//Window.alert(Integer.toString(uArray.size()));
-					Window.Location.reload();
-				}
-
-			});}
-			catch (Exception e)
-			{
-				 Window.alert(e.toString());
-				  e.printStackTrace(); }
-
-		}
-		
-		//ContactListForm2 s12= new ContactListForm2();
-	};
 
 
 
@@ -549,10 +389,10 @@ public class ContactListForm2 extends Widget {
 
 			RootPanel.get("content").clear();
 			topPanel.clear();
-			buttonPanel.clear();
+			//buttonPanel.clear();
 			userListbox.clear();
 			RootPanel.get("content").add(topPanel);
-			RootPanel.get("content").add(buttonPanel);
+			//RootPanel.get("content").add(buttonPanel);
 
 			topPanel.add(new HTML("<h2> Teilen von " + clArray.get(row).getName()));
 			topPanel.add(userListbox);
@@ -637,7 +477,8 @@ public class ContactListForm2 extends Widget {
 						// hinzugefügt
 						public void onSuccess(Void result) {
 							Window.alert("Löschen von " + clArray.get(row).getName() + " war erfolgreich!");
-							Window.Location.reload();
+							RootPanel.get("content").clear();
+							ContactListForm2 neuLaden = new ContactListForm2();
 
 						}
 
@@ -646,5 +487,193 @@ public class ContactListForm2 extends Widget {
 		}
 	}
 	
+	private class MyDialog extends DialogBox {
+
+	    public MyDialog() {
+	      // Set the dialog box's caption.
+	      setText(globalContactArray.get(globalIndex).getPrename() + " " + globalContactArray.get(globalIndex).getSurname());
+
+	      // Enable animation.
+	      setAnimationEnabled(true);
+
+	      // Enable glass background.
+	      setGlassEnabled(true);
+	      
+	      Button ok = new Button("OK");
+	      ok.addClickHandler(new ClickHandler() {
+	        public void onClick(ClickEvent event) {
+	          MyDialog.this.hide();
+	        }
+	      });
+
+	      VerticalPanel v = new VerticalPanel();
+	      
+	      for(Map.Entry<Property, Value> entry : propertyValueMap.entrySet())
+	      {
+	    	  Label propertyLabel = new Label(entry.getKey().getName());
+	    	  Label valueLabel = new Label(entry.getValue().getName());
+	    	  HorizontalPanel h = new  HorizontalPanel();
+	    	  h.add(propertyLabel);
+	    	  h.add(new Label(": "));
+	    	  h.add(valueLabel);
+	    	  v.add(h);
+	    	  
+	      }
+	      if (propertyValueMap.size() == 0){
+	    	  v.add(new Label ("Keine Eigenschaften gespeichert"));
+	      }
+	      
+	      v.add(ok);
+	      setWidget(v);
+
+	    }
+	  }
+	
+	private class sharePartofClClickhandler implements ClickHandler {
+
+		public void onClick(ClickEvent event){
+			
+		}
+//		public void onClick(ClickEvent event) {
+//			RootPanel.get("content").clear();
+//			RootPanel.get("content").add(topPanel);
+//			topPanel.clear();
+//
+//			TextColumn<Contact> prenameColumn = new TextColumn<Contact>() {
+//				public String getValue(Contact contact) {
+//					return contact.getPrename();
+//				}
+//			};
+//			TextColumn<Contact> surnameColumn = new TextColumn<Contact>() {
+//				public String getValue(Contact contact) {
+//					return contact.getSurname();
+//				}
+//			};
+//
+//			topPanel.add(new HTML("<h2> Kontakte von Kontaktliste " + clArray.get(row).getName() + " auswählen </h2>"));
+//			topPanel.add(contacttable2);
+//
+//			final MultiSelectionModel<Contact> selectionModel = new MultiSelectionModel<Contact>(Contact.KEY_PROVIDER);
+//			contacttable2.setSelectionModel(selectionModel,
+//					DefaultSelectionEventManager.<Contact>createCheckboxManager());
+//			selectionModel.addSelectionChangeHandler(new Handler() {
+//				@Override
+//				public void onSelectionChange(SelectionChangeEvent event) {
+//					set1 = selectionModel.getSelectedSet();
+//
+//				}
+//			});
+//
+//			Column<Contact, Boolean> checkColumn = new Column<Contact, Boolean>(new CheckboxCell(false, false)) {
+//				@Override
+//				public Boolean getValue(Contact object) {
+//					// Get the value from the selection model.
+//					return selectionModel.isSelected(object);
+//				}
+//			};
+//
+//			contacttable2.addColumn(checkColumn, SafeHtmlUtils.fromSafeConstant("<br/>"));
+//			contacttable2.setColumnWidth(checkColumn, 40, Unit.PX);
+//
+//			contacttable2.addColumn(prenameColumn, "Vorname");
+//			contacttable2.addColumn(surnameColumn, "Nachname");
+//
+//			// List<Contact> listcontacts = result;
+//
+//			dataProvider.getList().clear();
+//			dataProvider.getList().addAll(globalContactArray);
+//			dataProvider.addDataDisplay(contacttable2);
+//
+//
+//
+//			userListbox2.setEnabled(true);
+//
+//			// multi auswahl freischalten in ListBox
+//			userListbox2.ensureDebugId("cwListBox-multiBox");
+//			userListbox2.setVisibleItemCount(7);
+//			// Alle Kontaktlisten aus DB abrufen
+//
+//			// TODO nur KOntaktlisten des aktuellen Users abrufen!
+//			ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>() {
+//
+//				@Override
+//				public void onFailure(Throwable caught) {
+//					Window.alert("Die User konnten nicht geladen werden");
+//				}
+//
+//				@Override
+//				// jede Kontaktliste wird der ListBox hinzugefügt
+//				public void onSuccess(ArrayList<User> result) {
+//					publicUserArray = result;
+//					for (User u : result) {
+//						userListbox2.addItem(u.getLogEmail());
+//					}
+//
+//				}
+//
+//			});
+//
+//			topPanel.add(contacttable2);
+//			topPanel.add(new HTML("<h2> User auswählen, mit denen die Kontaktliste geteilt werden soll </h2>"));
+//
+//			topPanel.add(userListbox2);
+//
+//			topPanel.add(shareSeletedContactsButton);
+//
+//			set1 = selectionModel.getSelectedSet();
+//
+//
+//
+//		}
+	};
+
+	private class shareSelectedContactsClickhandler implements ClickHandler {
+
+		
+public void onClick(ClickEvent event){
+			
+		}
+//		public void onClick(ClickEvent event) {
+//			//Window.alert(Integer.toString(set1.size()));
+//
+//			for (int i = 0; i < userListbox2.getItemCount(); i++) {
+//				if (userListbox2.isItemSelected(i)) {
+//					uArray.add(publicUserArray.get(i));
+//				}
+//			}
+//			//cArray = (ArrayList<Contact>) set1;
+//			for(Contact c : set1)
+//			{
+//				cArray.add(c);
+//			}
+//			
+//			
+//			try{
+//			ClientSideSettings.getConnectedAdmin().giveContactPermissonToUsers(cArray, uArray, 1, new AsyncCallback<Void>() {
+//
+//				@Override
+//				public void onFailure(Throwable caught) {
+//					Window.alert("Ops, da ist etwas schief gelaufen!");
+//				}
+//
+//				@Override
+//				// jede Kontaktliste wird der ListBox hinzugefügt
+//				public void onSuccess(Void result) {
+//					Window.alert("Alle Kontakte erfolgreich geteilt!");
+//					//Window.alert(Integer.toString(cArray.size()));
+//					//Window.alert(Integer.toString(uArray.size()));
+//					Window.Location.reload();
+//				}
+//
+//			});}
+//			catch (Exception e)
+//			{
+//				 Window.alert(e.toString());
+//				  e.printStackTrace(); }
+//
+//		}
+//		
+		//ContactListForm2 s12= new ContactListForm2();
+	};
 
 };
