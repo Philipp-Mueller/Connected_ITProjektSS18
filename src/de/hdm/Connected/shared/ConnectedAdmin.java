@@ -289,10 +289,6 @@ public interface ConnectedAdmin extends RemoteService {
 
 	ArrayList<Permission> getAllPermissions() throws IllegalArgumentException;
 
-	ArrayList<Permission> getPermissionsByContactId(int contactID) throws IllegalArgumentException;
-
-	ArrayList<Permission> getPermissionsByContactListId(int contactListID) throws IllegalArgumentException;
-
 	ArrayList<Permission> getPermissionsByRecieveUserId(int recieveUId) throws IllegalArgumentException;
 
 	ArrayList<Permission> getPermissionsByShareUserId(int shareUId) throws IllegalArgumentException;
@@ -328,5 +324,9 @@ public interface ConnectedAdmin extends RemoteService {
 	User findUserById(int userId) throws IllegalArgumentException;
 
 	User findUserByEmail(String email) throws IllegalArgumentException;
+
+	boolean hasPermission(int shareObjectId, int receiverUserId) throws IllegalArgumentException;
+	
+	ArrayList<Contact> getContactsByUserPermission(int userId) throws IllegalArgumentException;
 
 }

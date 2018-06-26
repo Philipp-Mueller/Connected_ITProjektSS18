@@ -287,7 +287,7 @@ public class ContactSharing extends Widget {
 	      v.add(new HTML("Dieser Kontakt wurde schon anderen User geteilt, wollen Sie diese neu erstellte Eigenschaft direkt an einen dieser User teilen?"));
 	      
 	      
-	      ClientSideSettings.getConnectedAdmin().getPermissionsByContactId(contact.getBoId(), new AsyncCallback<ArrayList<Permission>>(){
+	      ClientSideSettings.getConnectedAdmin().getPermissionsBySharedOject(contact.getBoId(), new AsyncCallback<ArrayList<Permission>>(){
 
 			@Override
 			public void onFailure(Throwable caught) {

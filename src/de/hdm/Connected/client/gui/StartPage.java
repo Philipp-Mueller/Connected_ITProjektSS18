@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.ClickableTextCell;
@@ -36,6 +37,7 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -73,7 +75,7 @@ public class StartPage extends Widget {
 	private ArrayList<ContactList> allCLs = new ArrayList<ContactList>();
 	private ArrayList<ContactList> selectedCLs = new ArrayList<ContactList>();
 	private Map<Property, Value> propertyValueMap = null;
-	private Button selectedButton = new Button("Was ist den ausgewählt, hmm?!");
+	private Button selectedButton = new Button("Alle Kontakte auswählen");
 	private Button shareSelectedContacts = new Button("Ausgewählte Kontakte teilen");
 	private Button addContactstoCL = new Button("Kontakte einer Kontaktliste hinzufügen");
 	private final ListBox userListbox = new ListBox(true);
@@ -86,17 +88,19 @@ public class StartPage extends Widget {
 
 	public StartPage() {
 		overview.setWidth("1000px");
-		
 		// Create a Pager to control the table.
 		SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
 		pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
 		pager.setDisplay(overview);
-		
 		HorizontalPanel buttonPanel = new HorizontalPanel();
+		VerticalPanel cellTablePanel = new VerticalPanel();
 		buttonPanel.setSpacing(20);
+		buttonPanel.setWidth("1000px");
+		buttonPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);		
 		
+				
 		
-		ClientSideSettings.getConnectedAdmin().findAllContacts(new AsyncCallback<ArrayList<Contact>>() {
+		ClientSideSettings.getConnectedAdmin().getContactsByUserPermission(2, new AsyncCallback<ArrayList<Contact>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -107,6 +111,9 @@ public class StartPage extends Widget {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onSuccess(ArrayList<Contact> result) {
+				
+							
+				
 				for (Contact c : result) {
 					allContacts.add(c);
 
@@ -184,7 +191,11 @@ public class StartPage extends Widget {
 
 					@Override
 					public void onClick(ClickEvent event) {
-
+						if(selectedButton.getText() == "Alle Kontakte auswählen"){
+							selectedButton.setText("Auswahl aufheben");
+						} else if(selectedButton.getText() == "Auswahl aufheben"){
+							selectedButton.setText("Alle Kontakte auswählen");}
+						
 						for (Contact c : allContacts) {
 							if (!selectionModel.isSelected(c)) {
 								selectionModel.setSelected(c, true);
@@ -243,14 +254,20 @@ public class StartPage extends Widget {
 
 		});
 		RootPanel.get("content").add(buttonPanel);
-		buttonPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);		
-		buttonPanel.add(selectedButton);		
+
+		
+	
+		buttonPanel.add(selectedButton);
 		buttonPanel.add(shareSelectedContacts);
 		buttonPanel.add(addContactstoCL);
-		
-		RootPanel.get("content").add(overview);
-		RootPanel.get("content").add(pager);
 	
+		RootPanel.get("content").add(cellTablePanel);
+		cellTablePanel.add(overview);
+		cellTablePanel.add(pager);
+		cellTablePanel.setCellHorizontalAlignment(pager,HasHorizontalAlignment.ALIGN_CENTER);
+		
+		//RootPanel.get("content").add(pager);
+			
 	}
 
 	private class MyDialog extends DialogBox {
@@ -321,6 +338,25 @@ public class StartPage extends Widget {
 
 			userListbox.ensureDebugId("cwListBox-multiBox");
 			userListbox.setVisibleItemCount(7);
+			
+			ClientSideSettings.getConnectedAdmin().findAllContactlists(new AsyncCallback<ArrayList<ContactList>>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					Window.alert("Die Cls konnten nicht geladen werden");
+				}
+
+				@Override
+				// jede Kontaktliste wird der ListBox hinzugefügt
+				public void onSuccess(ArrayList<ContactList> result) {
+					allCLs = result;
+					for (ContactList cl : result) {
+						contactlistListbox.addItem(cl.getName());
+					}
+
+				}
+
+			});
 
 			ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>() {
 
@@ -419,24 +455,7 @@ public class StartPage extends Widget {
 			contactlistListbox.ensureDebugId("cwListBox-multiBox");
 			contactlistListbox.setVisibleItemCount(7);
 
-			ClientSideSettings.getConnectedAdmin().findAllContactlists(new AsyncCallback<ArrayList<ContactList>>() {
-
-				@Override
-				public void onFailure(Throwable caught) {
-					Window.alert("Die Cls konnten nicht geladen werden");
-				}
-
-				@Override
-				// jede Kontaktliste wird der ListBox hinzugefügt
-				public void onSuccess(ArrayList<ContactList> result) {
-					allCLs = result;
-					for (ContactList cl : result) {
-						contactlistListbox.addItem(cl.getName());
-					}
-
-				}
-
-			});
+		
 
 			buttonPanel.add(ok);
 			buttonPanel.add(zurück);

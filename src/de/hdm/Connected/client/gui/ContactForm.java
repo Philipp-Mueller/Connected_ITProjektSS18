@@ -169,7 +169,9 @@ public class ContactForm extends Widget {
 				if (addButton != null) {
 					java.sql.Timestamp creationTime = new Timestamp(System.currentTimeMillis());
 					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
-							creationTime, creationTime, 1, new AsyncCallback<Contact>() {
+							creationTime, creationTime, 2, new AsyncCallback<Contact>() {
+						ArrayList<Contact> contacts= new ArrayList<Contact>();
+						
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -179,8 +181,11 @@ public class ContactForm extends Widget {
 
 								@Override
 								public void onSuccess(Contact result) {
-									ArrayList<Contact> contacts= new ArrayList<Contact>();
 									contacts.add(result);
+									ArrayList<Integer> contactId = new ArrayList<Integer>(); 
+									ArrayList<Integer> userId = new ArrayList<Integer>();
+									contactId.add(result.getBoId());
+									userId.add(2);
 									
 									if (checkContactlist.getValue()) {
 										for (int i = 0; i < contactlist.getItemCount(); i++) {
@@ -191,35 +196,54 @@ public class ContactForm extends Widget {
 													}
 												}
 											}
-											}							
+											}	
+										ClientSideSettings.getConnectedAdmin().createPermission(2, contactId, userId, new AsyncCallback<Void>(){
+											
+											@Override
+											public void onFailure(Throwable caught) {
+												// TODO Auto-generated method stub
 												
-												ClientSideSettings.getConnectedAdmin().addContactsToContactList( contacts,
-														contactListToAdd,
-														new AsyncCallback<Void>() {
-
-															@Override
-															public void onFailure(Throwable caught) {
-																Window.alert(
-																		"Kontakt konnte Kontaktliste nicht hinzugefügt werden");
-															}
-
-															@Override
-															public void onSuccess(Void result) {
-																Window.alert(
-																		"Kontakt wurde angelegt und den Kontaktlisten hinzugefügt!");
-																Window.alert(Integer.toString(contactListToAdd.size()));
-																Window.Location.reload();
-
-															}
-
-														});
 											}
+
+											@Override
+											public void onSuccess(Void result) {
+																Window.alert("Kontakt Kontaktliste  hinzugefügt");		
+														
+														}
+												
+											
+											
+										});
+									}
+										
+										ClientSideSettings.getConnectedAdmin().addContactsToContactList( contacts,
+												contactListToAdd,
+												new AsyncCallback<Void>() {
+
+													@Override
+													public void onFailure(Throwable caught) {
+														Window.alert(
+																"Kontakt konnte Kontaktliste nicht hinzugefügt werden");
+													}
+
+													@Override
+													public void onSuccess(Void result) {
+														Window.alert(
+																"Kontakt wurde angelegt und den Kontaktlisten hinzugefügt!");
+														Window.alert(Integer.toString(contactListToAdd.size()));
+														Window.Location.reload();
+
+													}
+
+												});
+						
+								
 
 										
 
-									}
+									
 
-								
+								}
 
 							});
 				}
@@ -595,7 +619,7 @@ public class ContactForm extends Widget {
 						}
 					}
 				}
-				ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId, selectedContact.getBoId(), 1, new AsyncCallback<Value>(){
+				ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId, selectedContact.getBoId(), 2, new AsyncCallback<Value>(){
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -626,7 +650,7 @@ public class ContactForm extends Widget {
 				java.sql.Timestamp creationTime = new Timestamp(System.currentTimeMillis());
 				ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
 						creationTime, creationTime, 1, new AsyncCallback<Contact>() {
-
+							
 							@Override
 							public void onFailure(Throwable caught) {
 								// TODO Auto-generated method stub
@@ -635,30 +659,47 @@ public class ContactForm extends Widget {
 
 							@Override
 							public void onSuccess(Contact result) {
-								Label prenameLabel = new Label(result.getPrename());
-								Label surnameLabel = new Label(result.getSurname());
-								nameTable.setWidget(0, 1, prenameLabel);
-								nameTable.setWidget(1, 1, surnameLabel);
-
 								createdContact = result;
-								Window.alert("Hier bin ich");
-								addButton.removeFromParent();
+								ArrayList<Integer> contactId = new ArrayList<Integer>(); 
+								ArrayList<Integer> userId = new ArrayList<Integer>();
+								contactId.add(result.getBoId());
+								userId.add(2);
+								ClientSideSettings.getConnectedAdmin().createPermission(2, contactId, userId, new AsyncCallback<Void>(){
 
-								addButton = null;
+									@Override
+									public void onFailure(Throwable caught) {
+										// TODO Auto-generated method stub
+										
+									}
 
-								ClientSideSettings.getConnectedAdmin()
-										.findAllProperties(new findAllPropertiesCallback());
+									@Override
+									public void onSuccess(Void result) {
+										Label prenameLabel = new Label(createdContact.getPrename());
+										Label surnameLabel = new Label(createdContact.getSurname());
+										nameTable.setWidget(0, 1, prenameLabel);
+										nameTable.setWidget(1, 1, surnameLabel);
 
-								int rowCount = propertyTable.getRowCount();
-								newPropertyBtn = new Button("+");
-								newPropertyBtn.addClickHandler(new addNewPropertyClickHandler());
-								valueTextBox = new TextBox();
-								
-								
-								propertyTable.setWidget(rowCount , 0, new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
-								
-								propertyTable.setWidget(rowCount+1, 1, valueTextBox);
-								propertyTable.setWidget(rowCount+1, 2, newPropertyBtn);
+										//createdContact = created;
+										//Window.alert("Hier bin ich");
+										addButton.removeFromParent();
+
+										addButton = null;
+
+										ClientSideSettings.getConnectedAdmin()
+												.findAllProperties(new findAllPropertiesCallback());
+
+										int rowCount = propertyTable.getRowCount();
+										newPropertyBtn = new Button("+");
+										newPropertyBtn.addClickHandler(new addNewPropertyClickHandler());
+										valueTextBox = new TextBox();
+										
+										
+										propertyTable.setWidget(rowCount , 0, new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
+										
+										propertyTable.setWidget(rowCount+1, 1, valueTextBox);
+										propertyTable.setWidget(rowCount+1, 2, newPropertyBtn);									}
+									
+								});								
 							}
 						});
 			} else {
@@ -669,12 +710,14 @@ public class ContactForm extends Widget {
 				for (Property p : propertyArray) {
 					if ((propertyListBox.getSelectedItemText()).equals(p.getName())) {
 						propertyId = p.getBoId();
+						if(p.getName().equals("Geburtsdatum")){
 						propertyListBox.removeItem(propertyListBox.getSelectedIndex());
+						}
 					}
 				}
 
 				ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId,
-						createdContact.getBoId(), 1, new createValueCallback());
+						createdContact.getBoId(), 2, new createValueCallback());
 			}
 			}
 		}
