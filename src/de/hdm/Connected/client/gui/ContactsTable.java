@@ -10,17 +10,26 @@ import java.util.Set;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dev.shell.Icons;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
 import com.google.gwt.text.shared.SafeHtmlRenderer;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -43,13 +52,28 @@ public class ContactsTable extends CellTable {
 	ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
 	
 	List<Contact> contacts = new ArrayList<Contact>();
-	
+	SimplePager pager;
+	String imageHtml = "<img src=" + "/Trash_Can.png" + " alt=" + "Kontakt löschen" + ">";
 	public ContactsTable() {
-		
-		dataProvider.addDataDisplay(cellTable);
+		// Create a Pager to control the table.
+				SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
+				pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
+				pager.setDisplay(cellTable);		
 		
 		cellTable.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 		
+		ClientSideSettings.getConnectedAdmin().getContactsByUserPermission(2,new AsyncCallback<ArrayList<Contact>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Contact> result) {
+				contacts = result;
+	
 		TextColumn<Contact> prenameColumn = new TextColumn<Contact>() {
 
 			@Override
@@ -90,10 +114,21 @@ public class ContactsTable extends CellTable {
 		
 		cellTable.addColumn(updateColumn);
 		
-		ButtonCell deleteButton = new ButtonCell();
-		Column<Contact,String> deleteColumn = new Column<Contact,String> (updateButton) {
+		ButtonCell deleteButton = new ButtonCell(){
+			 @SuppressWarnings("unused")
+			public void render(Context context, Contact data, SafeHtmlBuilder sb) {
+		          //  if (data != null) {
+		                //ImageResource icon = Trash_Can.png
+		                //SafeHtml html = SafeHtmlUtils.fromTrustedString(AbstractImagePrototype.create(icon).getHTML());
+		            	 sb.appendHtmlConstant(imageHtml);
+		                
+		             
+		           // }
+			 }
+		};
+		Column<Contact,String> deleteColumn = new Column<Contact,String> (deleteButton) {
 			  public String getValue(Contact object) {
-			    return "löschen";
+			    return "";
 			  }
 			};
 			
@@ -106,7 +141,11 @@ public class ContactsTable extends CellTable {
 			}		
 		});
 		
+		
 		cellTable.addColumn(deleteColumn);
+		dataProvider.getList().clear();
+		dataProvider.addDataDisplay(cellTable);
+		
 		
 		final SingleSelectionModel<Contact> selectionModel = new SingleSelectionModel<Contact>();
 		cellTable.setSelectionModel(selectionModel);
@@ -187,6 +226,14 @@ public class ContactsTable extends CellTable {
 		
 		
 		RootPanel.get("content").add(cellTable);
+		RootPanel.get("content").add(pager);
+		RootPanel.get("content").add(new HTML("<img src=" + "/Trash_Can.png" + " alt=" + "Kontakt löschen" + ">"));
+		//cellTablePanel.setCellHorizontalAlignment(pager,HasHorizontalAlignment.ALIGN_CENTER);
 
 	}
+
+				
+	});
+
+}
 }
