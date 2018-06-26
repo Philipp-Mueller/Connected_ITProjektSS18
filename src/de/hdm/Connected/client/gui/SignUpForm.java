@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.client.Connected_ITProjektSS18;
-import de.hdm.Connected.client.Connected_ITProjektSS18ReportGenerator;
+import de.hdm.Connected.client.ReportGenerator.Connected_ITProjektSS18ReportGenerator;
 import de.hdm.Connected.shared.bo.User;
 
 
