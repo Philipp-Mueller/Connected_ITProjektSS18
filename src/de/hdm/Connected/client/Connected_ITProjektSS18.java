@@ -270,7 +270,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 					@Override
 					public void onSuccess(Contact result) {
 						RootPanel.get("content").clear();
-						ContactSharing newContactSharing = new ContactSharing(result);
+						//ContactSharing newContactSharing = new ContactSharing(result);
 						//Test_CellTable newform = new Test_CellTable(); 
 					}
 					
@@ -284,7 +284,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		RootPanel.get("content").add(newContactButton);
 		RootPanel.get("content").add(myContactListsButton);
 		RootPanel.get("content").add(editContactButton);
-		RootPanel.get("content").add(shareContactButton);
+		//RootPanel.get("content").add(shareContactButton);
 		RootPanel.get("content").add(overviewPageButton);
 		HorizontalPanel footer = new HorizontalPanel();
 		Anchor startPage = new Anchor ("Startseite", "Connected_ITProjektSS18.html");
