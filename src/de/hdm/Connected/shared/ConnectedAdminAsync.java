@@ -93,10 +93,6 @@ public interface ConnectedAdminAsync {
 
 	void getAllPermissions(AsyncCallback<ArrayList<Permission>> callback);
 
-	void getPermissionsByContactId(int contactID, AsyncCallback<ArrayList<Permission>> callback);
-
-	void getPermissionsByContactListId(int contactListID, AsyncCallback<ArrayList<Permission>> callback);
-
 	void getPermissionsByRecieveUserId(int recieveUId, AsyncCallback<ArrayList<Permission>> callback);
 
 	void getPermissionsByShareUserId(int shareUId, AsyncCallback<ArrayList<Permission>> callback);
@@ -122,5 +118,9 @@ public interface ConnectedAdminAsync {
 	void findUserById(int userId, AsyncCallback<User> callback);
 
 	void findUserByEmail(String email, AsyncCallback<User> callback);
+	
+	void hasPermission(int shareObjectId, int receiverUserId, AsyncCallback<Boolean> callback);
+	
+	void getContactsByUserPermission(int userId, AsyncCallback<ArrayList<Contact>> callback);
 	
 }

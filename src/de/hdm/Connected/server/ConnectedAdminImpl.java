@@ -114,22 +114,34 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return this.permissionMapper.findAll();
 	} 
 	
-	// Gibt alle PermissionObjekte für einen bestimmten Kontakt zurück
-	@Override
-	public ArrayList<Permission> getPermissionsByContactId(int contactID) throws IllegalArgumentException {
-		return this.permissionMapper.findByContactId(contactID);
-	}
-	
-	// Gibt alle Permission-Objekte für eine Contaktliste zurück
-	@Override
-	public ArrayList<Permission> getPermissionsByContactListId(int contactListID) throws IllegalArgumentException {
-		return this.permissionMapper.findByContactId(contactListID);
-	}
-	
 	// Gibt alle Permission-Objekte für einen User (Empfänger) zurück
 	@Override
 	public ArrayList<Permission> getPermissionsByRecieveUserId(int recieveUId) throws IllegalArgumentException {
 		return this.permissionMapper.findByContactId(recieveUId);
+	}
+	
+	//Gibt Permissions für User auf Kontakt-Objekte zurück
+	
+	public ArrayList<Contact> getContactsByUserPermission(int userId) throws IllegalArgumentException {
+		ArrayList<Contact> allContacts = new ArrayList<Contact>();
+		
+		
+		
+		for(int i=0; i<contactMapper.findAll().size(); i++){
+			if(hasPermission(contactMapper.findAll().get(i).getBoId(), userId)){
+				allContacts.add(contactMapper.findAll().get(i));
+			}
+		}
+		
+		return allContacts;
+		
+	}
+	
+	public boolean hasPermission(int shareObjectId, int receiverUserId) throws IllegalArgumentException{
+		if(permissionMapper.hasPermission(shareObjectId, receiverUserId)) {
+			return true;
+		}
+		return false;
 	}
 	
 	// Gibt alle Permission-Objekte für einen User (Teilender) zurück
@@ -174,6 +186,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		autoPermission.setReceiverUserID(ownerId);
 		autoPermission.setSharedObjectId(contact.getBoId());
 		autoPermission.setShareUserID(ownerId);
+		this.permissionMapper.insert(autoPermission);
 	
 		return this.contactMapper.insert(contact);
 		
