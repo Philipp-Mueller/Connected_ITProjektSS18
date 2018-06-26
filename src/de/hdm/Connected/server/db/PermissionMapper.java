@@ -458,6 +458,79 @@ public class PermissionMapper {
 		
 	}
 	
+	public Permission findBySharedObjectIdAndReceiverId (int sharedObjectId, int receiverUserId) {
+		// DB-Verbindung holen
+		Connection con = DBConnection.connection();
+		Permission permission = null;
+		
+		try {
+			// Leeres SQL-Statement (JDBC) anlegen
+			Statement stmt = con.createStatement();
+
+			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der ShareUserId in der Datenbank
+			ResultSet rs = stmt.executeQuery("SELECT id, sharedObjectID, receiverUserID, shareUserID FROM permission " + "WHERE sharedObjectID=" + sharedObjectId + " AND receiverUserID=" + receiverUserId);
+			/**
+			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
+			 * Tabelle permission vorhanden ist, muss das Abfragen des ResultSet so
+			 * oft erfolgen (while-Schleife), bis alle Tupel durchlaufen wurden.
+			 * Die DB-Tupel werden in Java-Objekte transformiert und
+			 * anschliessend der ArrayList hinzugefügt.
+			 */
+			if(rs.next()){
+				permission = new Permission();
+				permission.setBoId(rs.getInt("id"));
+				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
+				permission.setReceiverUserID(rs.getInt("receiverUserID"));
+				permission.setShareUserID(rs.getInt("shareUserID"));
+				
+			}
+			/**
+			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
+			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen dazu
+			 * ausgegeben, was passiert ist und wo im Code es passiert ist.
+			 */	
+		}catch (SQLException e) {
+			e.printStackTrace();
+	}
+		// Rückgabe der ArrayList
+		return permission;
+		
+}
+
+	public boolean hasPermission (int sharedObjectId, int receiverUserId) {
+		// DB-Verbindung holen
+		Connection con = DBConnection.connection();
+		boolean permission = false;
+		
+		try {
+			// Leeres SQL-Statement (JDBC) anlegen
+			Statement stmt = con.createStatement();
+
+			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der ShareUserId in der Datenbank
+			ResultSet rs = stmt.executeQuery("SELECT id, sharedObjectID, receiverUserID, shareUserID FROM permission " + "WHERE sharedObjectID=" + sharedObjectId + " AND receiverUserID=" + receiverUserId);
+			/**
+			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
+			 * Tabelle permission vorhanden ist, muss das Abfragen des ResultSet so
+			 * oft erfolgen (while-Schleife), bis alle Tupel durchlaufen wurden.
+			 * Die DB-Tupel werden in Java-Objekte transformiert und
+			 * anschliessend der ArrayList hinzugefügt.
+			 */
+			if(rs.next()){
+				permission = true;				
+			}
+			/**
+			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
+			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen dazu
+			 * ausgegeben, was passiert ist und wo im Code es passiert ist.
+			 */	
+		}catch (SQLException e) {
+			e.printStackTrace();
+	}
+		// Rückgabe der ArrayList
+		return permission;
+		
+}
+	
 	/**
 	 * Suchen eines Permission-Objekts anhand der übergebenen RecieveUserId in der Datenbank.
 	 * 
