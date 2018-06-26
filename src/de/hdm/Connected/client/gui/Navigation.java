@@ -28,58 +28,66 @@ public class Navigation extends VerticalPanel {
 		
 		//CellTree contactListsTree = new CellTree (contactListsTreeModel, null);
 		
-		Button myContacts = new Button ("Meine Kontakte");
-		//myContacts.addStyleName("");
+		Button BNewContact = new Button ("Neuen Kontakt anlegen");
+		// BNewContact.addStyleName("");
 		
-		myContacts.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				//Kontakte
-			}
-		});
-		
-		Button myContactlists = new Button ("Meine Kontaktlisten");
-		//myContactlists.addStyleName("");
-		
-		myContactlists.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				//Kontaktlisten
-			}
-		});
-		
-		Button sharedContacts = new Button ("Kontakte");
-		//sharedContactlists.addStyleName("");
-		
-		sharedContacts.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				//Kontakte
-			}
-		});
-		
-		Button sharedContactlists = new Button ("Kontaktlisten");
-		//sharedContactlists.addStyleName("");
-		
-		myContacts.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				//Kontaktlisten
-			}
-		});
-		
-		DisclosurePanel shared = new DisclosurePanel("Geteilt");
-		
-		VerticalPanel sharedPanel = new VerticalPanel();
-		sharedPanel.add(sharedContacts);
-		sharedPanel.add(sharedContactlists);
-		
-		shared.setContent(sharedPanel);
-	    	
-		this.add(myContacts);
-		this.add(myContactlists);
-		this.add(shared);
+		BNewContact.addClickHandler(new ClickHandler() {
 
+			@Override
+			public void onClick(ClickEvent event) {
+				ContactForm addContactForm = new ContactForm();
+			
+			}
+		});
+		
+		Button BNewContactList = new Button ("Neue Kontaktliste anlegen");
+		// BNewContactList.addStyleName("");
+		
+		BNewContactList.addClickHandler(new ClickHandler() {
+		// BNewContactList.addStyleName("");
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				ContactListForm addContactListForm = new ContactListForm();
+			}
+		});
+		
+		Button BMyContacts = new Button ("Meine Kontakte");
+		// BMyContacts.addStyleName("");
+		
+		BMyContacts.addClickHandler(new ClickHandler() {
+		// BMyContacts.addStyleName("");
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				//Kontakt-Tabelle;
+			
+			}
+		});
+
+		//CellTree?
+		DisclosurePanel myContactLists = new DisclosurePanel("Meine Kontaktlisten");
+			//myContactLists.setContent(contactListsTree);
+	    
+	    Button BSharedContacts = new Button ("Geteilte Kontakte");
+		// BSharedContacts.addStyleName("");
+		
+		BSharedContacts.addClickHandler(new ClickHandler() {
+		// BSharedContacts.addStyleName("");
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				//geteilte Kontakte 
+			}
+		});
+
+			
+		this.add(BNewContact);
+		this.add(BNewContactList);
+		this.add(BMyContacts);
+		this.add(myContactLists);
+		this.add(BSharedContacts);
+		
 			
 	}		
 }
