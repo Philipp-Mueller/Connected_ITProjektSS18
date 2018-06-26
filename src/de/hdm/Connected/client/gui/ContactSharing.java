@@ -53,7 +53,7 @@ public class ContactSharing extends Widget {
 	//Map<Property, Value> propertyValueMap = new HashMap<Property, Value>();
 	
 	
-	public ContactSharing(final Contact sharingContact){
+	public ContactSharing(final Contact sharingContact, ArrayList<User> usersToShare){
 		
 		RootPanel.get("content").add(new HTML("<h3> Kontakt <i>" + sharingContact.getPrename() + " " + sharingContact.getSurname() + "</i> teilen</h3><br />" ));
 		
