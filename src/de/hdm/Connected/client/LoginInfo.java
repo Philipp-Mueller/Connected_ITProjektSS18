@@ -2,6 +2,14 @@ package de.hdm.Connected.client;
 
 import java.io.Serializable;
 
+/**
+ * Login RPC service aus dem GWT Tutorial.
+ * LoginInfo object which contains the login info from the User Service
+ * 
+ * @author Burak
+ *
+ */
+
 public class LoginInfo implements Serializable {
 
   private static final long serialVersionUID = 1L;
