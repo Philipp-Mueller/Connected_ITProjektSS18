@@ -207,6 +207,11 @@ item. gwt-DisclosurePanel-open .content {
   color: red;
 }
 
+#content .iconButton{
+	width: 30px;
+	
+}
+
 #closeButton {
   margin: 15px 6px 6px;
 }
@@ -241,4 +246,12 @@ table {
 	min-height: 100%;
 	max-width: 1280px;
 	margin-left: 10px;
+}
+
+.gwt-PopupPanel .popupContent .button {
+	border: none;
+    background: #009999;
+    color: #fff;
+    padding: 5px 10px;
+    cursor: pointer;
 }
