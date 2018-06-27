@@ -17,7 +17,7 @@ import de.hdm.Connected.shared.ConnectedAdmin;;
 /**
  * Diese Klasse generiert die Begrüßungsseite
  * 
- *
+ * @author Burak
  */
 public class Welcome extends VerticalPanel {
 
@@ -27,9 +27,8 @@ public class Welcome extends VerticalPanel {
 	private static Logger rootLogger = Logger.getLogger("");
 
 	User currentUser = new User();
-	//Settings settings = new Settings();
 	Label lblWelcome = new Label();
-	String firstName = "";
+	String Name = "";
 	int userId;
 
 	/**
@@ -45,29 +44,11 @@ public class Welcome extends VerticalPanel {
 		this.setStyleName("vpLeft");
 		this.setWidth("600px");
 
-		//firstName = Homepage.currentUser.getFirstName();
-
-
-//		connectedAdmin.findUserByMail(Homepage.currentUser.getLogEmail(), new AsyncCallback<User>() {
-//
-//			@Override
-//			public void onFailure(Throwable caught) {
-//				// TODO Auto-generated method stub
-//
-//			}
-//
-//			@Override
-//			public void onSuccess(User result) {
-//				// TODO Auto-generated method stub
-//				rootLogger.log(Level.SEVERE, "result: " + result.getFirstName());
-//
-//				firstName = result.getFirstName();
-//
-//			}
-//		});
-
-
-		lblWelcome.setText("Herzlich Willkommen, " + firstName + "!");
+		currentUser = Connected_ITProjektSS18.currentUser;
+		Name = currentUser.getName();
+		
+		rootLogger.log(Level.SEVERE, "result: " + Name);
+		lblWelcome.setText("Herzlich Willkommen, " + Name + "!");
 		lblWelcome.setStyleName("lblWelcome");
 
 		vDialog.setSpacing(10);

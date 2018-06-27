@@ -10,6 +10,11 @@ import de.hdm.Connected.client.LoginInfo;
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.client.Connected_ITProjektSS18;
 
+/**
+ * 
+ * @author Burak
+ *
+ */
 public class Usermenu extends MenuBar {
 
 	MenuBar menu = new MenuBar();

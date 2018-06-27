@@ -90,7 +90,8 @@ public class UserMapper {
 			 * Datenbank.
 			 */
 
-			stmt.executeUpdate("INSERT INTO user (id, logEmail) VALUES " + "(" + user.getBoId() + ", '"
+			stmt.executeUpdate("INSERT INTO user (id, name, logEmail) VALUES (" + user.getBoId() + ", '"
+					+ user.getName() + "', '"
 					+ user.getLogEmail() + "')");
 
 			/**
@@ -121,7 +122,7 @@ public class UserMapper {
 			 * SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in
 			 * der Datenbank.
 			 */
-			stmt.executeUpdate("UPDATE user SET logEmail='" + user.getLogEmail() + "' WHERE id= " + user.getBoId());
+			stmt.executeUpdate("UPDATE user SET logEmail='" + user.getLogEmail() + "', name='"+ user.getName() +"' WHERE id= " + user.getBoId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -177,7 +178,7 @@ public class UserMapper {
 			 * SQL-Anweisung zum Finden des übergebenen Datensatzes, anhand der
 			 * Id, in der Datenbank.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, logEmail FROM user WHERE id=" + id);
+			ResultSet rs = stmt.executeQuery("SELECT id, name, logEmail FROM user WHERE id=" + id);
 			/**
 			 * Zu einem eindeutigen Wert exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurückgegeben werden.
@@ -188,6 +189,7 @@ public class UserMapper {
 				User user = new User();
 				user.setBoId(rs.getInt("id"));
 				user.setLogEmail(rs.getString("logEmail"));
+				user.setName(rs.getString("name"));
 				return user;
 			}
 			/**
@@ -217,7 +219,7 @@ public class UserMapper {
 			 * SQL-Anweisung zum Finden aller Datensätze, anhand der eMail, in
 			 * der Datenbank.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, logEmail FROM user WHERE logEmail LIKE '" + logEmail + "'");
+			ResultSet rs = stmt.executeQuery("SELECT id, name, logEmail FROM user WHERE logEmail LIKE '" + logEmail + "'");
 			/**
 			 * Zu einem eindeutigen Wert exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurückgegeben werden.
@@ -228,6 +230,7 @@ public class UserMapper {
 				User user = new User();
 				user.setBoId(rs.getInt("id"));
 				user.setLogEmail(rs.getString("logEmail"));
+				user.setName(rs.getString("name"));
 				return user;
 			}
 			/**
@@ -256,7 +259,7 @@ public class UserMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze in der Datenbank, sortiert nach
 			 * der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, logEmail from user ORDER BY id");
+			ResultSet rs = stmt.executeQuery("SELECT id, name, logEmail from user ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle contact
 			 * vorhanden ist, muss das Abfragen des ResultSet so oft erfolgen
@@ -268,6 +271,7 @@ public class UserMapper {
 				User u = new User();
 				u.setBoId(rs.getInt("id"));
 				u.setLogEmail(rs.getString("logEmail"));
+				u.setName(rs.getString("name"));
 				result.add(u);
 			}
 			/**

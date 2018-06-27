@@ -10,6 +10,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import de.hdm.Connected.server.db.ContactListMapper;
 import de.hdm.Connected.server.db.ContactMapper;
+import de.hdm.Connected.client.LoginInfo;
 import de.hdm.Connected.server.db.ContactContactListMapper;
 import de.hdm.Connected.server.db.PermissionMapper;
 import de.hdm.Connected.server.db.PropertyMapper;
@@ -396,9 +397,10 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 	// *** User ***
 	@Override
-	public User createUser(String email) throws IllegalArgumentException {
+	public User createUser(LoginInfo info) throws IllegalArgumentException {
 		User user = new User();
-		user.setLogEmail(email);
+		user.setLogEmail(info.getEmailAddress());
+		user.setName(info.getNickname());
 
 		return this.userMapper.insert(user);
 	}
