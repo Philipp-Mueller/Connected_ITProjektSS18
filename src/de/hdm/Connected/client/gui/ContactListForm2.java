@@ -73,6 +73,7 @@ public class ContactListForm2 extends Widget {
 	Button newContactListButton = new Button("Neue Kontaktliste erstellen", new newContactListClickhandler());
 	Button uptdateContactListButton = new Button("Kontaktliste bearbeiten");
 	Button shareContactListButton = new Button("Kontaktliste teilen", new shareCotactListClickhandler());
+	Button updateContactListButton = new Button("Kontaktliste umbenennen", new updateContactListClickhandler());
 	//Button sharePartOfClButton = new Button("Kontakte von Kontaktliste teilen", new sharePartofClClickhandler());
 	//Button addContactButton = new Button("Kontakt hinzufügen", new addContactsToContatListClickHandler());
 	Button createListButton = new Button("Liste erstellen", new createContactListClickhandler());
@@ -113,7 +114,9 @@ public class ContactListForm2 extends Widget {
 
 
 	
-	public ContactListForm2() {
+	public ContactListForm2(int selectedId) {
+		
+		row = selectedId;
 
 		// namePanel.add(nameLabel);
 		// namePanel.add(nameBox);
@@ -249,6 +252,8 @@ public class ContactListForm2 extends Widget {
 		contacttable.addColumn(visitbuttonColumn, "");
 		contacttable.addColumn(deletebuttonColumn, "");
 		
+		ClientSideSettings.getConnectedAdmin().findContactsByContactListId(selectedId, new showContactListCallback());
+		
 		
 	}
 
@@ -284,7 +289,7 @@ public class ContactListForm2 extends Widget {
 					new createContactListCallback());
 			
 			RootPanel.get("content").clear();
-			ContactListForm2 neuLaden = new ContactListForm2();
+			ContactListForm2 neuLaden = new ContactListForm2(row);
 
 		}
 	};
@@ -293,17 +298,20 @@ public class ContactListForm2 extends Widget {
 
 		public void onClick(ClickEvent event) {
 
-			RootPanel.get("content").clear();
-			topPanel.clear();
-			RootPanel.get("content").add(namePanel);
-			RootPanel.get("content").add(topPanel);
-			namePanel.add(nameLabel);
-			namePanel.add(nameBox);
-
-			topPanel.add(new HTML("<h2> Neue Kontaktliste erstellen</h2>"));
-			topPanel.add(namePanel);
-			//topPanel.add(addContactButton);
-			topPanel.add(createListButton);
+//			RootPanel.get("content").clear();
+//			topPanel.clear();
+//			RootPanel.get("content").add(namePanel);
+//			RootPanel.get("content").add(topPanel);
+//			namePanel.add(nameLabel);
+//			namePanel.add(nameBox);
+//
+//			topPanel.add(new HTML("<h2> Neue Kontaktliste erstellen</h2>"));
+//			topPanel.add(namePanel);
+//			//topPanel.add(addContactButton);
+//			topPanel.add(createListButton);
+			newDialog newi = new newDialog();
+			newi.center();
+			newi.show();
 
 		}
 	};
@@ -353,7 +361,7 @@ public class ContactListForm2 extends Widget {
 //		buttonPanel.clear();
 //			buttonPanel.add(newContactListButton);
 		buttonPanel.add(shareContactListButton);
-//			//buttonPanel.add(sharePartOfClButton);
+		buttonPanel.add(updateContactListButton);
 		buttonPanel.add(deleteCLButton);
 			
 			//contentPanel.add(new HTML("<h2> Kontaktliste " + clArray.get(row).getName() + ": </h2>"));
@@ -386,47 +394,51 @@ public class ContactListForm2 extends Widget {
 	private class shareCotactListClickhandler implements ClickHandler {
 
 		public void onClick(ClickEvent event) {
-
-			RootPanel.get("content").clear();
-			topPanel.clear();
-			//buttonPanel.clear();
-			userListbox.clear();
-			RootPanel.get("content").add(topPanel);
-			//RootPanel.get("content").add(buttonPanel);
-
-			topPanel.add(new HTML("<h2> Teilen von " + clArray.get(row).getName()));
-			topPanel.add(userListbox);
-			topPanel.add(shareContactList);
-
-			userListbox.setEnabled(true);
-
-			// multi auswahl freischalten in ListBox
-			userListbox.ensureDebugId("cwListBox-multiBox");
-			userListbox.setVisibleItemCount(7);
-			// Alle Kontaktlisten aus DB abrufen
-
-			publicUserArray = new ArrayList<User>();
-			// TODO nur KOntaktlisten des aktuellen Users abrufen!
-			ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>() {
-
-				@Override
-				public void onFailure(Throwable caught) {
-					Window.alert("Die User konnten nicht geladen werden");
-				}
-
-				@Override
-				// jede Kontaktliste wird der ListBox hinzugefügt
-				public void onSuccess(ArrayList<User> result) {
-					publicUserArray = result;
-					for (User u : result) {
-						userListbox.addItem(u.getLogEmail());
-					}
-
-				}
-
-			});
-
-		}
+//
+			shareDialog dia = new shareDialog();
+			dia.center();
+			dia.show();
+			
+//			RootPanel.get("content").clear();
+//			topPanel.clear();
+//			//buttonPanel.clear();
+//			userListbox.clear();
+//			RootPanel.get("content").add(topPanel);
+//			//RootPanel.get("content").add(buttonPanel);
+//
+//			topPanel.add(new HTML("<h2> Teilen von " + clArray.get(row).getName()));
+//			topPanel.add(userListbox);
+//			topPanel.add(shareContactList);
+//
+//			userListbox.setEnabled(true);
+//
+//			// multi auswahl freischalten in ListBox
+//			userListbox.ensureDebugId("cwListBox-multiBox");
+//			userListbox.setVisibleItemCount(7);
+//			// Alle Kontaktlisten aus DB abrufen
+//
+//			publicUserArray = new ArrayList<User>();
+//			// TODO nur KOntaktlisten des aktuellen Users abrufen!
+//			ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>() {
+//
+//				@Override
+//				public void onFailure(Throwable caught) {
+//					Window.alert("Die User konnten nicht geladen werden");
+//				}
+//
+//				@Override
+//				// jede Kontaktliste wird der ListBox hinzugefügt
+//				public void onSuccess(ArrayList<User> result) {
+//					publicUserArray = result;
+//					for (User u : result) {
+//						userListbox.addItem(u.getLogEmail());
+//					}
+//
+//				}
+//
+//			});
+//
+	}
 	}
 
 	private class shareContactListwithUserClickhandler implements ClickHandler {
@@ -478,12 +490,20 @@ public class ContactListForm2 extends Widget {
 						public void onSuccess(Void result) {
 							Window.alert("Löschen von " + clArray.get(row).getName() + " war erfolgreich!");
 							RootPanel.get("content").clear();
-							ContactListForm2 neuLaden = new ContactListForm2();
+							ContactListForm2 neuLaden = new ContactListForm2(row);
 
 						}
 
 					});
 			
+		}
+	}
+	
+	private class updateContactListClickhandler implements ClickHandler{
+		public void onClick(ClickEvent event){
+			updateDialog dia = new updateDialog();
+			dia.center();
+			dia.show();
 		}
 	}
 	
@@ -522,6 +542,204 @@ public class ContactListForm2 extends Widget {
 	      if (propertyValueMap.size() == 0){
 	    	  v.add(new Label ("Keine Eigenschaften gespeichert"));
 	      }
+	      
+	      v.add(ok);
+	      setWidget(v);
+
+	    }
+	  }
+	
+	private class updateDialog extends DialogBox {
+
+	    public updateDialog() {
+	      // Set the dialog box's caption.
+	      setText("Kontaktliste" + clArray.get(row).getName() + "umbenennen:");
+
+	      // Enable animation.
+	      setAnimationEnabled(true);
+
+	      // Enable glass background.
+	      setGlassEnabled(true);
+	      
+
+
+	      VerticalPanel v = new VerticalPanel();
+
+	    	  Label nameLabel = new Label("Name: ");
+	    	  final TextBox nameTextBox = new TextBox();
+	    	  HorizontalPanel h = new  HorizontalPanel();
+	    	  h.add(nameLabel);
+	    	  h.add(nameTextBox);
+	    	  v.add(h);
+	    	  
+		      Button ok = new Button("Speichern");
+		      ok.addClickHandler(new ClickHandler() {
+		        public void onClick(ClickEvent event) {
+		        	ContactList cl = new ContactList();
+		        	cl.setName(nameTextBox.getText());
+		        	cl.setBoId(clArray.get(row).getBoId());
+		        	ClientSideSettings.getConnectedAdmin().updateContactList(cl , new AsyncCallback<Void>(){
+		        		@Override
+		        		public void onFailure(Throwable caught){
+		        			
+		        		}
+		        		@Override
+		        		public void onSuccess(Void result)
+		        		{
+		        			Window.alert("Erfolgreich umbenannt");
+		        			RootPanel.get("content").clear();
+		        			ContactListForm2 mycontactlistForm = new ContactListForm2(clArray.get(row).getBoId());
+		        		}
+		        	});
+		        	updateDialog.this.hide();
+		        }
+		      });
+	      
+	      v.add(ok);
+	      setWidget(v);
+
+	    }
+	  }
+	
+	private class shareDialog extends DialogBox {
+
+	    public shareDialog() {
+	      // Set the dialog box's caption.
+	      setText("Kontaktliste" + clArray.get(row).getName() + "teilen:");
+
+	      // Enable animation.
+	      setAnimationEnabled(true);
+
+	      // Enable glass background.
+	      setGlassEnabled(true);
+	      
+
+
+	      VerticalPanel v = new VerticalPanel();
+	      v.clear();
+
+			v.add(userListbox);
+
+			
+			userListbox.clear();
+			
+			
+			//RootPanel.get("content").add(buttonPanel);
+
+
+
+			userListbox.setEnabled(true);
+
+			// multi auswahl freischalten in ListBox
+			userListbox.ensureDebugId("cwListBox-multiBox");
+			userListbox.setVisibleItemCount(7);
+			// Alle Kontaktlisten aus DB abrufen
+
+			publicUserArray = new ArrayList<User>();
+			// TODO nur KOntaktlisten des aktuellen Users abrufen!
+			ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					Window.alert("Die User konnten nicht geladen werden");
+				}
+
+				@Override
+				// jede Kontaktliste wird der ListBox hinzugefügt
+				public void onSuccess(ArrayList<User> result) {
+					publicUserArray = result;
+					for (User u : result) {
+						userListbox.addItem(u.getLogEmail());
+					}
+
+				}
+
+			});
+	   	  
+		      Button ok = new Button("Teilen");
+		      ok.addClickHandler(new ClickHandler() {
+		    	  
+		        public void onClick(ClickEvent event) {
+		        	
+					uArray.clear();
+					for (int i = 0; i < userListbox.getItemCount(); i++) {
+						if (userListbox.isItemSelected(i)) {
+							uArray.add(publicUserArray.get(i));
+						}
+					}
+					
+					ClientSideSettings.getConnectedAdmin().givePermissionToUsers(clArray.get(row).getBoId(), uArray,
+							1 , new AsyncCallback<Void>() {
+					
+								@Override
+								public void onFailure(Throwable caught) {
+									Window.alert("Ops, da ist etwas schief gelaufen!");
+								}
+
+								@Override
+								// jede Kontaktliste wird der ListBox
+								// hinzugefügt
+								public void onSuccess(Void result) {
+									Window.alert("Teilen von " + clArray.get(row).getName()+ " war erfolgreich!");
+									Window.alert(Integer.toString(uArray.size()));
+									RootPanel.get("contant").clear();
+									ContactListForm2 mycontactlistForm = new ContactListForm2(clArray.get(row).getBoId());
+								}
+
+							});
+					shareDialog.this.hide();
+			}
+		      });
+	      
+			v.add(ok);
+	      setWidget(v);
+
+	    }
+	  }
+	
+	private class newDialog extends DialogBox {
+
+	    public newDialog() {
+	      // Set the dialog box's caption.
+	      setText("Neue Kontaktliste erstellen:");
+
+	      // Enable animation.
+	      setAnimationEnabled(true);
+
+	      // Enable glass background.
+	      setGlassEnabled(true);
+	    
+	      VerticalPanel v = new VerticalPanel();
+
+	    	  Label nameLabel = new Label("Name: ");
+	    	  final TextBox nameTextBox = new TextBox();
+	    	  HorizontalPanel h = new  HorizontalPanel();
+	    	  h.add(nameLabel);
+	    	  h.add(nameTextBox);
+	    	  v.add(h);
+	    	  
+		      Button ok = new Button("Erstellen");
+		      ok.addClickHandler(new ClickHandler() {
+		        public void onClick(ClickEvent event) {
+		        	ContactList cl = new ContactList();
+		        	cl.setName(nameTextBox.getText());
+
+		        	ClientSideSettings.getConnectedAdmin().createContactList(nameTextBox.getText() , 1, new AsyncCallback<ContactList>(){
+		        		@Override
+		        		public void onFailure(Throwable caught){
+		        			
+		        		}
+		        		@Override
+		        		public void onSuccess(ContactList result)
+		        		{
+		        			Window.alert("Erfolgreich erstellt");
+		        			RootPanel.get("content").clear();
+		        			ContactListForm2 mycontactlistForm = new ContactListForm2(result.getBoId());
+		        		}
+		        	});
+		        	newDialog.this.hide();
+		        }
+		      });
 	      
 	      v.add(ok);
 	      setWidget(v);

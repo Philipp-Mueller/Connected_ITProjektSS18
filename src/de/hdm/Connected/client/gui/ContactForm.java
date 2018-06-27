@@ -31,7 +31,7 @@ import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
 
-public class ContactForm extends Widget {
+public class ContactForm extends PopupPanel {
 
 	/**
 	 * Klasse für die Bereistellung eines Formulars zum Anlegen/Bearbeiten eines
@@ -60,6 +60,7 @@ public class ContactForm extends Widget {
 
 	VerticalPanel propertyPanel = new VerticalPanel();
 	VerticalPanel valuePanel = new VerticalPanel();
+	VerticalPanel root = new VerticalPanel();
 
 	FlexTable nameTable = new FlexTable();
 	FlexTable propertyTable = new FlexTable();
@@ -89,12 +90,20 @@ public class ContactForm extends Widget {
 	 */
 
 	public ContactForm(Contact contact) {
-
+		super(true);
 		this.selectedContact = contact;
 
-		RootPanel.get("content").clear();
+		//RootPanel.get("content").clear();
+		
+		
+		// Enable animation.
+		this.setAnimationEnabled(true);
 
-		RootPanel.get("content").add(new HTML("<h3> Kontakt bearbeiten</h3>"));
+		//this.setStylePrimaryName("content");
+		//this.ensureDebugId("cwBasicPopup-simplePopup");
+	
+
+		root.add(new HTML("<h3> Kontakt bearbeiten</h3>"));
 
 		ClientSideSettings.getConnectedAdmin().findContactById(selectedContact.getBoId(), new AsyncCallback<Contact>() {
 
@@ -112,7 +121,7 @@ public class ContactForm extends Widget {
 			}
 
 		});
-
+		
 	}
 
 	/**
@@ -362,8 +371,9 @@ public class ContactForm extends Widget {
 
 			propertyTable = new FlexTable();
 			newPropertyTable = new FlexTable();
-			RootPanel.get("content").add(propertyTable);
-			RootPanel.get("content").add(newPropertyTable);
+			root.add(propertyTable);
+			
+			setWidget(root);
 			ArrayList<Value> valuesByContact = result;
 		
 			try {
@@ -534,12 +544,14 @@ public class ContactForm extends Widget {
 				newPropertyBtn = new Button ("neue Eigenschaft hinzufügen");
 				newPropertyBtn.addClickHandler(new addNewPropertyClickHandler());
 				
-				valueTextBox = new TextBox();							
+				valueTextBox = new TextBox();	
+				
 				
 				newPropertyTable.setWidget(0 , 0, new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
-				newPropertyTable.setWidget(0, 0, propertyListBox);
-				newPropertyTable.setWidget(0, 1, valueTextBox);
-				newPropertyTable.setWidget(0, 2, newPropertyBtn);	
+				newPropertyTable.setWidget(1, 0, propertyListBox);
+				newPropertyTable.setWidget(1, 1, valueTextBox);
+				newPropertyTable.setWidget(1, 2, newPropertyBtn);	
+				root.add(newPropertyTable);
 				
 				
 				
@@ -897,16 +909,17 @@ public class ContactForm extends Widget {
 		@Override
 		public void onChange(ChangeEvent event) {
 			// TODO Auto-generated method stub
+						
 			if (propertyListBox.getSelectedItemText().equals("oder neue Eigenschaft hinzufügen...")) {
-				int rowCount = propertyTable.getRowCount();
-				propertyTable.removeRow(rowCount - 1);
+				int rowCount = newPropertyTable.getRowCount();
+				newPropertyTable.removeRow(rowCount - 1);				
 				Window.alert(Integer.toString(rowCount));
 				newPropertyTextBox = new TextBox();
 				Button propertySaveButton = new Button("Speichern");
 				propertySaveButton.addClickHandler(new savePropertyClickHandler());
-				propertyTable.setWidget(rowCount, 0, new HTML("Eigenschaftsname:"));
-				propertyTable.setWidget(rowCount, 1, newPropertyTextBox);
-				propertyTable.setWidget(rowCount, 2, propertySaveButton);
+				newPropertyTable.setWidget(rowCount, 0, new HTML("Eigenschaftsname:"));
+				newPropertyTable.setWidget(rowCount, 1, newPropertyTextBox);
+				newPropertyTable.setWidget(rowCount, 2, propertySaveButton);
 				Window.alert(Integer.toString(rowCount));
 			} 
 
@@ -922,7 +935,7 @@ public class ContactForm extends Widget {
 		@Override
 		public void onClick(ClickEvent event) {
 			// TODO Auto-generated method stub
-
+		
 			ClientSideSettings.getConnectedAdmin().createProperty(newPropertyTextBox.getText(),
 					new AsyncCallback<Property>() {
 
@@ -936,7 +949,8 @@ public class ContactForm extends Widget {
 
 						public void onSuccess(Property result) {
 
-							int rowCount = propertyTable.getRowCount();
+						/*	int rowCount = propertyTable.getRowCount();
+							
 
 							ArrayList<Integer> selectedItems = new ArrayList<Integer>();
 							ArrayList<String> insertedValues = new ArrayList<String>();
@@ -954,19 +968,20 @@ public class ContactForm extends Widget {
 									insertedValues.add(values.getText());
 
 								}
-							}
+							}*/
 
 							propertyArray.add(result);
 
 							propertyListBox.setItemText(propertyListBox.getItemCount() - 1, result.getName());
 
 							propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
-							Window.alert("Size= " + Integer.toString(selectedItems.size()));
+							propertyListBox.addChangeHandler(new listBoxChangeHandler());
+						//	Window.alert("Size= " + Integer.toString(selectedItems.size()));
 
-							int rowIndex = propertyTable.getRowCount();
-							propertyTable.removeRow(rowIndex - 1);
+							int rowIndex = newPropertyTable.getRowCount();
+							newPropertyTable.removeRow(rowIndex - 1);
 
-							for (int i = 0; i < selectedItems.size(); i++) {
+						/*	for (int i = 0; i < selectedItems.size(); i++) {
 								ListBox propertyListBoxnew = new ListBox();
 								TextBox valuesTextBoxnew = new TextBox();
 								propertyListBoxnew.setWidth("250px");
@@ -978,13 +993,12 @@ public class ContactForm extends Widget {
 								propertyListBoxnew.setSelectedIndex(selectedItems.get(i));
 								valuesTextBoxnew.setText(insertedValues.get(i));
 								Window.alert(Integer.toString(i));
-							}
+							}*/
 
-							propertyTable.setWidget(rowCount, 0, propertyListBox);
-							propertyTable.setWidget(rowCount, 1, valueTextBox);
-							propertyTable.setWidget(rowCount, 2, newPropertyBtn);
-
-							Window.alert(Integer.toString(rowCount));
+							newPropertyTable.setWidget(0 , 0, new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
+							newPropertyTable.setWidget(1, 0, propertyListBox);
+							newPropertyTable.setWidget(1, 1, valueTextBox);
+							newPropertyTable.setWidget(1, 2, newPropertyBtn);	
 						}
 
 					});

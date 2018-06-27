@@ -56,9 +56,9 @@ public class SignUpForm extends VerticalPanel {
 	}
 	
 	public void signUp() {
-//		ClientSideSettings.getConnectedAdmin().createUser(emailBox.getText(), 
+		ClientSideSettings.getConnectedAdmin().createUser(emailBox.getText(), 
 														//passwortBox.getText(),
-//														new NewUserCallback());	
+														new NewUserCallback());	
 	}
 	
 	private class NewUserCallback implements AsyncCallback<User> {
@@ -109,9 +109,9 @@ public class SignUpForm extends VerticalPanel {
 	}
 	
 	public void signUpForRepGen() {
-//		ClientSideSettings.getConnectedAdmin().createUser(emailBox.getText(), 
-//														//passwortBox.getText(),
-//														new NewUserRepGenCallback());	
+		ClientSideSettings.getConnectedAdmin().createUser(emailBox.getText(), 
+														//passwortBox.getText(),
+														new NewUserRepGenCallback());	
 	}
 	
 	private class NewUserRepGenCallback implements AsyncCallback<User> {

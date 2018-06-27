@@ -1,6 +1,5 @@
 package de.hdm.Connected.client;
 
-import com.google.appengine.api.mail.MailService.Header;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -8,9 +7,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.storage.client.Storage;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
@@ -20,7 +17,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -32,6 +28,7 @@ import de.hdm.Connected.client.gui.ContactListForm;
 import de.hdm.Connected.client.gui.ContactListForm2;
 import de.hdm.Connected.client.gui.ContactSharing;
 import de.hdm.Connected.client.gui.ContactsTable;
+import de.hdm.Connected.client.gui.ShareOverviewForm;
 import de.hdm.Connected.client.gui.StartPage;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.FieldVerifier;
@@ -61,18 +58,19 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	/**
 	 * Login Panel
 	 */
-	protected static LoginInfo loginInfo = null;
+	private static LoginInfo loginInfo = null;
 	public final static String value_URL = Window.Location.getParameter("url");
 	private static VerticalPanel loginPanel = new VerticalPanel();
 	private static Label loginLabel = new Label(
 			"Please sign in to your Google Account to access the Connected application.");
 	private static Anchor signInLink = new Anchor("Sign In");
 	public static User currentUser = new User();
+	/*
+	 * Neue Klasse Homepage für die add methoden?
+	 */
+//	private Connected_ITProjektSS18 HomepagePanel;
+//	private Homepage HomepagePanel;
 
-	
-	// Settings
-	final Settings settings = new Settings();
-	final Welcome welcome = new Welcome();
 
 	/**
 	 * create new Panels
@@ -105,8 +103,6 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	
 	public void onModuleLoad() {
 		
-		
-		
 		stockStore = Storage.getSessionStorageIfSupported();
 
 		if (stockStore != null) {
@@ -130,79 +126,35 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		headlinePanel.add(headlineLabel);
 		logoutPanel.add(btnLogOut);
 		logoutPanel.add(zurueckButton);
-		vpBasisPanel.add(logoutPanel);
-		
-		// Menü start
-		Command settingDialog = new Command() {
-			public void execute() {
-
-				RootPanel.get("content").clear();
-				
-				RootPanel.get("content").add(settings);
-			}
-		};
-
-		Command logout = new Command() {
-			public void execute() {
-				loginInfo.getLogoutUrl();
-				Window.open(loginInfo.getLogoutUrl(), "_self", "");
-				loadLogin();
-			}
-		};
-		
-		
-		MenuBar menu1 = new MenuBar(true);
-		menu1.addItem("Profil", settingDialog);
-		menu1.addItem("Abmelden", logout);
-		
-		MenuBar menu = new MenuBar();
-		final String image = "<img src='user.png' height='40px' width='40px'/>";
-		SafeHtml addActivityImagePath = new SafeHtml() {
-		
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public String asString() {
-				return image;
-			}
-		};
-
-		menu.addItem(addActivityImagePath, menu1);
-		RootPanel.get("top").add(menu);
-		
-		// Menü ende
-		
-		log("Load Login");
+		vpBasisPanel.add(loginPanel);
 		
 		// Check login status using login service.
 	   LoginServiceAsync loginService = GWT.create(LoginService.class);
 	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
 	      public void onFailure(Throwable error) {
-	    	  log("Error: "+ error);
 	      }
 
 			public void onSuccess(LoginInfo result) {
-				log("UserInfo1: " + result.getEmailAddress());
+
 				loginInfo = result;
 
 				final String mail = loginInfo.getEmailAddress();
 
 				if (loginInfo.isLoggedIn() == true) {
-				connectedAdmin.findUserByEmail(mail, new AsyncCallback<User>() {
+
+				/**	connectedAdmin.findUserByMail(mail, new AsyncCallback<User>() {
 
 						@Override
 						public void onSuccess(User result) {
-							
 							if (result != null) {
-								log("User: " + result.getLogEmail());
 								currentUser = result;
-//								RootPanel.get().add( new StartPage());
-
-								RootPanel.get("content").add(welcome);
+								HomepagePanel = new Homepage(result);
+								RootPanel.get().add(HomepagePanel);
 
 							} else if (mail != null) {
 
-								connectedAdmin.createUser(loginInfo, new AsyncCallback<User>() {
+								connectedAdmin.createUser(mail, loginInfo.getFirstName(),
+										loginInfo.getLastName(), new AsyncCallback<User>() {
 
 											@Override
 											public void onFailure(Throwable caught) {
@@ -211,21 +163,17 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 
 											@Override
 											public void onSuccess(User result) {
-												log("Create new User: "+ result);
 												currentUser = result;
-												 
+												HomepagePanel = new Homepage(result);
 
 												isNew = true;
 
-												RootPanel.get("content").add(welcome);
+												RootPanel.get().add(HomepagePanel);
 
 											}
 										});
 
 							}
-
-							settings.run();
-							welcome.run();
 
 						}
 
@@ -234,7 +182,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 
 						}
 					});
-
+*/
 				} else {
 					loadLogin();
 				}
@@ -244,9 +192,21 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	    
 		    
 		Button newContactButton = new Button("Neuen Kontakt anlegen");
-		Button editContactButton = new Button ("Kontakt 8 bearbeiten");
+		Button editContactButton = new Button ("Kontakt bearbeiten");
 		Button shareContactButton = new Button ("Kontakt teilen");
 		Button overviewPageButton = new Button ("Übersichtsseite");
+		Button shareOverviewButton = new Button ("ShareOverviewSeite");
+		
+		shareOverviewButton.addClickHandler(new ClickHandler(){
+			
+			@Override public void onClick(ClickEvent event){
+				
+				RootPanel.get("content").clear();
+				ShareOverviewForm newShareoverview = new ShareOverviewForm(); 
+				
+				
+			}
+		});
 
 		newContactButton.addClickHandler(new ClickHandler() {
 
@@ -264,7 +224,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content").clear();
-				ContactListForm2 mycontactlistForm = new ContactListForm2();
+				ContactListForm2 mycontactlistForm = new ContactListForm2(0);
 				//Test_CellTable newform = new Test_CellTable(); 
 			}
 
@@ -334,6 +294,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		});
 		
 		
+		RootPanel.get("content").add(shareOverviewButton);
 		RootPanel.get("content").add(newContactButton);
 		RootPanel.get("content").add(myContactListsButton);
 		RootPanel.get("content").add(editContactButton);
@@ -380,7 +341,6 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		});
 		RootPanel.get("footer").add(footer);
 	}
-	
 	public static void loadLogin() {
 		// Assemble login panel.
 		signInLink.setHref(loginInfo.getLoginUrl());
@@ -419,9 +379,5 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	public static void deleteStorage() {
 		stockStore.clear();
 	}
-	
-	native void log(String s) /*-{
-		console.log(s);
-	}-*/;
 		  
 }

@@ -177,6 +177,7 @@ public class StartPage extends Widget {
 										// Window.alert(Integer.toString(result.size()));
 										// Window.alert(Integer.toString(globalIndex));
 										ShowContactInfo_Dialog showContact = new ShowContactInfo_Dialog(object);
+
 										showContact.center();
 										showContact.show();
 
