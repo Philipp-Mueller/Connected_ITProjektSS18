@@ -7,6 +7,7 @@ import java.util.Map;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
+import de.hdm.Connected.client.LoginInfo;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.ContactList;
 import de.hdm.Connected.shared.bo.Permission;
@@ -39,7 +40,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return neu erstelltes User-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public User createUser(String email) throws IllegalArgumentException;
+	public User createUser(LoginInfo info) throws IllegalArgumentException;
 	
 	/**
 	 * Aktuallisiert ein User-Objekt.
