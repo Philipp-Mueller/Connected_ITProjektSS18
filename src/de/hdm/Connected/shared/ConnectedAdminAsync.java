@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import de.hdm.Connected.client.LoginInfo;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.ContactList;
 import de.hdm.Connected.shared.bo.Permission;
@@ -23,7 +24,7 @@ public interface ConnectedAdminAsync {
 
 	void init(AsyncCallback<Void> callback);
 	
-	void createUser(String email, AsyncCallback<User> callback);
+	void createUser(LoginInfo info, AsyncCallback<User> callback);
 	
 	void updateUser(User user, AsyncCallback<Void> callback);
 	
