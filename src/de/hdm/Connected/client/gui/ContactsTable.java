@@ -1,5 +1,6 @@
 package de.hdm.Connected.client.gui;
 
+import java.rmi.server.LoaderHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -8,10 +9,14 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.cell.client.ButtonCell;
+import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dev.shell.Icons;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -25,6 +30,8 @@ import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSe
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Anchor;
@@ -40,6 +47,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.bo.Contact;
+import de.hdm.Connected.shared.bo.User;
 
 public class ContactsTable extends CellTable {
 	
@@ -53,7 +61,9 @@ public class ContactsTable extends CellTable {
 	
 	List<Contact> contacts = new ArrayList<Contact>();
 	SimplePager pager;
-	String imageHtml = "<img src=" + "/Trash_Can.png" + " alt=" + "Kontakt löschen" + ">";
+	String imageHtml = "<img src=" + "Trash_Can.png" + " alt=" + "Kontakt löschen" + ">";
+	boolean buttonPressed;
+	
 	public ContactsTable() {
 		// Create a Pager to control the table.
 				SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
@@ -73,16 +83,31 @@ public class ContactsTable extends CellTable {
 			@Override
 			public void onSuccess(ArrayList<Contact> result) {
 				contacts = result;
-	
+				
+				
+				
 		TextColumn<Contact> prenameColumn = new TextColumn<Contact>() {
-
-			@Override
+			
 			public String getValue(Contact object) {
 					 return object.getPrename();
 				}
+			
 			};
 			
 			prenameColumn.setSortable(true);
+			
+			prenameColumn.setFieldUpdater(new FieldUpdater<Contact, String>(){
+
+				@Override
+				public void update(int index, Contact object, String value) {
+					// TODO Auto-generated method stub
+					
+					Window.alert(object.getPrename() + object.getSurname());
+					
+				}
+				
+			});
+			
 			cellTable.addColumn(prenameColumn, "Vorname");
 			
 		TextColumn<Contact> surnameColumn = new TextColumn<Contact>() {
@@ -96,48 +121,140 @@ public class ContactsTable extends CellTable {
 			surnameColumn.setSortable(true);
 			cellTable.addColumn(surnameColumn, "Nachname");	
 			
-		ButtonCell updateButton = new ButtonCell();
-		
-		Column<Contact,String> updateColumn = new Column<Contact,String> (updateButton) {
-			  public String getValue(Contact object) {
-			    return "bearbeiten";
-			  }
+			ClickableTextCell shareButton = new ClickableTextCell(){
+				 @Override
+					public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
+					 String title = "Kontakt teilen";
+				           if (data != null) {
+				               sb.appendHtmlConstant("<img title='" + title + "' src=" + "/share.png" + " alt=" + "Kontakt bearbeiten" + " height=" +"25"+ " width=" + "25"+">");
+				                	             
+				            }
+					 }
 			};
 			
-		updateColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
-			@Override
-			public void update(int index, Contact object, String value) {
-				// TODO Auto-generated method stub
-				//Clickhandler
-			}		
-		});
-		
-		cellTable.addColumn(updateColumn);
-		
-		ButtonCell deleteButton = new ButtonCell(){
-			 @SuppressWarnings("unused")
-			public void render(Context context, Contact data, SafeHtmlBuilder sb) {
-		          //  if (data != null) {
-		                //ImageResource icon = Trash_Can.png
-		                //SafeHtml html = SafeHtmlUtils.fromTrustedString(AbstractImagePrototype.create(icon).getHTML());
-		            	 sb.appendHtmlConstant(imageHtml);
-		                
-		             
-		           // }
-			 }
+			Column<Contact,String> shareColumn = new Column<Contact,String> (shareButton) {
+				  public String getValue(Contact object) {
+				    return "";
+				  }
+				};
+				
+		    shareColumn.setCellStyleNames("iconButton");
+			shareColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
+				@Override
+				public void update(int index, Contact object, String value) {
+					buttonPressed = true;
+					Window.alert("Hallooo");
+					
+					
+				}		
+			});
+			
+			
+			cellTable.addColumn(shareColumn);
+			
+			
+			
+		ClickableTextCell updateButton = new ClickableTextCell(){
+			 @Override
+				public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
+				 String title = "Kontakt bearbeiten";
+			           if (data != null) {
+			               sb.appendHtmlConstant("<img title='" + title + "'src=" + "/edit.png" + " alt=" + "Kontakt bearbeiten" + " height=" +"25"+ " width=" + "25"+">");
+			                	             
+			            }
+				 }
 		};
-		Column<Contact,String> deleteColumn = new Column<Contact,String> (deleteButton) {
+		
+		Column<Contact,String> updateColumn = new Column<Contact,String> (updateButton) {
 			  public String getValue(Contact object) {
 			    return "";
 			  }
 			};
 			
+	    updateColumn.setCellStyleNames("iconButton");
+	    updateColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
+			@Override
+			public void update(int index, Contact object, String value) {
+				buttonPressed = true;
+				//Window.alert("Hallooo");
+				final ContactForm updatePopUp = new ContactForm(object);
+
+				// Enable glass background.
+				updatePopUp.setGlassEnabled(true);				
+				//updatePopUp.setPopupPosition(200, 300);
+				 updatePopUp.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+
+		                public void setPosition(int offsetWidth, int offsetHeight) {
+		                    // TODO Auto-generated method stub
+		                    int left = (Window.getClientWidth() - offsetWidth) / 3;
+		                    int top = (Window.getClientHeight() - offsetHeight) / 3;
+
+		                    updatePopUp.setPopupPosition(left, top);
+		                }
+		            });
+
+				updatePopUp.show();
+			
+				
+				  
+			
+			}		
+		});
+		
+		
+		cellTable.addColumn(updateColumn);
+	
+		ClickableTextCell deleteButton = new ClickableTextCell(){
+			 @Override
+			public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
+				 String title = "Kontakt löschen";
+		           if (data != null) {
+		               sb.appendHtmlConstant("<img title='" + title + "' src=" + "/delete.png" + " alt=" + "Kontakt löschen" + " height=" +"25"+ " width=" + "25"+">");
+		                	             
+		            }
+			 }
+			 };
+			 
+		
+		Column<Contact,String> deleteColumn = new Column<Contact,String> (deleteButton) {
+			  public String getValue(Contact object) {
+			    return "";
+			  }
+			};
+		deleteColumn.setCellStyleNames("iconButton");
 		deleteColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
 
 			@Override
-			public void update(int index, Contact object, String value) {
+			public void update(int index, final Contact object, String value) {
 				// TODO Auto-generated method stub
 				//Clickhandler
+				User user = new User();
+				user.setBoId(2);
+				buttonPressed = true;
+				ClientSideSettings.getConnectedAdmin().deleteContact(object, user, new AsyncCallback<Void>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						// TODO Auto-generated method stub
+						for(int i=0; i<contacts.size(); i++){
+							if(contacts.get(i).getBoId() == object.getBoId()){
+								contacts.remove(i);
+							}
+						}
+						dataProvider.getList().clear();
+						dataProvider.getList().addAll(contacts);
+						Window.alert("Kontakt " + object.getPrename() + " " + object.getSurname() + " wurde gelöscht");
+					}
+					
+				});
+				
+				
 			}		
 		});
 		
@@ -150,10 +267,10 @@ public class ContactsTable extends CellTable {
 		final SingleSelectionModel<Contact> selectionModel = new SingleSelectionModel<Contact>();
 		cellTable.setSelectionModel(selectionModel);
 		selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-			
+			final PopupPanel contactPopup = new PopupPanel(true, false);
 				public void onSelectionChange(SelectionChangeEvent event) {
 				final Contact selected = selectionModel.getSelectedObject();
-				if (selected != null) {
+				if (selected != null && !buttonPressed) {
 				//Window.alert("You selected: " + selected.prename + " " + selected.surname);
 					
 				final Anchor selectedContact = new Anchor(selected.getPrename() + selected.getSurname());
@@ -163,7 +280,7 @@ public class ContactsTable extends CellTable {
 				contactPopupContainer.setSpacing(10);
 				final HTML contactInfo = new HTML();
 				contactPopupContainer.add(contactInfo);
-				final PopupPanel contactPopup = new PopupPanel(true, false);
+				
 				contactPopup.setWidget(contactPopupContainer);
 
 				contactInfo.setHTML("Vorname: "+ selected.getPrename() + "<br>" + "Nachname: " + selected.getSurname() + "</i>");
@@ -172,7 +289,9 @@ public class ContactsTable extends CellTable {
 			  //int top = selectedContact.getAbsoluteTop() + 45;
 		      //contactPopup.setPopupPosition(left, top);
 				contactPopup.show();
-			} 
+			} else if(buttonPressed){
+				buttonPressed = false;
+			}
 		} 
    }); 
 		
@@ -227,7 +346,7 @@ public class ContactsTable extends CellTable {
 		
 		RootPanel.get("content").add(cellTable);
 		RootPanel.get("content").add(pager);
-		RootPanel.get("content").add(new HTML("<img src=" + "/Trash_Can.png" + " alt=" + "Kontakt löschen" + ">"));
+	
 		//cellTablePanel.setCellHorizontalAlignment(pager,HasHorizontalAlignment.ALIGN_CENTER);
 
 	}
