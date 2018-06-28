@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import de.hdm.Connected.shared.bo.SharedObject;
 import de.hdm.Connected.shared.bo.Value;
 
 /**
@@ -15,9 +16,11 @@ import de.hdm.Connected.shared.bo.Value;
  * Zur Verwaltung der Objekte implementiert die Mapper-Klasse entsprechende
  * Methoden (insert, search, delete, update).
  * 
+ * Durch extends SharedObjectMapper wird die Vererbung von SharedObjects dargestellt und in der DB-Ebene verdeutlicht.
+ * 
  * @author Burak
  */
-public class ValueMapper {
+public class ValueMapper extends SharedObjectMapper {
 
 	/**
 	 * Die Klasse ValueMapper wird nur einmal instantiiert
@@ -60,6 +63,9 @@ public class ValueMapper {
 		 * DB-Verbindung holen.
 		 */
 		Connection con = DBConnection.connection();
+		
+			
+		
 
 		try {
 			/**
@@ -67,25 +73,18 @@ public class ValueMapper {
 			 */
 			Statement stmt = con.createStatement();
 			/**
-			 * Abfrage des zuletzt hinzugefuegten Primaerschluessel (id). Die
-			 * aktuelle id wird um eins erhoeht. Statement ausfuellen und als
-			 * Query an die Datenbank senden.
+			 * Abfrage des zuletzt hinzugefuegten Primaerschluessel (id) in der SharedObject-Klasse. Es wird durch den Aufruf von "super.insert()" in der Superklasse SharedObjectMapper die
+			 * aktuelle id um eins erhoeht. 
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
-
-			if (rs.next()) {
-				value.setBoId(rs.getInt("maxid") + 1);
-			}
-			stmt = con.createStatement();
+		
+			value.setBoId(super.insert());
+		
 			/*
 			 * SQL-Anweisung zum Einfuegen des neuen Value-Tupels in die
 			 * Datenbank.
 			 */
 
-			// ID in Sharedobject einfügen
-
-			stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES (" + value.getBoId() + ")");
-
+	
 			stmt.executeUpdate("INSERT INTO value (id, name, propertyId, contactId, ownerId) VALUES (" + value.getBoId() + ", '"
 					+ value.getName() + "', " + value.getPropertyID() + ", " + value.getContactID() +  ", " + value.getCreatorId() + ")");
 			/**

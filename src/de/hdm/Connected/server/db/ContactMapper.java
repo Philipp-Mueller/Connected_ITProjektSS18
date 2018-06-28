@@ -18,9 +18,11 @@ import de.hdm.Connected.shared.bo.Permission;
  * Zur Verwaltung der Objekte implementiert die Mapper-Klasse entsprechende
  * Methoden (insert, search, delete, update).
  * 
+ * Durch extends SharedObjectMapper wird die Vererbung von SharedObjects dargestellt und in der DB-Ebene verdeutlicht.
+ * 
  * @author Burak
  */
-public class ContactMapper {
+public class ContactMapper extends SharedObjectMapper {
 
 	/**
 	 * Die Klasse ContactMapper wird nur einmal instantiiert
@@ -70,16 +72,12 @@ public class ContactMapper {
 			 */
 			Statement stmt = con.createStatement();
 			/**
-			 * Abfrage des zuletzt hinzugefuegten Primaerschluessel (id). Die aktuelle id
-			 * wird um eins erhoeht. Statement ausfuellen und als Query an die Datenbank
-			 * senden. Da Contact ein SharedObject ist wird der maxid von SharedObject ermittelt, damit jedes SharedObject ein eindeutigen ID besitzen.
+			 * Abfrage des zuletzt hinzugefuegten Primaerschluessel (id) in der SharedObject-Klasse. Es wird durch den Aufruf von "super.insert() in der Superklasse SharedObjectMapper die
+			 * aktuelle id um eins erhoeht. 
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
-
-			if (rs.next()) {
-				contact.setBoId(rs.getInt("maxid") + 1);
-			}
-			stmt = con.createStatement();
+			
+				contact.setBoId(super.insert());
+		
 			/**
 			 * SQL-Anweisung zum Einfuegen des neuen Contact-Tupels in die Datenbank.
 			 */
