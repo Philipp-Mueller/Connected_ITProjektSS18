@@ -150,11 +150,12 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			}
 		};
 		
-		
+		// Anzeige der Menü Elemente
 		MenuBar menu1 = new MenuBar(true);
 		menu1.addItem("Profil", settingDialog);
 		menu1.addItem("Abmelden", logout);
 		
+		// Menü Icon
 		MenuBar menu = new MenuBar();
 		final String image = "<img src='user.png' height='40px' width='40px'/>";
 		SafeHtml addActivityImagePath = new SafeHtml() {
@@ -192,16 +193,16 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 
 						@Override
 						public void onSuccess(User result) {
-							
+							// Ruft den User auf der mit der Google email in der DB eingetragen ist³
 							if (result != null) {
 								log("User: " + result.getLogEmail());
 								currentUser = result;
-//								RootPanel.get().add( new StartPage());
+								
 
 								RootPanel.get("content").add(welcome);
 
 							} else if (mail != null) {
-
+								// Erstellt einen neuen User wenn dieser noch nicht existiert
 								connectedAdmin.createUser(loginInfo, new AsyncCallback<User>() {
 
 											@Override
