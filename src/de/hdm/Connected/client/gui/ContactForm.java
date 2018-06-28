@@ -101,28 +101,34 @@ public class ContactForm extends PopupPanel {
 
 		//this.setStylePrimaryName("content");
 		//this.ensureDebugId("cwBasicPopup-simplePopup");
-	
+	    
 
 		root.add(new HTML("<h3> Kontakt bearbeiten</h3>"));
+		root.add(nameTable);
 
-		ClientSideSettings.getConnectedAdmin().findContactById(selectedContact.getBoId(), new AsyncCallback<Contact>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void onSuccess(Contact result) {
+	
 				// Wenn Kontakt gefunden, dann die Values dazu finden.
+			
+				Button changeNameButton = new Button("Namen ändern");
+				
+				firstNameBox.setText(selectedContact.getPrename());
+				surnameBox.setText(selectedContact.getSurname());
+				
+				
+				changeNameButton.addClickHandler(new changeNameClickHandler());
+				
+				nameTable.setWidget(0, 0, new HTML("<strong>Vorname: <strong>"));
+				nameTable.setWidget(0, 1, new HTML(selectedContact.getPrename()));
+				nameTable.setWidget(1, 0, new HTML("<strong>Nachname: <strong>"));
+				nameTable.setWidget(1, 1, new HTML(selectedContact.getSurname()));
+				nameTable.getFlexCellFormatter().setRowSpan(1, 2, 2);
+				nameTable.getFlexCellFormatter().setAlignment(1, 2, HasHorizontalAlignment.ALIGN_CENTER, HasVerticalAlignment.ALIGN_MIDDLE);
+				nameTable.setWidget(1, 2, changeNameButton);
 				ClientSideSettings.getConnectedAdmin().findAllProperties(new findAllPropertiesCallback());
-
 			}
 
-		});
 		
-	}
+
 
 	/**
 	 * Konstruktor wenn ein neuer Kontakt angelegt wird.
@@ -522,7 +528,7 @@ public class ContactForm extends PopupPanel {
 								}
 
 							});
-					      
+							
 							propertyTable.setWidget(rowCount, 0, new HTML("<p><strong>"	+ p.getName() + "</strong></p>"));
 							propertyTable.setWidget(rowCount, 1, new HTML (updatingOldValue.getName()));
 							propertyTable.setWidget(rowCount, 2, updateBtn);
@@ -642,7 +648,20 @@ public class ContactForm extends PopupPanel {
 					@Override
 					public void onSuccess(Value result) {
 						//TODO hier Dialogbox einfügen um zu fragen ob neue Eigenschaft direkt geteilt werden soll^
-						ContactSharing shareValue = new ContactSharing(selectedContact, result);
+						int rowCount = propertyTable.getRowCount();
+						updatingValue = result;
+						updateBtn = new Button ("Eigenschaft bearbeiten");
+						deleteBtn = new Button ("Eigenschaft entfernen");						
+						updateBtn.addClickHandler(new updateBtnClickHandler());
+						deleteBtn.addClickHandler(new deleteBtnClickHandler());
+						
+						propertyTable.setWidget(rowCount, 0 , new HTML("<strong>" + propertyListBox.getSelectedItemText()+ "</strong>"));
+						propertyTable.setWidget(rowCount, 1, new HTML(result.getName()));
+						propertyTable.setWidget(rowCount, 2, updateBtn);
+						propertyTable.setWidget(rowCount, 3, deleteBtn);
+						
+					ContactSharing shareValue = new ContactSharing(selectedContact, result);
+					
 						//shareNewValue.show();
 						
 						
@@ -1122,4 +1141,49 @@ public class ContactForm extends PopupPanel {
 
 	}
 
+	private class changeNameClickHandler implements ClickHandler {
+		
+		@Override
+		public void onClick(ClickEvent event){
+
+			 Button saveChangeNameButton = new Button("Änderungen speichern");
+			 
+			
+			 saveChangeNameButton.addClickHandler(new ClickHandler(){
+				 public void onClick(ClickEvent event){
+					 selectedContact.setPrename(firstNameBox.getText());	 
+					 selectedContact.setSurname(surnameBox.getText());
+					 
+					 ClientSideSettings.getConnectedAdmin().updateContact(selectedContact, new AsyncCallback<Contact>(){
+
+						@Override
+						public void onFailure(Throwable caught) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public void onSuccess(Contact result) {
+							Button changeNameButton = new Button("Namen ändern");
+							nameTable.setWidget(0, 0, new HTML("<strong>Vorname: <strong>"));
+							nameTable.setWidget(0, 1, new HTML(result.getPrename()));
+							nameTable.setWidget(1, 0, new HTML("<strong>Nachname: <strong>"));
+							nameTable.setWidget(1, 1, new HTML(result.getSurname()));
+							nameTable.getFlexCellFormatter().setRowSpan(1, 2, 2);
+							nameTable.getFlexCellFormatter().setAlignment(1, 2, HasHorizontalAlignment.ALIGN_CENTER, HasVerticalAlignment.ALIGN_MIDDLE);
+							nameTable.setWidget(1, 2, changeNameButton);
+							changeNameButton.addClickHandler(new changeNameClickHandler());
+						}
+						 
+					 });
+				 }
+			 });
+			 nameTable.setWidget(0, 1, firstNameBox);
+			 nameTable.setWidget(1, 1, surnameBox);
+			 nameTable.setWidget(1, 2, saveChangeNameButton);
+		 
+			
+		}
+	}
+	
 }
