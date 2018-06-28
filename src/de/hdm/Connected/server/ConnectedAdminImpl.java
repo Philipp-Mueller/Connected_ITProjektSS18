@@ -448,11 +448,12 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		value.setName(name);
 		value.setPropertyID(propertyId);
 		value.setContactID(contactId);
+		value.setCreatorId(ownerId);
 		
-			Permission autoPermission = new Permission();
+		/*	Permission autoPermission = new Permission();
 			autoPermission.setReceiverUserID(ownerId);
 			autoPermission.setSharedObjectId(value.getBoId());
-			autoPermission.setShareUserID(ownerId);
+			autoPermission.setShareUserID(ownerId);*/
 
 		return this.valueMapper.insert(value);
 	}
