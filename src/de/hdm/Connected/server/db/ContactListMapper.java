@@ -172,7 +172,7 @@ public class ContactListMapper extends SharedObjectMapper{
 			 * SQL-Anweisung zum Finden des übergebenen Datensatzes, anhand der
 			 * Id, in der Datenbank.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name FROM contactlist WHERE id=" + id);
+			ResultSet rs = stmt.executeQuery("SELECT id, ownerId name FROM contactlist WHERE id=" + id);
 			/**
 			 * Zu einem eindeutigen Wert exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurückgegeben werden.
@@ -183,6 +183,7 @@ public class ContactListMapper extends SharedObjectMapper{
 				ContactList contactList = new ContactList();
 				contactList.setBoId(rs.getInt("id"));
 				contactList.setName(rs.getString("name"));
+				contactList.setCreatorId(rs.getInt("ownerId"));
 				return contactList;			
 		}
 			/**
@@ -214,7 +215,7 @@ public class ContactListMapper extends SharedObjectMapper{
 			/**
 			 * SQL-Anweisung zum Finden des Datensatzes, nach dem gesuchten Namen, in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name FROM contactlist " + "WHERE ownerId=" + userId);
+			ResultSet rs = stmt.executeQuery("SELECT id, name, ownerId FROM contactlist " + "WHERE ownerId=" + userId);
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle contactlist vorhanden ist, muss das Abfragen des ResultSet so

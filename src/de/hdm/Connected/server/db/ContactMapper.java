@@ -209,7 +209,7 @@ public class ContactMapper extends SharedObjectMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze in der Datenbank, sortiert nach
 			 * der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname FROM contact ORDER BY prename");
+			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname, ownerid FROM contact ORDER BY prename");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle contact
 			 * vorhanden ist, muss das Abfragen des ResultSet so oft erfolgen
@@ -222,6 +222,7 @@ public class ContactMapper extends SharedObjectMapper {
 				contact.setBoId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
+				contact.setCreatorId(rs.getInt("ownerid"));
 				result.add(contact);
 			}
 			/**
@@ -388,7 +389,7 @@ public class ContactMapper extends SharedObjectMapper {
 
 			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der userID in der
 			// Datenbank
-			ResultSet rs = stmt.executeQuery("SELECT id , prename, surname, creationDate, modificationDate FROM contact WHERE ownerId =" + userID);
+			ResultSet rs = stmt.executeQuery("SELECT id , prename, surname, ownerid, creationDate, modificationDate FROM contact WHERE ownerid =" + userID);
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle
 			 * permission vorhanden ist, muss das Abfragen des ResultSet so oft erfolgen
@@ -401,6 +402,7 @@ public class ContactMapper extends SharedObjectMapper {
 				contact.setBoId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
+				contact.setCreatorId(rs.getInt("ownerid"));
 				contact.setCreationDate(rs.getTimestamp("creationDate"));
 				contact.setModificationDate(rs.getTimestamp("modificationDate"));
 				result.add(contact);
