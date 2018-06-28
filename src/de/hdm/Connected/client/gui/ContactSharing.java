@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -42,22 +43,33 @@ import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
 
-public class ContactSharing extends Widget {
+public class ContactSharing extends PopupPanel {
 
 	private ListDataProvider<Entry<Property, Value>> dataProvider = new ListDataProvider<Entry<Property, Value>>();
 	private CellTable<Entry<Property, Value>> propertyValueTable = new CellTable<Entry<Property, Value>>();
 	private Set<Entry<Property,Value>> selectedSet = new HashSet<Entry<Property,Value>>();
 	ArrayList<User> allUsers = null;
 	final ListBox userListBox = new ListBox(true);
-	
+	VerticalPanel root = new VerticalPanel();
+	Button closeButton = new Button("Abbrechen");
 	//Map<Property, Value> propertyValueMap = new HashMap<Property, Value>();
 	
 	
-	public ContactSharing(final Contact sharingContact, ArrayList<User> usersToShare){
+	public ContactSharing(final Contact sharingContact){
+		this.setAnimationEnabled(true);
+		closeButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				// Popup schließen bei Betägigung des Buttons
+				hide();
+
+			}
+		});
 		
-		RootPanel.get("content").add(new HTML("<h3> Kontakt <i>" + sharingContact.getPrename() + " " + sharingContact.getSurname() + "</i> teilen</h3><br />" ));
 		
-		RootPanel.get("content").add(new HTML("Bitte wählen Sie die Eigenschaften aus, die Sie teilen möchten:<br />" ));
+		root.add(new HTML("<h3> Kontakt <i>" + sharingContact.getPrename() + " " + sharingContact.getSurname() + "</i> teilen</h3><br />" ));
+		
+		root.add(new HTML("Bitte wählen Sie die Eigenschaften aus, die Sie teilen möchten:<br />" ));
 		
 		ClientSideSettings.getConnectedAdmin().findValueAndProperty(sharingContact.getBoId(), new AsyncCallback<Map<Property, Value>>(){
 
@@ -145,11 +157,11 @@ public class ContactSharing extends Widget {
 						
 					});
 					
-					RootPanel.get("content").add(propertyValueTable);
+					root.add(propertyValueTable);
 					
-					RootPanel.get("content").add(new HTML("<br />Bitte wählen Sie die/den User aus, mit dem Sie diesen Kontakt teilen möchten:<br />" ));
+					root.add(new HTML("<br />Bitte wählen Sie die/den User aus, mit dem Sie diesen Kontakt teilen möchten:<br />" ));
 					
-					RootPanel.get("content").add(userListBox);
+					root.add(userListBox);
 					
 					Button selected = new Button("Zeig was ist ausgwählt");
 					selected.addClickHandler(new ClickHandler(){
@@ -201,7 +213,9 @@ public class ContactSharing extends Widget {
 						}
 						
 					});
-					RootPanel.get("content").add(selected);
+					root.add(selected);
+					root.add(closeButton);
+					setWidget(root);
 				
 			}
 			
@@ -271,7 +285,7 @@ public class ContactSharing extends Widget {
 					Window.alert(Integer.toString(userArray.size()));
 					Window.alert("Die Eigenschaft wurde erstellt und geteilt");
 					MyDialog.this.hide();
-					RootPanel.get("content").clear();
+					//RootPanel.get("content").clear();
 					ContactForm contactForm = new ContactForm(contact);
 					
 				}
