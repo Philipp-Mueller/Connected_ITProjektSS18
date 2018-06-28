@@ -374,7 +374,7 @@ public class ContactListForm2 extends Widget {
 
 		public void onClick(ClickEvent event) {
 
-			ClientSideSettings.getConnectedAdmin().createContactList(nameBox.getText(), 1,
+			ClientSideSettings.getConnectedAdmin().createContactList(nameBox.getText(), 2,
 					new createContactListCallback());
 
 			RootPanel.get("content").clear();
@@ -850,7 +850,7 @@ public class ContactListForm2 extends Widget {
 					ContactList cl = new ContactList();
 					cl.setName(nameTextBox.getText());
 
-					ClientSideSettings.getConnectedAdmin().createContactList(nameTextBox.getText(), 1,
+					ClientSideSettings.getConnectedAdmin().createContactList(nameTextBox.getText(), 2,
 							new AsyncCallback<ContactList>() {
 								@Override
 								public void onFailure(Throwable caught) {

@@ -198,7 +198,7 @@ public class Settings extends VerticalPanel {
 							@Override
 							public void onSuccess(Void result) {
 
-								//Window.open(Connected_ITProjektSS18.loginInfo.getLogoutUrl(), "_self", "");
+								Window.open(Connected_ITProjektSS18.loginInfo.getLogoutUrl(), "_self", "");
 								Window.alert("Ihr Profil wurde gelöscht!");
 								Connected_ITProjektSS18.loadLogin();
 

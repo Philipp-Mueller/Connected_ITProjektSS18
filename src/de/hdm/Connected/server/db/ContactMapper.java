@@ -18,9 +18,11 @@ import de.hdm.Connected.shared.bo.Permission;
  * Zur Verwaltung der Objekte implementiert die Mapper-Klasse entsprechende
  * Methoden (insert, search, delete, update).
  * 
+ * Durch extends SharedObjectMapper wird die Vererbung von SharedObjects dargestellt und in der DB-Ebene verdeutlicht.
+ * 
  * @author Burak
  */
-public class ContactMapper {
+public class ContactMapper extends SharedObjectMapper {
 
 	/**
 	 * Die Klasse ContactMapper wird nur einmal instantiiert
@@ -70,25 +72,21 @@ public class ContactMapper {
 			 */
 			Statement stmt = con.createStatement();
 			/**
-			 * Abfrage des zuletzt hinzugefuegten Primaerschluessel (id). Die aktuelle id
-			 * wird um eins erhoeht. Statement ausfuellen und als Query an die Datenbank
-			 * senden. Da Contact ein SharedObject ist wird der maxid von SharedObject ermittelt, damit jedes SharedObject ein eindeutigen ID besitzen.
+			 * Abfrage des zuletzt hinzugefuegten Primaerschluessel (id) in der SharedObject-Klasse. Es wird durch den Aufruf von "super.insert() in der Superklasse SharedObjectMapper die
+			 * aktuelle id um eins erhoeht. 
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
-
-			if (rs.next()) {
-				contact.setBoId(rs.getInt("maxid") + 1);
-			}
-			stmt = con.createStatement();
+			
+				contact.setBoId(super.insert());
+		
 			/**
 			 * SQL-Anweisung zum Einfuegen des neuen Contact-Tupels in die Datenbank.
 			 */
 			//ID in Sharedobject einfügen
 			Timestamp currentTime = new Timestamp (System.currentTimeMillis());
-			stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES (" + contact.getBoId() + ")");
+
 			
 			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, ownerId, creationDate, modificationDate) VALUES (" + contact.getBoId() + ", '"
-					+ contact.getPrename() + "', '" + contact.getSurname() + "', " + contact.getCreatorId() + " '" + currentTime +"', '"+ currentTime + "')");
+					+ contact.getPrename() + "', '" + contact.getSurname() + "', " + contact.getCreatorId() + ", '" + currentTime +"', '"+ currentTime + "')");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
 			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
@@ -462,5 +460,33 @@ public class ContactMapper {
 		}
 		return result;
 	}
+	
+	/*
+	 * Hier wird das Modifizierungsdatum aktualisiert, wenn eine Eigenschaft geändert wurde oder neu hinzugefügt.
+	 */
+	
+	public void updateContactModificationDate(int contactId){
+		Connection con = DBConnection.connection();
+		Timestamp currentTime = new Timestamp (System.currentTimeMillis());
+		
+		try {
+			Statement stmt = con.createStatement();
+			/**
+			 * SQL-Anweisung zum Aktualisieren des uebergebenen Datensatzes in der
+			 * Datenbank.
+			 */
+			stmt.executeUpdate("UPDATE contact SET modificationDate='" + currentTime + "' WHERE id= " + contactId);
+		}
+		/**
+		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
+		 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
+		 * passiert ist und wo im Code es passiert ist.
+		 */
+		catch (SQLException e2) {
+			e2.printStackTrace();
+		}
+	
+	}
+	
 }
 
