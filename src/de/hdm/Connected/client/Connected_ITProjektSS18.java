@@ -1,5 +1,6 @@
 package de.hdm.Connected.client;
 
+import com.google.appengine.api.mail.MailService.Header;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -7,7 +8,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.storage.client.Storage;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
@@ -17,6 +20,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -58,19 +62,18 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	/**
 	 * Login Panel
 	 */
-	private static LoginInfo loginInfo = null;
+	protected static LoginInfo loginInfo = null;
 	public final static String value_URL = Window.Location.getParameter("url");
 	private static VerticalPanel loginPanel = new VerticalPanel();
 	private static Label loginLabel = new Label(
 			"Please sign in to your Google Account to access the Connected application.");
 	private static Anchor signInLink = new Anchor("Sign In");
 	public static User currentUser = new User();
-	/*
-	 * Neue Klasse Homepage für die add methoden?
-	 */
-//	private Connected_ITProjektSS18 HomepagePanel;
-//	private Homepage HomepagePanel;
 
+	
+	// Settings
+	final Settings settings = new Settings();
+	final Welcome welcome = new Welcome();
 
 	/**
 	 * create new Panels
@@ -103,6 +106,8 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	
 	public void onModuleLoad() {
 		
+		
+		
 		stockStore = Storage.getSessionStorageIfSupported();
 
 		if (stockStore != null) {
@@ -126,35 +131,82 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		headlinePanel.add(headlineLabel);
 		logoutPanel.add(btnLogOut);
 		logoutPanel.add(zurueckButton);
-		vpBasisPanel.add(loginPanel);
+		vpBasisPanel.add(logoutPanel);
+		
+		// Menü start
+		Command settingDialog = new Command() {
+			public void execute() {
+
+				RootPanel.get("content").clear();
+				
+				RootPanel.get("content").add(settings);
+			}
+		};
+
+		Command logout = new Command() {
+			public void execute() {
+				loginInfo.getLogoutUrl();
+				Window.open(loginInfo.getLogoutUrl(), "_self", "");
+				loadLogin();
+			}
+		};
+		
+		// Anzeige der Menü Elemente
+		MenuBar menu1 = new MenuBar(true);
+		menu1.addItem("Profil", settingDialog);
+		menu1.addItem("Abmelden", logout);
+		
+		// Menü Icon
+		MenuBar menu = new MenuBar();
+		final String image = "<img src='user.png' height='40px' width='40px'/>";
+		SafeHtml addActivityImagePath = new SafeHtml() {
+		
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public String asString() {
+				return image;
+			}
+		};
+
+		menu.addItem(addActivityImagePath, menu1);
+		RootPanel.get("top").add(menu);
+		
+		// Menü ende
+		
+		log("Load Login");
 		
 		// Check login status using login service.
 	   LoginServiceAsync loginService = GWT.create(LoginService.class);
 	    loginService.login(GWT.getHostPageBaseURL(), new AsyncCallback<LoginInfo>() {
 	      public void onFailure(Throwable error) {
+	    	  log("Error: "+ error);
 	      }
 
 			public void onSuccess(LoginInfo result) {
-
+				log("UserInfo1: " + result.getEmailAddress());
 				loginInfo = result;
 
 				final String mail = loginInfo.getEmailAddress();
 
 				if (loginInfo.isLoggedIn() == true) {
-
-				/**	connectedAdmin.findUserByMail(mail, new AsyncCallback<User>() {
+				connectedAdmin.findUserByEmail(mail, new AsyncCallback<User>() {
 
 						@Override
 						public void onSuccess(User result) {
+							// Ruft den User auf der mit der Google email in der DB eingetragen ist³
 							if (result != null) {
+								log("User: " + result.getLogEmail());
 								currentUser = result;
-								HomepagePanel = new Homepage(result);
-								RootPanel.get().add(HomepagePanel);
+								settings.run();
+								welcome.run();
+
+								RootPanel.get("content").add(welcome);
+								
 
 							} else if (mail != null) {
-
-								connectedAdmin.createUser(mail, loginInfo.getFirstName(),
-										loginInfo.getLastName(), new AsyncCallback<User>() {
+								// Erstellt einen neuen User wenn dieser noch nicht existiert
+								connectedAdmin.createUser(loginInfo, new AsyncCallback<User>() {
 
 											@Override
 											public void onFailure(Throwable caught) {
@@ -163,17 +215,21 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 
 											@Override
 											public void onSuccess(User result) {
+												log("Create new User: "+ result.getName());
 												currentUser = result;
-												HomepagePanel = new Homepage(result);
+												settings.run();
+												welcome.run();
 
 												isNew = true;
 
-												RootPanel.get().add(HomepagePanel);
+												RootPanel.get("content").add(welcome);
 
 											}
 										});
 
 							}
+
+							
 
 						}
 
@@ -182,7 +238,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 
 						}
 					});
-*/
+
 				} else {
 					loadLogin();
 				}
@@ -192,20 +248,10 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	    
 		    
 		Button newContactButton = new Button("Neuen Kontakt anlegen");
-		Button editContactButton = new Button ("Kontakt bearbeiten");
+		Button editContactButton = new Button ("Kontakt 8 bearbeiten");
 		Button shareContactButton = new Button ("Kontakt teilen");
 		Button overviewPageButton = new Button ("Übersichtsseite");
-		Button shareOverviewButton = new Button ("ShareOverviewSeite");
-		
-		shareOverviewButton.addClickHandler(new ClickHandler(){
-			
-			@Override 
-			public void onClick(ClickEvent event){
-				RootPanel.get("content").clear();
-			 ShareOverviewForm newShareOverview = new ShareOverviewForm(); 
-				
-				}
-		});
+
 
 		
 		newContactButton.addClickHandler(new ClickHandler() {
@@ -294,7 +340,6 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		});
 		
 		
-		RootPanel.get("content").add(shareOverviewButton);
 		RootPanel.get("content").add(newContactButton);
 		RootPanel.get("content").add(myContactListsButton);
 		RootPanel.get("content").add(editContactButton);
@@ -341,6 +386,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		});
 		RootPanel.get("footer").add(footer);
 	}
+	
 	public static void loadLogin() {
 		// Assemble login panel.
 		signInLink.setHref(loginInfo.getLoginUrl());
@@ -379,5 +425,9 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	public static void deleteStorage() {
 		stockStore.clear();
 	}
+	
+	native void log(String s) /*-{
+		console.log(s);
+	}-*/;
 		  
 }
