@@ -28,7 +28,7 @@ import de.hdm.Connected.client.gui.ContactListForm;
 import de.hdm.Connected.client.gui.ContactListForm2;
 import de.hdm.Connected.client.gui.ContactSharing;
 import de.hdm.Connected.client.gui.ContactsTable;
-import de.hdm.Connected.client.gui.ShareOverviewForm;
+
 import de.hdm.Connected.client.gui.StartPage;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.FieldVerifier;
@@ -202,7 +202,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			@Override public void onClick(ClickEvent event){
 				
 				RootPanel.get("content").clear();
-				ShareOverviewForm newShareoverview = new ShareOverviewForm(); 
+			//	ShareOverviewForm newShareoverview = new ShareOverviewForm(); 
 				
 				
 			}

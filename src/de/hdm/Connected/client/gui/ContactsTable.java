@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.cell.client.ButtonCell;
@@ -35,11 +36,13 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
@@ -47,7 +50,9 @@ import com.google.gwt.view.client.SingleSelectionModel;
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.bo.Contact;
+import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
+import de.hdm.Connected.shared.bo.Value;
 
 public class ContactsTable extends CellTable {
 	
@@ -56,6 +61,7 @@ public class ContactsTable extends CellTable {
 	//private HorizontalPanel hPanel = new HorizontalPanel();
 	
 	private CellTable<Contact> cellTable = new CellTable<Contact>();
+	private Map<Property, Value> propertyValueMap = null;
 	
 	ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
 	
@@ -84,13 +90,13 @@ public class ContactsTable extends CellTable {
 			public void onSuccess(ArrayList<Contact> result) {
 				contacts = result;
 				
+			ClickableTextCell prenameCell = new ClickableTextCell();	
 				
-				
-		TextColumn<Contact> prenameColumn = new TextColumn<Contact>() {
+		Column<Contact, String> prenameColumn = new Column<Contact, String> (prenameCell) {
 			
-			public String getValue(Contact object) {
-					 return object.getPrename();
-				}
+			 public String getValue(Contact object) {
+				    return object.getPrename();
+				  }
 			
 			};
 			
@@ -99,10 +105,28 @@ public class ContactsTable extends CellTable {
 			prenameColumn.setFieldUpdater(new FieldUpdater<Contact, String>(){
 
 				@Override
-				public void update(int index, Contact object, String value) {
+				public void update(int index, final Contact object, String value) {
 					// TODO Auto-generated method stub
 					
-					Window.alert(object.getPrename() + object.getSurname());
+					ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),
+							new AsyncCallback<Map<Property, Value>>() {
+
+								public void onFailure(Throwable caught) {
+									Window.alert("Ops, da ist etwas schief gelaufen!");
+								}
+
+								public void onSuccess(Map<Property, Value> result) {
+									propertyValueMap = result;
+									// Window.alert(Integer.toString(result.size()));
+									// Window.alert(Integer.toString(globalIndex));
+									ShowContactInfo_Dialog showContact = new ShowContactInfo_Dialog(object);
+
+									showContact.center();
+									showContact.show();
+
+								}
+
+							});
 					
 				}
 				
@@ -264,14 +288,35 @@ public class ContactsTable extends CellTable {
 		dataProvider.addDataDisplay(cellTable);
 		
 		
-		final SingleSelectionModel<Contact> selectionModel = new SingleSelectionModel<Contact>();
+	/*	final SingleSelectionModel<Contact> selectionModel = new SingleSelectionModel<Contact>();
 		cellTable.setSelectionModel(selectionModel);
 		selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-			final PopupPanel contactPopup = new PopupPanel(true, false);
+			//final PopupPanel contactPopup = new PopupPanel(true, false);
 				public void onSelectionChange(SelectionChangeEvent event) {
 				final Contact selected = selectionModel.getSelectedObject();
 				if (selected != null && !buttonPressed) {
 				//Window.alert("You selected: " + selected.prename + " " + selected.surname);
+					
+					ClientSideSettings.getConnectedAdmin().findValueAndProperty(selected.getBoId(),
+							new AsyncCallback<Map<Property, Value>>() {
+
+								public void onFailure(Throwable caught) {
+									Window.alert("Ops, da ist etwas schief gelaufen!");
+								}
+
+								public void onSuccess(Map<Property, Value> result) {
+									propertyValueMap = result;
+									// Window.alert(Integer.toString(result.size()));
+									// Window.alert(Integer.toString(globalIndex));
+									ShowContactInfo_Dialog showContact = new ShowContactInfo_Dialog(selected);
+
+									showContact.center();
+									showContact.show();
+
+								}
+
+							});
+					
 					
 				final Anchor selectedContact = new Anchor(selected.getPrename() + selected.getSurname());
 				
@@ -281,19 +326,17 @@ public class ContactsTable extends CellTable {
 				final HTML contactInfo = new HTML();
 				contactPopupContainer.add(contactInfo);
 				
-				contactPopup.setWidget(contactPopupContainer);
+				///contactPopup.setWidget(contactPopupContainer);
 
 				contactInfo.setHTML("Vorname: "+ selected.getPrename() + "<br>" + "Nachname: " + selected.getSurname() + "</i>");
 
-			  //int left = selectedContact.getAbsoluteLeft() + 86;
-			  //int top = selectedContact.getAbsoluteTop() + 45;
+			//  int left = selectedContact.getAbsoluteLeft() + 86;
+			//  int top = selectedContact.getAbsoluteTop() + 45;
 		      //contactPopup.setPopupPosition(left, top);
-				contactPopup.show();
-			} else if(buttonPressed){
-				buttonPressed = false;
-			}
+			//	contactPopup.show();
+			} else if (buttonPressed) {buttonPressed = false;}
 		} 
-   }); 
+   }); */
 		
 		 	List<Contact> list = dataProvider.getList();
 		    for (Contact Contact : contacts) {
@@ -355,4 +398,44 @@ public class ContactsTable extends CellTable {
 	});
 
 }
+	private class ShowContactInfo_Dialog extends PopupPanel {
+	
+	public ShowContactInfo_Dialog(Contact contact)  {
+		//PopUp schließt automatisch wenn daneben geklickt wird
+		super(true);
+		//ensureDebugId("cwBasicPopup-simplePopup");
+			   
+		// Enable animation.
+		setAnimationEnabled(true);
+
+		// Enable glass background.
+		setGlassEnabled(true);
+		
+		setWidth("300px");
+
+		VerticalPanel v = new VerticalPanel();
+		FlexTable contactInfoTable = new FlexTable();
+		contactInfoTable.setCellSpacing(20);
+		
+
+		contactInfoTable.setWidget(0, 0, new HTML("<strong>Vorname: </strong>"));
+		contactInfoTable.setWidget(0, 1, new HTML(contact.getPrename()));
+		contactInfoTable.setWidget(1, 0, new HTML("<strong>Nachname: </strong>"));
+		contactInfoTable.setWidget(1, 1, new HTML(contact.getSurname()));
+		
+		for(Map.Entry<Property, Value> entry : propertyValueMap.entrySet()){
+			int rowCount = contactInfoTable.getRowCount();
+			contactInfoTable.setWidget(rowCount, 0, new HTML("<strong>" + entry.getKey().getName() + ":</strong>"));
+			contactInfoTable.setWidget(rowCount, 1, new HTML(entry.getValue().getName()));
+		}
+		
+		v.add(new HTML("<h3> Kontakt: <i>" + contact.getPrename() + " " + contact.getSurname() +"</i></h3><br /><br />"));
+		v.add(contactInfoTable);
+		setWidget(v);
+		
+	}
+
+	
+}
+	
 }
