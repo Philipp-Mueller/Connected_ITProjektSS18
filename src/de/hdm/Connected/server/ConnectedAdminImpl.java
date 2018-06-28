@@ -177,17 +177,17 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	
 	public Contact createContact(String prename, String surname, Timestamp creationDate, Timestamp modificationDate, int ownerId) {
 		Contact contact = new Contact();
-		contact.setCreationDate(creationDate);
-		contact.setModificationDate(modificationDate);
+		//contact.setCreationDate(creationDate);
+		//contact.setModificationDate(modificationDate);
 		contact.setPrename(prename);
 		contact.setSurname(surname);
 		contact.setCreatorId(ownerId);
 		
-		Permission autoPermission = new Permission();
+	/*	Permission autoPermission = new Permission();
 		autoPermission.setReceiverUserID(ownerId);
 		autoPermission.setSharedObjectId(contact.getBoId());
 		autoPermission.setShareUserID(ownerId);
-		this.permissionMapper.insert(autoPermission);
+		this.permissionMapper.insert(autoPermission);*/
 	
 		return this.contactMapper.insert(contact);
 		
@@ -267,11 +267,12 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public ContactList createContactList(String name, int ownerId){
 		ContactList contactList = new ContactList();
 		contactList.setName(name);
+		contactList.setCreatorId(ownerId);
 				
-			Permission autoPermission = new Permission();
+			/*Permission autoPermission = new Permission();
 			autoPermission.setReceiverUserID(ownerId);
 			autoPermission.setSharedObjectId(contactList.getBoId());
-			autoPermission.setShareUserID(ownerId);
+			autoPermission.setShareUserID(ownerId);*/
 	
 				return this.contactListMapper.insert(contactList);
 	}

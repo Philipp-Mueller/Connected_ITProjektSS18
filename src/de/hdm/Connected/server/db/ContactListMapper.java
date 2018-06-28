@@ -89,7 +89,7 @@ public class ContactListMapper {
 			stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES (" + contactList.getBoId() + ")");
 			
 			stmt.executeUpdate("INSERT INTO contactlist (id, name, ownerId) VALUES " + "(" + contactList.getBoId() + ", '"
-					+ contactList.getName() + "', '" + contactList.getCreatorId()+ "')");
+					+ contactList.getName() + "', " + contactList.getCreatorId()+ ")");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
