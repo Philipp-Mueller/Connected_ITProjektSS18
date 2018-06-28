@@ -251,6 +251,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		Button shareContactButton = new Button ("Kontakt teilen");
 		Button overviewPageButton = new Button ("Übersichtsseite");
 
+		
 		newContactButton.addClickHandler(new ClickHandler() {
 
 			@Override
