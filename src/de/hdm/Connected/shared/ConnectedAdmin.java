@@ -108,7 +108,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return aktualisiertes Contact-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public void updateContact(Contact contact, int userId) throws IllegalArgumentException;
+	public Contact updateContact(Contact contact) throws IllegalArgumentException;
 	
 	/**
 	 * Löscht ein Contact-Objekt und alle eventuell darauf basierenden

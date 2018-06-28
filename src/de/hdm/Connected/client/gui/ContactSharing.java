@@ -239,8 +239,8 @@ public class ContactSharing extends Widget {
 	        public void onClick(ClickEvent event) {
 	        	Window.alert("Neue Eigenschaft wurde gespeichert!");
 	        	MyDialog.this.hide();
-				RootPanel.get("content").clear();
-				ContactForm contactForm = new ContactForm(contact);
+				//RootPanel.get("content").clear();
+				//ContactForm contactForm = new ContactForm(contact);
 	        }
 	      });
 	      

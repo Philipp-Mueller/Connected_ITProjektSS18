@@ -207,6 +207,11 @@ item. gwt-DisclosurePanel-open .content {
   color: red;
 }
 
+#content .iconButton{
+	width: 30px;
+	
+}
+
 #closeButton {
   margin: 15px 6px 6px;
 }
@@ -243,6 +248,13 @@ table {
 	margin-left: 10px;
 }
 
+.gwt-PopupPanel .popupContent .button {
+	border: none;
+    background: #009999;
+    color: #fff;
+    padding: 5px 10px;
+    cursor: pointer;
+}
 .lblWelcome {
 	font-family: 'Marck Script', cursive;
 	text-align: center;
@@ -251,3 +263,4 @@ table {
 	font-weight: 700;
 	padding: 3%;
 	}
+

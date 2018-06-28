@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.cell.client.Cell;
+import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
@@ -22,15 +24,24 @@ import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.ContactList;
 
+
 public class ContactlistsCellList extends Widget {
 	
-	private ContactList selectedContactlist;
+	private ConnectedAdminAsync connectedAdmin = ClientSideSettings.getConnectedAdmin();
 	
-	CellList<ContactList> cellList;
+	private ContactlistsCell clCell = new ContactlistsCell();
 	
-	public CellList<ContactList> createContactlistsCellList() {
+	ListDataProvider<ContactList> dataProvider = new ListDataProvider<ContactList>();
+	
+	List<ContactList> cll = new ArrayList<ContactList>();
+	
+    private CellList<ContactList> cellList;
+   
+    boolean buttonPressed;
+    
+	public ContactlistsCellList() {
 		
-	ProvidesKey<ContactList> keyProvider = new ProvidesKey<ContactList>() {
+		ProvidesKey<ContactList> keyProvider = new ProvidesKey<ContactList>() {
 	        public Object getKey(ContactList cl) {
 	           // Always do a null check.
 	           return (cl == null) ? null : cl.getBoId();
@@ -40,33 +51,48 @@ public class ContactlistsCellList extends Widget {
     ContactlistsCell clCell = new ContactlistsCell();
 	     
 	cellList = new CellList<ContactList>(clCell, keyProvider);
-	     
-    cellList.setStyleName("cellList");
-    
-    cellList.setPageSize(30);
-	cellList.setKeyboardPagingPolicy(KeyboardPagingPolicy.INCREASE_RANGE);
-	cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);    
-	     
-	final NoSelectionModel<ContactList> clSelectionModel = new NoSelectionModel<ContactList>(keyProvider);
 	
-	cellList.setSelectionModel(clSelectionModel);
+	ClientSideSettings.getConnectedAdmin().findAllContactlists(new AsyncCallback<ArrayList<ContactList>>() {
+	     
+	     @Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void onSuccess(ArrayList<ContactList> result) {
+				cll = result;
+			
+			
+	cellList.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+	dataProvider.addDataDisplay(cellList);
 	
-	clSelectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-		
+	final SingleSelectionModel<ContactList> selectionModel = new SingleSelectionModel<ContactList>();
+	
+	cellList.setSelectionModel(selectionModel);
+	
+	selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+	
 		public void onSelectionChange(SelectionChangeEvent event) {
-			selectedContactlist = clSelectionModel.getLastSelectedObject();
+			
+			final ContactList selected = selectionModel.getSelectedObject();
+			if (selected != null && !buttonPressed) {
+				ContactListForm2 clform = new ContactListForm2(selected.getBoId());
+			}
+			
+			else if (buttonPressed) {
+				buttonPressed = false;
+			}
 		}
-
-	});
- 
-	 return cellList;
-	 
-	}
-	
-	public ContactList getSelectedContactlist () {
 		
-		return selectedContactlist;
-	}
+	});
 	
-
+	cellList.setRowCount(cll.size(), true);
+	cellList.setRowData(0, cll);
+	
+	RootPanel.get("nav").add(cellList);
+			
+			}
+	 	});
+	 }
 }

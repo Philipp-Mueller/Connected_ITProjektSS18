@@ -197,9 +197,11 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 							if (result != null) {
 								log("User: " + result.getLogEmail());
 								currentUser = result;
-								
+								settings.run();
+								welcome.run();
 
 								RootPanel.get("content").add(welcome);
+								
 
 							} else if (mail != null) {
 								// Erstellt einen neuen User wenn dieser noch nicht existiert
@@ -212,9 +214,10 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 
 											@Override
 											public void onSuccess(User result) {
-												log("Create new User: "+ result);
+												log("Create new User: "+ result.getName());
 												currentUser = result;
-												 
+												settings.run();
+												welcome.run();
 
 												isNew = true;
 
@@ -225,8 +228,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 
 							}
 
-							settings.run();
-							welcome.run();
+							
 
 						}
 
@@ -265,7 +267,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content").clear();
-				ContactListForm2 mycontactlistForm = new ContactListForm2();
+				ContactListForm2 mycontactlistForm = new ContactListForm2(0);
 				//Test_CellTable newform = new Test_CellTable(); 
 			}
 

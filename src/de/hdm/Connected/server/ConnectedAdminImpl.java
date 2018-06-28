@@ -195,9 +195,9 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	
 	//Updated Contact
 	@Override
-	public void updateContact(Contact contact, int userId) throws IllegalArgumentException {
-		if (contact.getBoId()==permissionMapper.findById(userId).getBoId())
-		contactMapper.update(contact);
+	public Contact updateContact(Contact contact) throws IllegalArgumentException {
+		//if (contact.getBoId()==permissionMapper.findById(userId).getBoId()) --> quatsch!
+		return this.contactMapper.update(contact);
 	}
 	
 	// löscht Kontakt mit Values 
@@ -236,7 +236,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	// gibt Contact Objekte mit übergebener UserID zurück (alle Objekte die ein bestimmter User erstellt hat)
 	@Override
 	public ArrayList<Contact> findContactsByOwnerId(int id) throws IllegalArgumentException {
-		return this.contactMapper.findByUserId(id);
+		return this.contactMapper.findByOwnerId(id);
 	}
 	
 	//Gibt Contact Objekte mit übergebenen Eigenschaftsausprägung zurück
