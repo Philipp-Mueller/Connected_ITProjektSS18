@@ -462,5 +462,33 @@ public class ContactMapper {
 		}
 		return result;
 	}
+	
+	/*
+	 * Hier wird das Modifizierungsdatum aktualisiert, wenn eine Eigenschaft geändert wurde oder neu hinzugefügt.
+	 */
+	
+	public void updateContactModificationDate(int contactId){
+		Connection con = DBConnection.connection();
+		Timestamp currentTime = new Timestamp (System.currentTimeMillis());
+		
+		try {
+			Statement stmt = con.createStatement();
+			/**
+			 * SQL-Anweisung zum Aktualisieren des uebergebenen Datensatzes in der
+			 * Datenbank.
+			 */
+			stmt.executeUpdate("UPDATE contact SET modificationDate='" + currentTime + "' WHERE id= " + contactId);
+		}
+		/**
+		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
+		 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
+		 * passiert ist und wo im Code es passiert ist.
+		 */
+		catch (SQLException e2) {
+			e2.printStackTrace();
+		}
+	
+	}
+	
 }
 

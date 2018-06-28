@@ -134,6 +134,10 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 			}
 		}
 		
+		for(int j=0; j<contactMapper.findByOwnerId(userId).size(); j++){
+			allContacts.add(contactMapper.findByOwnerId(userId).get(j));
+		}
+		
 		return allContacts;
 		
 	}
@@ -450,6 +454,9 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		value.setContactID(contactId);
 		value.setCreatorId(ownerId);
 		
+		//modifizierungsdatum aktualisieren
+		this.contactMapper.updateContactModificationDate(contactId);
+		
 		/*	Permission autoPermission = new Permission();
 			autoPermission.setReceiverUserID(ownerId);
 			autoPermission.setSharedObjectId(value.getBoId());
@@ -460,6 +467,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 	@Override
 	public Value updateValue(Value value) throws IllegalArgumentException {
+		this.contactMapper.updateContactModificationDate(value.getContactID());
 		return this.valueMapper.update(value);
 	}
 
