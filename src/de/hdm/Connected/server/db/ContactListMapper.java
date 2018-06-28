@@ -83,8 +83,7 @@ public class ContactListMapper extends SharedObjectMapper{
 			 * SQL-Anweisung zum Einfügen des neuen ContactList-Tupels in die
 			 * Datenbank.
 			 */
-			//ID in Sharedobject einfügen
-			stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES (" + contactList.getBoId() + ")");
+	
 			
 			stmt.executeUpdate("INSERT INTO contactlist (id, name, ownerId) VALUES " + "(" + contactList.getBoId() + ", '"
 					+ contactList.getName() + "', " + contactList.getCreatorId()+ ")");

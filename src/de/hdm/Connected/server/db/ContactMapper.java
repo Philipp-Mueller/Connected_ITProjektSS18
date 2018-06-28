@@ -83,7 +83,7 @@ public class ContactMapper extends SharedObjectMapper {
 			 */
 			//ID in Sharedobject einfügen
 			Timestamp currentTime = new Timestamp (System.currentTimeMillis());
-			stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES (" + contact.getBoId() + ")");
+
 			
 			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, ownerId, creationDate, modificationDate) VALUES (" + contact.getBoId() + ", '"
 					+ contact.getPrename() + "', '" + contact.getSurname() + "', " + contact.getCreatorId() + ", '" + currentTime +"', '"+ currentTime + "')");

@@ -77,7 +77,7 @@ public class SharedObjectMapper {
 				ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
 
 				if (rs.next()) {
-					sharedObjectId = rs.getInt("maxid") + 1;
+					sharedObjectId = (rs.getInt("maxid") + 1);
 				}
 				stmt = con.createStatement();
 				/*
