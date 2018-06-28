@@ -236,7 +236,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	// gibt Contact Objekte mit übergebener UserID zurück (alle Objekte die ein bestimmter User erstellt hat)
 	@Override
 	public ArrayList<Contact> findContactsByOwnerId(int id) throws IllegalArgumentException {
-		return this.contactMapper.findByUserId(id);
+		return this.contactMapper.findByOwnerId(id);
 	}
 	
 	//Gibt Contact Objekte mit übergebenen Eigenschaftsausprägung zurück

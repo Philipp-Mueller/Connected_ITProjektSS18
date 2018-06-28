@@ -119,7 +119,7 @@ public class ContactsTable extends CellTable {
 									propertyValueMap = result;
 									// Window.alert(Integer.toString(result.size()));
 									// Window.alert(Integer.toString(globalIndex));
-									ShowContactInfo_Dialog showContact = new ShowContactInfo_Dialog(object);
+									ContactInfoForm showContact = new ContactInfoForm(object, result);
 
 									showContact.center();
 									showContact.show();
@@ -134,15 +134,45 @@ public class ContactsTable extends CellTable {
 			
 			cellTable.addColumn(prenameColumn, "Vorname");
 			
-		TextColumn<Contact> surnameColumn = new TextColumn<Contact>() {
+			ClickableTextCell surnameCell = new ClickableTextCell();	
+			
+			Column<Contact, String> surnameColumn = new Column<Contact, String>(surnameCell) {
+				public String getValue(Contact contact) {
+					return contact.getSurname();
+				}
+			};
+			
+			surnameColumn.setSortable(true);
+			
+			surnameColumn.setFieldUpdater(new FieldUpdater<Contact, String>(){
 
 				@Override
-				public String getValue(Contact object) {
-						 return object.getSurname();
-					}
-				};
+				public void update(int index, final Contact object, String value) {
+					// TODO Auto-generated method stub
+					
+					ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),
+							new AsyncCallback<Map<Property, Value>>() {
+
+								public void onFailure(Throwable caught) {
+									Window.alert("Ops, da ist etwas schief gelaufen!");
+								}
+
+								public void onSuccess(Map<Property, Value> result) {
+									propertyValueMap = result;
+									// Window.alert(Integer.toString(result.size()));
+									// Window.alert(Integer.toString(globalIndex));
+									ContactInfoForm showContact = new ContactInfoForm(object, result);
+
+									showContact.center();
+									showContact.show();
+
+								}
+
+							});
+					
+				}
 				
-			surnameColumn.setSortable(true);
+			});
 			cellTable.addColumn(surnameColumn, "Nachname");	
 			
 			ClickableTextCell shareButton = new ClickableTextCell(){
@@ -398,44 +428,5 @@ public class ContactsTable extends CellTable {
 	});
 
 }
-	private class ShowContactInfo_Dialog extends PopupPanel {
-	
-	public ShowContactInfo_Dialog(Contact contact)  {
-		//PopUp schließt automatisch wenn daneben geklickt wird
-		super(true);
-		//ensureDebugId("cwBasicPopup-simplePopup");
-			   
-		// Enable animation.
-		setAnimationEnabled(true);
 
-		// Enable glass background.
-		setGlassEnabled(true);
-		
-		setWidth("300px");
-
-		VerticalPanel v = new VerticalPanel();
-		FlexTable contactInfoTable = new FlexTable();
-		contactInfoTable.setCellSpacing(20);
-		
-
-		contactInfoTable.setWidget(0, 0, new HTML("<strong>Vorname: </strong>"));
-		contactInfoTable.setWidget(0, 1, new HTML(contact.getPrename()));
-		contactInfoTable.setWidget(1, 0, new HTML("<strong>Nachname: </strong>"));
-		contactInfoTable.setWidget(1, 1, new HTML(contact.getSurname()));
-		
-		for(Map.Entry<Property, Value> entry : propertyValueMap.entrySet()){
-			int rowCount = contactInfoTable.getRowCount();
-			contactInfoTable.setWidget(rowCount, 0, new HTML("<strong>" + entry.getKey().getName() + ":</strong>"));
-			contactInfoTable.setWidget(rowCount, 1, new HTML(entry.getValue().getName()));
-		}
-		
-		v.add(new HTML("<h3> Kontakt: <i>" + contact.getPrename() + " " + contact.getSurname() +"</i></h3><br /><br />"));
-		v.add(contactInfoTable);
-		setWidget(v);
-		
-	}
-
-	
-}
-	
 }

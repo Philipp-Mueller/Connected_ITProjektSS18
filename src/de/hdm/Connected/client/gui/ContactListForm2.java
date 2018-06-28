@@ -10,6 +10,7 @@ import java.util.Set;
 
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.CheckboxCell;
+import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
@@ -166,16 +167,87 @@ public class ContactListForm2 extends Widget {
 
 		});
 
-		TextColumn<Contact> prenameColumn = new TextColumn<Contact>() {
+		ClickableTextCell prenameCell = new ClickableTextCell();
+		
+		Column<Contact, String> prenameColumn = new Column<Contact, String>(prenameCell) {
 			public String getValue(Contact contact) {
 				return contact.getPrename();
 			}
 		};
-		TextColumn<Contact> surnameColumn = new TextColumn<Contact>() {
+		
+		prenameColumn.setSortable(true);
+		
+		prenameColumn.setFieldUpdater(new FieldUpdater<Contact, String>(){
+
+			@Override
+			public void update(int index, final Contact object, String value) {
+				// TODO Auto-generated method stub
+				
+				ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),
+						new AsyncCallback<Map<Property, Value>>() {
+
+							public void onFailure(Throwable caught) {
+								Window.alert("Ops, da ist etwas schief gelaufen!");
+							}
+
+							public void onSuccess(Map<Property, Value> result) {
+								propertyValueMap = result;
+								// Window.alert(Integer.toString(result.size()));
+								// Window.alert(Integer.toString(globalIndex));
+								ContactInfoForm showContact = new ContactInfoForm(object, result);
+
+								showContact.center();
+								showContact.show();
+
+							}
+
+						});
+				
+			}
+			
+		});
+		
+		ClickableTextCell surnameCell = new ClickableTextCell();	
+		
+		Column<Contact, String> surnameColumn = new Column<Contact, String>(surnameCell) {
 			public String getValue(Contact contact) {
 				return contact.getSurname();
 			}
 		};
+		
+		surnameColumn.setSortable(true);
+		
+		surnameColumn.setFieldUpdater(new FieldUpdater<Contact, String>(){
+
+			@Override
+			public void update(int index, final Contact object, String value) {
+				// TODO Auto-generated method stub
+				
+				ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),
+						new AsyncCallback<Map<Property, Value>>() {
+
+							public void onFailure(Throwable caught) {
+								Window.alert("Ops, da ist etwas schief gelaufen!");
+							}
+
+							public void onSuccess(Map<Property, Value> result) {
+								propertyValueMap = result;
+								// Window.alert(Integer.toString(result.size()));
+								// Window.alert(Integer.toString(globalIndex));
+								ContactInfoForm showContact = new ContactInfoForm(object, result);
+
+								showContact.center();
+								showContact.show();
+
+							}
+
+						});
+				
+			}
+			
+		});
+		
+		
 		ButtonCell visitButtonCell = new ButtonCell();
 		ButtonCell deleteButtonCell = new ButtonCell();
 		Column visitbuttonColumn = new Column<Contact, String>(visitButtonCell) {

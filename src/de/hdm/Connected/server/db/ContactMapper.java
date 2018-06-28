@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import de.hdm.Connected.shared.bo.Contact;
@@ -83,10 +84,11 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Einfuegen des neuen Contact-Tupels in die Datenbank.
 			 */
 			//ID in Sharedobject einfügen
+			Timestamp currentTime = new Timestamp (System.currentTimeMillis());
 			stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES (" + contact.getBoId() + ")");
 			
-			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, userId) VALUES (" + contact.getBoId() + ", '"
-					+ contact.getPrename() + "', '" + contact.getSurname() + "', " + contact.getCreatorId() + ")");
+			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, ownerId, creationDate, modificationDate) VALUES (" + contact.getBoId() + ", '"
+					+ contact.getPrename() + "', '" + contact.getSurname() + "', " + contact.getCreatorId() + " '" + currentTime +"', '"+ currentTime + "')");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
 			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
@@ -106,7 +108,8 @@ public class ContactMapper {
 	 */
 	public Contact update(Contact contact) {
 		Connection con = DBConnection.connection();
-
+		Timestamp currentTime = new Timestamp (System.currentTimeMillis());
+		
 		try {
 			Statement stmt = con.createStatement();
 			/**
@@ -114,7 +117,7 @@ public class ContactMapper {
 			 * Datenbank.
 			 */
 			stmt.executeUpdate("UPDATE contact SET prename='" + contact.getPrename() + "', surname= '"
-					+ contact.getSurname() + "' WHERE id= " + contact.getBoId());
+					+ contact.getSurname() + "', modificationDate= '"+ currentTime + "' WHERE id= " + contact.getBoId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
@@ -167,7 +170,7 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Finden des uebergebenen Datensatzes, anhand der Id, in der
 			 * Datenbank.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname FROM contact WHERE id=" + id);
+			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname, creationDate, modificationDate FROM contact WHERE id=" + id);
 			/**
 			 * Zu einem Primaerschluessel exisitiert nur maximal ein Datenbank-Tupel, somit
 			 * kann auch nur einer zurueckgegeben werden. Es wird mit einer If-Abfragen
@@ -178,6 +181,8 @@ public class ContactMapper {
 				contact.setBoId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
+				contact.setCreationDate(rs.getTimestamp("creationDate"));
+				contact.setModificationDate(rs.getTimestamp("modificationDate"));
 				return contact;
 			}
 			/**
@@ -292,7 +297,7 @@ public class ContactMapper {
 			 * der Datenbank, sortiert nach der Id.
 			 */
 			ResultSet rs = stmt.executeQuery(
-					"SELECT id, prename, surname FROM contact WHERE surename LIKE '" + surname + "' ORDER BY id");
+					"SELECT id, prename, surname FROM contact WHERE surname LIKE '" + surname + "' ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle Contact
 			 * mit dem uebergebenen Namen vorhanden ist, muss das Abfragen des ResultSet so
@@ -373,7 +378,7 @@ public class ContactMapper {
 	 * @return ArrayList<Contact>
 	 */
 
-	public ArrayList<Contact> findByUserId(int userID) {
+	public ArrayList<Contact> findByOwnerId(int userID) {
 		// DB-Verbindung holen
 		Connection con = DBConnection.connection();
 
@@ -385,7 +390,7 @@ public class ContactMapper {
 
 			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der userID in der
 			// Datenbank
-			ResultSet rs = stmt.executeQuery("SELECT id , prename, surname FROM contact WHERE id =" + userID);
+			ResultSet rs = stmt.executeQuery("SELECT id , prename, surname, creationDate, modificationDate FROM contact WHERE ownerId =" + userID);
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle
 			 * permission vorhanden ist, muss das Abfragen des ResultSet so oft erfolgen
@@ -398,6 +403,8 @@ public class ContactMapper {
 				contact.setBoId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
+				contact.setCreationDate(rs.getTimestamp("creationDate"));
+				contact.setModificationDate(rs.getTimestamp("modificationDate"));
 				result.add(contact);
 				
 			}

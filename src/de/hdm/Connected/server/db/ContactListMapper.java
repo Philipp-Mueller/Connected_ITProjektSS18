@@ -88,8 +88,8 @@ public class ContactListMapper {
 			//ID in Sharedobject einfügen
 			stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES (" + contactList.getBoId() + ")");
 			
-			stmt.executeUpdate("INSERT INTO contactlist (id, name) VALUES " + "(" + contactList.getBoId() + ", '"
-					+ contactList.getName() + "')");
+			stmt.executeUpdate("INSERT INTO contactlist (id, name, ownerId) VALUES " + "(" + contactList.getBoId() + ", '"
+					+ contactList.getName() + "', '" + contactList.getCreatorId()+ "')");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
@@ -207,7 +207,7 @@ public class ContactListMapper {
 	 * @return ArrayList<ContactList>
 	 */
 	
-	public ArrayList<ContactList> findByUserId(int userId){
+	public ArrayList<ContactList> findByOwnerId(int userId){
 		Connection con = DBConnection.connection();
 		
 		ArrayList<ContactList> result = new ArrayList<ContactList>();
@@ -217,7 +217,7 @@ public class ContactListMapper {
 			/**
 			 * SQL-Anweisung zum Finden des Datensatzes, nach dem gesuchten Namen, in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name FROM contactlist " + "WHERE userId=" + userId);
+			ResultSet rs = stmt.executeQuery("SELECT id, name FROM contactlist " + "WHERE ownerId=" + userId);
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle contactlist vorhanden ist, muss das Abfragen des ResultSet so
@@ -230,7 +230,7 @@ public class ContactListMapper {
 				ContactList contactList = new ContactList();
 				contactList.setBoId(rs.getInt("id"));
 				contactList.setName(rs.getString("name"));
-			//	contactList.setUserId(rs.getInt("userId"));
+			    contactList.setCreatorId(rs.getInt("ownerId"));
 				result.add(contactList);
 			}
 			/**
@@ -261,7 +261,7 @@ public class ContactListMapper {
 			Statement stmt = con.createStatement();
 			
 			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der Id in der Datenbank
-			ResultSet rs = stmt.executeQuery("SELECT id, name FROM contactlist ORDER BY id");
+			ResultSet rs = stmt.executeQuery("SELECT id, name, ownerId FROM contactlist ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle contactlist vorhanden ist, muss das Abfragen des ResultSet so
@@ -274,6 +274,7 @@ public class ContactListMapper {
 				ContactList contactlist = new ContactList();
 				contactlist.setBoId(rs.getInt("id"));
 				contactlist.setName(rs.getString("name"));
+				contactlist.setCreatorId(rs.getInt("ownerId"));
 				result.add(contactlist);
 			}
 			/**
