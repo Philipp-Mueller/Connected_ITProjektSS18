@@ -88,7 +88,7 @@ public class ContactMapper {
 			stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES (" + contact.getBoId() + ")");
 			
 			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, ownerId, creationDate, modificationDate) VALUES (" + contact.getBoId() + ", '"
-					+ contact.getPrename() + "', '" + contact.getSurname() + "', " + contact.getCreatorId() + " '" + currentTime +"', '"+ currentTime + "')");
+					+ contact.getPrename() + "', '" + contact.getSurname() + "', " + contact.getCreatorId() + ", '" + currentTime +"', '"+ currentTime + "')");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
 			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
