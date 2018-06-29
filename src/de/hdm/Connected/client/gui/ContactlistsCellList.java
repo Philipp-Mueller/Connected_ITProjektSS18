@@ -94,8 +94,7 @@ public class ContactlistsCellList extends Widget {
 	
 	RootPanel.get("nav").add(cellList);
 	
-	Label naviiii = new Label("Hier ist die Navi");
-	RootPanel.get("nav").add(naviiii);
+
 			
 			}
 	 	});
