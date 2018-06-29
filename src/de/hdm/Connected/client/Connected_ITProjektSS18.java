@@ -32,7 +32,6 @@ import de.hdm.Connected.client.gui.ContactListForm;
 import de.hdm.Connected.client.gui.ContactListForm2;
 import de.hdm.Connected.client.gui.ContactSharing;
 import de.hdm.Connected.client.gui.ContactsTable;
-import de.hdm.Connected.client.gui.ShareOverviewForm;
 import de.hdm.Connected.client.gui.StartPage;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.FieldVerifier;
