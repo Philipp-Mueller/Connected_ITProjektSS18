@@ -18,6 +18,14 @@ import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dev.shell.Icons;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 
@@ -40,14 +48,20 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.MultiSelectionModel;
@@ -58,6 +72,7 @@ import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.bo.Contact;
+import de.hdm.Connected.shared.bo.ContactList;
 import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
@@ -70,7 +85,17 @@ public class ContactsTable extends CellTable {
 
 	private CellTable<Contact> cellTable = new CellTable<Contact>();
 	private Map<Property, Value> propertyValueMap = null;
+	
+	private ArrayList<Contact> selectedContactsArray = new ArrayList<Contact>();
+	private ArrayList<User> selectedUser = new ArrayList<User>();
+	private ListBox userListbox = new ListBox();
+	private ArrayList<User> allUsers = new ArrayList<User>();
+	
+	private Button addContactButton = new Button(" + Kontakt");
+	private Button shareSelectedContacts = new Button("Ausgewählte Kontakte teilen");
+	private Button addContactstoCL = new Button("Kontakte einer Kontaktliste hinzufügen");
 
+	private TextBox searchBox = new TextBox();
 	ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
 
 	List<Contact> contacts = new ArrayList<Contact>();
@@ -114,7 +139,7 @@ public class ContactsTable extends CellTable {
 					}
 				});
 
-				Column<Contact, Boolean> checkColumn = new Column<Contact, Boolean>(new CheckboxCell(false, true)) {
+				Column<Contact, Boolean> checkColumn = new Column<Contact, Boolean>(new CheckboxCell(false, false)) {
 					@Override
 					public Boolean getValue(Contact object) {
 						// Get the value from the selection model.
@@ -533,7 +558,62 @@ public class ContactsTable extends CellTable {
 				cellTable.setRowCount(contacts.size(), true);
 				cellTable.setRowData(0, contacts);
 				cellTable.setWidth("70%");
+				
+				shareSelectedContacts.addClickHandler(new ClickHandler() {
 
+					@Override
+					public void onClick(ClickEvent event) {
+
+						for (Contact c : selectedContacts) {
+							selectedContactsArray.add(c);
+						}
+
+						ShareMultipleContacts shareMultiplePopup = new ShareMultipleContacts();
+						shareMultiplePopup.center();
+						shareMultiplePopup.show();
+					}
+
+				});
+				
+				searchBox.setText("Nach Kontakten suchen");
+				
+				searchBox.addBlurHandler(new BlurHandler(){
+
+					@Override
+					public void onBlur(BlurEvent event) {
+						TextBoxKeyUpHandler handler = null;
+						searchBox.setText("Nach Kontakten suchen");
+												
+					}
+					
+				});
+				
+				searchBox.addClickHandler(new ClickHandler(){
+
+					@Override
+					public void onClick(ClickEvent event) {
+						// TODO Auto-generated method stub
+						searchBox.setText("");
+						
+						//Der Suchbox einen KeyUp Handler anfügen. Bei jeder Eingabe werden die Kontakte angezeigt die dem Text inkl Wildcards davor und dahinter entsprechen.
+						searchBox.addKeyUpHandler(new TextBoxKeyUpHandler());						
+						
+					}
+					
+				});
+			
+				
+				HorizontalPanel buttonPanel = new HorizontalPanel();
+				//buttonPanel.setWidth("1000px");
+				//buttonPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);	
+				buttonPanel.setSpacing(20);
+				
+				buttonPanel.add(addContactButton);
+				buttonPanel.add(shareSelectedContacts);
+				buttonPanel.add(addContactstoCL);
+				buttonPanel.add(searchBox);
+				
+				RootPanel.get("content").add(buttonPanel);
 				RootPanel.get("content").add(cellTable);
 				RootPanel.get("content").add(pager);
 
@@ -542,7 +622,135 @@ public class ContactsTable extends CellTable {
 			}
 
 		});
+	}
+		private class ShareMultipleContacts extends PopupPanel {
+			
+			
 
+			public ShareMultipleContacts(){
+				// Enable animation.
+				setAnimationEnabled(true);
+
+				// Enable glass background.
+				setGlassEnabled(true);
+				Button zurück = new Button("Zurück");
+				zurück.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						selectedUser.clear();
+						selectedContacts.clear();
+						userListbox.clear();
+						allUsers.clear();
+						ShareMultipleContacts.this.hide();
+					}
+				});
+
+				Button ok = new Button("Teilen");
+				ok.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent event) {
+
+						for (int i = 0; i < userListbox.getItemCount(); i++) {
+							if (userListbox.isItemSelected(i)) {
+								selectedUser.add(allUsers.get(i));
+							}
+						}
+						Window.alert(Integer.toString(selectedContactsArray.size()));
+						Window.alert(Integer.toString(selectedUser.size()));
+						if (selectedContactsArray.size() > 1) {
+							ClientSideSettings.getConnectedAdmin().giveContactPermissonToUsers(selectedContactsArray,
+									selectedUser, 1, new AsyncCallback<Void>() {
+
+										@Override
+										public void onFailure(Throwable caught) {
+											Window.alert("Ops, da ist etwas schief gelaufen!");
+										}
+
+										@Override
+										// jede Kontaktliste wird der ListBox
+										// hinzugefügt
+										public void onSuccess(Void result) {
+											Window.alert("Alle Kontakte erfolgreich geteilt!");
+											Window.alert(Integer.toString(selectedContactsArray.size()));
+											Window.alert(Integer.toString(selectedUser.size()));
+											// Window.alert(Integer.toString(cArray.size()));
+											// Window.alert(Integer.toString(uArray.size()));
+											allUsers.clear();
+											userListbox.clear();
+											Window.Location.reload();
+										}
+
+									});
+						} else {
+						
+						}
+
+						ShareMultipleContacts.this.hide();
+					}
+				});
+
+				VerticalPanel v = new VerticalPanel();
+				HorizontalPanel buttonPanel = new HorizontalPanel();
+
+				userListbox.ensureDebugId("cwListBox-multiBox");
+				userListbox.setVisibleItemCount(7);
+				
+				ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Die User konnten nicht geladen werden");
+					}
+
+					@Override
+					// jede Kontaktliste wird der ListBox hinzugefügt
+					public void onSuccess(ArrayList<User> result) {
+						allUsers = result;
+						for (User u : result) {
+							userListbox.addItem(u.getLogEmail());
+						}
+
+					}
+
+				});
+
+				buttonPanel.add(ok);
+				buttonPanel.add(zurück);
+				v.add(new HTML("<h3> Mit welchen Usern sollen die Kontakte geteilt werden ?</h3>"));
+				v.add(userListbox);
+				v.add(buttonPanel);
+				setWidget(v);
+
+			}
+		}
+		
+		private class TextBoxKeyUpHandler implements KeyUpHandler{
+			
+		
+
+		@Override
+		public void onKeyUp(KeyUpEvent event) {
+			// TODO Auto-generated method stub
+			if(searchBox.getText() == ""){
+				dataProvider.getList().clear();
+				dataProvider.getList().addAll(contacts);
+				cellTable.redraw();
+				
+				}else{
+				String searchString = "*" + searchBox.getText() + "*";
+				searchString= searchString.replaceAll("\\*", "\\\\w*");
+				ArrayList<Contact> foundContacts = new ArrayList<Contact>();
+				for(Contact c : contacts){
+					if (c.getPrename().matches(searchString) || c.getSurname().matches(searchString)){
+			            foundContacts.add(c);
+				}
+				}
+				
+				dataProvider.getList().clear();
+				dataProvider.getList().addAll(foundContacts);
+				cellTable.redraw();
+				}
+			
+		}
+		
+		}
 	}
 
-}
