@@ -61,6 +61,7 @@ public class ContactSharing extends PopupPanel {
 			@Override
 			public void onClick(ClickEvent event) {
 				// Popup schließen bei Betägigung des Buttons
+			  center();
 				hide();
 
 			}
@@ -194,11 +195,16 @@ public class ContactSharing extends PopupPanel {
 					    	  
 					      });
 					
-					root.add(propertyValueTable);
-					
+				  
+				    root.add(userListBox);
+				    
 					root.add(new HTML("<br />Bitte wählen Sie die/den User aus, mit dem Sie diesen Kontakt teilen möchten:<br />" ));
+				    
+				    root.add(propertyValueTable);
 					
-					root.add(userListBox);
+				
+					
+					
 					
 					Button selected = new Button("Kontakt teilen");
 					selected.addClickHandler(new ClickHandler(){
