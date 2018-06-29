@@ -2,6 +2,7 @@ package de.hdm.Connected.client.gui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.google.gwt.thirdparty.javascript.jscomp.Result;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -116,6 +118,14 @@ public class ContactListForm2 extends Widget {
 	private ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
 	Set<Contact> set1 = new HashSet<Contact>();
 	String sizeSt;
+	
+	ClickableTextCell prenameCell = new ClickableTextCell();
+	
+	Column<Contact, String> prenameColumn = new Column<Contact, String>(prenameCell) {
+		public String getValue(Contact contact) {
+			return contact.getPrename();
+		}
+	};
 
 	public ContactListForm2(int selectedId) {
 
@@ -167,13 +177,7 @@ public class ContactListForm2 extends Widget {
 
 		});
 
-		ClickableTextCell prenameCell = new ClickableTextCell();
-		
-		Column<Contact, String> prenameColumn = new Column<Contact, String>(prenameCell) {
-			public String getValue(Contact contact) {
-				return contact.getPrename();
-			}
-		};
+
 		
 		prenameColumn.setSortable(true);
 		
@@ -246,6 +250,8 @@ public class ContactListForm2 extends Widget {
 			}
 			
 		});
+		
+		
 		
 		
 		ButtonCell visitButtonCell = new ButtonCell();
@@ -461,6 +467,24 @@ public class ContactListForm2 extends Widget {
 			int setSize = set1.size();
 			sizeSt = Integer.toString(setSize);
 			// contentPanel.add(contacttable);
+			
+		    ListHandler<Contact> columnSortHandler = new ListHandler<Contact>(result);
+		    
+		    columnSortHandler.setComparator(prenameColumn,
+		        new Comparator<Contact>() {
+		          public int compare(Contact c1, Contact c2) {
+		            if (c1 == c2) {
+		              return 0;
+		            }
+
+		            if (c1 != null) {
+		              return (c2 != null) ? c1.getPrename().compareTo(c2.getPrename()) : 1;
+		            }
+		            return -1;
+		          }
+		        });
+		    
+		    contacttable.addColumnSortHandler(columnSortHandler);
 
 		}
 
