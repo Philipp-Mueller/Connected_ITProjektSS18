@@ -467,6 +467,11 @@ public class ContactListForm2 extends Widget {
 			int setSize = set1.size();
 			sizeSt = Integer.toString(setSize);
 			// contentPanel.add(contacttable);
+			List<Contact> list = dataProvider.getList();
+		    for (Contact Contact : result) {
+		      list.add (Contact);
+		    }
+			
 			
 		    ListHandler<Contact> columnSortHandler = new ListHandler<Contact>(result);
 		    
@@ -485,6 +490,16 @@ public class ContactListForm2 extends Widget {
 		        });
 		    
 		    contacttable.addColumnSortHandler(columnSortHandler);
+		    
+		    contacttable.getColumnSortList().push(prenameColumn);
+		    contacttable.setRowCount(result.size(), true);
+		    contacttable.setRowData(0, result);
+		    contacttable.setWidth("70%");
+		    
+		    contacttable.redraw();
+			//RootPanel.get("content").add(contacttable);
+			//RootPanel.get("content").add(pager);
+			
 
 		}
 
