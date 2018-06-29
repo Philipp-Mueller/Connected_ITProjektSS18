@@ -157,13 +157,50 @@ public class ContactSharing extends PopupPanel {
 						
 					});
 					
+				      ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(sharingContact.getBoId(), new AsyncCallback<ArrayList<Permission>>(){   	  
+				    	  
+				  	    
+
+							@Override
+							public void onFailure(Throwable caught) {
+								
+								
+							}
+
+							@Override
+							public void onSuccess(ArrayList<Permission> result) {
+								
+								for (Permission p : result){
+							//		ClientSideSettings.getConnectedAdmin().findUserById(p.getReceiverUserID(), new AsyncCallback<User>(){
+
+										//@Override
+									//	public void onFailure(Throwable caught) {
+									//		Window.alert("Leider konnte der User nicht gefunden werden.");
+											
+								//		}
+
+								//		@Override
+								//		public void onSuccess(User result) {
+									//		userPermissionList.addItem(result.getLogEmail());
+								//			permissionUser.add(result);				
+															}
+										
+								//	}
+							//	);
+								}
+								
+							
+						//	}
+					    	  
+					      });
+					
 					root.add(propertyValueTable);
 					
 					root.add(new HTML("<br />Bitte wählen Sie die/den User aus, mit dem Sie diesen Kontakt teilen möchten:<br />" ));
 					
 					root.add(userListBox);
 					
-					Button selected = new Button("Zeig was ist ausgwählt");
+					Button selected = new Button("Kontakt teilen");
 					selected.addClickHandler(new ClickHandler(){
 
 						@Override
@@ -301,7 +338,9 @@ public class ContactSharing extends PopupPanel {
 	      v.add(new HTML("Dieser Kontakt wurde schon anderen User geteilt, wollen Sie diese neu erstellte Eigenschaft direkt an einen dieser User teilen?"));
 	      
 	      
-	      ClientSideSettings.getConnectedAdmin().getPermissionsBySharedOject(contact.getBoId(), new AsyncCallback<ArrayList<Permission>>(){
+	      ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(contact.getBoId(), new AsyncCallback<ArrayList<Permission>>(){   	  
+	    	  
+	    
 
 			@Override
 			public void onFailure(Throwable caught) {
