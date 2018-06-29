@@ -156,7 +156,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	}
 	// Gibt alle Permission-Objekte für ein geteiltes Objekt zurück
 	@Override
-	public ArrayList<Permission> getPermissionsBySharedOject(int sharedOId) throws IllegalArgumentException {
+	public ArrayList<Permission> getPermissionsBySharedObjectId(int sharedOId) throws IllegalArgumentException {
 		return this.permissionMapper.findByContactId(sharedOId);
 	}
 	

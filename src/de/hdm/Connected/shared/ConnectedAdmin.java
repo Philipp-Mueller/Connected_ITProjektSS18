@@ -294,7 +294,7 @@ public interface ConnectedAdmin extends RemoteService {
 
 	ArrayList<Permission> getPermissionsByShareUserId(int shareUId) throws IllegalArgumentException;
 
-	ArrayList<Permission> getPermissionsBySharedOject(int sharedOId) throws IllegalArgumentException;
+	ArrayList<Permission> getPermissionsBySharedObjectId(int sharedOId) throws IllegalArgumentException;
 
 	ArrayList<Permission> getPermissionsByValueId(int valueId) throws IllegalArgumentException;
 
