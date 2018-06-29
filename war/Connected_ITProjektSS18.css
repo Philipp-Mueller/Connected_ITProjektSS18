@@ -93,7 +93,7 @@ h1 a {
 #nav {
     font-family: 'Montserrat', sans-serif;
 	width: 25%;
-	padding: ;
+	font-weight: 300px;
 	position: fixed;
 	display: flex;
 	flex-flow: column;

@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
@@ -42,18 +43,18 @@ public class Navigation extends VerticalPanel {
 		
 		ContactlistsCellList ccl = new ContactlistsCellList();
 		
-		/*Button myContactlists = new Button ("Meine Kontaktlisten");
-		//myContactlists.addStyleName("");
+		Button myContactlists = new Button ("Meine Kontaktlisten");
+		myContactlists.addStyleName("");
 		
 		myContactlists.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				//Kontaktlisten
 			}
-		}); */
+		}); 
 		
 		
-		/*Button sharedContacts = new Button ("Kontakte");
+		Button sharedContacts = new Button ("Kontakte");
 		//sharedContactlists.addStyleName("");
 		
 		sharedContacts.addClickHandler(new ClickHandler() {
@@ -64,14 +65,14 @@ public class Navigation extends VerticalPanel {
 		});
 		
 		Button sharedContactlists = new Button ("Kontaktlisten");
-		//sharedContactlists.addStyleName("");
+		sharedContactlists.addStyleName("");
 		
 		myContacts.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				//Kontaktlisten
 			}
-		}); */
+		}); 
 		
 		DisclosurePanel clists = new DisclosurePanel();
 		
@@ -80,15 +81,19 @@ public class Navigation extends VerticalPanel {
 		clists.setContent(ccl);
 		
 		
-		/*VerticalPanel sharedPanel = new VerticalPanel();
+		VerticalPanel sharedPanel = new VerticalPanel();
 		sharedPanel.add(sharedContacts);
 		sharedPanel.add(sharedContactlists);
 		
-		shared.setContent(sharedPanel);*/
-	    	
+		//shared.setContent(sharedPanel);
+		
 		this.add(myContacts);
 		this.add(clists);
-		//this.add(myContactlists);
-			
+		this.add(myContactlists);		
+		
+//		RootPanel.get("nav").add(sharedPanel);
+//		RootPanel.get("nav").add(myContacts);
+//		RootPanel.get("nav").add(clists);
+//		RootPanel.get("nav").add(myContactlists);
 	}		
 }
