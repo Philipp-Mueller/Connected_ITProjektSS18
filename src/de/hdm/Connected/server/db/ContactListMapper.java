@@ -12,10 +12,12 @@ import de.hdm.Connected.shared.bo.ContactList;
   * Zur Verwaltung der Objekte implementiert die Mapper-Klasse entsprechende
   * Methoden (insert, search, delete, update).
   * 
+  * Durch extends SharedObjectMapper wird die Vererbung von SharedObjects dargestellt und in der DB-Ebene verdeutlicht.
+  * 
   * @author Philipp
   */
  
-public class ContactListMapper {
+public class ContactListMapper extends SharedObjectMapper{
 	/**
 	 * Die Klasse ContactListMapper wird nur einmal instantiiert
 	 * (Singleton-Eigenschaft). Damit diese Eigenschaft erfüllt werden kann,
@@ -70,26 +72,21 @@ public class ContactListMapper {
 			 */
 			Statement stmt = con.createStatement();
 			/**
-			 * Abfrage des zuletzt hinzugefügten Primärschlüssel (id). Die
-			 * aktuelle id wird um eins erhöht. Statement ausfüllen und als
-			 * Query an die Datenbank senden.
+			 * Abfrage des zuletzt hinzugefuegten Primaerschluessel (id) in der SharedObject-Klasse. Es wird durch den Aufruf von "super.insert()" in der Superklasse SharedObjectMapper die
+			 * aktuelle id um eins erhoeht. 
 			 */
 		
-			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
 		
-			if (rs.next()) {
-				contactList.setBoId(rs.getInt("maxid") + 1);
-			}
-			stmt = con.createStatement();
+			contactList.setBoId(super.insert());
+	
 			/**
 			 * SQL-Anweisung zum Einfügen des neuen ContactList-Tupels in die
 			 * Datenbank.
 			 */
-			//ID in Sharedobject einfügen
-			stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES (" + contactList.getBoId() + ")");
+	
 			
 			stmt.executeUpdate("INSERT INTO contactlist (id, name, ownerId) VALUES " + "(" + contactList.getBoId() + ", '"
-					+ contactList.getName() + "', '" + contactList.getCreatorId()+ "')");
+					+ contactList.getName() + "', " + contactList.getCreatorId()+ ")");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
@@ -175,7 +172,7 @@ public class ContactListMapper {
 			 * SQL-Anweisung zum Finden des übergebenen Datensatzes, anhand der
 			 * Id, in der Datenbank.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name FROM contactlist WHERE id=" + id);
+			ResultSet rs = stmt.executeQuery("SELECT id, ownerId name FROM contactlist WHERE id=" + id);
 			/**
 			 * Zu einem eindeutigen Wert exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurückgegeben werden.
@@ -186,6 +183,7 @@ public class ContactListMapper {
 				ContactList contactList = new ContactList();
 				contactList.setBoId(rs.getInt("id"));
 				contactList.setName(rs.getString("name"));
+				contactList.setCreatorId(rs.getInt("ownerId"));
 				return contactList;			
 		}
 			/**
@@ -217,7 +215,7 @@ public class ContactListMapper {
 			/**
 			 * SQL-Anweisung zum Finden des Datensatzes, nach dem gesuchten Namen, in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name FROM contactlist " + "WHERE ownerId=" + userId);
+			ResultSet rs = stmt.executeQuery("SELECT id, name, ownerId FROM contactlist " + "WHERE ownerId=" + userId);
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle contactlist vorhanden ist, muss das Abfragen des ResultSet so
