@@ -74,7 +74,6 @@ public class ContactListForm2 extends Widget {
 	Label yourContactsLabel = new Label("Deine Kontakte:");
 	ListBox contactListBox = new ListBox();
 	Button newContactListButton = new Button("Neue Kontaktliste erstellen", new newContactListClickhandler());
-	Button uptdateContactListButton = new Button("Kontaktliste bearbeiten");
 	Button shareContactListButton = new Button("Kontaktliste teilen", new shareCotactListClickhandler());
 	Button updateContactListButton = new Button("Kontaktliste umbenennen", new updateContactListClickhandler());
 	// Button sharePartOfClButton = new Button("Kontakte von Kontaktliste
@@ -130,6 +129,8 @@ public class ContactListForm2 extends Widget {
 	public ContactListForm2(int selectedId) {
 
 		row = selectedId;
+		
+		Window.alert(Integer.toString(row));
 
 		// namePanel.add(nameLabel);
 		// namePanel.add(nameBox);

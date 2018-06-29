@@ -30,6 +30,7 @@ import de.hdm.Connected.client.gui.ContactForm;
 import de.hdm.Connected.client.gui.ContactForm_Test;
 import de.hdm.Connected.client.gui.ContactListForm;
 import de.hdm.Connected.client.gui.ContactListForm2;
+import de.hdm.Connected.client.gui.ContactListForm3;
 import de.hdm.Connected.client.gui.ContactSharing;
 import de.hdm.Connected.client.gui.ContactsTable;
 import de.hdm.Connected.client.gui.StartPage;
@@ -268,7 +269,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content").clear();
-				ContactListForm2 mycontactlistForm = new ContactListForm2(0);
+				ContactListForm3 mycontactlistForm = new ContactListForm3(168);
 				//Test_CellTable newform = new Test_CellTable(); 
 			}
 
