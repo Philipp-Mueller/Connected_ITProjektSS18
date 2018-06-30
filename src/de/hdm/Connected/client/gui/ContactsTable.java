@@ -559,6 +559,29 @@ public class ContactsTable extends CellTable {
 				cellTable.setRowData(0, contacts);
 				cellTable.setWidth("70%");
 				
+				addContactButton.addClickHandler(new ClickHandler(){
+						//Bei Click "Kontakt anlegen" Pop Up anzeigen
+					@Override
+					public void onClick(ClickEvent event) {
+						final ContactForm newContact = new ContactForm();
+						// Enable glass background.
+						newContact.setGlassEnabled(true);					
+						
+						newContact.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+
+							public void setPosition(int offsetWidth, int offsetHeight) {
+								// TODO Auto-generated method stub
+								int left = (Window.getClientWidth() - offsetWidth) / 3;
+								int top = (Window.getClientHeight() - offsetHeight) / 3;
+
+								newContact.setPopupPosition(left, top);
+							}
+						});
+						
+					}
+					
+				});
+				
 				shareSelectedContacts.addClickHandler(new ClickHandler() {
 
 					@Override
@@ -576,12 +599,13 @@ public class ContactsTable extends CellTable {
 				});
 				
 				searchBox.setText("Nach Kontakten suchen");
-				
+				searchBox.getElement().getStyle().setColor("lightgrey");
 				searchBox.addBlurHandler(new BlurHandler(){
 
 					@Override
 					public void onBlur(BlurEvent event) {
 						TextBoxKeyUpHandler handler = null;
+						searchBox.getElement().getStyle().setColor("lightgrey");
 						searchBox.setText("Nach Kontakten suchen");
 												
 					}
@@ -594,6 +618,7 @@ public class ContactsTable extends CellTable {
 					public void onClick(ClickEvent event) {
 						// TODO Auto-generated method stub
 						searchBox.setText("");
+						searchBox.getElement().getStyle().setColor("black");
 						
 						//Der Suchbox einen KeyUp Handler anfügen. Bei jeder Eingabe werden die Kontakte angezeigt die dem Text inkl Wildcards davor und dahinter entsprechen.
 						searchBox.addKeyUpHandler(new TextBoxKeyUpHandler());						
@@ -735,11 +760,11 @@ public class ContactsTable extends CellTable {
 				cellTable.redraw();
 				
 				}else{
-				String searchString = "*" + searchBox.getText() + "*";
+				String searchString = "*" + searchBox.getText().toLowerCase() + "*";
 				searchString= searchString.replaceAll("\\*", "\\\\w*");
 				ArrayList<Contact> foundContacts = new ArrayList<Contact>();
 				for(Contact c : contacts){
-					if (c.getPrename().matches(searchString) || c.getSurname().matches(searchString)){
+					if (c.getPrename().toLowerCase().matches(searchString) || c.getSurname().toLowerCase().matches(searchString)){
 			            foundContacts.add(c);
 				}
 				}

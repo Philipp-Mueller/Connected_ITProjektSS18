@@ -137,8 +137,19 @@ public class ContactForm extends PopupPanel {
 	 */
 
 	public ContactForm() {
+		
+		this.setAnimationEnabled(true);
+		closeButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				// Popup schließen bei Betägigung des Buttons
+				hide();
+
+			}
+		});
 
 		// RootPanel.get("content").clear();
+		VerticalPanel root = new VerticalPanel();
 
 		HorizontalPanel topPanel = new HorizontalPanel();
 		/*
@@ -147,7 +158,7 @@ public class ContactForm extends PopupPanel {
 
 		topPanel.add(new HTML("<h2> Neuen Kontakt erstellen</h2>"));
 
-		RootPanel.get("content").add(topPanel);
+		root.add(topPanel);
 
 		nameTable.setWidget(0, 0, new HTML("<h3> Vorname: </h3>"));
 		nameTable.setWidget(0, 1, firstNameBox);
@@ -162,9 +173,9 @@ public class ContactForm extends PopupPanel {
 		itemPanel.add(propertyPanel);
 		itemPanel.add(valuePanel);
 
-		RootPanel.get("content").add(itemPanel);
-		RootPanel.get("content").add(nameTable);
-		RootPanel.get("content").add(propertyTable);
+		root.add(itemPanel);
+		root.add(nameTable);
+		root.add(propertyTable);
 
 		HorizontalPanel bottomPanel = new HorizontalPanel();
 
@@ -202,6 +213,7 @@ public class ContactForm extends PopupPanel {
 									ArrayList<Integer> userId = new ArrayList<Integer>();
 									contactId.add(result.getBoId());
 									userId.add(2);
+									Window.alert("Kontakt wurde angelegt!");
 
 									if (checkContactlist.getValue()) {
 										for (int i = 0; i < contactlist.getItemCount(); i++) {
@@ -213,24 +225,8 @@ public class ContactForm extends PopupPanel {
 												}
 											}
 										}
-										ClientSideSettings.getConnectedAdmin().createPermission(2, contactId, userId,
-												new AsyncCallback<Void>() {
-
-													@Override
-													public void onFailure(Throwable caught) {
-														// TODO Auto-generated
-														// method stub
-
-													}
-
-													@Override
-													public void onSuccess(Void result) {
-														Window.alert("Kontakt Kontaktliste  hinzugefügt");
-
-													}
-
-												});
-									}
+									
+									
 
 									ClientSideSettings.getConnectedAdmin().addContactsToContactList(contacts,
 											contactListToAdd, new AsyncCallback<Void>() {
@@ -246,12 +242,13 @@ public class ContactForm extends PopupPanel {
 													Window.alert(
 															"Kontakt wurde angelegt und den Kontaktlisten hinzugefügt!");
 													Window.alert(Integer.toString(contactListToAdd.size()));
-													Window.Location.reload();
+													
 
 												}
 
 											});
-
+									}
+									hide();
 								}
 
 							});
@@ -283,7 +280,7 @@ public class ContactForm extends PopupPanel {
 				 * }
 				 */ else {
 					Window.alert("Kontakt angelegt!");
-					Window.Location.reload();
+					hide();
 				}
 
 			}
@@ -296,7 +293,7 @@ public class ContactForm extends PopupPanel {
 		cancelButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				Window.Location.reload();
+				hide();
 
 			}
 		});
@@ -347,15 +344,16 @@ public class ContactForm extends PopupPanel {
 		contactlist.setEnabled(false);
 
 		// Dies dem FlexTable hinzufügen
-		RootPanel.get("content").add(new HTML("<h3> Kontakt einer Kontaktliste hinzufügen? </h3>"));
+		root.add(new HTML("<h3> Kontakt einer Kontaktliste hinzufügen? </h3>"));
 		checkboxTable.setWidget(0, 0, checkContactlist);
 		// Disabled Style
 		checkboxTable.setWidget(0, 1,
 				new HTML("<h3 style=\"color:#D3D3D3;\"> Bitte eine oder mehrere Kontaktlisten auswählen: </h3>"));
 		checkboxTable.setWidget(0, 2, contactlist);
 
-		RootPanel.get("content").add(checkboxTable);
-		RootPanel.get("content").add(bottomPanel);
+		root.add(checkboxTable);
+		root.add(bottomPanel);
+		setWidget(root);
 
 	}
 
