@@ -3,6 +3,7 @@ package de.hdm.Connected.client.gui;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -157,7 +158,7 @@ public class ContactForm_Test extends Widget {
 			// ---------- saveButton ClickHandler------------
 
 			public void onClick(ClickEvent event) {
-				java.sql.Timestamp creationTime = new Timestamp(System.currentTimeMillis());
+				java.sql.Date creationTime = new java.sql.Date(System.currentTimeMillis());
 				// Zu erst wird das Kontakt-Objekt angelegt.
 				ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
 						creationTime, creationTime, 1, new AsyncCallback<Contact>() {
@@ -482,7 +483,8 @@ public class ContactForm_Test extends Widget {
 			if(addButton !=null){
 				
 						
-				java.sql.Timestamp creationTime = new Timestamp(System.currentTimeMillis());
+				java.sql.Date creationTime = new java.sql.Date(System.currentTimeMillis());
+				
 				ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
 						creationTime, creationTime, 1, new AsyncCallback<Contact>() {
 
