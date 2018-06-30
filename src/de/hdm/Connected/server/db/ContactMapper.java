@@ -467,7 +467,7 @@ public class ContactMapper extends SharedObjectMapper {
 	
 	public void updateContactModificationDate(int contactId){
 		Connection con = DBConnection.connection();
-		Timestamp currentTime = new Timestamp (System.currentTimeMillis());
+		java.sql.Date currentTime = new java.sql.Date(System.currentTimeMillis());
 		
 		try {
 			Statement stmt = con.createStatement();
