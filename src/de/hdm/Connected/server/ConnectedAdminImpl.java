@@ -142,6 +142,47 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		
 	}
 	
+	public ArrayList<ContactList> getContactListsByUserPermission(int userId) throws IllegalArgumentException {
+		ArrayList<ContactList> allContactLists = new ArrayList<ContactList>();
+		
+		
+		
+		for(int i=0; i<contactListMapper.findAllContactLists().size(); i++){
+			if(hasPermission(contactListMapper.findAllContactLists().get(i).getBoId(), userId)){
+				allContactLists.add(contactListMapper.findAllContactLists().get(i));
+			}
+		}
+		
+		for(int j=0; j<contactListMapper.findByOwnerId(userId).size(); j++){
+			allContactLists.add(contactListMapper.findByOwnerId(userId).get(j));
+		}
+		
+		return allContactLists;
+		
+	}
+	
+	public ArrayList<Value> getValuesByUserPermission(int contactId, int userId) throws IllegalArgumentException {
+		ArrayList<Value> allValues = new ArrayList<Value>();
+		
+		
+		
+		for(int i=0; i<valueMapper.findByContactId(contactId).size(); i++){
+			if(valueMapper.findByContactId(contactId).get(i).getCreatorId() == userId){
+				
+				allValues.add(valueMapper.findByContactId(contactId).get(i));
+				
+			}else if(hasPermission(valueMapper.findByContactId(contactId).get(i).getBoId(), userId)){
+				
+				allValues.add(valueMapper.findByContactId(contactId).get(i));
+			}
+			
+		}
+	
+		
+		return allValues;
+		
+	}
+	
 	public boolean hasPermission(int shareObjectId, int receiverUserId) throws IllegalArgumentException{
 		if(permissionMapper.hasPermission(shareObjectId, receiverUserId)) {
 			return true;
@@ -181,11 +222,12 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	
 	public Contact createContact(String prename, String surname, Date creationDate, Date modificationDate, int ownerId) {
 		Contact contact = new Contact();
-		//contact.setCreationDate(creationDate);
-		//contact.setModificationDate(modificationDate);
+	
 		contact.setPrename(prename);
 		contact.setSurname(surname);
 		contact.setCreatorId(ownerId);
+		contact.setCreationDate(creationDate);
+		contact.setModificationDate(modificationDate);
 		
 	/*	Permission autoPermission = new Permission();
 		autoPermission.setReceiverUserID(ownerId);
@@ -533,11 +575,12 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 	
 	@Override
-	public Map<Property, Value> findValueAndProperty(int id) throws IllegalArgumentException {
+	public Map<Property, Value> findValueAndProperty(int contactId, int userId) throws IllegalArgumentException {
 		Map<Property, Value> mapi = new HashMap<Property, Value>();
-		for(int i=0; i<findValuesByContactId(id).size();i++){
-			Property property = findPropertyByPropertyId(findValuesByContactId(id).get(i).getPropertyID());
-			Value value = findValuesByContactId(id).get(i);			
+		
+		for(int i=0; i<getValuesByUserPermission(contactId, userId).size();i++){
+			Property property = findPropertyByPropertyId(getValuesByUserPermission(contactId, userId).get(i).getPropertyID());
+			Value value = getValuesByUserPermission(contactId, userId).get(i);			
 			mapi.put(property, value);
 		}
 		
