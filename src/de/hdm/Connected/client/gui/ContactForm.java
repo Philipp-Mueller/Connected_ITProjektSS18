@@ -199,7 +199,7 @@ public class ContactForm extends PopupPanel {
 				if (addButton != null) {
 					java.sql.Date creationTime = new java.sql.Date(System.currentTimeMillis());
 					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
-							creationTime, creationTime, 2, new AsyncCallback<Contact>() {
+							creationTime, creationTime, ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Contact>() {
 								ArrayList<Contact> contacts = new ArrayList<Contact>();
 
 								@Override
@@ -700,7 +700,7 @@ public class ContactForm extends PopupPanel {
 
 					java.sql.Date creationTime = new java.sql.Date(System.currentTimeMillis());
 					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
-							creationTime, creationTime, 2, new AsyncCallback<Contact>() {
+							creationTime, creationTime, ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Contact>() {
 
 								@Override
 								public void onFailure(Throwable caught) {

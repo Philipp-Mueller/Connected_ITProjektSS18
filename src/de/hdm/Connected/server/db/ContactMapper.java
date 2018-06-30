@@ -207,7 +207,7 @@ public class ContactMapper extends SharedObjectMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze in der Datenbank, sortiert nach
 			 * der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname, ownerid FROM contact ORDER BY prename");
+			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname, ownerid, creationDate, modificationDate FROM contact ORDER BY prename");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle contact
 			 * vorhanden ist, muss das Abfragen des ResultSet so oft erfolgen
@@ -221,6 +221,8 @@ public class ContactMapper extends SharedObjectMapper {
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				contact.setCreatorId(rs.getInt("ownerid"));
+				contact.setCreationDate(rs.getDate("creationDate"));
+				contact.setModificationDate(rs.getDate("modificationDate"));
 				result.add(contact);
 			}
 			/**
