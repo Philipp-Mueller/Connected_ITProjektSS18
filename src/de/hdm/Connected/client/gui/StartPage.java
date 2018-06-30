@@ -165,7 +165,7 @@ public class StartPage extends Widget {
 				visitbuttonColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
 					public void update(int index, final Contact object, String value) {
 						// Value is the button value. Object is the row object.
-						ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),
+						ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),2,
 								new AsyncCallback<Map<Property, Value>>() {
 
 									public void onFailure(Throwable caught) {
