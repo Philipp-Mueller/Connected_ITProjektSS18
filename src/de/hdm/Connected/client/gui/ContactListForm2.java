@@ -188,7 +188,7 @@ public class ContactListForm2 extends Widget {
 			public void update(int index, final Contact object, String value) {
 				// TODO Auto-generated method stub
 				
-				ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),
+				ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),2,
 						new AsyncCallback<Map<Property, Value>>() {
 
 							public void onFailure(Throwable caught) {
@@ -228,7 +228,7 @@ public class ContactListForm2 extends Widget {
 			public void update(int index, final Contact object, String value) {
 				// TODO Auto-generated method stub
 				
-				ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),
+				ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),2,
 						new AsyncCallback<Map<Property, Value>>() {
 
 							public void onFailure(Throwable caught) {
@@ -276,7 +276,7 @@ public class ContactListForm2 extends Widget {
 			public void update(int index, Contact object, String value) {
 				// Value is the button value. Object is the row object.
 
-				ClientSideSettings.getConnectedAdmin().findValueAndProperty(globalContactArray.get(index).getBoId(),
+				ClientSideSettings.getConnectedAdmin().findValueAndProperty(globalContactArray.get(index).getBoId(),2,
 						new AsyncCallback<Map<Property, Value>>() {
 
 							public void onFailure(Throwable caught) {

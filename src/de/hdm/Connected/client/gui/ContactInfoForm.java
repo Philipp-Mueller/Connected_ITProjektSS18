@@ -65,7 +65,7 @@ public ContactInfoForm(Contact contact, Map<Property, Value> map)  {
 	
 	//TODO einheitliche Methode für richtige Zeitausgabe finden/implementieren evtl timestamp zu Date (Mappern & Impl) ändern
 	
-	Timestamp stamp =contact.getModificationDate();
+	Date stamp =contact.getModificationDate();
 	Date mDate = new Date(stamp.getTime());
 //	String moDate = contact.getModificationDate().toString();
 	

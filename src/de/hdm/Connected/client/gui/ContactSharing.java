@@ -72,7 +72,7 @@ public class ContactSharing extends PopupPanel {
 		
 		root.add(new HTML("Bitte wählen Sie die Eigenschaften aus, die Sie teilen möchten:<br />" ));
 		
-		ClientSideSettings.getConnectedAdmin().findValueAndProperty(sharingContact.getBoId(), new AsyncCallback<Map<Property, Value>>(){
+		ClientSideSettings.getConnectedAdmin().findValueAndProperty(sharingContact.getBoId(),2, new AsyncCallback<Map<Property, Value>>(){
 
 			@Override
 			public void onFailure(Throwable caught) {

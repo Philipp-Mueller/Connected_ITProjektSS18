@@ -91,6 +91,10 @@ public class ContactsTable extends CellTable {
 	private ListBox userListbox = new ListBox();
 	private ArrayList<User> allUsers = new ArrayList<User>();
 	
+	private ArrayList<ContactList> allCLs = new ArrayList<ContactList>();
+	private ArrayList<ContactList> selectedCLs = new ArrayList<ContactList>();
+	ListBox contactlistListbox = new ListBox();
+	
 	private Button addContactButton = new Button(" + Kontakt");
 	private Button shareSelectedContacts = new Button("Ausgewählte Kontakte teilen");
 	private Button addContactstoCL = new Button("Kontakte einer Kontaktliste hinzufügen");
@@ -221,7 +225,7 @@ public class ContactsTable extends CellTable {
 					public void update(int index, final Contact object, String value) {
 						// TODO Auto-generated method stub
 
-						ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),
+						ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),2,
 								new AsyncCallback<Map<Property, Value>>() {
 
 									public void onFailure(Throwable caught) {
@@ -283,7 +287,7 @@ public class ContactsTable extends CellTable {
 					public void update(int index, final Contact object, String value) {
 						// TODO Auto-generated method stub
 
-						ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),
+						ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(), 2,
 								new AsyncCallback<Map<Property, Value>>() {
 
 									public void onFailure(Throwable caught) {
@@ -559,6 +563,53 @@ public class ContactsTable extends CellTable {
 				cellTable.setRowData(0, contacts);
 				cellTable.setWidth("70%");
 				
+				addContactButton.addClickHandler(new ClickHandler(){
+						//Bei Click "Kontakt anlegen" Pop Up anzeigen
+					@Override
+					public void onClick(ClickEvent event) {
+						final ContactForm newContact = new ContactForm();
+						// Enable glass background.
+						newContact.setGlassEnabled(true);					
+						
+						newContact.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+
+							public void setPosition(int offsetWidth, int offsetHeight) {
+								// TODO Auto-generated method stub
+								int left = (Window.getClientWidth() - offsetWidth) / 3;
+								int top = (Window.getClientHeight() - offsetHeight) / 3;
+
+								newContact.setPopupPosition(left, top);
+							}
+						});
+						
+					}
+					
+				});
+				
+				addContactstoCL.addClickHandler(new ClickHandler(){
+
+					@Override
+					public void onClick(ClickEvent event) {
+						final AddContactsToContactList addCToCl = new AddContactsToContactList();
+						// Enable glass background.
+						addCToCl.setGlassEnabled(true);					
+						
+						addCToCl.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+
+							public void setPosition(int offsetWidth, int offsetHeight) {
+								// TODO Auto-generated method stub
+								int left = (Window.getClientWidth() - offsetWidth) / 3;
+								int top = (Window.getClientHeight() - offsetHeight) / 3;
+
+								addCToCl.setPopupPosition(left, top);
+							}
+						});
+						
+					}
+					
+				});
+				
+				
 				shareSelectedContacts.addClickHandler(new ClickHandler() {
 
 					@Override
@@ -576,12 +627,13 @@ public class ContactsTable extends CellTable {
 				});
 				
 				searchBox.setText("Nach Kontakten suchen");
-				
+				searchBox.getElement().getStyle().setColor("lightgrey");
 				searchBox.addBlurHandler(new BlurHandler(){
 
 					@Override
 					public void onBlur(BlurEvent event) {
 						TextBoxKeyUpHandler handler = null;
+						searchBox.getElement().getStyle().setColor("lightgrey");
 						searchBox.setText("Nach Kontakten suchen");
 												
 					}
@@ -594,6 +646,7 @@ public class ContactsTable extends CellTable {
 					public void onClick(ClickEvent event) {
 						// TODO Auto-generated method stub
 						searchBox.setText("");
+						searchBox.getElement().getStyle().setColor("black");
 						
 						//Der Suchbox einen KeyUp Handler anfügen. Bei jeder Eingabe werden die Kontakte angezeigt die dem Text inkl Wildcards davor und dahinter entsprechen.
 						searchBox.addKeyUpHandler(new TextBoxKeyUpHandler());						
@@ -722,6 +775,7 @@ public class ContactsTable extends CellTable {
 			}
 		}
 		
+		
 		private class TextBoxKeyUpHandler implements KeyUpHandler{
 			
 		
@@ -735,11 +789,11 @@ public class ContactsTable extends CellTable {
 				cellTable.redraw();
 				
 				}else{
-				String searchString = "*" + searchBox.getText() + "*";
+				String searchString = "*" + searchBox.getText().toLowerCase() + "*";
 				searchString= searchString.replaceAll("\\*", "\\\\w*");
 				ArrayList<Contact> foundContacts = new ArrayList<Contact>();
 				for(Contact c : contacts){
-					if (c.getPrename().matches(searchString) || c.getSurname().matches(searchString)){
+					if (c.getPrename().toLowerCase().matches(searchString) || c.getSurname().toLowerCase().matches(searchString)){
 			            foundContacts.add(c);
 				}
 				}
@@ -752,5 +806,82 @@ public class ContactsTable extends CellTable {
 		}
 		
 		}
-	}
+		
+		private class AddContactsToContactList extends PopupPanel {
 
+			public AddContactsToContactList() {
+				
+				// Enable animation.
+				setAnimationEnabled(true);
+
+			//	ClientSideSettings.getConnectedAdmin().getP
+				
+				Button zurück = new Button("Zurück");
+				zurück.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						selectedCLs.clear();
+						selectedContactsArray.clear();
+						contactlistListbox.clear();
+						AddContactsToContactList.this.hide();
+					}
+				});
+
+				Button ok = new Button("Hinzufügen");
+				ok.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent event) {
+
+						for (int i = 0; i < contactlistListbox.getItemCount(); i++) {
+							if (contactlistListbox.isItemSelected(i)) {
+								selectedCLs.add(allCLs.get(i));
+							}
+						}
+
+						if (selectedContactsArray.size() > 1) {
+							ClientSideSettings.getConnectedAdmin().addContactsToContactList(selectedContactsArray,
+									selectedCLs, new AsyncCallback<Void>() {
+
+										@Override
+										public void onFailure(Throwable caught) {
+											Window.alert("Ops, da ist etwas schief gelaufen!");
+										}
+
+										@Override
+										// jede Kontaktliste wird der ListBox
+										// hinzugefügt
+										public void onSuccess(Void result) {
+											Window.alert("Alle Kontakte erfolgreich geteilt!");
+											Window.alert(Integer.toString(selectedContactsArray.size()));
+											Window.alert(Integer.toString(selectedCLs.size()));
+											// Window.alert(Integer.toString(cArray.size()));
+											// Window.alert(Integer.toString(uArray.size()));
+											AddContactsToContactList.this.hide();
+										}
+
+									});
+						} else {
+							// ContactSharing fiki = new
+							// ContactSharing(selectedContactsArray.get(1).getBoId(),
+							// selectedUser);
+						}
+
+						AddContactsToContactList.this.hide();
+					}
+				});
+
+				VerticalPanel v = new VerticalPanel();
+				HorizontalPanel buttonPanel = new HorizontalPanel();
+
+				contactlistListbox.ensureDebugId("cwListBox-multiBox");
+				contactlistListbox.setVisibleItemCount(7);
+
+			
+
+				buttonPanel.add(ok);
+				buttonPanel.add(zurück);
+				v.add(userListbox);
+				v.add(buttonPanel);
+				setWidget(v);
+
+			}
+	}
+}
