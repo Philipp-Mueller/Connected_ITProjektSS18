@@ -60,11 +60,6 @@ public ContactInfoForm(Contact contact, Map<Property, Value> map)  {
 	
 	Date mDate = contact.getModificationDate();
 	Date cDate = contact.getCreationDate();
-	
-//	String moDate = contact.getModificationDate().toString();
-	
-	
-	// java.sql.Date umgewandeltesDate = new java.sql.Date(new java.util.Date().getTime());
 
 	
 	contactInfoTable.setWidget(0, 0, new HTML("<strong>Ersteller: </strong>"));
