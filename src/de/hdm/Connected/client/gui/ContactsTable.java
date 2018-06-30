@@ -590,6 +590,9 @@ public class ContactsTable extends CellTable {
 
 					@Override
 					public void onClick(ClickEvent event) {
+						for (Contact c : selectedContacts) {
+							selectedContactsArray.add(c);
+						}
 						final AddContactsToContactList addCToCl = new AddContactsToContactList();
 						// Enable glass background.
 						addCToCl.setGlassEnabled(true);					
@@ -813,8 +816,26 @@ public class ContactsTable extends CellTable {
 				
 				// Enable animation.
 				setAnimationEnabled(true);
+				
+				ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(2, new AsyncCallback<ArrayList<ContactList>>(){
 
-			//	ClientSideSettings.getConnectedAdmin().getP
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void onSuccess(ArrayList<ContactList> result) {
+						Window.alert(Integer.toString(result.size()));
+						allCLs = result;
+					 for(ContactList cl : result){
+						 contactlistListbox.addItem(cl.getName());
+					 }
+						
+					}
+					
+				});
 				
 				Button zurück = new Button("Zurück");
 				zurück.addClickHandler(new ClickHandler() {
@@ -835,7 +856,7 @@ public class ContactsTable extends CellTable {
 								selectedCLs.add(allCLs.get(i));
 							}
 						}
-
+						Window.alert(Integer.toString(selectedContactsArray.size()));
 						if (selectedContactsArray.size() > 1) {
 							ClientSideSettings.getConnectedAdmin().addContactsToContactList(selectedContactsArray,
 									selectedCLs, new AsyncCallback<Void>() {
@@ -849,7 +870,7 @@ public class ContactsTable extends CellTable {
 										// jede Kontaktliste wird der ListBox
 										// hinzugefügt
 										public void onSuccess(Void result) {
-											Window.alert("Alle Kontakte erfolgreich geteilt!");
+											Window.alert("Alle Kontakte wurden den Kontaktlisten hinzugefügt!");
 											Window.alert(Integer.toString(selectedContactsArray.size()));
 											Window.alert(Integer.toString(selectedCLs.size()));
 											// Window.alert(Integer.toString(cArray.size()));
@@ -878,7 +899,7 @@ public class ContactsTable extends CellTable {
 
 				buttonPanel.add(ok);
 				buttonPanel.add(zurück);
-				v.add(userListbox);
+				v.add(contactlistListbox);
 				v.add(buttonPanel);
 				setWidget(v);
 
