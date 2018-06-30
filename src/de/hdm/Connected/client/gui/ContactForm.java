@@ -790,7 +790,7 @@ public class ContactForm extends PopupPanel {
 		public void onSuccess(final Value result) {
 			// Am Ende wird der Kontakt den ausgewählten Kontaktlisten
 			// hinzugefügt.
-			Window.alert("Kontakt vollständig angelegt");
+			Window.alert("Eigenschaft erfolgreich hinzugefügt");
 			final Label propertyLabel = new Label(propertyName);
 			Label valueLabel = new Label(result.getName());
 			propertyTable.removeRow(eventRow);
