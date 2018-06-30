@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import de.hdm.Connected.shared.bo.SharedObject;
 import de.hdm.Connected.shared.bo.Value;
 
 /**
@@ -15,9 +16,11 @@ import de.hdm.Connected.shared.bo.Value;
  * Zur Verwaltung der Objekte implementiert die Mapper-Klasse entsprechende
  * Methoden (insert, search, delete, update).
  * 
+ * Durch extends SharedObjectMapper wird die Vererbung von SharedObjects dargestellt und in der DB-Ebene verdeutlicht.
+ * 
  * @author Burak
  */
-public class ValueMapper {
+public class ValueMapper extends SharedObjectMapper {
 
 	/**
 	 * Die Klasse ValueMapper wird nur einmal instantiiert
@@ -60,6 +63,9 @@ public class ValueMapper {
 		 * DB-Verbindung holen.
 		 */
 		Connection con = DBConnection.connection();
+		
+			
+		
 
 		try {
 			/**
@@ -67,27 +73,20 @@ public class ValueMapper {
 			 */
 			Statement stmt = con.createStatement();
 			/**
-			 * Abfrage des zuletzt hinzugefuegten Primaerschluessel (id). Die
-			 * aktuelle id wird um eins erhoeht. Statement ausfuellen und als
-			 * Query an die Datenbank senden.
+			 * Abfrage des zuletzt hinzugefuegten Primaerschluessel (id) in der SharedObject-Klasse. Es wird durch den Aufruf von "super.insert()" in der Superklasse SharedObjectMapper die
+			 * aktuelle id um eins erhoeht. 
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
-
-			if (rs.next()) {
-				value.setBoId(rs.getInt("maxid") + 1);
-			}
-			stmt = con.createStatement();
+		
+			value.setBoId(super.insert());
+		
 			/*
 			 * SQL-Anweisung zum Einfuegen des neuen Value-Tupels in die
 			 * Datenbank.
 			 */
-			
-			//ID in Sharedobject einfügen
-			
-			stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES (" + value.getBoId() + ")");
-			
-			stmt.executeUpdate("INSERT INTO value (id, name, propertyId, contactId) VALUES (" + value.getBoId()
-			+ ", '" + value.getName() + "', " + value.getPropertyID()+ ", " + value.getContactID() + ")");
+
+	
+			stmt.executeUpdate("INSERT INTO value (id, name, propertyId, contactId, ownerId) VALUES (" + value.getBoId() + ", '"
+					+ value.getName() + "', " + value.getPropertyID() + ", " + value.getContactID() +  ", " + value.getCreatorId() + ")");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
@@ -114,7 +113,8 @@ public class ValueMapper {
 			 * SQL-Anweisung zum Aktualisieren des uebergebenen Datensatzes in
 			 * der Datenbank.
 			 */
-			stmt.executeUpdate("UPDATE value SET name='" + value.getName() + "', propertyId = '" + value.getPropertyID() + "', contactId = '" + value.getContactID() + "' WHERE id= " + value.getBoId());
+			stmt.executeUpdate("UPDATE value SET name='" + value.getName() + "', propertyId = '" + value.getPropertyID()
+					+ "', contactId = '" + value.getContactID() + "' WHERE id= " + value.getBoId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -168,8 +168,7 @@ public class ValueMapper {
 			 * SQL-Anweisung zum Finden des uebergebenen Datensatzes, anhand der
 			 * Id, in der Datenbank.
 			 */
-			ResultSet rs = stmt
-					.executeQuery("SELECT id, name, propertyId, contactId FROM value WHERE id=" + id);
+			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId, ownerId FROM value WHERE id=" + id);
 			/**
 			 * Zu einem Primaerschluessel exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurueckgegeben werden.
@@ -182,6 +181,7 @@ public class ValueMapper {
 				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
+				value.setCreatorId(rs.getInt("ownerId"));
 				return value;
 			}
 			/**
@@ -211,10 +211,9 @@ public class ValueMapper {
 			 * SQL-Anweisung zum Finden des Datensatzes, anhand des uebergebenen
 			 * bez, in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt
-					.executeQuery("SELECT id, name, propertyId, contactId FROM value WHERE bez LIKE '" + bez
-							+ "' ORDER BY id");
-			
+			ResultSet rs = stmt.executeQuery(
+					"SELECT id, name, propertyId, contactId, ownerId FROM value WHERE bez LIKE '" + bez + "' ORDER BY id");
+
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle Value mit dem uebergebenen bez vorhanden ist, muss das
@@ -228,6 +227,7 @@ public class ValueMapper {
 				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
+				value.setCreatorId(rs.getInt("ownerId"));
 				result.add(value);
 			}
 			/**
@@ -248,7 +248,7 @@ public class ValueMapper {
 	 * @param contactid
 	 * @return ArrayList<Value>
 	 */
-	
+
 	public ArrayList<Value> findByContactId(int contactId) {
 		Connection con = DBConnection.connection();
 
@@ -259,7 +259,7 @@ public class ValueMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der ContactId,
 			 * in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId FROM value WHERE contactId LIKE '"
+			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId, ownerId FROM value WHERE contactId LIKE '"
 					+ contactId + "' ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
@@ -275,6 +275,7 @@ public class ValueMapper {
 				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
+				value.setCreatorId(rs.getInt("ownerId"));
 				result.add(value);
 			}
 			/**
@@ -287,7 +288,7 @@ public class ValueMapper {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Findet ein Value-Objekt anhand des uebergebenen PropertyId in der
 	 * Datenbank.
@@ -295,7 +296,7 @@ public class ValueMapper {
 	 * @param propertyId
 	 * @return ArrayList<Value>
 	 */
-	
+
 	public ArrayList<Value> findByProperty(int propertyId) {
 		Connection con = DBConnection.connection();
 
@@ -303,10 +304,10 @@ public class ValueMapper {
 		try {
 			Statement stmt = con.createStatement();
 			/**
-			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der PropertyId,
-			 * in der Datenbank, sortiert nach der Id.
+			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der
+			 * PropertyId, in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId FROM value WHERE propertyId = "
+			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId, ownerId FROM value WHERE propertyId = "
 					+ propertyId + " ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
@@ -322,6 +323,7 @@ public class ValueMapper {
 				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
+				value.setCreatorId(rs.getInt("ownerId"));
 				result.add(value);
 			}
 			/**
@@ -334,16 +336,15 @@ public class ValueMapper {
 		}
 		return result;
 	}
-	
-	
+
 	/**
-	 * Findet ein Value-Objekt anhand des uebergebenen PropertyId und Beschreibung in der
-	 * Datenbank.
+	 * Findet ein Value-Objekt anhand des uebergebenen PropertyId und
+	 * Beschreibung in der Datenbank.
 	 * 
 	 * @param propertyId
 	 * @return ArrayList<Value>
 	 */
-	
+
 	public ArrayList<Value> findByPropertyAndDescription(int propertyId, String valueDescription) {
 		Connection con = DBConnection.connection();
 
@@ -351,11 +352,11 @@ public class ValueMapper {
 		try {
 			Statement stmt = con.createStatement();
 			/**
-			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der PropertyId,
-			 * in der Datenbank, sortiert nach der Id.
+			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der
+			 * PropertyId, in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId FROM value WHERE propertyId = '"
-					+ propertyId + "' AND LOWER(name) LIKE '%"+valueDescription.toLowerCase()+"%'" +"ORDER BY id");
+			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId, creatorId FROM value WHERE propertyId = '"
+					+ propertyId + "' AND LOWER(name) LIKE '%" + valueDescription.toLowerCase() + "%'" + "ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle Value mit dem uebergebenen PropertyId vorhanden ist, muss
@@ -370,6 +371,7 @@ public class ValueMapper {
 				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
+				value.setCreatorId(rs.getInt("ownerId"));
 				result.add(value);
 			}
 			/**
@@ -382,13 +384,13 @@ public class ValueMapper {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Findet alle Value-Objekte in der Datenbank.
 	 * 
 	 * @return ArrayList<Value>
 	 */
-	
+
 	public ArrayList<Value> findAllValues() {
 		Connection con = DBConnection.connection();
 
@@ -396,10 +398,10 @@ public class ValueMapper {
 		try {
 			Statement stmt = con.createStatement();
 			/**
-			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der PropertyId,
-			 * in der Datenbank, sortiert nach der Id.
+			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der
+			 * PropertyId, in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, description, propertyId, contactId FROM value ORDER BY id");
+			ResultSet rs = stmt.executeQuery("SELECT id, description, propertyId, contactId, ownerId FROM value ORDER BY id");
 
 			while (rs.next()) {
 				Value value = new Value();
@@ -407,6 +409,7 @@ public class ValueMapper {
 				value.setName(rs.getString("description"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
+				value.setCreatorId(rs.getInt("ownerId"));
 				result.add(value);
 			}
 			/**
@@ -419,8 +422,5 @@ public class ValueMapper {
 		}
 		return result;
 	}
-	
-	
-
 
 }

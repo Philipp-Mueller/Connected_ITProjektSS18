@@ -108,7 +108,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return aktualisiertes Contact-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public void updateContact(Contact contact, int userId) throws IllegalArgumentException;
+	public Contact updateContact(Contact contact) throws IllegalArgumentException;
 	
 	/**
 	 * Löscht ein Contact-Objekt und alle eventuell darauf basierenden
@@ -294,7 +294,7 @@ public interface ConnectedAdmin extends RemoteService {
 
 	ArrayList<Permission> getPermissionsByShareUserId(int shareUId) throws IllegalArgumentException;
 
-	ArrayList<Permission> getPermissionsBySharedOject(int sharedOId) throws IllegalArgumentException;
+	ArrayList<Permission> getPermissionsBySharedObjectId(int sharedOId) throws IllegalArgumentException;
 
 	ArrayList<Permission> getPermissionsByValueId(int valueId) throws IllegalArgumentException;
 

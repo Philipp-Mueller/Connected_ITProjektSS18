@@ -85,8 +85,13 @@ public class ReportGeneratorBaseForm extends Widget {
 	// Footer Attribute
 	private HorizontalPanel footer = new HorizontalPanel();
 	private Anchor connectedLink = new Anchor("Connected", "Connected_ITProjektSS18.html");
+	private HTML copyrightText2 = new HTML(" | ");
+	private Anchor reportGeneratorLink = new Anchor (" ReportGenerator", "Connected_ITProjektSS18ReportGenerator.html");
 	private HTML copyrightText = new HTML(" | © 2018 Connected | ");
 	private Anchor impressumLink = new Anchor("Impressum");
+	
+	
+	
 
 	public ReportGeneratorBaseForm() {
 
@@ -316,6 +321,8 @@ public class ReportGeneratorBaseForm extends Widget {
 
 		});
 		footer.add(connectedLink);
+		footer.add(copyrightText2);
+		footer.add(reportGeneratorLink);
 		footer.add(copyrightText);
 		footer.add(impressumLink);
 		RootPanel.get("footer").add(footer);

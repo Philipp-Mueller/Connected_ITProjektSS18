@@ -40,7 +40,7 @@ public interface ConnectedAdminAsync {
 	
 	void createContact(String prename, String surname, Timestamp creationDate, Timestamp modificationDate, int ownerId, AsyncCallback<Contact> callback);
 	
-	void updateContact(Contact contact, int userId, AsyncCallback<Void> callback);
+	void updateContact(Contact contact, AsyncCallback<Contact> callback);
 	
 	void deleteContact(Contact contact, User cUser, AsyncCallback<Void> callback);
 	
@@ -98,7 +98,7 @@ public interface ConnectedAdminAsync {
 
 	void getPermissionsByShareUserId(int shareUId, AsyncCallback<ArrayList<Permission>> callback);
 
-	void getPermissionsBySharedOject(int sharedOId, AsyncCallback<ArrayList<Permission>> callback);
+	void getPermissionsBySharedObjectId(int sharedOId, AsyncCallback<ArrayList<Permission>> callback);
 
 	void getPermissionsByValueId(int valueId, AsyncCallback<ArrayList<Permission>> callback);
 
