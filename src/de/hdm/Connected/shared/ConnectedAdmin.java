@@ -1,6 +1,6 @@
 package de.hdm.Connected.shared;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -94,13 +94,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 */
 	public void deleteProperty(Property property) throws IllegalArgumentException;
 	
-	/**
-	 * Erstellt ein neues Contact-Objekt.
-	 * 
-	 * @return neu erstelltes Contact-Objekt
-	 * @throws IllegalArgumentException
-	 */
-	public Contact createContact(String prename, String surname, Timestamp creationDate, Timestamp modificationDate, int ownerId) throws IllegalArgumentException;
+	Contact createContact(String prename, String surname, Date creationDate, Date modificationDate, int ownerId);
 	
 	/**
 	 * Aktuallisiert ein Contact-Objekt.

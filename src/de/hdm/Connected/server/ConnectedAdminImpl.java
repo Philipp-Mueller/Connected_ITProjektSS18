@@ -1,6 +1,6 @@
 package de.hdm.Connected.server;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +41,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public ConnectedAdminImpl() throws IllegalArgumentException {
 	}
 
-	Timestamp ts = new Timestamp(System.currentTimeMillis());
+	
 
 	
 	/**
@@ -179,7 +179,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	
 	// erstellt Contact und fügt eine Berechtigung für User hinzu, der Contact erstellt hat
 	
-	public Contact createContact(String prename, String surname, Timestamp creationDate, Timestamp modificationDate, int ownerId) {
+	public Contact createContact(String prename, String surname, Date creationDate, Date modificationDate, int ownerId) {
 		Contact contact = new Contact();
 		//contact.setCreationDate(creationDate);
 		//contact.setModificationDate(modificationDate);
@@ -593,6 +593,8 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
 	
 	/*@Override
 	public ArrayList<Contact> findAllContacts() throws IllegalArgumentException{

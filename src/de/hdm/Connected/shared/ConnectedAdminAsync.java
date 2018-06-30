@@ -1,5 +1,6 @@
 package de.hdm.Connected.shared;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Map;
@@ -38,7 +39,7 @@ public interface ConnectedAdminAsync {
 	
 	void deleteProperty(Property property, AsyncCallback<Void> callback);
 	
-	void createContact(String prename, String surname, Timestamp creationDate, Timestamp modificationDate, int ownerId, AsyncCallback<Contact> callback);
+	void createContact(String prename, String surname, Date creationDate, Date modificationDate, int ownerId, AsyncCallback<Contact> callback);
 	
 	void updateContact(Contact contact, AsyncCallback<Contact> callback);
 	
