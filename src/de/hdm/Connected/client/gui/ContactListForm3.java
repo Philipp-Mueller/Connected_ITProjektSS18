@@ -16,6 +16,7 @@ import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dev.shell.Icons;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
@@ -74,8 +75,9 @@ public class ContactListForm3 extends CellTable {
 	ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
 	
 	Button newContactListButton = new Button("Neue Kontaktliste erstellen", new newContactListClickhandler());
-	Button shareContactListButton = new Button("Kontaktliste teilen", new shareCotactListClickhandler());
-	Button updateContactListButton = new Button("Kontaktliste umbenennen", new updateContactListClickhandler());
+	Button shareContactListButton = new Button("<img border='0' src='share.png' width = '50' length = '50'/>");
+	Button updateContactListButton = new Button("<img border='0' src='edit.png' width = '50' '50' length = '50'/>");
+	Button deleteContactListButton = new Button("<img border='0' src='delete.png' width = '50' '50' length = '50'/>");
 	HorizontalPanel buttonPanel = new HorizontalPanel();
 	Label nameLabel = new Label();
 	final ListBox userListbox = new ListBox(true);
@@ -104,8 +106,9 @@ public class ContactListForm3 extends CellTable {
 				Window.alert("Carmen mag das nicht");
 			}
 			public void onSuccess(ArrayList<ContactList> result){
-				Window.alert("Carmen mag das");
+
 				for(int i = 0; i<result.size(); i++){
+
 					if(contaclistid == result.get(i).getBoId()){
 						mainContactlist.setBoId(contaclistid);
 						mainContactlist.setName(result.get(i).getName());
@@ -126,6 +129,7 @@ public class ContactListForm3 extends CellTable {
 
 			@Override
 			public void onSuccess(ArrayList<Contact> result) {
+				
 				contacts = result;
 				
 			ClickableTextCell prenameCell = new ClickableTextCell();	
@@ -323,28 +327,33 @@ public class ContactListForm3 extends CellTable {
 				User user = new User();
 				user.setBoId(2);
 				buttonPressed = true;
-				ClientSideSettings.getConnectedAdmin().deleteContact(object, user, new AsyncCallback<Void>(){
-
-					@Override
-					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void onSuccess(Void result) {
-						// TODO Auto-generated method stub
-						for(int i=0; i<contacts.size(); i++){
-							if(contacts.get(i).getBoId() == object.getBoId()){
-								contacts.remove(i);
-							}
-						}
-						dataProvider.getList().clear();
-						dataProvider.getList().addAll(contacts);
-						Window.alert("Kontakt " + object.getPrename() + " " + object.getSurname() + " wurde gelöscht");
-					}
-					
-				});
+				
+				deleteDialog deleteD = new deleteDialog(index);
+				deleteD.center();
+				deleteD.show();
+				
+//				ClientSideSettings.getConnectedAdmin().deleteContact(object, user, new AsyncCallback<Void>(){
+//
+//					@Override
+//					public void onFailure(Throwable caught) {
+//						// TODO Auto-generated method stub
+//						
+//					}
+//
+//					@Override
+//					public void onSuccess(Void result) {
+//						// TODO Auto-generated method stub
+//						for(int i=0; i<contacts.size(); i++){
+//							if(contacts.get(i).getBoId() == object.getBoId()){
+//								contacts.remove(i);
+//							}
+//						}
+//						dataProvider.getList().clear();
+//						dataProvider.getList().addAll(contacts);
+//						Window.alert("Kontakt " + object.getPrename() + " " + object.getSurname() + " wurde gelöscht");
+//					}
+//					
+//				});
 				
 				
 			}		
@@ -453,13 +462,20 @@ public class ContactListForm3 extends CellTable {
 		cellTable.setRowCount(contacts.size(), true);
 		cellTable.setRowData(0, contacts);
 		cellTable.setWidth("70%");
+
+		buttonPanel.setWidth("100%");
+		buttonPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
 		
+		buttonPanel.add(new HTML("<h2> Kontaktliste: " +  mainContactlist.getName()+ "</h2>"));
 		buttonPanel.add(newContactListButton);
+		//shareContactListButton.setHTML(("<img border='0' src='share.png' />"));
+		shareContactListButton.addClickHandler(new shareCotactListClickhandler());
+		updateContactListButton.addClickHandler(new updateContactListClickhandler());
+		deleteContactListButton.addClickHandler(new deleteContactListClickhandler());
 		buttonPanel.add(shareContactListButton);
 		buttonPanel.add(updateContactListButton);
-		nameLabel.setText("Halts Maul Carmen!");
-		Window.alert(mainContactlist.getName());
-		buttonPanel.add(nameLabel);
+		buttonPanel.add(deleteContactListButton);
+
 		RootPanel.get("content").add(buttonPanel);
 		RootPanel.get("content").add(cellTable);
 		RootPanel.get("content").add(pager);
@@ -652,7 +668,7 @@ public class ContactListForm3 extends CellTable {
 						public void onSuccess(Void result) {
 							Window.alert("Erfolgreich umbenannt");
 							RootPanel.get("content").clear();
-							ContactListForm2 mycontactlistForm = new ContactListForm2(mainContactlist.getBoId());
+							ContactListForm3 reload = new ContactListForm3(mainContactlist.getBoId());
 						}
 					});
 					updateDialog.this.hide();
@@ -752,7 +768,7 @@ public class ContactListForm3 extends CellTable {
 									Window.alert("Teilen von " + mainContactlist.getName() + " war erfolgreich!");
 									Window.alert(Integer.toString(uArray.size()));
 									RootPanel.get("contant").clear();
-									ContactListForm2 mycontactlistForm = new ContactListForm2(
+									ContactListForm3 reload = new ContactListForm3(
 											mainContactlist.getBoId());
 								}
 
@@ -815,7 +831,7 @@ public class ContactListForm3 extends CellTable {
 								public void onSuccess(ContactList result) {
 									Window.alert("Erfolgreich erstellt");
 									RootPanel.get("content").clear();
-									ContactListForm2 mycontactlistForm = new ContactListForm2(result.getBoId());
+									ContactListForm3 reload = new ContactListForm3(result.getBoId());
 								}
 							});
 					newDialog.this.hide();
@@ -832,10 +848,10 @@ public class ContactListForm3 extends CellTable {
 
 	private class deleteDialog extends DialogBox {
 
-		public deleteDialog() {
+		public deleteDialog(final int index) {
 
 			// Set the dialog box's caption.
-			setText("Löschen");
+			setText("Kontakt entfernen");
 
 			// Enable animation.
 			setAnimationEnabled(true);
@@ -845,7 +861,7 @@ public class ContactListForm3 extends CellTable {
 
 			VerticalPanel v = new VerticalPanel();
 
-			Label deleteLabel = new Label("Löschen wirklich durchführen?");
+			Label deleteLabel = new Label("Kontakt von Kontaktliste entfernen?");
 			v.add(deleteLabel);
 
 			Button delete = new Button("Ja");
@@ -855,24 +871,24 @@ public class ContactListForm3 extends CellTable {
 
 				public void onClick(ClickEvent event) {
 
-//					ClientSideSettings.getConnectedAdmin().removeContactFromContactList(
-//							contacts.get(publicindex).getBoId(), mainContactlist.getBoId(),
-//							new AsyncCallback<Void>() {
-//								public int boIdvonContact = contacts.get(publicindex).getBoId();
-//								public int boIdvonCL = mainContactlist.getBoId();
-//
-//								public void onFailure(Throwable caught) {
-//									Window.alert("Ops, da ist etwas schief gelaufen!");
-//								}
-//
-//								public void onSuccess(Void result) {
-//									Window.alert("Kontakt erfolgreich von Kontaktliste entfernt");
-//									dataProvider.getList().remove(publicindex);
-//									dataProvider.refresh();
-//
-//								}
-//
-//							});
+					ClientSideSettings.getConnectedAdmin().removeContactFromContactList(
+							contacts.get(index).getBoId(), mainContactlist.getBoId(),
+							new AsyncCallback<Void>() {
+								public int boIdvonContact = contacts.get(index).getBoId();
+								public int boIdvonCL = mainContactlist.getBoId();
+
+								public void onFailure(Throwable caught) {
+									Window.alert("Ops, da ist etwas schief gelaufen!");
+								}
+
+								public void onSuccess(Void result) {
+									Window.alert("Kontakt erfolgreich von Kontaktliste entfernt");
+									dataProvider.getList().remove(index);
+									dataProvider.refresh();
+
+								}
+
+							});
 
 					deleteDialog.this.hide();
 
@@ -938,7 +954,7 @@ public class ContactListForm3 extends CellTable {
 						public void onSuccess(Void result) {
 							Window.alert("Löschen von " + mainContactlist.getName() + " war erfolgreich!");
 							RootPanel.get("content").clear();
-							ContactListForm2 neuLaden = new ContactListForm2(mainContactlist.getBoId());
+							//ContactListForm2 neuLaden = new ContactListForm2(mainContactlist.getBoId());
 
 						}
 
