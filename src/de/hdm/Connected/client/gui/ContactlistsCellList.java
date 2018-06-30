@@ -93,8 +93,6 @@ public class ContactlistsCellList extends Widget {
 	cellList.setRowData(0, cll);
 	
 	RootPanel.get("nav").add(cellList);
-	
-
 			
 			}
 	 	});

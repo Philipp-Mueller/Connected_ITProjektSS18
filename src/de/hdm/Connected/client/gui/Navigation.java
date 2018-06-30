@@ -25,6 +25,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.bo.Contact;
+import de.hdm.Connected.client.gui.ContactsTable;
 
 
 public class Navigation extends VerticalPanel {
@@ -37,11 +38,11 @@ public class Navigation extends VerticalPanel {
 		myContacts.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				//Kontakte
+				ContactsTable ctable = new ContactsTable();
 			}
 		});
 		
-		ContactlistsCellList ccl = new ContactlistsCellList();
+		/*
 		
 		Button myContactlists = new Button ("Meine Kontaktlisten");
 		myContactlists.addStyleName("");
@@ -51,10 +52,10 @@ public class Navigation extends VerticalPanel {
 			public void onClick(ClickEvent event) {
 				//Kontaktlisten
 			}
-		}); 
+		}); */
 		
 		
-		Button sharedContacts = new Button ("Kontakte");
+		/* Button sharedContacts = new Button ("Kontakte");
 		//sharedContactlists.addStyleName("");
 		
 		sharedContacts.addClickHandler(new ClickHandler() {
@@ -62,9 +63,9 @@ public class Navigation extends VerticalPanel {
 			public void onClick(ClickEvent event) {
 				//Kontakte
 			}
-		});
+		}); */
 		
-		Button sharedContactlists = new Button ("Kontaktlisten");
+		/* Button sharedContactlists = new Button ("Kontaktlisten");
 		sharedContactlists.addStyleName("");
 		
 		myContacts.addClickHandler(new ClickHandler() {
@@ -72,24 +73,26 @@ public class Navigation extends VerticalPanel {
 			public void onClick(ClickEvent event) {
 				//Kontaktlisten
 			}
-		}); 
+		}); */
 		
-		DisclosurePanel clists = new DisclosurePanel();
+		ContactlistsCellList clcl = new ContactlistsCellList();
 		
-		clists.getHeaderTextAccessor().setText("Meine Kontaktlisten");
+		DisclosurePanel clists = new DisclosurePanel("Meine Kontaktlisten");
 		
-		clists.setContent(ccl);
+		//clists.getHeaderTextAccessor().setText("Meine Kontaktlisten");
+		
+		clists.setContent(clcl);
 		
 		
-		VerticalPanel sharedPanel = new VerticalPanel();
+		/*VerticalPanel sharedPanel = new VerticalPanel();
 		sharedPanel.add(sharedContacts);
-		sharedPanel.add(sharedContactlists);
+		sharedPanel.add(sharedContactlists); */
 		
 		//shared.setContent(sharedPanel);
 		
 		this.add(myContacts);
 		this.add(clists);
-		this.add(myContactlists);		
+		//this.add(myContactlists);		
 		
 //		RootPanel.get("nav").add(sharedPanel);
 //		RootPanel.get("nav").add(myContacts);
