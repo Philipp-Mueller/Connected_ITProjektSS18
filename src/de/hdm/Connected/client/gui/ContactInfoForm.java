@@ -103,4 +103,3 @@ public ContactInfoForm(Contact contact, Map<Property, Value> map)  {
 
 
 }
-
