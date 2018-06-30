@@ -3,6 +3,7 @@
  */
 package de.hdm.Connected.shared.bo;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
@@ -23,7 +24,7 @@ public abstract class SharedObject extends BusinessObject{
 	private int creatorId = 0;
 	
 	// Realisierung des Modificationsdatums um Status propagieren zu können
-	private Timestamp creationDate = new Timestamp(System.currentTimeMillis());
+	private Date creationDate;
 	
 	/**
 	 * AutoKonstruktor
@@ -68,7 +69,7 @@ public abstract class SharedObject extends BusinessObject{
 	/**
 	 * @return the creationDate
 	 */
-	public Timestamp getCreationDate() {
+	public Date getCreationDate() {
 		return creationDate;
 	}
 
@@ -76,7 +77,7 @@ public abstract class SharedObject extends BusinessObject{
 	/**
 	 * @param creationDate the creationDate to set
 	 */
-	public void setCreationDate(Timestamp creationDate) {
+	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
 

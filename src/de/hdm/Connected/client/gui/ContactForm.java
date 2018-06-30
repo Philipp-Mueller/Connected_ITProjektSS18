@@ -1,8 +1,10 @@
 package de.hdm.Connected.client.gui;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -195,7 +197,7 @@ public class ContactForm extends PopupPanel {
 				// sonst der Kontakt keiner Liste hinzugefügt werden soll
 				final ArrayList<ContactList> contactListToAdd = new ArrayList<ContactList>();
 				if (addButton != null) {
-					java.sql.Timestamp creationTime = new Timestamp(System.currentTimeMillis());
+					java.sql.Date creationTime = new java.sql.Date(Calendar.getInstance().getTimeInMillis());
 					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
 							creationTime, creationTime, 2, new AsyncCallback<Contact>() {
 								ArrayList<Contact> contacts = new ArrayList<Contact>();
@@ -696,7 +698,7 @@ public class ContactForm extends PopupPanel {
 
 				if (addButton != null) {
 
-					java.sql.Timestamp creationTime = new Timestamp(System.currentTimeMillis());
+					java.sql.Date creationTime = new java.sql.Date(Calendar.getInstance().getTimeInMillis());
 					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
 							creationTime, creationTime, 1, new AsyncCallback<Contact>() {
 
