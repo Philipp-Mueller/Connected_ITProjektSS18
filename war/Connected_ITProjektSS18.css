@@ -65,6 +65,11 @@ h1 a {
 	padding: 20px 0px 20px 30px;
 }
 
+#main {
+	height: 95%;
+	
+}
+
 #usermenu .gwt-HTML {
 	padding: 20px 0px;
 }
@@ -91,39 +96,26 @@ h1 a {
 }
 
 #nav {
-    font-family: 'Montserrat', sans-serif;
-	width: 25%;
+  font-family: 'Montserrat', sans-serif;
+	width: 100%;
 	font-weight: 300px;
-	position: fixed;
 	display: flex;
 	flex-flow: column;
 	background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
-    justify-content: flex-end;
+  justify-content: flex-top;
+	height: inherit;
+	overflow-x: hidden;
 }
 
-item .gwt-DisclosurePanel-open {
-	font-family: 'Montserrat', sans-serif;
-	padding: px ;
-}
-
-item. gwt-DisclosurePanel-open .content {
-	font-family: 'Montserrat', sans-serif;
-	padding: 20px ;
-} 
-
-#DisclosurePanel {
-	font-family: 'Montserrat', sans-serif;
-	padding: px;
-	
-}
 #nav table {
 	font-family: 'Montserrat', sans-serif;
-	width: 100%;
+	width:100%;
+	padding-left: 0px;
 }
 
 #nav button {
 	font-family: 'Montserrat', sans-serif;
-	width: 100%;
+	width: 90%;
 	border: none;
 	background: transparent;
 	color: #666;
@@ -131,6 +123,7 @@ item. gwt-DisclosurePanel-open .content {
 	text-align: left;
 	font-size: 100%;
 	cursor: pointer;
+	
 }
 
 #nav button.editor {
@@ -149,6 +142,13 @@ item. gwt-DisclosurePanel-open .content {
 #nav button:focus{
 	background: #009999;
 	color: #fff;
+}
+
+#nav-wrapper {
+	background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
+	width: 20%;
+	display: block;
+	height: inherit;
 }
 
 #content button {
@@ -262,5 +262,44 @@ table {
 	font-size: 4rem;
 	font-weight: 700;
 	padding: 3%;
-	}
+}
+
+.cellList {
+	color:#666;
+	font-family: 'Montserrat', sans-serif;
+  padding-left: 9px;
+	font-weight: 300px;
+}
+
+.cellListPanel {
+	border-style: hidden;
+	border-color: transparent; 
+	border-width: 0px;
+}
+
+td .GBG2FFLDAB {
+	padding: 15px 0px 15px 20px;
+
+}
+
+td .GBG2FFLDCB {
+	padding: 15px 0px 15px 20px;
+
+}
+
+td .GBG2FFLDBB {
+	padding: 15px 0px 15px 20px;
+	background: #009999;
+	color: #fff;
+	border-radius: 4px;
+	width: 70%;
+}
+
+td .GBG2FFLDDB {
+	padding: 15px 0px 15px 20px;
+}
+
+table.content td{
+	border: 1px;
+}
 
