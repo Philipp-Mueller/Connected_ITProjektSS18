@@ -249,6 +249,7 @@ public class ContactForm extends PopupPanel {
 											});
 									}
 									hide();
+									Window.Location.reload();
 								}
 
 							});
@@ -281,6 +282,7 @@ public class ContactForm extends PopupPanel {
 				 */ else {
 					Window.alert("Kontakt angelegt!");
 					hide();
+					Window.Location.reload();
 				}
 
 			}
