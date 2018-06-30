@@ -150,7 +150,7 @@ public class ContactListForm3 extends CellTable {
 				public void update(int index, final Contact object, String value) {
 					// TODO Auto-generated method stub
 					
-					ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),
+					ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(), 2, 
 							new AsyncCallback<Map<Property, Value>>() {
 
 								public void onFailure(Throwable caught) {
@@ -192,7 +192,7 @@ public class ContactListForm3 extends CellTable {
 				public void update(int index, final Contact object, String value) {
 					// TODO Auto-generated method stub
 					
-					ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),
+					ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(), 2, 
 							new AsyncCallback<Map<Property, Value>>() {
 
 								public void onFailure(Throwable caught) {
