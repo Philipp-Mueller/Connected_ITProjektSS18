@@ -17,17 +17,17 @@ public class ContactlistsCell extends AbstractCell <ContactList>{
 	
 		if(value == null) {
 			return;
-		}else if(value.getCreatorId() != user.getBoId()){
+		} else if(value.getCreatorId() != user.getBoId()){
 		sb.appendHtmlConstant("<i>");
 		sb.appendEscaped(value.getName());
 		sb.appendHtmlConstant("</i>");
 				
 		
-		}else if(value.getCreatorId() == user.getBoId()){
+		} else if(value.getCreatorId() == user.getBoId()){
 			sb.appendHtmlConstant("<div>");
 			sb.appendEscaped(value.getName());
 			sb.appendHtmlConstant("</div>");
-				}
+	}
 	
 }
 }

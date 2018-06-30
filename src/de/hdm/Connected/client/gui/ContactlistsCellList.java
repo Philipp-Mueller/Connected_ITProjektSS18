@@ -9,6 +9,7 @@ import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.cellview.client.HasKeyboardPagingPolicy.KeyboardPagingPolicy;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -77,7 +78,8 @@ public class ContactlistsCellList extends Widget {
 			
 			final ContactList selected = selectionModel.getSelectedObject();
 			if (selected != null && !buttonPressed) {
-				ContactListForm2 clform = new ContactListForm2(selected.getBoId());
+				RootPanel.get("content").clear();
+				ContactListForm2 clForm = new ContactListForm2(selected.getBoId());
 			}
 			
 			else if (buttonPressed) {
@@ -89,6 +91,8 @@ public class ContactlistsCellList extends Widget {
 	
 	cellList.setRowCount(cll.size(), true);
 	cellList.setRowData(0, cll);
+	
+	cellList.setStylePrimaryName("cellList");
 	
 	RootPanel.get("nav").add(cellList);
 			
