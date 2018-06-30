@@ -107,7 +107,7 @@ public interface ConnectedAdminAsync {
 
 	void getPermissionById(int id, AsyncCallback<Permission> callback);
 
-	void findValueAndProperty(int id, AsyncCallback<Map<Property, Value>> callback);
+	void findValueAndProperty(int contactId, int userId, AsyncCallback<Map<Property, Value>> callback);
 
 	void findValueByValue(String value, AsyncCallback<ArrayList<Value>> callback);
 
@@ -124,5 +124,9 @@ public interface ConnectedAdminAsync {
 	void hasPermission(int shareObjectId, int receiverUserId, AsyncCallback<Boolean> callback);
 	
 	void getContactsByUserPermission(int userId, AsyncCallback<ArrayList<Contact>> callback);
+
+	void getContactListsByUserPermission(int userId, AsyncCallback<ArrayList<ContactList>> callback);
+
+	void getValuesByUserPermission(int contactId, int userId, AsyncCallback<ArrayList<Value>> callback);
 	
 }
