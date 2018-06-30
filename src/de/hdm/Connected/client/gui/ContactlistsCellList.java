@@ -79,7 +79,7 @@ public class ContactlistsCellList extends Widget {
 			final ContactList selected = selectionModel.getSelectedObject();
 			if (selected != null && !buttonPressed) {
 				RootPanel.get("content").clear();
-				ContactListForm2 clform = new ContactListForm2(selected.getBoId());
+				ContactListForm2 clForm = new ContactListForm2(selected.getBoId());
 			}
 			
 			else if (buttonPressed) {
@@ -91,6 +91,8 @@ public class ContactlistsCellList extends Widget {
 	
 	cellList.setRowCount(cll.size(), true);
 	cellList.setRowData(0, cll);
+	
+	cellList.setStylePrimaryName("cellList");
 	
 	RootPanel.get("nav").add(cellList);
 			
