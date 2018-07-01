@@ -1,5 +1,6 @@
 package de.hdm.Connected.client.gui;
 
+import java.awt.Dialog;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,9 +11,16 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.gwt.cell.client.CheckboxCell;
+import com.google.gwt.cell.client.ClickableTextCell;
+import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
@@ -25,8 +33,10 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
@@ -35,6 +45,7 @@ import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 import com.google.gwt.view.client.SelectionChangeEvent.HasSelectionChangedHandlers;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.bo.Contact;
@@ -46,15 +57,28 @@ import de.hdm.Connected.shared.bo.Value;
 public class ContactSharing extends PopupPanel {
 
 	private ListDataProvider<Entry<Property, Value>> dataProvider = new ListDataProvider<Entry<Property, Value>>();
+	private ListDataProvider<User> userDataProvider = new ListDataProvider<User>();
+	private ListDataProvider<User> receiverUserDataProvider = new ListDataProvider<User>();
 	private CellTable<Entry<Property, Value>> propertyValueTable = new CellTable<Entry<Property, Value>>();
-	private Set<Entry<Property,Value>> selectedSet = new HashSet<Entry<Property,Value>>();
+	private CellTable<User> usersWithPermission = new CellTable<User>();
+	private CellTable<User> receiverUser = new CellTable<User>();
+	private Set<Entry<Property, Value>> selectedSet = new HashSet<Entry<Property, Value>>();
+	List<Entry<Property, Value>> propertiesAndValues = new ArrayList<Entry<Property, Value>>();	
+	final MultiSelectionModel<Entry<Property,Value>> selectionModel = new MultiSelectionModel<Entry<Property,Value>>();
 	ArrayList<User> allUsers = null;
+	ArrayList<User> permissionUser = null;
+	private ArrayList<User> receiverUserData = new ArrayList<User>();
 	final ListBox userListBox = new ListBox(true);
 	VerticalPanel root = new VerticalPanel();
+	VerticalPanel boxPanel = new VerticalPanel();
+	HorizontalPanel horizontal = new HorizontalPanel();
 	Button closeButton = new Button("Abbrechen");
-	//Map<Property, Value> propertyValueMap = new HashMap<Property, Value>();
-	
-	
+	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
+	private SuggestBox suggestBox = new SuggestBox(oracle);
+	private String selectedUser;
+	private Button addButton = new Button("+");
+	// Map<Property, Value> propertyValueMap = new HashMap<Property, Value>();
+
 	public ContactSharing(final Contact sharingContact){
 		this.setAnimationEnabled(true);
 		closeButton.addClickHandler(new ClickHandler() {
@@ -67,10 +91,237 @@ public class ContactSharing extends PopupPanel {
 			}
 		});
 		
-		
+		receiverUser.setVisible(false);
 		root.add(new HTML("<h3> Kontakt <i>" + sharingContact.getPrename() + " " + sharingContact.getSurname() + "</i> teilen</h3><br />" ));
 		
-		root.add(new HTML("Bitte wählen Sie die Eigenschaften aus, die Sie teilen möchten:<br />" ));
+		//root.add(new HTML("Kontakt bereits geteilit mit: <br />"));
+		
+		//Anzeigen der User, die bereits Zugriff auf diesen Kontakt haben
+		ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(sharingContact.getBoId(), new AsyncCallback<ArrayList<Permission>>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Window.alert("Leider konnten die Permissions des Kontakts nicht abgefragt werden");
+			}
+
+			@Override
+			public void onSuccess(ArrayList<Permission> result) {
+				permissionUser = new ArrayList<User>();
+				//User der Permissions abrufen
+				for (Permission p: result){
+					ClientSideSettings.getConnectedAdmin().findUserById(p.getReceiverUserID(), new AsyncCallback<User>(){
+
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert("Leider konnte der User nicht abgefragt werden");
+							
+						}
+
+						@Override
+						public void onSuccess(User result) {
+							permissionUser.add(result);
+							
+							
+						}
+						
+					});
+				}
+				TextColumn<User> nameColumn = new TextColumn<User>() {
+					public String getValue(User user) {
+						return user.getLogEmail();
+					}
+				};
+			
+				ClickableTextCell deleteButton = new ClickableTextCell() {
+					@Override
+					public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
+						String title = "Berechtigung löschen";
+						if (data != null) {
+							sb.appendHtmlConstant("<img title='" + title + "' src=" + "/delete.png" + " alt="
+									+ "Kontakt löschen" + " height=" + "18" + " width=" + "18" + ">");
+
+						}
+					}
+				};
+
+				Column<User, String> deleteColumn = new Column<User, String>(deleteButton) {
+					public String getValue(User object) {
+						return "";
+					}
+				};
+				deleteColumn.setCellStyleNames("iconButton");
+				deleteColumn.setFieldUpdater(new FieldUpdater<User, String>() {
+
+					@Override
+					public void update(int index, final User object, String value) {
+						
+					}
+				});
+				
+				
+				
+			    usersWithPermission.addColumn(nameColumn, "Bereits geteilt mit:");	
+			    usersWithPermission.addColumn(deleteColumn);
+			    
+				
+				
+			}
+			
+		});
+		
+		
+		
+		
+		
+		
+		
+		
+		loadAllUser();
+		
+		
+		suggestBox.addKeyUpHandler(new KeyUpHandler() {
+
+			@Override
+			public void onKeyUp(KeyUpEvent event) {
+				selectedUser =  ((SuggestBox) event.getSource()).getText();
+			}
+		});
+		
+		suggestBox.getElement().getStyle().setMarginLeft(20, Unit.PX);
+
+		
+		
+		addButton.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				usersWithPermission.setVisible(false);
+				receiverUser.setVisible(true);
+				userListBox.addItem(suggestBox.getText());
+				
+				ClientSideSettings.getConnectedAdmin().findUserByEmail(suggestBox.getText(), new AsyncCallback<User>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("User wurde nicht gefunden");
+						
+					}
+
+					@Override
+					public void onSuccess(User result) {
+						//receiverUserData.add(result);	
+						suggestBox.setText("");
+						receiverUserDataProvider.getList().add(result);
+						receiverUserDataProvider.addDataDisplay(receiverUser);
+						
+					}
+					
+				});
+				
+				
+				
+				
+			}
+			
+		});
+		
+		TextColumn<User> receiveNameColumn = new TextColumn<User>() {
+			public String getValue(User user) {
+				return user.getLogEmail();
+			}
+		};
+		
+		ClickableTextCell deleteButton = new ClickableTextCell() {
+			@Override
+			public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
+				String title = "Kontakt entfernen";
+				if (data != null) {
+					sb.appendHtmlConstant("<img title='" + title + "' src=" + "/delete.png" + " alt="
+							+ "Kontakt löschen" + " height=" + "18" + " width=" + "18" + ">");
+
+				}
+			}
+		};
+
+		Column<User, String> reiceiveDeleteColumn = new Column<User, String>(deleteButton) {
+			public String getValue(User object) {
+				return "";
+			}
+		};
+		reiceiveDeleteColumn.setCellStyleNames("iconButton");
+		reiceiveDeleteColumn.setFieldUpdater(new FieldUpdater<User, String>() {
+
+			@Override
+			public void update(int index, final User object, String value) {
+				final DialogBox agreeDelete = new DialogBox();
+				VerticalPanel vpanel = new VerticalPanel();
+				HorizontalPanel buttonPanel = new HorizontalPanel();
+				Button yes = new Button("Ja");
+				Button no  = new Button("Nein");
+				no.addClickHandler(new ClickHandler(){@Override
+					public void onClick(ClickEvent event) {	agreeDelete.hide();	}} );
+				vpanel.add(new HTML("Wollen Sie diesen User aus der Liste entfernen?"));
+				buttonPanel.add(no);
+				buttonPanel.add(yes);
+				vpanel.add(buttonPanel);				
+				agreeDelete.setWidget(vpanel);
+				agreeDelete.setGlassEnabled(true);
+				agreeDelete.center();
+			    agreeDelete.show();
+			}
+		});
+		
+		receiverUser.addColumn(receiveNameColumn, "Neu teilen mit:");
+		receiverUser.addColumn(reiceiveDeleteColumn);
+		receiverUserDataProvider.addDataDisplay(receiverUser);
+		
+		
+		
+		
+		  final SingleSelectionModel<User> selectionModel_Single = new SingleSelectionModel<User>();
+		  
+				 usersWithPermission.setSelectionModel(selectionModel_Single);
+				 
+				 selectionModel_Single.addSelectionChangeHandler(new SelectionChangeEvent.Handler() { 
+					 
+				 
+				 public void onSelectionChange(SelectionChangeEvent event) { 
+					 final User selected = selectionModel_Single.getSelectedObject(); 
+				 
+				 if (selected != null ) { 
+					 Window.alert("You selected: " + selected.getLogEmail());
+				  
+				  ClientSideSettings.getConnectedAdmin().findValueAndProperty(sharingContact.getBoId(), selected.getBoId(), new AsyncCallback<Map<Property,Value>>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void onSuccess(Map<Property, Value> result) {
+						selectionModel.clear();
+						receiverUser.setVisible(false);
+						for(Map.Entry<Property, Value> entry : result.entrySet()){
+							for(int i=0; i<propertiesAndValues.size(); i++){
+						if(entry.getValue().getBoId() == propertiesAndValues.get(i).getValue().getBoId()){
+							selectionModel.setSelected(propertiesAndValues.get(i), true);
+						}
+							
+							}
+						}
+						
+						
+					}
+					  
+				  });
+				
+				 }
+				 }
+				 });			 
+		
+	
 		
 		ClientSideSettings.getConnectedAdmin().findValueAndProperty(sharingContact.getBoId(),2, new AsyncCallback<Map<Property, Value>>(){
 
@@ -83,7 +334,7 @@ public class ContactSharing extends PopupPanel {
 			@Override
 			public void onSuccess(Map<Property, Value> result) {
 				//List für DataProvider mit den Properties und Values
-				List<Entry<Property, Value>> propertiesAndValues = new ArrayList<Entry<Property, Value>>();		
+				
 				
 				for(Map.Entry<Property, Value> entry : result.entrySet()){
 					propertiesAndValues.add(entry);				
@@ -101,7 +352,7 @@ public class ContactSharing extends PopupPanel {
 					}
 				};
 					
-				final MultiSelectionModel<Entry<Property,Value>> selectionModel = new MultiSelectionModel<Entry<Property,Value>>();
+				
 				propertyValueTable.setSelectionModel(selectionModel,
 						DefaultSelectionEventManager.<Entry<Property,Value>>createCheckboxManager());
 				
@@ -194,12 +445,30 @@ public class ContactSharing extends PopupPanel {
 						//	}
 					    	  
 					      });
-					
+				     
+				      
 				  
-				    root.add(userListBox);
+						userDataProvider.getList().clear();
+						userDataProvider.getList().addAll(permissionUser);
+						userDataProvider.addDataDisplay(usersWithPermission);
+				   
+					horizontal.getElement().getStyle().setMarginBottom(30, Unit.PX);
+						
+					horizontal.add(usersWithPermission);
+					horizontal.add(receiverUser);	
+					horizontal.add(boxPanel);
+					Label add = new Label("zusätzlich teilen mit: ");
+					add.getElement().getStyle().setMarginLeft(30, Unit.PX);
+					boxPanel.add(add);
+					HorizontalPanel textPanel = new HorizontalPanel();
+					boxPanel.add(textPanel);					
+					textPanel.add(suggestBox);
+					textPanel.add(addButton);
 				    
-					root.add(new HTML("<br />Bitte wählen Sie die/den User aus, mit dem Sie diesen Kontakt teilen möchten:<br />" ));
+				    root.add(horizontal);
+				  				
 				    
+					root.add(new HTML("Bitte wählen Sie die Eigenschaften aus, die Sie teilen möchten:<br />" ));
 				    root.add(propertyValueTable);
 					
 				
@@ -265,129 +534,153 @@ public class ContactSharing extends PopupPanel {
 		});
 	
 }
-	
-	public ContactSharing(Contact contact, Value value){
-		
-		MyDialog shareNewValue = new MyDialog(contact, value);
-		shareNewValue.center();
-		
-		
-	}
-	
-	private class MyDialog extends DialogBox {
 
-	    public MyDialog(final Contact contact, final Value value) {
-	    	final ArrayList<User> permissionUser = new ArrayList<User>();
-	    	VerticalPanel v = new VerticalPanel();
-	    	HorizontalPanel h = new HorizontalPanel();
-	      // Set the dialog box's caption.
-	      setText("Neue Eigenschaft für Kontakt " + contact.getPrename() + " " + contact.getSurname() + " an Teilhaber teilen?");
-
-	      // Enable animation.
-	      setAnimationEnabled(true);
-
-	      // Enable glass background.
-	      setGlassEnabled(true);
-	      
-	      final ListBox userPermissionList = new ListBox(true);
-	      
-	      Button noButton = new Button("Nein");
-	      noButton.addClickHandler(new ClickHandler() {
-	        public void onClick(ClickEvent event) {
-	        	Window.alert("Neue Eigenschaft wurde gespeichert!");
-	        	MyDialog.this.hide();
-				//RootPanel.get("content").clear();
-				//ContactForm contactForm = new ContactForm(contact);
-	        }
-	      });
-	      
-	      Button yesButton = new Button("Ja, ausgewählten Kontakten teilen");
-	      yesButton.addClickHandler(new ClickHandler() {
-	        public void onClick(ClickEvent event) {
-	        	final ArrayList<User> userArray = new ArrayList<User>();
-	        	for(int i=0; i<userPermissionList.getItemCount(); i++){
-	        		if(userPermissionList.isItemSelected(i)){
-	        			for(User u : permissionUser){
-	        				if(u.getLogEmail().equals(userPermissionList.getItemText(i))){
-	        					userArray.add(u);
-	        				}
-	        			}
-	        		}
-	        	}
-	        	
-	          ClientSideSettings.getConnectedAdmin().givePermissionToUsers(value.getBoId(), userArray, 3, new AsyncCallback<Void>(){
-
-				@Override
-				public void onFailure(Throwable caught) {
-					// TODO Auto-generated method stub
-					
-				}
-
-				@Override
-				public void onSuccess(Void result) {
-					Window.alert(Integer.toString(userArray.size()));
-					Window.alert("Die Eigenschaft wurde erstellt und geteilt");
-					MyDialog.this.hide();
-					//RootPanel.get("content").clear();
-					ContactForm contactForm = new ContactForm(contact);
-					
-				}
-	        	  
-	          });
-	        }
-	      });
-
-	      
-	      userPermissionList .ensureDebugId("cwListBox-multiBox");
-	      userPermissionList .setVisibleItemCount(7);
-	    
-	      v.add(new HTML("Dieser Kontakt wurde schon anderen User geteilt, wollen Sie diese neu erstellte Eigenschaft direkt an einen dieser User teilen?"));
-	      
-	      
-	      ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(contact.getBoId(), new AsyncCallback<ArrayList<Permission>>(){   	  
-	    	  
-	    
+	private void loadAllUser() {
+		ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>(){
 
 			@Override
 			public void onFailure(Throwable caught) {
-				
+				// TODO Auto-generated method stub
 				
 			}
 
 			@Override
-			public void onSuccess(ArrayList<Permission> result) {
+			public void onSuccess(ArrayList<User> result) {
+				oracle.clear();
+				for(User u: result){
+					//if(u.getBoId() != ClientSideSettings.getCurrentUser().getBoId()){
+					oracle.add(u.getLogEmail());	
+					//}
+				}
 				
-				for (Permission p : result){
-					ClientSideSettings.getConnectedAdmin().findUserById(p.getReceiverUserID(), new AsyncCallback<User>(){
+			}
+			
+		});
+	}
+	
+	
+
+	public ContactSharing(Contact contact, Value value) {
+
+		MyDialog shareNewValue = new MyDialog(contact, value);
+		shareNewValue.center();
+
+	}
+
+	private class MyDialog extends DialogBox {
+
+		public MyDialog(final Contact contact, final Value value) {
+			final ArrayList<User> permissionUser = new ArrayList<User>();
+			VerticalPanel v = new VerticalPanel();
+			HorizontalPanel h = new HorizontalPanel();
+			// Set the dialog box's caption.
+			setText("Neue Eigenschaft für Kontakt " + contact.getPrename() + " " + contact.getSurname()
+					+ " an Teilhaber teilen?");
+
+			// Enable animation.
+			setAnimationEnabled(true);
+
+			// Enable glass background.
+			setGlassEnabled(true);
+
+			final ListBox userPermissionList = new ListBox(true);
+
+			Button noButton = new Button("Nein");
+			noButton.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					Window.alert("Neue Eigenschaft wurde gespeichert!");
+					MyDialog.this.hide();
+					// RootPanel.get("content").clear();
+					// ContactForm contactForm = new ContactForm(contact);
+				}
+			});
+
+			Button yesButton = new Button("Ja, ausgewählten Kontakten teilen");
+			yesButton.addClickHandler(new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					final ArrayList<User> userArray = new ArrayList<User>();
+					for (int i = 0; i < userPermissionList.getItemCount(); i++) {
+						if (userPermissionList.isItemSelected(i)) {
+							for (User u : permissionUser) {
+								if (u.getLogEmail().equals(userPermissionList.getItemText(i))) {
+									userArray.add(u);
+								}
+							}
+						}
+					}
+
+					ClientSideSettings.getConnectedAdmin().givePermissionToUsers(value.getBoId(), userArray, 3,
+							new AsyncCallback<Void>() {
+
+								@Override
+								public void onFailure(Throwable caught) {
+									// TODO Auto-generated method stub
+
+								}
+
+								@Override
+								public void onSuccess(Void result) {
+									Window.alert(Integer.toString(userArray.size()));
+									Window.alert("Die Eigenschaft wurde erstellt und geteilt");
+									MyDialog.this.hide();
+									// RootPanel.get("content").clear();
+									ContactForm contactForm = new ContactForm(contact);
+
+								}
+
+							});
+				}
+			});
+
+			userPermissionList.ensureDebugId("cwListBox-multiBox");
+			userPermissionList.setVisibleItemCount(7);
+
+			v.add(new HTML(
+					"Dieser Kontakt wurde schon anderen User geteilt, wollen Sie diese neu erstellte Eigenschaft direkt an einen dieser User teilen?"));
+
+			ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(contact.getBoId(),
+					new AsyncCallback<ArrayList<Permission>>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							Window.alert("Leider konnte der User nicht gefunden werden.");
-							
+
 						}
 
 						@Override
-						public void onSuccess(User result) {
-							userPermissionList.addItem(result.getLogEmail());
-							permissionUser.add(result);				
-											}
-						
-					});
-				}
-				
-			
-			}
-	    	  
-	      });
-	      	      
-	      
-	      v.add(userPermissionList);
-	      v.add(h);
-	      h.add(yesButton);
-	      h.add(noButton);	      
-	      setWidget(v);
-	      this.show();
+						public void onSuccess(ArrayList<Permission> result) {
 
-	    }
-	  }
+							for (Permission p : result) {
+								ClientSideSettings.getConnectedAdmin().findUserById(p.getReceiverUserID(),
+										new AsyncCallback<User>() {
+
+											@Override
+											public void onFailure(Throwable caught) {
+												Window.alert("Leider konnte der User nicht gefunden werden.");
+
+											}
+
+											@Override
+											public void onSuccess(User result) {
+												userPermissionList.addItem(result.getLogEmail());
+												permissionUser.add(result);
+											}
+
+										});
+							}
+
+						}
+
+					});
+
+			v.add(userPermissionList);
+			v.add(h);
+			h.add(yesButton);
+			h.add(noButton);
+			setWidget(v);
+			this.show();
+			
+			
+			
+		}
+	}
 }
