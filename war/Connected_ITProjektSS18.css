@@ -66,9 +66,15 @@ h1 a {
 }
 
 #main {
-	height: 95%;
-	
+	height:100%;
+	display: flex;
+	flex-direction: row;
+	flex: 1 1 auto;
+	height: 0px;
+	overflow-y: hidden;
 }
+	
+
 
 #usermenu .gwt-HTML {
 	padding: 20px 0px;
@@ -96,15 +102,15 @@ h1 a {
 }
 
 #nav {
-  font-family: 'Montserrat', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 	width: 100%;
 	font-weight: 300px;
 	display: flex;
 	flex-flow: column;
 	background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
-  justify-content: flex-top;
+    justify-content: flex-top;
 	height: inherit;
-	overflow-x: hidden;
+	overflow-x: auto;
 }
 
 #nav table {
@@ -148,7 +154,7 @@ h1 a {
 	background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
 	width: 20%;
 	display: block;
-	height: inherit;
+	height: 100%;
 }
 
 #content button {

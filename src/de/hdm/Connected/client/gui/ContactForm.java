@@ -146,6 +146,8 @@ public class ContactForm extends PopupPanel {
 			public void onClick(ClickEvent event) {
 				// Popup schließen bei Betägigung des Buttons
 				hide();
+				RootPanel.get("content").clear();
+				ContactsTable overview = new ContactsTable();
 
 			}
 		});

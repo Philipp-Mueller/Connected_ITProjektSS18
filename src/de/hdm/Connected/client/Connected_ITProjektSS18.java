@@ -38,6 +38,7 @@ import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.FieldVerifier;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.User;
+import de.hdm.Connected.client.gui.Navigation;
 import de.hdm.Connected.client.LoginInfo;
 import de.hdm.Connected.shared.LoginService;
 import de.hdm.Connected.shared.LoginServiceAsync;
@@ -106,8 +107,10 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	
 	public void onModuleLoad() {
 		
-		
-		
+		Navigation navigation = new Navigation();
+		// Das navPanel der Seite im Bereich der id "nav" hinzufügen
+				RootPanel.get("nav").add(navigation);
+			
 		stockStore = Storage.getSessionStorageIfSupported();
 
 		if (stockStore != null) {
@@ -150,6 +153,8 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 				loadLogin();
 			}
 		};
+		
+	
 		
 		// Anzeige der Menü Elemente
 		MenuBar menu1 = new MenuBar(true);
