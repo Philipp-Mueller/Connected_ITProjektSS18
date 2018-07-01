@@ -28,8 +28,9 @@ public class Navigation extends VerticalPanel {
 		cButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				RootPanel.get("content").clear();
-				//ContactsTable
+				//ContactsTable ctable = new ContactsTable();
+				//RootPanel.get("content").clear();
+				//RootPanel.get("content").add(ctable);
 			}
 		});
 		
@@ -39,12 +40,12 @@ public class Navigation extends VerticalPanel {
 		Button headerButton = new Button("Meine Kontaktlisten");
 		clPanel.setHeader(headerButton);
 		
-		VerticalPanel vpanel = new VerticalPanel();
-		vpanel.setBorderWidth(1);	    
-	    vpanel.setWidth("200");
+		//VerticalPanel vpanel = new VerticalPanel();
+		//vpanel.setBorderWidth(1);	    
+	    //vpanel.setWidth("200");
 	    
-	    vpanel.add(cellList);
-		clPanel.setContent(vpanel);
+	    //vpanel.add(cellList);
+		clPanel.setContent(cellList);
 		
 		this.add(cButton);
 		this.add(clPanel);	
