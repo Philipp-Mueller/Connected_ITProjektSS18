@@ -81,12 +81,10 @@ public class ContactMapper extends SharedObjectMapper {
 			/**
 			 * SQL-Anweisung zum Einfuegen des neuen Contact-Tupels in die Datenbank.
 			 */
-			//ID in Sharedobject einfügen
-			Timestamp currentTime = new Timestamp (System.currentTimeMillis());
-
+		
 			
 			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, ownerId, creationDate, modificationDate) VALUES (" + contact.getBoId() + ", '"
-					+ contact.getPrename() + "', '" + contact.getSurname() + "', " + contact.getCreatorId() + ", '" + currentTime +"', '"+ currentTime + "')");
+					+ contact.getPrename() + "', '" + contact.getSurname() + "', " + contact.getCreatorId() + ", '" + contact.getCreationDate() +"', '"+ contact.getModificationDate() + "')");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
 			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
@@ -179,8 +177,8 @@ public class ContactMapper extends SharedObjectMapper {
 				contact.setBoId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
-				contact.setCreationDate(rs.getTimestamp("creationDate"));
-				contact.setModificationDate(rs.getTimestamp("modificationDate"));
+				contact.setCreationDate(rs.getDate("creationDate"));
+				contact.setModificationDate(rs.getDate("modificationDate"));
 				return contact;
 			}
 			/**
@@ -209,7 +207,7 @@ public class ContactMapper extends SharedObjectMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze in der Datenbank, sortiert nach
 			 * der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname, ownerid FROM contact ORDER BY prename");
+			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname, ownerid, creationDate, modificationDate FROM contact ORDER BY prename");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle contact
 			 * vorhanden ist, muss das Abfragen des ResultSet so oft erfolgen
@@ -223,6 +221,8 @@ public class ContactMapper extends SharedObjectMapper {
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				contact.setCreatorId(rs.getInt("ownerid"));
+				contact.setCreationDate(rs.getDate("creationDate"));
+				contact.setModificationDate(rs.getDate("modificationDate"));
 				result.add(contact);
 			}
 			/**
@@ -403,8 +403,8 @@ public class ContactMapper extends SharedObjectMapper {
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				contact.setCreatorId(rs.getInt("ownerid"));
-				contact.setCreationDate(rs.getTimestamp("creationDate"));
-				contact.setModificationDate(rs.getTimestamp("modificationDate"));
+				contact.setCreationDate(rs.getDate("creationDate"));
+				contact.setModificationDate(rs.getDate("modificationDate"));
 				result.add(contact);
 				
 			}
@@ -469,7 +469,7 @@ public class ContactMapper extends SharedObjectMapper {
 	
 	public void updateContactModificationDate(int contactId){
 		Connection con = DBConnection.connection();
-		Timestamp currentTime = new Timestamp (System.currentTimeMillis());
+		java.sql.Date currentTime = new java.sql.Date(System.currentTimeMillis());
 		
 		try {
 			Statement stmt = con.createStatement();

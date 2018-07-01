@@ -1,6 +1,6 @@
 package de.hdm.Connected.shared;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -94,13 +94,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 */
 	public void deleteProperty(Property property) throws IllegalArgumentException;
 	
-	/**
-	 * Erstellt ein neues Contact-Objekt.
-	 * 
-	 * @return neu erstelltes Contact-Objekt
-	 * @throws IllegalArgumentException
-	 */
-	public Contact createContact(String prename, String surname, Timestamp creationDate, Timestamp modificationDate, int ownerId) throws IllegalArgumentException;
+	Contact createContact(String prename, String surname, Date creationDate, Date modificationDate, int ownerId);
 	
 	/**
 	 * Aktuallisiert ein Contact-Objekt.
@@ -302,7 +296,7 @@ public interface ConnectedAdmin extends RemoteService {
 
 	Permission getPermissionById(int id) throws IllegalArgumentException;
 
-	Map<Property, Value> findValueAndProperty(int id) throws IllegalArgumentException;
+	Map<Property, Value> findValueAndProperty(int contactId, int userId) throws IllegalArgumentException;
 
 	ArrayList<Value> findValueByValue(String value) throws IllegalArgumentException;
 
@@ -329,5 +323,9 @@ public interface ConnectedAdmin extends RemoteService {
 	boolean hasPermission(int shareObjectId, int receiverUserId) throws IllegalArgumentException;
 	
 	ArrayList<Contact> getContactsByUserPermission(int userId) throws IllegalArgumentException;
+	
+	ArrayList<ContactList> getContactListsByUserPermission(int userId) throws IllegalArgumentException;
+	
+	ArrayList<Value> getValuesByUserPermission(int contactId, int userId) throws IllegalArgumentException;
 
 }

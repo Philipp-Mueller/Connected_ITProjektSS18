@@ -26,6 +26,7 @@ import de.hdm.Connected.client.gui.ContactForm;
 import de.hdm.Connected.client.gui.ContactForm_Test;
 import de.hdm.Connected.client.gui.ContactListForm;
 import de.hdm.Connected.client.gui.ContactListForm2;
+import de.hdm.Connected.client.gui.ContactListForm3;
 import de.hdm.Connected.client.gui.ContactSharing;
 import de.hdm.Connected.client.gui.ContactlistsCellList;
 import de.hdm.Connected.client.gui.ContactsTable;
@@ -36,6 +37,7 @@ import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.FieldVerifier;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.User;
+import de.hdm.Connected.client.gui.Navigation;
 import de.hdm.Connected.client.LoginInfo;
 import de.hdm.Connected.shared.LoginService;
 import de.hdm.Connected.shared.LoginServiceAsync;
@@ -105,6 +107,13 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	
 	public void onModuleLoad() {
 		
+<<<<<<< HEAD
+=======
+		Navigation navigation = new Navigation();
+		// Das navPanel der Seite im Bereich der id "nav" hinzufügen
+				RootPanel.get("nav").add(navigation);
+			
+>>>>>>> master
 		stockStore = Storage.getSessionStorageIfSupported();
 
 		if (stockStore != null) {
@@ -130,7 +139,56 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		headlinePanel.add(headlineLabel);
 		logoutPanel.add(btnLogOut);
 		logoutPanel.add(zurueckButton);
+<<<<<<< HEAD
 		vpBasisPanel.add(loginPanel);
+=======
+		vpBasisPanel.add(logoutPanel);
+		
+		// Menü start
+		Command settingDialog = new Command() {
+			public void execute() {
+
+				RootPanel.get("content").clear();
+				
+				RootPanel.get("content").add(settings);
+			}
+		};
+
+		Command logout = new Command() {
+			public void execute() {
+				loginInfo.getLogoutUrl();
+				Window.open(loginInfo.getLogoutUrl(), "_self", "");
+				loadLogin();
+			}
+		};
+		
+	
+		
+		// Anzeige der Menü Elemente
+		MenuBar menu1 = new MenuBar(true);
+		menu1.addItem("Profil", settingDialog);
+		menu1.addItem("Abmelden", logout);
+		
+		// Menü Icon
+		MenuBar menu = new MenuBar();
+		final String image = "<img src='user.png' height='40px' width='40px'/>";
+		SafeHtml addActivityImagePath = new SafeHtml() {
+		
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public String asString() {
+				return image;
+			}
+		};
+
+		menu.addItem(addActivityImagePath, menu1);
+		RootPanel.get("top").add(menu);
+		
+		// Menü ende
+		
+		log("Load Login");
+>>>>>>> master
 		
 		// Check login status using login service.
 	   LoginServiceAsync loginService = GWT.create(LoginService.class);
@@ -228,7 +286,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content").clear();
-				ContactListForm2 mycontactlistForm = new ContactListForm2(0);
+				ContactListForm3 mycontactlistForm = new ContactListForm3(6);
 				//Test_CellTable newform = new Test_CellTable(); 
 			}
 

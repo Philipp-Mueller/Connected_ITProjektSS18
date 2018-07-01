@@ -1,8 +1,10 @@
 package de.hdm.Connected.client.gui;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -144,6 +146,8 @@ public class ContactForm extends PopupPanel {
 			public void onClick(ClickEvent event) {
 				// Popup schließen bei Betägigung des Buttons
 				hide();
+				RootPanel.get("content").clear();
+				ContactsTable overview = new ContactsTable();
 
 			}
 		});
@@ -195,9 +199,9 @@ public class ContactForm extends PopupPanel {
 				// sonst der Kontakt keiner Liste hinzugefügt werden soll
 				final ArrayList<ContactList> contactListToAdd = new ArrayList<ContactList>();
 				if (addButton != null) {
-					java.sql.Timestamp creationTime = new Timestamp(System.currentTimeMillis());
+					java.sql.Date creationTime = new java.sql.Date(System.currentTimeMillis());
 					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
-							creationTime, creationTime, 2, new AsyncCallback<Contact>() {
+							creationTime, creationTime, ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Contact>() {
 								ArrayList<Contact> contacts = new ArrayList<Contact>();
 
 								@Override
@@ -696,9 +700,9 @@ public class ContactForm extends PopupPanel {
 
 				if (addButton != null) {
 
-					java.sql.Timestamp creationTime = new Timestamp(System.currentTimeMillis());
+					java.sql.Date creationTime = new java.sql.Date(System.currentTimeMillis());
 					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
-							creationTime, creationTime, 1, new AsyncCallback<Contact>() {
+							creationTime, creationTime, ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Contact>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -709,50 +713,32 @@ public class ContactForm extends PopupPanel {
 								@Override
 								public void onSuccess(Contact result) {
 									createdContact = result;
-									ArrayList<Integer> contactId = new ArrayList<Integer>();
-									ArrayList<Integer> userId = new ArrayList<Integer>();
-									contactId.add(result.getBoId());
-									userId.add(2);
-									ClientSideSettings.getConnectedAdmin().createPermission(2, contactId, userId,
-											new AsyncCallback<Void>() {
+																	
+									Label prenameLabel = new Label(createdContact.getPrename());
+									Label surnameLabel = new Label(createdContact.getSurname());
+									nameTable.setWidget(0, 1, prenameLabel);
+									nameTable.setWidget(1, 1, surnameLabel);
 
-												@Override
-												public void onFailure(Throwable caught) {
-													// TODO Auto-generated
-													// method stub
+									// createdContact = created;
+									// Window.alert("Hier bin
+									// ich");
+									addButton.removeFromParent();
 
-												}
+									addButton = null;
 
-												@Override
-												public void onSuccess(Void result) {
-													Label prenameLabel = new Label(createdContact.getPrename());
-													Label surnameLabel = new Label(createdContact.getSurname());
-													nameTable.setWidget(0, 1, prenameLabel);
-													nameTable.setWidget(1, 1, surnameLabel);
+									ClientSideSettings.getConnectedAdmin()
+											.findAllProperties(new findAllPropertiesCallback());
 
-													// createdContact = created;
-													// Window.alert("Hier bin
-													// ich");
-													addButton.removeFromParent();
+									int rowCount = propertyTable.getRowCount();
+									newPropertyBtn = new Button("+");
+									newPropertyBtn.addClickHandler(new addNewPropertyClickHandler());
+									valueTextBox = new TextBox();
 
-													addButton = null;
+									propertyTable.setWidget(rowCount, 0,
+											new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
 
-													ClientSideSettings.getConnectedAdmin()
-															.findAllProperties(new findAllPropertiesCallback());
-
-													int rowCount = propertyTable.getRowCount();
-													newPropertyBtn = new Button("+");
-													newPropertyBtn.addClickHandler(new addNewPropertyClickHandler());
-													valueTextBox = new TextBox();
-
-													propertyTable.setWidget(rowCount, 0,
-															new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
-
-													propertyTable.setWidget(rowCount + 1, 1, valueTextBox);
-													propertyTable.setWidget(rowCount + 1, 2, newPropertyBtn);
-												}
-
-											});
+									propertyTable.setWidget(rowCount + 1, 1, valueTextBox);
+									propertyTable.setWidget(rowCount + 1, 2, newPropertyBtn);
 								}
 							});
 				} else {
