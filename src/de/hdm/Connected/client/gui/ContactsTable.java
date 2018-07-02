@@ -706,7 +706,6 @@ public class ContactsTable extends CellTable {
 
 						for (int i = 0; i < userListbox.getItemCount(); i++) {
 							if (userListbox.isItemSelected(i)) {
-								selectedUser.add(allUsers.get(i));
 							}
 						}
 						Window.alert(Integer.toString(selectedContactsArray.size()));
