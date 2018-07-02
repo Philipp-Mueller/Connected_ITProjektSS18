@@ -75,9 +75,9 @@ public class ContactListForm3 extends CellTable {
 	ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
 	
 	Button newContactListButton = new Button("Neue Kontaktliste erstellen", new newContactListClickhandler());
-	Button shareContactListButton = new Button("<img border='0' src='share.png' width = '50' length = '50'/>");
-	Button updateContactListButton = new Button("<img border='0' src='edit.png' width = '50' '50' length = '50'/>");
-	Button deleteContactListButton = new Button("<img border='0' src='delete.png' width = '50' '50' length = '50'/>");
+	Button shareContactListButton = new Button("<img border='0' src='share.png' width = '25' length = '25'/>");
+	Button updateContactListButton = new Button("<img border='0' src='edit.png' width = '25'  length = '25'/>");
+	Button deleteContactListButton = new Button("<img border='0' src='delete.png' width = '25' length = '25'/>");
 	HorizontalPanel buttonPanel = new HorizontalPanel();
 	Label nameLabel = new Label();
 	final ListBox userListbox = new ListBox(true);
@@ -91,8 +91,10 @@ public class ContactListForm3 extends CellTable {
 	boolean buttonPressed;
 	ContactList mainContactlist = new ContactList();
 	
-	public ContactListForm3(final int contaclistid) {
+	public ContactListForm3(final ContactList cl) {
 		// Create a Pager to control the table.
+		
+		mainContactlist = cl;
 				SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
 				pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
 				pager.setDisplay(cellTable);		
@@ -100,26 +102,26 @@ public class ContactListForm3 extends CellTable {
 		cellTable.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 		
 		
-		ClientSideSettings.getConnectedAdmin().findAllContactlists( new AsyncCallback<ArrayList<ContactList>>(){
-			@Override
-			public void onFailure(Throwable caught){
-				Window.alert("Carmen mag das nicht");
-			}
-			public void onSuccess(ArrayList<ContactList> result){
-
-				for(int i = 0; i<result.size(); i++){
-
-					if(contaclistid == result.get(i).getBoId()){
-						mainContactlist.setBoId(contaclistid);
-						mainContactlist.setName(result.get(i).getName());
-					}
-				}
-			}
-		});
+//		ClientSideSettings.getConnectedAdmin().findAllContactlists( new AsyncCallback<ArrayList<ContactList>>(){
+//			@Override
+//			public void onFailure(Throwable caught){
+//				Window.alert("Carmen mag das nicht");
+//			}
+//			public void onSuccess(ArrayList<ContactList> result){
+//
+//				for(int i = 0; i<result.size(); i++){
+//
+//					if(contaclistid == result.get(i).getBoId()){
+//						mainContactlist.setBoId(contaclistid);
+//						mainContactlist.setName(result.get(i).getName());
+//					}
+//				}
+//			}
+//		});
 		
 		
 		
-		ClientSideSettings.getConnectedAdmin().findContactsByContactListId(contaclistid, new AsyncCallback<ArrayList<Contact>>(){
+		ClientSideSettings.getConnectedAdmin().findContactsByContactListId(mainContactlist.getBoId(), new AsyncCallback<ArrayList<Contact>>(){
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -464,7 +466,7 @@ public class ContactListForm3 extends CellTable {
 		cellTable.setWidth("70%");
 
 		buttonPanel.setWidth("100%");
-		buttonPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		buttonPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		
 		buttonPanel.add(new HTML("<h2> Kontaktliste: " +  mainContactlist.getName()+ "</h2>"));
 		buttonPanel.add(newContactListButton);
@@ -494,7 +496,7 @@ public class ContactListForm3 extends CellTable {
 
 		public void onClick(ClickEvent event) {
 
-			newDialog newi = new newDialog();
+			NewContactListPopup newi = new NewContactListPopup();
 			newi.center();
 			newi.show();
 
@@ -668,7 +670,7 @@ public class ContactListForm3 extends CellTable {
 						public void onSuccess(Void result) {
 							Window.alert("Erfolgreich umbenannt");
 							RootPanel.get("content").clear();
-							ContactListForm3 reload = new ContactListForm3(mainContactlist.getBoId());
+							ContactListForm3 reload = new ContactListForm3(mainContactlist);
 						}
 					});
 					updateDialog.this.hide();
@@ -769,7 +771,7 @@ public class ContactListForm3 extends CellTable {
 									Window.alert(Integer.toString(uArray.size()));
 									RootPanel.get("contant").clear();
 									ContactListForm3 reload = new ContactListForm3(
-											mainContactlist.getBoId());
+											mainContactlist);
 								}
 
 							});
@@ -831,7 +833,7 @@ public class ContactListForm3 extends CellTable {
 								public void onSuccess(ContactList result) {
 									Window.alert("Erfolgreich erstellt");
 									RootPanel.get("content").clear();
-									ContactListForm3 reload = new ContactListForm3(result.getBoId());
+									ContactListForm3 reload = new ContactListForm3(result);
 								}
 							});
 					newDialog.this.hide();
