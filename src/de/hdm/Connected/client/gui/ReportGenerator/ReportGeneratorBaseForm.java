@@ -34,6 +34,7 @@ import com.google.gwt.view.client.SingleSelectionModel;
 
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.ReportGenerator.ReportGeneratorServiceAsync;
+import de.hdm.Connected.shared.ReportGenerator.ReportObjekt;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
@@ -66,17 +67,18 @@ public class ReportGeneratorBaseForm extends Widget {
 	// Attribute
 	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 	private SuggestBox box = new SuggestBox(oracle);
-	private CellTable<Contact> table = new CellTable<Contact>();
-	private ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
+	private CellTable<ReportObjekt> table = new CellTable<ReportObjekt>();
+	private ListDataProvider<ReportObjekt> dataProvider = new ListDataProvider<ReportObjekt>();
 
 	// Attribute
-	private List<Contact> contactToShowInReport = new ArrayList<>();
+	private List<ReportObjekt> contactToShowInReport = new ArrayList<>();
 	private boolean allContacts = false;
 	private boolean sharedContacts = false;
 	private Integer propertyId = null;
 	private String valueDescription = "";
 	protected String userEmail = "";
 	private Map<Integer, String> propertyValueMap = new HashMap<>();
+	private Map<Integer, String> propertyIdUndName = new HashMap<Integer, String>();
 
 	// Attribute Content
 	private HTML property = new HTML(" Suchen Sie hier nach bestimmten Eigenschaften: ");
@@ -86,12 +88,9 @@ public class ReportGeneratorBaseForm extends Widget {
 	private HorizontalPanel footer = new HorizontalPanel();
 	private Anchor connectedLink = new Anchor("Connected", "Connected_ITProjektSS18.html");
 	private HTML copyrightText2 = new HTML(" | ");
-	private Anchor reportGeneratorLink = new Anchor (" ReportGenerator", "Connected_ITProjektSS18ReportGenerator.html");
+	private Anchor reportGeneratorLink = new Anchor(" ReportGenerator", "Connected_ITProjektSS18ReportGenerator.html");
 	private HTML copyrightText = new HTML(" | © 2018 Connected | ");
 	private Anchor impressumLink = new Anchor("Impressum");
-	
-	
-	
 
 	public ReportGeneratorBaseForm() {
 
@@ -190,7 +189,8 @@ public class ReportGeneratorBaseForm extends Widget {
 				String propertyText = propertyListBox.getSelectedItemText();
 
 				/*
-				 *  Werte aus der Listbox Anzeige in die HashMap für Übertragung an den Server merken
+				 * Werte aus der Listbox Anzeige in die HashMap für Übertragung an den Server
+				 * merken
 				 */
 				propertyValueMap.put(propertyId, value);
 
@@ -205,7 +205,8 @@ public class ReportGeneratorBaseForm extends Widget {
 			public void onClick(ClickEvent event) {
 				Integer selektionsProperties = lb.getSelectedIndex();
 				/*
-				 *  Werte aus der Hash Map für die Server Übertragung wieder entfernen, da nicht mehr Relevant für die Selektion
+				 * Werte aus der Hash Map für die Server Übertragung wieder entfernen, da nicht
+				 * mehr Relevant für die Selektion
 				 */
 				propertyValueMap.remove(Integer.valueOf(lb.getSelectedValue()));
 				lb.removeItem(selektionsProperties);
@@ -231,22 +232,22 @@ public class ReportGeneratorBaseForm extends Widget {
 
 				ReportGeneratorBaseForm.this.valueDescription = box.getText();
 
-					rgsa.searchContacts(allContacts, sharedContacts, userEmail, propertyValueMap,
-							new AsyncCallback<List<Contact>>() {
+				rgsa.searchContacts(allContacts, sharedContacts, userEmail, propertyValueMap,
+						new AsyncCallback<List<ReportObjekt>>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Window.alert("Fehler beim lesen aller Kontakte aufgetreten");
-								}
+							@Override
+							public void onFailure(Throwable caught) {
+								Window.alert("Fehler beim lesen aller Kontakte aufgetreten");
+							}
 
-								@Override
-								public void onSuccess(List<Contact> result) {
+							@Override
+							public void onSuccess(List<ReportObjekt> result) {
 
-									// Daten in der Tabelle austauschen
-									dataProvider.getList().clear();
-									dataProvider.getList().addAll(result);
-								}
-							});
+								// Daten in der Tabelle austauschen
+								dataProvider.getList().clear();
+								dataProvider.getList().addAll(result);
+							}
+						});
 			}
 		});
 		// Abstand und Panel hinzufügen
@@ -259,41 +260,36 @@ public class ReportGeneratorBaseForm extends Widget {
 		// Verbindet die Tabelle mit dem Data Provider.
 		dataProvider.addDataDisplay(table);
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-		TextColumn<Contact> nameColumn = new TextColumn<Contact>() {
+		TextColumn<ReportObjekt> nameColumn = new TextColumn<ReportObjekt>() {
 			@Override
-			public String getValue(Contact object) {
-				return object.getPrename();
+			public String getValue(ReportObjekt object) {
+				return object.getVorname();
 			}
 		};
 		table.addColumn(nameColumn, "Vorname");
 
-		TextColumn<Contact> surnameColumn = new TextColumn<Contact>() {
+		TextColumn<ReportObjekt> surnameColumn = new TextColumn<ReportObjekt>() {
 			@Override
-			public String getValue(Contact object) {
-				return object.getSurname();
+			public String getValue(ReportObjekt object) {
+				return object.getNachname();
 			}
 		};
 		table.addColumn(surnameColumn, "Nachname");
 
-		final SingleSelectionModel<Contact> selectionModel = new SingleSelectionModel<Contact>();
-		table.setSelectionModel(selectionModel);
-		selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-			public void onSelectionChange(SelectionChangeEvent event) {
-				Contact selected = selectionModel.getSelectedObject();
-				if (selected != null) {
-					Window.alert("You selected: " + selected.getPrename() + " " + selected.getSurname());
-				}
-			}
-		});
+
 		table.setRowCount(contactToShowInReport.size(), true);
 		table.setRowData(0, contactToShowInReport);
-		hPanel4.add(table);
 
 		/*
 		 * Nachdem die UI erstellt ist werden die Daten für das Dropdown und die
 		 * Suggestbox geladen
 		 */
 		loadDataForFiltering();
+
+		
+		
+		
+		hPanel4.add(table);
 
 		/*
 		 * Vertical panel wird dem RootPanel hinzugefügt (Somit wirds sichtbar)
@@ -360,14 +356,16 @@ public class ReportGeneratorBaseForm extends Widget {
 				for (Property p : result) {
 					String propertyId = String.valueOf(p.getBoId());
 					propertyListBox.addItem(p.getName(), propertyId);
+					propertyIdUndName.put(p.getBoId(), p.getName());
 				}
 				ReportGeneratorBaseForm.this.propertyId = Integer.valueOf(propertyListBox.getSelectedValue());
 
 				/*
-				 * Die Properties sind geladen, jetzt werden die Values für die
-				 * Suggestbox im Property-Dropdown geladen
+				 * Die Properties sind geladen, jetzt werden die Values für die Suggestbox im
+				 * Property-Dropdown geladen
 				 */
 				loadValuesForSuggestion();
+				eigenschaftSpaltenFuerTabelle();
 			}
 		});
 
@@ -393,4 +391,27 @@ public class ReportGeneratorBaseForm extends Widget {
 
 	}
 
+	
+	private void eigenschaftSpaltenFuerTabelle() {
+		/* Nachdem die Eigenschaften geladen wurden können diese der Tabelle hinzugefügt
+		* werden. Das jetzt alle Eingeschaften bekannt sind.
+		*/
+		for(Integer key : propertyIdUndName.keySet()) {
+			final int keyP = key.intValue();
+			
+			TextColumn<ReportObjekt> eigenschaftscolumn = new TextColumn<ReportObjekt>() {
+				@Override
+				public String getValue(ReportObjekt object) {
+					for(Integer kontaktEingeschaftKey : object.getPropertyValueMap().keySet()){
+						if(kontaktEingeschaftKey.intValue() ==keyP) {
+							return object.getPropertyValueMap().get(kontaktEingeschaftKey);
+						}
+					}
+					return "";
+				}
+			};
+			table.addColumn(eigenschaftscolumn, propertyIdUndName.get(key));
+		}
+	}
+	
 }
