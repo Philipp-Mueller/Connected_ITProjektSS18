@@ -1,6 +1,7 @@
 package de.hdm.Connected.server.ReportGenerator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,6 +16,7 @@ import de.hdm.Connected.server.db.UserMapper;
 import de.hdm.Connected.server.db.ValueMapper;
 import de.hdm.Connected.shared.ConnectedAdmin;
 import de.hdm.Connected.shared.ReportGenerator.ReportGeneratorService;
+import de.hdm.Connected.shared.ReportGenerator.ReportObjekt;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
@@ -75,9 +77,10 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 
 
 	@Override
-	public List<Contact> searchContacts(boolean allContacts, boolean sharedContacts, String userEmail, Map<Integer, String> propertyValueMap) {
+	public List<ReportObjekt> searchContacts(boolean allContacts, boolean sharedContacts, String userEmail, Map<Integer, String> propertyValueMap) {
 
-		List<Contact> result = new ArrayList<Contact>();
+		List<Contact> ergebnisKontakte = new ArrayList<Contact>();
+		List<ReportObjekt> ergebnisReport = new ArrayList<ReportObjekt>();
 		
 		//Wenn nicht nach allen Kontakten gesucht werden soll und ein Nutzer gesetzt ist
 		if(!allContacts&&userEmail!=null && !userEmail.isEmpty()){
@@ -86,12 +89,12 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 			
 			//Jetzt müssen wir unterscheiden, ob shared contacts geladen werden sollen
 			if(sharedContacts){
-				result = allSharedContactsPerUser(u.getBoId());
+				ergebnisKontakte = allSharedContactsPerUser(u.getBoId());
 			}else{
-				result = allContactsPerUser(u.getBoId());
+				ergebnisKontakte = allContactsPerUser(u.getBoId());
 			}
 		}else{
-			result = allContacts();
+			ergebnisKontakte = allContacts();
 			//TODO Auch alle Shared Contacts
 		}
 		
@@ -107,10 +110,34 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 			//die werte zu einer Property haben
 			for(Integer propertyKey : propertyIds){
 				List<Contact> valuesAndProperties = contactsBasedOnPropertiesAndValues(propertyKey, propertyValueMap.get(propertyKey));
-				result.retainAll(valuesAndProperties);
+				ergebnisKontakte.retainAll(valuesAndProperties);
 			}
 		}
-		return result;
+		
+		ArrayList<Property> allproperties = adminImpl.findAllProperties();
+		
+		//Für jeden ErgebnisKontakt die Eigenschaften aufbauen
+		for(Contact c : ergebnisKontakte) {
+			//Eigenschaften lesen
+			List<Value> eigenschaften = valueMapper.findByContactId(c.getBoId());
+			
+			//Reportobjekt aufbauen
+			Map<Integer,String> eigenschaftsMap = new HashMap<Integer,String>();
+			
+			//Für jede mögliche Eigenschaft prüfen ob der Nutzer dazu ein Wert hat
+			for(Property p : allproperties) {
+				eigenschaftsMap.put(p.getBoId(), findeWertZuEigenschaft(p.getBoId(),eigenschaften));
+			}
+			ReportObjekt ro = new ReportObjekt(c.getPrename(), c.getSurname(), eigenschaftsMap);
+			ergebnisReport.add(ro);
+			
+			
+			//Reportobjekt dem Ergebnis hinzufügen
+		}
+		
+		
+		
+		return ergebnisReport;
 		
 	}
 	
@@ -133,6 +160,18 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 		return null; //TODO implementierung fehlt 		
 	}
 
+	
+	
+	private String findeWertZuEigenschaft(int id, List<Value> list) {
+		for(Value v : list) {
+			if(v.getBoId()==id) {
+				return v.getName();
+			}
+		}
+		return "";
+	}
+	
+	
 	
 	private List<Contact> contactsBasedOnPropertiesAndValues(int propertyId, String valueDescription) {
 	
