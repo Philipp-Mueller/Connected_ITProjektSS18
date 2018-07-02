@@ -109,10 +109,29 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public void updatePermissionsForUser(ArrayList<Integer> newPermissions, int contactId, int userId) throws IllegalArgumentException{
 		
 		ArrayList<Integer> oldPermissions = new ArrayList<Integer>();
+		ArrayList<Integer> receiverUser = new ArrayList<Integer>();
+		ArrayList<Integer> createPermissions = new ArrayList<Integer>();
+		receiverUser.add(userId);
 		
 		for(int i=0; i< getValuesByUserPermission(contactId, userId).size();i++){
 			oldPermissions.add(getValuesByUserPermission(contactId, userId).get(i).getBoId());
 		};
+		
+		
+		for(int j=0; j<oldPermissions.size(); j++){
+			if(!newPermissions.contains(oldPermissions.get(j))){
+				deletePermission(permissionMapper.findBySharedObjectIdAndReceiverId(oldPermissions.get(j),userId));
+			}
+		}
+		
+		for(int k=0; k<newPermissions.size(); k++){
+			if(!hasPermission(newPermissions.get(k), userId)){
+			createPermissions.add(newPermissions.get(k));
+				
+			}
+		}
+		this.createPermission(2,createPermissions,receiverUser);
+		
 		
 	}
 	

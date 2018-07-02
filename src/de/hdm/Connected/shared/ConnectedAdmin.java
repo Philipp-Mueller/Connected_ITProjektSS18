@@ -285,6 +285,8 @@ public interface ConnectedAdmin extends RemoteService {
 	ArrayList<Permission> getPermissionsByValueId(int valueId) throws IllegalArgumentException;
 
 	void updatePermission(Permission permission) throws IllegalArgumentException;
+	
+	void updatePermissionsForUser(ArrayList<Integer> newPermissions, int contactId, int userId) throws IllegalArgumentException;
 
 	Permission getPermissionById(int id) throws IllegalArgumentException;
 

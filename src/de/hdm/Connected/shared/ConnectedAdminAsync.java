@@ -128,5 +128,8 @@ public interface ConnectedAdminAsync {
 	void getValuesByUserPermission(int contactId, int userId, AsyncCallback<ArrayList<Value>> callback);
 
 	void deletePermissionFromContact(int userId, int contactId, AsyncCallback<Void> callback);
+
+	void updatePermissionsForUser(ArrayList<Integer> newPermissions, int contactId, int userId,
+			AsyncCallback<Void> callback);
 	
 }
