@@ -652,12 +652,11 @@ public class ContactForm extends PopupPanel {
 				int propertyId = 0;
 				for (Property p : propertyArray) {
 					if ((propertyListBox.getSelectedItemText()).equals(p.getName())) {
-						propertyId = p.getBoId();
-						if (p.getName().equals("Geburtsdatum")) {
-							propertyListBox.removeItem(propertyListBox.getSelectedIndex());
-						}
+						propertyId = p.getBoId();						
 					}
 				}
+		
+			
 				ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId,
 						selectedContact.getBoId(), 2, new AsyncCallback<Value>() {
 
@@ -685,7 +684,8 @@ public class ContactForm extends PopupPanel {
 								propertyTable.setWidget(rowCount, 3, deleteBtn);
 
 								ContactSharing shareValue = new ContactSharing(selectedContact, result);
-
+								if (propertyListBox.getSelectedItemText().equals("Geburtsdatum")) {
+									propertyListBox.removeItem(propertyListBox.getSelectedIndex());}
 								// shareNewValue.show();
 
 							}
