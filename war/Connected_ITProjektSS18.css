@@ -150,6 +150,11 @@ h1 a {
 	color: #fff;
 }
 
+#nav .gwt-Button-buttonpressednav{
+	background: #009999 !important;
+	color: #fff;
+}
+
 #nav-wrapper {
 	background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
 	width: 20%;
