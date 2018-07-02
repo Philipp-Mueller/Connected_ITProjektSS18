@@ -75,7 +75,12 @@ public class Navigation extends VerticalPanel {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				ContactListForm addContactListForm = new ContactListForm();
+				NewContactListPopup addContactListForm = new NewContactListPopup();
+				addContactListForm.center();
+				addContactListForm.show();
+				Navigation reload = new Navigation();
+				
+				
 			}
 		});
 		
@@ -131,7 +136,7 @@ public class Navigation extends VerticalPanel {
 						@Override
 						public void onClick(ClickEvent event) {
 							RootPanel.get("content").clear();
-							ContactListForm3 showContactList = new ContactListForm3(cl.getBoId());
+							ContactListForm3 showContactList = new ContactListForm3(cl);
 						}
 						
 					});
