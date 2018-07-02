@@ -99,19 +99,16 @@ public class Navigation extends VerticalPanel {
 		
 	//	ContactlistsCellList cellList = new ContactlistsCellList();
 		//CellTree?
-		String header  = "Meine Kontaktlisten";
+		//String header  = "Meine Kontaktlisten";
 		
-		DisclosurePanel myContactLists = new DisclosurePanel("Meine Kontaktlisten");
+		DisclosurePanel myContactLists = new DisclosurePanel();
 			//myContactLists.setContent(contactListsTree);
 		
 		Button headerButton = new Button("Meine Kontaktlisten");
-	//	myContactLists.setHeader(headerButton);
+	    myContactLists.setHeader(headerButton);
 	   // myContactLists.setContent(cellList);
 	    Button BSharedContacts = new Button ("Geteilte Kontakte");
 		// BSharedContacts.addStyleName("");
-	    
-	  	    
-	    
 	    
 	    final VerticalPanel contactListPanel = new VerticalPanel();
 	    
@@ -128,7 +125,7 @@ public class Navigation extends VerticalPanel {
 				allContactsLists = result;
 				for (final ContactList cl : allContactsLists){
 					Button showCL = new Button("      " + cl.getName());
-					
+					showCL.setStylePrimaryName("gwt-Button-buttonpressednav");
 					showCL.addClickHandler(new ClickHandler(){
 
 						@Override
@@ -141,7 +138,6 @@ public class Navigation extends VerticalPanel {
 					contactListPanel.add(showCL);
 				}
 			}
-	    	
 	    	
 	    });
 		
@@ -160,9 +156,6 @@ public class Navigation extends VerticalPanel {
 		this.add(BNewContactList);
 		this.add(BMyContacts);
 		this.add(myContactLists);
-		
-		
-		
-			
+
 	}		
 }
