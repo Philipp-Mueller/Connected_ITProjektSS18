@@ -603,17 +603,17 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		// TODO Auto-generated method stub
 		ArrayList<Permission> permissionToDelete = new ArrayList<Permission>();
 		
-		permissionToDelete.add(permissionMapper.findBySharedObjectIdAndReceiverId(userId, contactId));
+		permissionToDelete.add(permissionMapper.findBySharedObjectIdAndReceiverId(contactId, userId));
 		
 		for(int i=0; i<findValuesByContactId(contactId).size(); i++){
 			
 			if(hasPermission(findValuesByContactId(contactId).get(i).getBoId(), userId)){			
-			permissionToDelete.add(permissionMapper.findBySharedObjectIdAndReceiverId(userId, findValuesByContactId(contactId).get(i).getBoId()));
+			permissionToDelete.add(permissionMapper.findBySharedObjectIdAndReceiverId(findValuesByContactId(contactId).get(i).getBoId(), userId));
 			}
 		}
 		
-		for(Permission p : permissionToDelete){
-			deletePermission(p);
+		for(int j=0; j<permissionToDelete.size(); j++){
+			deletePermission(permissionToDelete.get(j));
 		}
 		
 
