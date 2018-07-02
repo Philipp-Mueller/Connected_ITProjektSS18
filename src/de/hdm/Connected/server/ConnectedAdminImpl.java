@@ -106,6 +106,16 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		
 	}
 	
+	public void updatePermissionsForUser(ArrayList<Integer> newPermissions, int contactId, int userId) throws IllegalArgumentException{
+		
+		ArrayList<Integer> oldPermissions = new ArrayList<Integer>();
+		
+		for(int i=0; i< getValuesByUserPermission(contactId, userId).size();i++){
+			oldPermissions.add(getValuesByUserPermission(contactId, userId).get(i).getBoId());
+		};
+		
+	}
+	
 	// gibt alle Permsission-Objekte aus der DB zurück
 	@Override
 	public ArrayList<Permission> getAllPermissions() throws IllegalArgumentException {
@@ -323,8 +333,8 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	// updatet Kontaktliste
 	
 	@Override
-	public void updateContactList(ContactList contactList) throws IllegalArgumentException {
-		contactListMapper.update(contactList);
+	public ContactList updateContactList(ContactList contactList) throws IllegalArgumentException {
+	 return this.contactListMapper.update(contactList);
 	}
 	
 	// fügt einer Kontaktliste einen Kontakt hinzu
@@ -580,8 +590,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 			Value value = getValuesByUserPermission(contactId, userId).get(i);			
 			mapi.put(property, value);
 		}
-		
-		
+				
 		return mapi;
 		
 	}
