@@ -96,13 +96,10 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	
 	//löscht eine Permission wenn User sie selbst erstellt hat
 	@Override
-	public void deletePermission(Permission permission, User cUser) throws IllegalArgumentException {
-			
-		if (cUser.getBoId()==permissionMapper.findById(cUser.getBoId()).getShareUserID()){
-				
-						permissionMapper.delete(permission, cUser);						 }
+	public void deletePermission(Permission permission) throws IllegalArgumentException {			
+						permissionMapper.delete(permission);						 
 																						
-																				}				 	
+ }				 	
 	@Override
 	public void updatePermission(Permission permission) throws IllegalArgumentException{
 		permissionMapper.update(permission);
@@ -258,7 +255,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 					&& permissionMapper.findById(contact.getBoId()).getBoId() == contact.getBoId()){
 					
 						Permission cPermission = permissionMapper.findById(sharedObjectId);
-							permissionMapper.delete(cPermission, cUser);									}
+							permissionMapper.delete(cPermission);									}
 																							
 			else {
 				ArrayList<Value> values = this.findValuesByContactId(contact.getBoId());
@@ -403,7 +400,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 					&& permissionMapper.findById(contactList.getBoId()).getBoId() == contactList.getBoId()){
 					
 						Permission cPermission = permissionMapper.findById(sharedObjectId);
-							permissionMapper.delete(cPermission,cUser);
+							permissionMapper.delete(cPermission);
 							}
 											
 			else {
@@ -463,7 +460,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 		if (permissions != null) {
 			for (Permission permission : permissions) {
-				this.permissionMapper.delete(permission, user);
+				this.permissionMapper.delete(permission);
 			}
 		}
 		this.userMapper.delete(user);
@@ -602,8 +599,23 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 
 	@Override // Delete Permission Redundant?! --ähm ja - würde das in Permission schreiben (deletePermission Methode) Wieder die Frage nach Objekte oder ID´s übergeben ;) Grüssle Denise 
-	public void removeAccessToObject(int userId, int shareObjectId) throws IllegalArgumentException {
+	public void deletePermissionFromContact(int userId, int contactId) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
+		ArrayList<Permission> permissionToDelete = new ArrayList<Permission>();
+		
+		permissionToDelete.add(permissionMapper.findBySharedObjectIdAndReceiverId(userId, contactId));
+		
+		for(int i=0; i<findValuesByContactId(contactId).size(); i++){
+			
+			if(hasPermission(findValuesByContactId(contactId).get(i).getBoId(), userId)){			
+			permissionToDelete.add(permissionMapper.findBySharedObjectIdAndReceiverId(userId, findValuesByContactId(contactId).get(i).getBoId()));
+			}
+		}
+		
+		for(Permission p : permissionToDelete){
+			deletePermission(p);
+		}
+		
 
 	}
 

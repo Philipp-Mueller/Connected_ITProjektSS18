@@ -227,7 +227,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @param permission
 	 * @throws IllegalArgumentException
 	 */
-	public void deletePermission(Permission permission, User cUser) throws IllegalArgumentException;
+	public void deletePermission(Permission permission) throws IllegalArgumentException;
 	
 	/**
 	 * Fügt ein Contact einer ContactList hinzu
@@ -246,14 +246,6 @@ public interface ConnectedAdmin extends RemoteService {
 	public void removeContactFromContactList(int contactid, int contactlistid) throws IllegalArgumentException;
 			
 	
-	
-	/**
-	 * Löscht die Permission des Users auf das Objekt
-	 * 
-	 * @param shareObjectId, userId
-	 * @throws IllegalArgumentException
-	 */
-	public void removeAccessToObject(int userId, int shareObjectId) throws IllegalArgumentException;
 	
 	/**
 	 * Gibt alle Properties zurück
@@ -327,5 +319,7 @@ public interface ConnectedAdmin extends RemoteService {
 	ArrayList<ContactList> getContactListsByUserPermission(int userId) throws IllegalArgumentException;
 	
 	ArrayList<Value> getValuesByUserPermission(int contactId, int userId) throws IllegalArgumentException;
+
+	void deletePermissionFromContact(int userId, int contactId) throws IllegalArgumentException;
 
 }

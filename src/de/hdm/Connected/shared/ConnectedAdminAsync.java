@@ -73,13 +73,11 @@ public interface ConnectedAdminAsync {
 	
 	void createPermission(int shareUserId, ArrayList<Integer> shareObjectId, ArrayList<Integer> receiverUserId, AsyncCallback<Void> callback);
 	
-	void deletePermission(Permission permission, User cUser, AsyncCallback<Void> callback);
+	void deletePermission(Permission permission, AsyncCallback<Void> callback);
 	
 	void addContactsToContactList(ArrayList<Contact> contactArray, ArrayList<ContactList> contactlistArray, AsyncCallback<Void> callback);
 	
 	void removeContactFromContactList(int contactid, int contactlistid, AsyncCallback<Void> callback);
-	
-	void removeAccessToObject(int userId, int shareObjectId, AsyncCallback<Void> callback);
 	
 	void findAllProperties(AsyncCallback<ArrayList<Property>> callback);
 	
@@ -128,5 +126,7 @@ public interface ConnectedAdminAsync {
 	void getContactListsByUserPermission(int userId, AsyncCallback<ArrayList<ContactList>> callback);
 
 	void getValuesByUserPermission(int contactId, int userId, AsyncCallback<ArrayList<Value>> callback);
+
+	void deletePermissionFromContact(int userId, int contactId, AsyncCallback<Void> callback);
 	
 }
