@@ -66,6 +66,11 @@ h1 a {
 }
 
 #main {
+<<<<<<< HEAD
+	height: 95%;
+	
+}
+=======
 	height:100%;
 	display: flex;
 	flex-direction: row;
@@ -75,6 +80,7 @@ h1 a {
 }
 	
 
+>>>>>>> master
 
 #usermenu .gwt-HTML {
 	padding: 20px 0px;
@@ -102,21 +108,31 @@ h1 a {
 }
 
 #nav {
+<<<<<<< HEAD
+  font-family: 'Montserrat', sans-serif;
+=======
     font-family: 'Montserrat', sans-serif;
+>>>>>>> master
 	width: 100%;
 	font-weight: 300px;
 	display: flex;
 	flex-flow: column;
 	background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
+<<<<<<< HEAD
+  justify-content: flex-top;
+	height: inherit;
+	overflow-x: hidden;
+=======
     justify-content: flex-top;
 	height: inherit;
-	/*overflow-x: auto;*/
+	overflow-x: auto;
+>>>>>>> master
 }
 
 #nav table {
 	font-family: 'Montserrat', sans-serif;
 	width:100%;
-	padding-right: 15px;
+	padding-left: 0px;
 }
 
 #nav button {
@@ -154,7 +170,11 @@ h1 a {
 	background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
 	width: 20%;
 	display: block;
-	height: 95%;
+<<<<<<< HEAD
+	height: inherit;
+=======
+	height: 100%;
+>>>>>>> master
 }
 
 #content button {
@@ -277,7 +297,7 @@ table {
 	font-weight: 300px;
 }
 
-.contactListPanel {
+.cellListPanel {
 	border-style: hidden;
 	border-color: transparent; 
 	border-width: 0px;
@@ -309,25 +329,3 @@ table.content td{
 	border: 1px;
 }
 
-.gwt-Button-buttonpressednav {
-	font-family: 'Montserrat', sans-serif;
-	width: 90%;
-	border: none;
-	background: transparent;
-	color: #666;
-	padding: 15px 0px 15px 20px;
-	text-align: left;
-	font-size: 100%;
-	cursor: pointer;
-	border-radius: 4px;
-}
-
-table.gwt-DisclosurePanel {
-text-align: left;
-margin-left: inherit;
-} 
-
-table.cellListPanel.content {
-	text-align: left;
-  margin-left: inherit;
-}
