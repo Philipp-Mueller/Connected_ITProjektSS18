@@ -88,20 +88,6 @@ public ContactlistsCell(){
 			 });
 
 	
-<<<<<<< HEAD
-		if(value == null) {
-			return;
-		} else if(value.getCreatorId() != user.getBoId()){
-		sb.appendHtmlConstant("<i>");
-		sb.appendEscaped(value.getName());
-		sb.appendHtmlConstant("</i>");
-				
-		
-		} else if(value.getCreatorId() == user.getBoId()){
-			sb.appendHtmlConstant("<div>");
-			sb.appendEscaped(value.getName());
-			sb.appendHtmlConstant("</div>");
-=======
 	
 ClientSideSettings.getConnectedAdmin().findAllContactlists(new AsyncCallback<ArrayList<ContactList>>(){
 
@@ -116,7 +102,6 @@ ClientSideSettings.getConnectedAdmin().findAllContactlists(new AsyncCallback<Arr
 		 for(ContactList cl: result){
 		 alleKontakte.addContactList(cl);
 		 }
->>>>>>> master
 	}
 	
 });

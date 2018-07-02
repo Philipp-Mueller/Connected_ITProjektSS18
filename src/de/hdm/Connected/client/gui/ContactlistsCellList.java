@@ -94,19 +94,8 @@ public class ContactlistsCellList extends Widget {
 	
 	cellList.setStylePrimaryName("cellList");
 	
-<<<<<<< HEAD
-	VerticalPanel panel = new VerticalPanel();
-	panel.setBorderWidth(1);	    
-    panel.setWidth("200");
-	panel.add(cellList);
-	
-	panel.setStylePrimaryName("cellListPanel");
-	RootPanel.get().add(panel);
-	
-=======
 	RootPanel.get("nav").add(cellList);
 			
->>>>>>> master
 			}
 	 	});
 	 }

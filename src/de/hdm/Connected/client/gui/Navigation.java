@@ -1,5 +1,11 @@
 package de.hdm.Connected.client.gui;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import com.google.gwt.cell.client.Cell;
+import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.CellList;
@@ -9,22 +15,17 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HTML;
-<<<<<<< HEAD
-import com.google.gwt.user.client.ui.HasText;
-=======
 import com.google.gwt.user.client.ui.PopupPanel;
->>>>>>> master
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.ProvidesKey;
+import com.google.gwt.view.client.SelectionModel;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 import de.hdm.Connected.client.ClientSideSettings;
-<<<<<<< HEAD
-import de.hdm.Connected.shared.bo.Contact;
-import de.hdm.Connected.client.gui.ContactsTable;
-=======
 import de.hdm.Connected.shared.bo.ContactList;
->>>>>>> master
 
 
 public class Navigation extends VerticalPanel {
@@ -33,36 +34,6 @@ public class Navigation extends VerticalPanel {
 	 Button BMyContacts = new Button ("Meine Kontakte");
 	public void onLoad() {
 		
-<<<<<<< HEAD
-		Button cButton = new Button ("Meine Kontakte");
-		//myContacts.addStyleName("");
-		
-		cButton.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				//ContactsTable ctable = new ContactsTable();
-				//RootPanel.get("content").clear();
-				//RootPanel.get("content").add(ctable);
-			}
-		});
-		
-		ContactlistsCellList cellList = new ContactlistsCellList();
-		
-		DisclosurePanel clPanel = new DisclosurePanel();
-		Button headerButton = new Button("Meine Kontaktlisten");
-		clPanel.setHeader(headerButton);
-		
-		//VerticalPanel vpanel = new VerticalPanel();
-		//vpanel.setBorderWidth(1);	    
-	    //vpanel.setWidth("200");
-	    
-	    //vpanel.add(cellList);
-		clPanel.setContent(cellList);
-		
-		this.add(cButton);
-		this.add(clPanel);	
-
-=======
 		
 		//ContactlistsCell cellTreeModel = new ContactlistsCell();
 		
@@ -104,7 +75,12 @@ public class Navigation extends VerticalPanel {
 			
 			@Override
 			public void onClick(ClickEvent event) {
-				ContactListForm addContactListForm = new ContactListForm();
+				NewContactListPopup addContactListForm = new NewContactListPopup();
+				addContactListForm.center();
+				addContactListForm.show();
+				Navigation reload = new Navigation();
+				
+				
 			}
 		});
 		
@@ -128,19 +104,16 @@ public class Navigation extends VerticalPanel {
 		
 	//	ContactlistsCellList cellList = new ContactlistsCellList();
 		//CellTree?
-		String header  = "Meine Kontaktlisten";
+		//String header  = "Meine Kontaktlisten";
 		
-		DisclosurePanel myContactLists = new DisclosurePanel("Meine Kontaktlisten");
+		DisclosurePanel myContactLists = new DisclosurePanel();
 			//myContactLists.setContent(contactListsTree);
 		
 		Button headerButton = new Button("Meine Kontaktlisten");
-	//	myContactLists.setHeader(headerButton);
+	    myContactLists.setHeader(headerButton);
 	   // myContactLists.setContent(cellList);
 	    Button BSharedContacts = new Button ("Geteilte Kontakte");
 		// BSharedContacts.addStyleName("");
-	    
-	  	    
-	    
 	    
 	    final VerticalPanel contactListPanel = new VerticalPanel();
 	    
@@ -157,20 +130,19 @@ public class Navigation extends VerticalPanel {
 				allContactsLists = result;
 				for (final ContactList cl : allContactsLists){
 					Button showCL = new Button("      " + cl.getName());
-					
+					showCL.setStylePrimaryName("gwt-Button-buttonpressednav");
 					showCL.addClickHandler(new ClickHandler(){
 
 						@Override
 						public void onClick(ClickEvent event) {
 							RootPanel.get("content").clear();
-							ContactListForm3 showContactList = new ContactListForm3(cl.getBoId());
+							ContactListForm3 showContactList = new ContactListForm3(cl);
 						}
 						
 					});
 					contactListPanel.add(showCL);
 				}
 			}
-	    	
 	    	
 	    });
 		
@@ -189,10 +161,6 @@ public class Navigation extends VerticalPanel {
 		this.add(BNewContactList);
 		this.add(BMyContacts);
 		this.add(myContactLists);
-		
-		
-		
-			
->>>>>>> master
+
 	}		
 }
