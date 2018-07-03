@@ -164,6 +164,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 							if (result != null) {
 								log("User: " + result.getLogEmail());
 								currentUser = result;
+								ClientSideSettings.setCurrentUser(result);
 								settings.run();
 								welcome.run();
 
@@ -208,6 +209,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 											public void onSuccess(User result) {
 												log("Create new User: "+ result.getName());
 												currentUser = result;
+												ClientSideSettings.setCurrentUser(result);
 												settings.run();
 												welcome.run();
 
