@@ -457,9 +457,16 @@ public class ContactsTable extends CellTable {
 					@Override
 					public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
 						String title = "Kontakt löschen";
+						String titelCL = "Kontakt von Kontaktliste entfernen";
 						if (data != null) {
+							if(contactlist == null){
 							sb.appendHtmlConstant("<img title='" + title + "' src=" + "/delete.png" + " alt="
 									+ "Kontakt löschen" + " height=" + "25" + " width=" + "25" + ">");
+							}
+							else{
+								sb.appendHtmlConstant("<img title='" + titelCL + "' src=" + "/deleteFromList.png" + " alt="
+										+ "Kontakt von Kontaktliste entfernen" + " height=" + "25" + " width=" + "25" + ">");
+							}
 
 						}
 					}
