@@ -660,17 +660,20 @@ public class ContactListForm3 extends CellTable {
 					ContactList cl = new ContactList();
 					cl.setName(nameTextBox.getText());
 					cl.setBoId(mainContactlist.getBoId());
-					ClientSideSettings.getConnectedAdmin().updateContactList(cl, new AsyncCallback<Void>() {
+					ClientSideSettings.getConnectedAdmin().updateContactList(cl, new AsyncCallback<ContactList>() {
 						@Override
 						public void onFailure(Throwable caught) {
 
 						}
 
 						@Override
-						public void onSuccess(Void result) {
+						public void onSuccess(ContactList result) {
 							Window.alert("Erfolgreich umbenannt");
 							RootPanel.get("content").clear();
-							ContactListForm3 reload = new ContactListForm3(mainContactlist);
+							ContactListForm3 reload = new ContactListForm3(result);
+							RootPanel.get("nav").clear();
+							Navigation reloadN = new Navigation();
+							RootPanel.get("nav").add(reloadN);
 						}
 					});
 					updateDialog.this.hide();

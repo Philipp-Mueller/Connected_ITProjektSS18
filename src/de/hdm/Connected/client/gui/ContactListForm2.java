@@ -704,14 +704,14 @@ public class ContactListForm2 extends Widget {
 					ContactList cl = new ContactList();
 					cl.setName(nameTextBox.getText());
 					cl.setBoId(clArray.get(row).getBoId());
-					ClientSideSettings.getConnectedAdmin().updateContactList(cl, new AsyncCallback<Void>() {
+					ClientSideSettings.getConnectedAdmin().updateContactList(cl, new AsyncCallback<ContactList>() {
 						@Override
 						public void onFailure(Throwable caught) {
 
 						}
 
 						@Override
-						public void onSuccess(Void result) {
+						public void onSuccess(ContactList result) {
 							Window.alert("Erfolgreich umbenannt");
 							RootPanel.get("content").clear();
 							ContactListForm2 mycontactlistForm = new ContactListForm2(clArray.get(row).getBoId());
