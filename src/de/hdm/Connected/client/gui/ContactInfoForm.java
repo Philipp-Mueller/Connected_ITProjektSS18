@@ -126,7 +126,7 @@ public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 			@Override
 			public void onSuccess(Property result) {
 				int rowCount = contactInfoTable.getRowCount();
-				contactInfoTable.setWidget(rowCount, 0, new HTML("<p><strong>" + result.getName() + ":</strong></p>"));
+				contactInfoTable.setWidget(rowCount, 0, new HTML("<p><i><strong>" + result.getName() + ":</strong></i></p>"));
 				//TODO currentUser
 				
 				if(value.getCreatorId() != 1){
