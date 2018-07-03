@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-import de.hdm.Connected.client.gui.StartPage;
+import de.hdm.Connected.client.gui.ContactsTable;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.bo.User;
 
@@ -133,7 +133,7 @@ public class Settings extends VerticalPanel {
 			@Override
 			public void onClick(ClickEvent event) {
 
-				RootPanel.get().add(new StartPage());
+				RootPanel.get().add(new ContactsTable(null, null));
 			}
 		});
 

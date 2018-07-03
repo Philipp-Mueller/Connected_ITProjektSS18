@@ -1,13 +1,9 @@
 package de.hdm.Connected.client;
 
-import com.google.appengine.api.mail.MailService.Header;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Command;
@@ -15,33 +11,19 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Anchor;
 
-import de.hdm.Connected.client.gui.ContactForm;
-import de.hdm.Connected.client.gui.ContactForm_Test;
-import de.hdm.Connected.client.gui.ContactListForm;
-import de.hdm.Connected.client.gui.ContactListForm2;
-import de.hdm.Connected.client.gui.ContactListForm3;
-import de.hdm.Connected.client.gui.ContactSharing;
-import de.hdm.Connected.client.gui.ContactsTable;
-import de.hdm.Connected.client.gui.StartPage;
-import de.hdm.Connected.shared.ConnectedAdminAsync;
-import de.hdm.Connected.shared.FieldVerifier;
-import de.hdm.Connected.shared.bo.Contact;
-import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.client.gui.Navigation;
-import de.hdm.Connected.client.LoginInfo;
+import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.LoginService;
 import de.hdm.Connected.shared.LoginServiceAsync;
+import de.hdm.Connected.shared.bo.User;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
