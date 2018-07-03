@@ -118,9 +118,10 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		// Menü start
 		final Command settingDialog = new Command() {
 			public void execute() {
-
+				// Letztes hinzugefügtes Widget
+				//settings.setReturnWidget(RootPanel.get("content").getWidget(RootPanel.get("content").getWidgetCount()-1));
+				settings.setReturnWidget(welcome);
 				RootPanel.get("content").clear();
-				
 				RootPanel.get("content").add(settings);
 			}
 		};
