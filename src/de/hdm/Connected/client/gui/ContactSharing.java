@@ -388,12 +388,12 @@ public class ContactSharing extends PopupPanel {
 			}
 		});
 		//alle Eigenschaft auf der der aktuelle Nutzer zugriff hat auswählen
-		ClientSideSettings.getConnectedAdmin().findValueAndProperty(sharingContact.getBoId(), 2,
+		ClientSideSettings.getConnectedAdmin().findValueAndProperty(sharingContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(),
 				new AsyncCallback<Map<Property, Value>>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
+
 
 					}
 
@@ -495,8 +495,8 @@ public class ContactSharing extends PopupPanel {
 									selectedUsers.add(receiverUser.getVisibleItems().get(i).getBoId());
 								}
 
-								// TODO getCurrentUser()
-								ClientSideSettings.getConnectedAdmin().createPermission(3, selectedValues,
+
+								ClientSideSettings.getConnectedAdmin().createPermission(ClientSideSettings.getCurrentUser().getBoId(), selectedValues,
 										selectedUsers, new AsyncCallback<Void>() {
 
 											@Override
@@ -555,7 +555,7 @@ public class ContactSharing extends PopupPanel {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
+
 
 			}
 
@@ -623,12 +623,12 @@ public class ContactSharing extends PopupPanel {
 						}
 					}
 
-					ClientSideSettings.getConnectedAdmin().givePermissionToUsers(value.getBoId(), userArray, 3,
+					ClientSideSettings.getConnectedAdmin().givePermissionToUsers(value.getBoId(), userArray, ClientSideSettings.getCurrentUser().getBoId(),
 							new AsyncCallback<Void>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
-									// TODO Auto-generated method stub
+
 
 								}
 

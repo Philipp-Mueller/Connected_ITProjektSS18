@@ -119,7 +119,7 @@ public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
+
 				
 			}
 
@@ -127,9 +127,8 @@ public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 			public void onSuccess(Property result) {
 				int rowCount = contactInfoTable.getRowCount();
 				contactInfoTable.setWidget(rowCount, 0, new HTML("<p><i><strong>" + result.getName() + ":</strong></i></p>"));
-				//TODO currentUser
-				
-				if(value.getCreatorId() != 1){
+
+				if(value.getCreatorId() != ClientSideSettings.getCurrentUser().getBoId()){
 				contactInfoTable.setWidget(rowCount, 1, new HTML("<i>" +value.getName() +"</i>")); } 
 				else{
 					contactInfoTable.setWidget(rowCount, 1, new HTML(value.getName()));
@@ -147,7 +146,7 @@ public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 	 *zur Anzeige des Popus
 	 *
 	 */	
-	if(contact.getCreatorId() ==2){
+	if(contact.getCreatorId() ==ClientSideSettings.getCurrentUser().getBoId()){
 		v.add(new HTML("<br /><h3> &nbsp; Kontakt: <i>" + contact.getPrename() + " " + contact.getSurname() +"</i></h3><br />"));
 	}else{
 		v.add(new HTML("<br /><h3> &nbsp; Kontakt: " + contact.getPrename() + " " + contact.getSurname() +"</h3><br />"));
