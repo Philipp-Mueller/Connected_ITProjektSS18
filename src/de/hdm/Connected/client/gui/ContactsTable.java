@@ -242,9 +242,9 @@ public class ContactsTable extends CellTable {
 						if(value == null) {
 							return;
 						}else if(value.getCreatorId() != userId){
-						sb.appendHtmlConstant("<i>");
+						sb.appendHtmlConstant("<i><strong>");
 						sb.appendEscaped(value.getPrename());
-						sb.appendHtmlConstant("</i>");
+						sb.appendHtmlConstant("</strong></i>");
 								
 						
 						}else if(value.getCreatorId() == userId){
@@ -306,9 +306,9 @@ public class ContactsTable extends CellTable {
 						if(value == null) {
 							return;
 						}else if(value.getCreatorId() != userId){
-						sb.appendHtmlConstant("<div><i>");
+						sb.appendHtmlConstant("<div><i><strong>");
 						sb.appendEscaped(value.getSurname());
-						sb.appendHtmlConstant("</i></div>");
+						sb.appendHtmlConstant("</strong></i></div>");
 								
 						
 						}else if(value.getCreatorId() == userId){
