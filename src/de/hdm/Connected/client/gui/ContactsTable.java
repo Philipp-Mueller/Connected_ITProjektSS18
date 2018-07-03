@@ -18,6 +18,7 @@ import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dev.shell.Icons;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -28,7 +29,8 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
-
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -55,6 +57,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -69,6 +72,7 @@ import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent.Handler;
+import com.google.gwt.view.client.SelectionModel;
 
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
@@ -95,12 +99,17 @@ public class ContactsTable extends CellTable {
 	private ArrayList<ContactList> allCLs = new ArrayList<ContactList>();
 	private ArrayList<ContactList> selectedCLs = new ArrayList<ContactList>();
 	ListBox contactlistListbox = new ListBox();
+	private boolean firstTimePressed = true;
+	Label search = new Label();
 	
 	private Button addContactButton = new Button(" + Kontakt");
 	private Button shareSelectedContacts = new Button("Ausgewählte Kontakte teilen");
 	private Button addContactstoCL = new Button("Kontakte einer Kontaktliste hinzufügen");
-
+	private ContactInfoForm contact = null;
+	
 	private TextBox searchBox = new TextBox();
+	
+	boolean isAppend = false;
 	ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
 
 	List<Contact> contacts = new ArrayList<Contact>();
@@ -136,7 +145,7 @@ public class ContactsTable extends CellTable {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
+				Window.alert("Kontakte konnten nicht geladen werden");
 
 			}
 
@@ -158,8 +167,24 @@ public class ContactsTable extends CellTable {
 					@Override
 					public void onSelectionChange(SelectionChangeEvent event) {
 						selectedContacts = selectionModel.getSelectedSet();
-
+						
+						if(selectedContacts !=null){
+										
+						shareSelectedContacts.setVisible(true);
+						addContactstoCL.setVisible(true);
+						search.getElement().getStyle().setMarginLeft(184, Unit.PX);
+				
+						}
+						
+						if(selectionModel.getSelectedSet().size() == 0){
+						shareSelectedContacts.setVisible(false);
+						addContactstoCL.setVisible(false);
+						search.getElement().getStyle().setMarginLeft(610, Unit.PX);
+						
+						}
+						
 					}
+					
 				});
 
 				Column<Contact, Boolean> checkColumn = new Column<Contact, Boolean>(new CheckboxCell(false, false)) {
@@ -169,8 +194,9 @@ public class ContactsTable extends CellTable {
 						return selectionModel.isSelected(object);
 					}
 				};
-
-				Header<Boolean> checkAllHeader = new Header<Boolean>(new CheckboxCell()) {
+				CheckboxCell cell = new CheckboxCell(true,true);
+				
+				Header<Boolean> checkAllHeader = new Header<Boolean>(cell) {
 
 					@Override
 
@@ -195,10 +221,9 @@ public class ContactsTable extends CellTable {
 							for(Contact c : contacts){
 								selectionModel.setSelected(c, value);
 							}
-						
-
+							
 					}
-
+					
 				});
 				
 				checkColumn.setCellStyleNames("iconButton");
@@ -256,10 +281,10 @@ public class ContactsTable extends CellTable {
 										//propertyValueMap = result;
 										// Window.alert(Integer.toString(result.size()));
 										// Window.alert(Integer.toString(globalIndex));
-										ContactInfoForm showContact = new ContactInfoForm(object, result);
+										contact = new ContactInfoForm(object, result);
 
-										showContact.center();
-										showContact.show();
+										contact.center();
+										contact.show();
 
 									}
 
@@ -318,10 +343,10 @@ public class ContactsTable extends CellTable {
 								//propertyValueMap = result;
 								// Window.alert(Integer.toString(result.size()));
 								// Window.alert(Integer.toString(globalIndex));
-								ContactInfoForm showContact = new ContactInfoForm(object, result);
+								ContactInfoForm contact = new ContactInfoForm(object, result);
 
-								showContact.center();
-								showContact.show();
+								contact.center();
+								contact.show();
 
 							}
 
@@ -699,31 +724,26 @@ public class ContactsTable extends CellTable {
 					}
 
 				});
+			
 				
-				searchBox.setText("Nach Kontakten suchen");
-				searchBox.getElement().getStyle().setColor("lightgrey");
-				searchBox.addBlurHandler(new BlurHandler(){
-
-					@Override
-					public void onBlur(BlurEvent event) {
-						TextBoxKeyUpHandler handler = null;
-						searchBox.getElement().getStyle().setColor("lightgrey");
-						searchBox.setText("Nach Kontakten suchen");
-												
-					}
-					
-				});
-				
+									
 				searchBox.addClickHandler(new ClickHandler(){
 
 					@Override
 					public void onClick(ClickEvent event) {
 						// TODO Auto-generated method stub
+						if(!(searchBox.getText() == "") && firstTimePressed){
+							firstTimePressed = false;
 						searchBox.setText("");
 						searchBox.getElement().getStyle().setColor("black");
+						}
+						
+						
+						
 						
 						//Der Suchbox einen KeyUp Handler anfügen. Bei jeder Eingabe werden die Kontakte angezeigt die dem Text inkl Wildcards davor und dahinter entsprechen.
 						searchBox.addKeyUpHandler(new TextBoxKeyUpHandler());						
+						
 						
 					}
 					
@@ -733,13 +753,21 @@ public class ContactsTable extends CellTable {
 				
 				if(contactlist == null){
 				//buttonPanel.setWidth("1000px");
-				//buttonPanel.setHorizontalAlignment(HasHorizontalAlignment.IGHT);	
+				buttonPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);	
 				buttonPanel.setSpacing(20);
 				
-				buttonPanel.add(addContactButton);
+				
 				buttonPanel.add(shareSelectedContacts);
 				buttonPanel.add(addContactstoCL);
+				
+				shareSelectedContacts.setVisible(false);
+				addContactstoCL.setVisible(false);
+				
+				search.getElement().setInnerHTML("<strong>Kontakt suchen:</strong>");
+				buttonPanel.add(search);
 				buttonPanel.add(searchBox);
+				searchBox.setWidth("215px");
+				search.getElement().getStyle().setMarginLeft(610, Unit.PX);
 				
 				RootPanel.get("content").add(buttonPanel);
 				RootPanel.get("content").add(cellTable);
@@ -876,12 +904,7 @@ public class ContactsTable extends CellTable {
 		@Override
 		public void onKeyUp(KeyUpEvent event) {
 			// TODO Auto-generated method stub
-			if(searchBox.getText() == ""){
-				dataProvider.getList().clear();
-				dataProvider.getList().addAll(contacts);
-				cellTable.redraw();
-				
-				}else{
+			if(searchBox.getText() != ""){
 				String searchString = "*" + searchBox.getText().toLowerCase() + "*";
 				searchString= searchString.replaceAll("\\*", "\\\\w*");
 				ArrayList<Contact> foundContacts = new ArrayList<Contact>();
@@ -894,11 +917,20 @@ public class ContactsTable extends CellTable {
 				dataProvider.getList().clear();
 				dataProvider.getList().addAll(foundContacts);
 				cellTable.redraw();
-				}
+				
+				
+							
+				}else {
+			
+				dataProvider.getList().clear();
+				dataProvider.getList().addAll(contacts);
+				cellTable.redraw();
+				firstTimePressed = true;}
 			
 		}
 		
 		}
+
 		
 		private class AddContactsToContactList extends PopupPanel {
 
