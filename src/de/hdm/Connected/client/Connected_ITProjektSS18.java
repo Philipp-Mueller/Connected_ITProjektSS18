@@ -107,10 +107,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	
 	public void onModuleLoad() {
 		
-		Navigation navigation = new Navigation();
-		// Das navPanel der Seite im Bereich der id "nav" hinzufügen
-				RootPanel.get("nav").add(navigation);
-			
+		
 		stockStore = Storage.getSessionStorageIfSupported();
 
 		if (stockStore != null) {
@@ -137,7 +134,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		vpBasisPanel.add(logoutPanel);
 		
 		// Menü start
-		Command settingDialog = new Command() {
+		final Command settingDialog = new Command() {
 			public void execute() {
 
 				RootPanel.get("content").clear();
@@ -146,7 +143,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			}
 		};
 
-		Command logout = new Command() {
+		final Command logout = new Command() {
 			public void execute() {
 				loginInfo.getLogoutUrl();
 				Window.open(loginInfo.getLogoutUrl(), "_self", "");
@@ -156,26 +153,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		
 	
 		
-		// Anzeige der Menü Elemente
-		MenuBar menu1 = new MenuBar(true);
-		menu1.addItem("Profil", settingDialog);
-		menu1.addItem("Abmelden", logout);
 		
-		// Menü Icon
-		MenuBar menu = new MenuBar();
-		final String image = "<img src='user.png' height='40px' width='40px'/>";
-		SafeHtml addActivityImagePath = new SafeHtml() {
-		
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public String asString() {
-				return image;
-			}
-		};
-
-		menu.addItem(addActivityImagePath, menu1);
-		RootPanel.get("top").add(menu);
 		
 		// Menü ende
 		
@@ -206,6 +184,31 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 								settings.run();
 								welcome.run();
 
+								Navigation navigation = new Navigation();
+								// Das navPanel der Seite im Bereich der id "nav" hinzufügen
+										RootPanel.get("nav").add(navigation);
+										
+										// Anzeige der Menü Elemente
+										MenuBar menu1 = new MenuBar(true);
+										menu1.addItem("Profil", settingDialog);
+										menu1.addItem("Abmelden", logout);
+										
+										// Menü Icon
+										MenuBar menu = new MenuBar();
+										final String image = "<img src='user.png' height='40px' width='40px'/>";
+										SafeHtml addActivityImagePath = new SafeHtml() {
+										
+											private static final long serialVersionUID = 1L;
+
+											@Override
+											public String asString() {
+												return image;
+											}
+										};
+
+										menu.addItem(addActivityImagePath, menu1);
+										RootPanel.get("top").add(menu);
+									
 								RootPanel.get("content").add(welcome);
 								
 
@@ -226,6 +229,32 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 												welcome.run();
 
 												isNew = true;
+												
+												Navigation navigation = new Navigation();
+												// Das navPanel der Seite im Bereich der id "nav" hinzufügen
+														RootPanel.get("nav").add(navigation);
+														
+														// Anzeige der Menü Elemente
+														MenuBar menu1 = new MenuBar(true);
+														menu1.addItem("Profil", settingDialog);
+														menu1.addItem("Abmelden", logout);
+														
+														// Menü Icon
+														MenuBar menu = new MenuBar();
+														final String image = "<img src='user.png' height='40px' width='40px'/>";
+														SafeHtml addActivityImagePath = new SafeHtml() {
+														
+															private static final long serialVersionUID = 1L;
+
+															@Override
+															public String asString() {
+																return image;
+															}
+														};
+
+														menu.addItem(addActivityImagePath, menu1);
+														RootPanel.get("top").add(menu);
+													
 
 												RootPanel.get("content").add(welcome);
 
