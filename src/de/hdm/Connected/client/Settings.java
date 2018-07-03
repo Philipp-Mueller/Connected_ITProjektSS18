@@ -9,11 +9,14 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
+import de.hdm.Connected.client.gui.ContactsTable;
 import de.hdm.Connected.client.gui.StartPage;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.bo.User;
@@ -60,7 +63,7 @@ public class Settings extends VerticalPanel {
 	/**
 	 * Create the Button
 	 */
-	Button btnAbrrechenButton = new Button("Abbrechen");
+	Button btnAbbrechenButton = new Button("Abbrechen");
 	Button btnSichernButton = new Button("Speichern");
 	Button btnDeleteAccount = new Button("Profil löschen");
 
@@ -68,6 +71,9 @@ public class Settings extends VerticalPanel {
 
 	static Button btnNo = new Button("Nein");
 	static Button btnYes = new Button("Ja");
+	
+	final Welcome welcome = new Welcome();
+	Widget returnWidget;
 
 	/**
 	 * Diese Methode generiert die View und wird nach der Instanziierung
@@ -102,7 +108,7 @@ public class Settings extends VerticalPanel {
 		vpSettingsPanel.add(lbEmail);
 		vpSettingsPanel.add(lbAusgabeEmail);
 
-		hpButtonPanel.add(btnAbrrechenButton);
+		hpButtonPanel.add(btnAbbrechenButton);
 		hpButtonPanel.add(btnSichernButton);
 		hpButtonPanel.add(btnDeleteAccount);
 		vpSettingsPanel.add(hpButtonPanel);
@@ -128,12 +134,15 @@ public class Settings extends VerticalPanel {
 
 		lbAusgabeEmail.setText(currentUser.getLogEmail());
 
-		btnAbrrechenButton.addClickHandler(new ClickHandler() {
+		btnAbbrechenButton.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 
-				RootPanel.get().add(new StartPage());
+				RootPanel.get("content").clear();
+				RootPanel.get("content").add(returnWidget); 
+				//ContactsTable ct = new ContactsTable(null, null);
+				log("clear");
 			}
 		});
 
@@ -149,10 +158,12 @@ public class Settings extends VerticalPanel {
 
 							@Override
 							public void onSuccess(Void result) {
+								Window.alert("Ihr Profil wurde gespeichert!");
 
 //								Homepage.hideView();
 								if( tbName.getText() == "" ){
 									lblInfoName.setVisible(true);
+								
 								}else{
 									lblInfoName.setVisible(false);
 								}
@@ -199,8 +210,9 @@ public class Settings extends VerticalPanel {
 							public void onSuccess(Void result) {
 
 								Window.open(Connected_ITProjektSS18.loginInfo.getLogoutUrl(), "_self", "");
-								Window.alert("Ihr Profil wurde gelöscht!");
 								Connected_ITProjektSS18.loadLogin();
+								Window.alert("Ihr Profil wurde gelöscht!");
+
 
 							}
 
@@ -231,6 +243,10 @@ public class Settings extends VerticalPanel {
 		this.add(hpHeader);
 		this.add(hpSettings);
 
+	}
+	
+	public void setReturnWidget(Widget w) {
+		returnWidget = w;
 	}
 	
 	native void log(String s) /*-{
