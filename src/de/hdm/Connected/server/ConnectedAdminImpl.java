@@ -270,12 +270,6 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		contact.setCreationDate(creationDate);
 		contact.setModificationDate(modificationDate);
 		
-	/*	Permission autoPermission = new Permission();
-		autoPermission.setReceiverUserID(ownerId);
-		autoPermission.setSharedObjectId(contact.getBoId());
-		autoPermission.setShareUserID(ownerId);
-		this.permissionMapper.insert(autoPermission);*/
-	
 		return this.contactMapper.insert(contact);
 		
 	}
