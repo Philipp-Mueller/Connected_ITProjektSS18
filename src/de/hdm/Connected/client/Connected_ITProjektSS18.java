@@ -88,7 +88,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	 */
 	
 	public void onModuleLoad() {
-		
+	
 		
 		stockStore = Storage.getSessionStorageIfSupported();
 
