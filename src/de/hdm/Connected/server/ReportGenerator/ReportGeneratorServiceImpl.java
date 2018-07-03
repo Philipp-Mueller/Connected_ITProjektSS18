@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import de.hdm.Connected.server.ConnectedAdminImpl;
 import de.hdm.Connected.server.db.ContactMapper;
+import de.hdm.Connected.server.db.PermissionMapper;
 import de.hdm.Connected.server.db.PropertyMapper;
 import de.hdm.Connected.server.db.UserMapper;
 import de.hdm.Connected.server.db.ValueMapper;
@@ -18,6 +18,7 @@ import de.hdm.Connected.shared.ConnectedAdmin;
 import de.hdm.Connected.shared.ReportGenerator.ReportGeneratorService;
 import de.hdm.Connected.shared.ReportGenerator.ReportObjekt;
 import de.hdm.Connected.shared.bo.Contact;
+import de.hdm.Connected.shared.bo.Permission;
 import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
@@ -41,6 +42,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 	private ContactMapper contactMapper = null;
 	private UserMapper userMapper = null;
 	private PropertyMapper propertyMapper = null;
+	private PermissionMapper permissionMapper = null;
 	
 	/*
 	 * Init ist eine Initialisierungsmethode, welche für jede Instanz der 
@@ -55,6 +57,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 		this.contactMapper = ContactMapper.contactMapper();
 		this.userMapper = UserMapper.userMapper();
 		this.propertyMapper = PropertyMapper.propertyMapper();
+		this.permissionMapper = PermissionMapper.permissionMapper();
 	}
 	
 
@@ -79,11 +82,15 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 	@Override
 	public List<ReportObjekt> searchContacts(boolean allContacts, boolean sharedContacts, String userEmail, Map<Integer, String> propertyValueMap) {
 
+		System.out.println(userEmail);
+		System.out.println(allContacts);
+		System.out.println(sharedContacts);
+		
 		List<Contact> ergebnisKontakte = new ArrayList<Contact>();
 		List<ReportObjekt> ergebnisReport = new ArrayList<ReportObjekt>();
 		
 		//Wenn nicht nach allen Kontakten gesucht werden soll und ein Nutzer gesetzt ist
-		if(!allContacts&&userEmail!=null && !userEmail.isEmpty()){
+		if(userEmail!=null && !userEmail.isEmpty()){
 			
 			User u = userMapper.findByEmail(userEmail);
 			
@@ -94,8 +101,13 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 				ergebnisKontakte = allContactsPerUser(u.getBoId());
 			}
 		}else{
-			ergebnisKontakte = allContacts();
-			//TODO Auch alle Shared Contacts
+			
+			if(sharedContacts){
+				ergebnisKontakte = allSharedContacts();
+			}else{
+				ergebnisKontakte = allContacts();
+				
+			}
 		}
 		
 		//Jetzt noch die property value filter prüfen...
@@ -152,12 +164,32 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 	}
 	
 
-	private List<Contact> allSharedContacts(int id) throws IllegalArgumentException{
-		return null; //TODO implementierung fehlt
+	private List<Contact> allSharedContacts(){
+		List<Contact> sharedContacts = new ArrayList<Contact>();
+		List<Permission> allPermissions = permissionMapper.findAll();
+		for(Permission p : allPermissions){
+			Contact c = contactMapper.findById(p.getSharedObjectId());
+			if(!sharedContacts.contains(c)){
+				sharedContacts.add(c);
+			}
+		}
+		return sharedContacts;	
 	}
+	
 
 	private List<Contact> allSharedContactsPerUser(int userId) {
-		return null; //TODO implementierung fehlt 		
+			 
+			List<Contact> sharedContacts = new ArrayList<Contact>();
+			
+			List<Permission> sharedPermissions = this.adminImpl.getPermissionsByShareUserId(userId);
+			for(Permission p : sharedPermissions){
+				Contact c = contactMapper.findById(p.getSharedObjectId());
+				if(!sharedContacts.contains(c)){
+					sharedContacts.add(c);
+				}
+			}
+			
+			return sharedContacts;
 	}
 
 	
