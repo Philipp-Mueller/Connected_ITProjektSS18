@@ -4,6 +4,7 @@ import java.util.ArrayList;
 //import java.util.Date;
 import java.util.Map;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
@@ -28,7 +29,8 @@ import de.hdm.Connected.shared.bo.User;
 
 public class ContactInfoForm extends PopupPanel {
 
-private String email;
+private User creator = new User();
+Contact contactShown = new Contact();
 private FlexTable contactInfoTable = new FlexTable();
 
 /**
@@ -38,8 +40,10 @@ private FlexTable contactInfoTable = new FlexTable();
 
 public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 	//PopUp schließt automatisch wenn daneben geklickt wird
+	
 	super(true);
-	//ensureDebugId("cwBasicPopup-simplePopup");
+	
+	contactShown = contact;
 		   
 	// Enable animation.
 	setAnimationEnabled(true);
@@ -62,11 +66,6 @@ public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 	
 	contactInfoTable.setCellSpacing(22);
 	
-	/**
-	 * Variable zur Abfrage des Erstellers
-	 * Zuweisung der ErstellerId
-	 */
-	int creatorId =contact.getCreatorId();
 
 	
 	/**
@@ -74,17 +73,27 @@ public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 	 * weist String email die Mailadresse des Erstellers zu
 	 */
 	
-	ClientSideSettings.getConnectedAdmin().findUserById(creatorId, new AsyncCallback<User>(){
+	ClientSideSettings.getConnectedAdmin().findUserById(contact.getCreatorId(), new AsyncCallback<User>(){
 		@Override
 		public void onFailure(Throwable caught) {
-			// TODO Auto-generated method stub
+			Window.alert("Konnte User nicht finden!");
 					}
 
 		
 		@Override
 		public void onSuccess(User result) {
-			email=result.getLogEmail();
-			
+			creator = result;			
+			contactInfoTable.setWidget(0, 0, new HTML("<strong>Ersteller: </strong>"));
+			contactInfoTable.setWidget(0, 1, new HTML(creator.getLogEmail()));
+			contactInfoTable.setWidget(1, 0, new HTML("<strong>Erstellt: </strong>"));
+			contactInfoTable.setWidget(1, 1, new HTML(contactShown.getCreationDate().toString()));
+			contactInfoTable.setWidget(2, 0, new HTML("<strong>Zuletzt geändert: </strong>"));
+			contactInfoTable.setWidget(2, 1, new HTML(contactShown.getModificationDate().toString()));
+			contactInfoTable.setWidget(3, 0, new HTML("<strong>Vorname: </strong>"));
+			contactInfoTable.setWidget(3, 1, new HTML(contactShown.getPrename()));
+			contactInfoTable.setWidget(4, 0, new HTML("<strong>Nachname: </strong>"));
+			contactInfoTable.setWidget(4, 1, new HTML(contactShown.getSurname()));
+			center();
 		}
 		
 	});
@@ -95,16 +104,7 @@ public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 	 *
 	 */		
 			
-	contactInfoTable.setWidget(0, 0, new HTML("<strong>Ersteller: </strong>"));
-	contactInfoTable.setWidget(0, 1, new HTML(email));
-	contactInfoTable.setWidget(1, 0, new HTML("<strong>Erstellt: </strong>"));
-	contactInfoTable.setWidget(1, 1, new HTML(contact.getCreationDate().toString()));
-	contactInfoTable.setWidget(2, 0, new HTML("<strong>Zuletzt geändert: </strong>"));
-	contactInfoTable.setWidget(2, 1, new HTML(contact.getModificationDate().toString()));
-	contactInfoTable.setWidget(3, 0, new HTML("<strong>Vorname: </strong>"));
-	contactInfoTable.setWidget(3, 1, new HTML(contact.getPrename()));
-	contactInfoTable.setWidget(4, 0, new HTML("<strong>Nachname: </strong>"));
-	contactInfoTable.setWidget(4, 1, new HTML(contact.getSurname()));
+	
 
 	/**
 	 *Erzeugt für jede Eigenschaft eine neue Zeile
@@ -126,7 +126,7 @@ public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 			@Override
 			public void onSuccess(Property result) {
 				int rowCount = contactInfoTable.getRowCount();
-				contactInfoTable.setWidget(rowCount, 0, new HTML("<strong>" + result.getName() + ":</strong>"));
+				contactInfoTable.setWidget(rowCount, 0, new HTML("<p><strong>" + result.getName() + ":</strong></p>"));
 				//TODO currentUser
 				
 				if(value.getCreatorId() != 1){
@@ -147,8 +147,13 @@ public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 	 *zur Anzeige des Popus
 	 *
 	 */	
+	if(contact.getCreatorId() ==2){
+		v.add(new HTML("<br /><h3> &nbsp; Kontakt: <i>" + contact.getPrename() + " " + contact.getSurname() +"</i></h3><br />"));
+	}else{
+		v.add(new HTML("<br /><h3> &nbsp; Kontakt: " + contact.getPrename() + " " + contact.getSurname() +"</h3><br />"));
+	}
 	
-	v.add(new HTML("<h3> Kontakt: <i>" + contact.getPrename() + " " + contact.getSurname() +"</i></h3><br /><br />"));
+	v.add(new HTML("<hr>"));
 	v.add(contactInfoTable);
 	setWidget(v);
 	
