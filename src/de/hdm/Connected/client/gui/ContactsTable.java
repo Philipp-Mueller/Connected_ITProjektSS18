@@ -225,15 +225,15 @@ public class ContactsTable extends CellTable {
 					public void update(int index, final Contact object, String value) {
 						// TODO Auto-generated method stub
 
-						ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),2,
-								new AsyncCallback<Map<Property, Value>>() {
+						ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(object.getBoId(),2,
+								new AsyncCallback<ArrayList<Value>>() {
 
 									public void onFailure(Throwable caught) {
 										Window.alert("Ops, da ist etwas schief gelaufen!");
 									}
 
-									public void onSuccess(Map<Property, Value> result) {
-										propertyValueMap = result;
+									public void onSuccess(ArrayList<Value> result) {
+										//propertyValueMap = result;
 										// Window.alert(Integer.toString(result.size()));
 										// Window.alert(Integer.toString(globalIndex));
 										ContactInfoForm showContact = new ContactInfoForm(object, result);
@@ -287,25 +287,25 @@ public class ContactsTable extends CellTable {
 					public void update(int index, final Contact object, String value) {
 						// TODO Auto-generated method stub
 
-						ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(), 2,
-								new AsyncCallback<Map<Property, Value>>() {
+						ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(object.getBoId(),2,
+								new AsyncCallback<ArrayList<Value>>() {
 
-									public void onFailure(Throwable caught) {
-										Window.alert("Ops, da ist etwas schief gelaufen!");
-									}
+							public void onFailure(Throwable caught) {
+								Window.alert("Ops, da ist etwas schief gelaufen!");
+							}
 
-									public void onSuccess(Map<Property, Value> result) {
-										propertyValueMap = result;
-										// Window.alert(Integer.toString(result.size()));
-										// Window.alert(Integer.toString(globalIndex));
-										ContactInfoForm showContact = new ContactInfoForm(object, result);
+							public void onSuccess(ArrayList<Value> result) {
+								//propertyValueMap = result;
+								// Window.alert(Integer.toString(result.size()));
+								// Window.alert(Integer.toString(globalIndex));
+								ContactInfoForm showContact = new ContactInfoForm(object, result);
 
-										showContact.center();
-										showContact.show();
+								showContact.center();
+								showContact.show();
 
-									}
+							}
 
-								});
+						});
 
 					}
 
