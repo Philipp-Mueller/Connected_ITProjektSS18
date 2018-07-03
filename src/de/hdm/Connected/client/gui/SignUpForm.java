@@ -6,14 +6,13 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.client.Connected_ITProjektSS18;
-import de.hdm.Connected.client.ReportGenerator.Connected_ITProjektSS18ReportGenerator;
+import de.hdm.Connected.client.Connected_ITProjektSS18ReportGenerator;
 import de.hdm.Connected.shared.bo.User;
 
 
