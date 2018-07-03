@@ -66,11 +66,6 @@ h1 a {
 }
 
 #main {
-<<<<<<< HEAD
-	height: 95%;
-	
-}
-=======
 	height:100%;
 	display: flex;
 	flex-direction: row;
@@ -80,7 +75,6 @@ h1 a {
 }
 	
 
->>>>>>> master
 
 #usermenu .gwt-HTML {
 	padding: 20px 0px;
@@ -108,31 +102,21 @@ h1 a {
 }
 
 #nav {
-<<<<<<< HEAD
-  font-family: 'Montserrat', sans-serif;
-=======
     font-family: 'Montserrat', sans-serif;
->>>>>>> master
 	width: 100%;
 	font-weight: 300px;
 	display: flex;
 	flex-flow: column;
 	background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
-<<<<<<< HEAD
-  justify-content: flex-top;
-	height: inherit;
-	overflow-x: hidden;
-=======
     justify-content: flex-top;
 	height: inherit;
 	overflow-x: auto;
->>>>>>> master
 }
 
 #nav table {
 	font-family: 'Montserrat', sans-serif;
 	width:100%;
-	padding-left: 0px;
+	padding-right: 15px;
 }
 
 #nav button {
@@ -161,8 +145,8 @@ h1 a {
 	color: #fff;
 }
 
-#nav button:focus{
-	background: #009999;
+#nav .gwt-Button-buttonpressednav{
+	background: #009999 !important;
 	color: #fff;
 }
 
@@ -170,11 +154,7 @@ h1 a {
 	background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
 	width: 20%;
 	display: block;
-<<<<<<< HEAD
-	height: inherit;
-=======
-	height: 100%;
->>>>>>> master
+	height: 95%;
 }
 
 #content button {
@@ -282,7 +262,7 @@ table {
     cursor: pointer;
 }
 .lblWelcome {
-	font-family: 'Marck Script', cursive;
+	font-family: 'Montserrat', sans-serif;
 	text-align: center;
 	color: #90A4AE;
 	font-size: 4rem;
@@ -297,35 +277,51 @@ table {
 	font-weight: 300px;
 }
 
-.cellListPanel {
+.contactListPanel {
 	border-style: hidden;
 	border-color: transparent; 
 	border-width: 0px;
-}
-
-td .GBG2FFLDAB {
-	padding: 15px 0px 15px 20px;
-
-}
-
-td .GBG2FFLDCB {
-	padding: 15px 0px 15px 20px;
-
-}
-
-td .GBG2FFLDBB {
-	padding: 15px 0px 15px 20px;
-	background: #009999;
-	color: #fff;
-	border-radius: 4px;
-	width: 70%;
-}
-
-td .GBG2FFLDDB {
-	padding: 15px 0px 15px 20px;
 }
 
 table.content td{
 	border: 1px;
 }
 
+.gwt-Button-buttonpressednav {
+	font-family: 'Montserrat', sans-serif;
+	width: 90%;
+	border: none;
+	background: transparent;
+	color: #666;
+	padding: 15px 0px 15px 20px;
+	text-align: left;
+	font-size: 100%;
+	cursor: pointer;
+	border-radius: 4px;
+}
+
+table.gwt-DisclosurePanel {
+text-align: left;
+margin-left: inherit;
+} 
+
+table.cellListPanel.content {
+	text-align: left;
+  margin-left: inherit;
+}
+
+.gwt-PopupPanel button {
+	background: #009999;
+	color: #fff;
+	border: none;
+}
+
+.gwt-DialogBox button {
+	background: #009999;
+	color: #fff;
+	border: none;
+}
+
+strong {
+	font-weight: bold;
+}

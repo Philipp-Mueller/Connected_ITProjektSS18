@@ -105,6 +105,36 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		permissionMapper.update(permission);
 		
 	}
+	//Updaten der Permissions für einen User 
+	public void updatePermissionsForUser(ArrayList<Integer> newPermissions, int contactId, int userId) throws IllegalArgumentException{
+		
+		ArrayList<Integer> oldPermissions = new ArrayList<Integer>();
+		ArrayList<Integer> receiverUser = new ArrayList<Integer>();
+		ArrayList<Integer> createPermissions = new ArrayList<Integer>();
+		
+		receiverUser.add(userId);
+		
+		for(int i=0; i< getValuesByReceiveUserPermission(contactId, userId).size();i++){
+			oldPermissions.add(getValuesByReceiveUserPermission(contactId, userId).get(i).getBoId());
+		};
+		
+		
+		for(int j=0; j<oldPermissions.size(); j++){
+			if(!newPermissions.contains(Integer.valueOf(oldPermissions.get(j)))){
+				deletePermission(permissionMapper.findBySharedObjectIdAndReceiverId(oldPermissions.get(j), userId));
+			}
+		}
+		
+		for(int k=0; k<newPermissions.size(); k++){
+			if(!hasPermission(newPermissions.get(k), userId)){
+			createPermissions.add(newPermissions.get(k));
+				
+			}
+		}
+		this.createPermission(2,createPermissions,receiverUser);
+		
+		
+	}
 	
 	// gibt alle Permsission-Objekte aus der DB zurück
 	@Override
@@ -180,6 +210,20 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		
 	}
 	
+	public ArrayList<Value> getValuesByReceiveUserPermission(int contactId, int userId) throws IllegalArgumentException {
+		ArrayList<Value> allValues = new ArrayList<Value>();
+		
+		for(int i=0; i<valueMapper.findByContactId(contactId).size(); i++){
+			if(hasPermission(valueMapper.findByContactId(contactId).get(i).getBoId(), userId)){
+				
+				allValues.add(valueMapper.findByContactId(contactId).get(i));
+			}
+		}
+		
+		return allValues;
+	}
+	
+	
 	public boolean hasPermission(int shareObjectId, int receiverUserId) throws IllegalArgumentException{
 		if(permissionMapper.hasPermission(shareObjectId, receiverUserId)) {
 			return true;
@@ -226,12 +270,6 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		contact.setCreationDate(creationDate);
 		contact.setModificationDate(modificationDate);
 		
-	/*	Permission autoPermission = new Permission();
-		autoPermission.setReceiverUserID(ownerId);
-		autoPermission.setSharedObjectId(contact.getBoId());
-		autoPermission.setShareUserID(ownerId);
-		this.permissionMapper.insert(autoPermission);*/
-	
 		return this.contactMapper.insert(contact);
 		
 	}
@@ -249,25 +287,44 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	
 	@Override
 	public void deleteContact(Contact contact, User cUser)throws IllegalArgumentException {
-		int sharedObjectId = permissionMapper.findById(permissionMapper.findById(cUser.getBoId()).getReceiverUserID()).getBoId();
+
 							
-			if (cUser.getBoId()==permissionMapper.findById(cUser.getBoId()).getShareUserID()
-					&& permissionMapper.findById(contact.getBoId()).getBoId() == contact.getBoId()){
-					
-						Permission cPermission = permissionMapper.findById(sharedObjectId);
-							permissionMapper.delete(cPermission);									}
-																							
-			else {
-				ArrayList<Value> values = this.findValuesByContactId(contact.getBoId());
+		if(contact.getCreatorId() == cUser.getBoId()){			
 			
-				if (values != null){
-				for (Value value: values){
-					this.valueMapper.delete(value);
-										 }
-							   		}
-				
-			this.contactMapper.delete(contact);
+			ArrayList<Value> values = this.findValuesByContactId(contact.getBoId());
+			ArrayList<Permission> permission = new ArrayList<Permission>();
+			permission.addAll(permissionMapper.findBySharedObjectId(contact.getBoId()));
+			
+			
+			//Values Permission und Value selbst löschen		
+			if (values != null){
+			for (Value value: values){
+				for(Permission p : this.permissionMapper.findBySharedObjectId(value.getBoId())){
+					this.permissionMapper.delete(p);
+				};
+				this.valueMapper.delete(value);
+									 }
+						   		}
+			
+			//Kontakt aus allen Kontaktlisten entfernen.
+			ccMapper.removeContactFromAllContactList(contact.getBoId());
+			
+			//Kontakt Permissions löschen und Kontakt selbst löschen
+			for(Permission p : this.permissionMapper.findBySharedObjectId(contact.getBoId())){
+				this.permissionMapper.delete(p);
+			};
+			
+		this.contactMapper.delete(contact);
+		}
+		
+			
+			else {
+				deletePermission(permissionMapper.findBySharedObjectIdAndReceiverId(contact.getBoId(), cUser.getBoId()));
+				ArrayList<Value> vPermissionsToDelete = getValuesByReceiveUserPermission(contact.getBoId(), cUser.getBoId());
+					for(Value v : vPermissionsToDelete){						
+						deletePermission(permissionMapper.findBySharedObjectIdAndReceiverId(v.getBoId(), cUser.getBoId()));
 				 }
+			}
 																						}
 		
 	// gibt alle Contact Objekte zurück
@@ -323,8 +380,8 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	// updatet Kontaktliste
 	
 	@Override
-	public void updateContactList(ContactList contactList) throws IllegalArgumentException {
-		contactListMapper.update(contactList);
+	public ContactList updateContactList(ContactList contactList) throws IllegalArgumentException {
+	 return this.contactListMapper.update(contactList);
 	}
 	
 	// fügt einer Kontaktliste einen Kontakt hinzu
@@ -580,8 +637,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 			Value value = getValuesByUserPermission(contactId, userId).get(i);			
 			mapi.put(property, value);
 		}
-		
-		
+				
 		return mapi;
 		
 	}
@@ -603,17 +659,17 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		// TODO Auto-generated method stub
 		ArrayList<Permission> permissionToDelete = new ArrayList<Permission>();
 		
-		permissionToDelete.add(permissionMapper.findBySharedObjectIdAndReceiverId(userId, contactId));
+		permissionToDelete.add(permissionMapper.findBySharedObjectIdAndReceiverId(contactId, userId));
 		
 		for(int i=0; i<findValuesByContactId(contactId).size(); i++){
 			
 			if(hasPermission(findValuesByContactId(contactId).get(i).getBoId(), userId)){			
-			permissionToDelete.add(permissionMapper.findBySharedObjectIdAndReceiverId(userId, findValuesByContactId(contactId).get(i).getBoId()));
+			permissionToDelete.add(permissionMapper.findBySharedObjectIdAndReceiverId(findValuesByContactId(contactId).get(i).getBoId(), userId));
 			}
 		}
 		
-		for(Permission p : permissionToDelete){
-			deletePermission(p);
+		for(int j=0; j<permissionToDelete.size(); j++){
+			deletePermission(permissionToDelete.get(j));
 		}
 		
 

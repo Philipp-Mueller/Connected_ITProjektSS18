@@ -1,13 +1,9 @@
 package de.hdm.Connected.client;
 
-import com.google.appengine.api.mail.MailService.Header;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Command;
@@ -15,33 +11,19 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Anchor;
 
-import de.hdm.Connected.client.gui.ContactForm;
-import de.hdm.Connected.client.gui.ContactForm_Test;
-import de.hdm.Connected.client.gui.ContactListForm;
-import de.hdm.Connected.client.gui.ContactListForm2;
-import de.hdm.Connected.client.gui.ContactListForm3;
-import de.hdm.Connected.client.gui.ContactSharing;
-import de.hdm.Connected.client.gui.ContactsTable;
-import de.hdm.Connected.client.gui.StartPage;
-import de.hdm.Connected.shared.ConnectedAdminAsync;
-import de.hdm.Connected.shared.FieldVerifier;
-import de.hdm.Connected.shared.bo.Contact;
-import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.client.gui.Navigation;
-import de.hdm.Connected.client.LoginInfo;
+import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.LoginService;
 import de.hdm.Connected.shared.LoginServiceAsync;
+import de.hdm.Connected.shared.bo.User;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -107,10 +89,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	
 	public void onModuleLoad() {
 		
-		Navigation navigation = new Navigation();
-		// Das navPanel der Seite im Bereich der id "nav" hinzufügen
-				RootPanel.get("nav").add(navigation);
-			
+		
 		stockStore = Storage.getSessionStorageIfSupported();
 
 		if (stockStore != null) {
@@ -137,7 +116,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		vpBasisPanel.add(logoutPanel);
 		
 		// Menü start
-		Command settingDialog = new Command() {
+		final Command settingDialog = new Command() {
 			public void execute() {
 
 				RootPanel.get("content").clear();
@@ -146,7 +125,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			}
 		};
 
-		Command logout = new Command() {
+		final Command logout = new Command() {
 			public void execute() {
 				loginInfo.getLogoutUrl();
 				Window.open(loginInfo.getLogoutUrl(), "_self", "");
@@ -156,26 +135,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		
 	
 		
-		// Anzeige der Menü Elemente
-		MenuBar menu1 = new MenuBar(true);
-		menu1.addItem("Profil", settingDialog);
-		menu1.addItem("Abmelden", logout);
 		
-		// Menü Icon
-		MenuBar menu = new MenuBar();
-		final String image = "<img src='user.png' height='40px' width='40px'/>";
-		SafeHtml addActivityImagePath = new SafeHtml() {
-		
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public String asString() {
-				return image;
-			}
-		};
-
-		menu.addItem(addActivityImagePath, menu1);
-		RootPanel.get("top").add(menu);
 		
 		// Menü ende
 		
@@ -206,6 +166,31 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 								settings.run();
 								welcome.run();
 
+								Navigation navigation = new Navigation();
+								// Das navPanel der Seite im Bereich der id "nav" hinzufügen
+										RootPanel.get("nav").add(navigation);
+										
+										// Anzeige der Menü Elemente
+										MenuBar menu1 = new MenuBar(true);
+										menu1.addItem("Profil", settingDialog);
+										menu1.addItem("Abmelden", logout);
+										
+										// Menü Icon
+										MenuBar menu = new MenuBar();
+										final String image = "<img src='user.png' height='40px' width='40px'/>";
+										SafeHtml addActivityImagePath = new SafeHtml() {
+										
+											private static final long serialVersionUID = 1L;
+
+											@Override
+											public String asString() {
+												return image;
+											}
+										};
+
+										menu.addItem(addActivityImagePath, menu1);
+										RootPanel.get("top").add(menu);
+									
 								RootPanel.get("content").add(welcome);
 								
 
@@ -226,6 +211,32 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 												welcome.run();
 
 												isNew = true;
+												
+												Navigation navigation = new Navigation();
+												// Das navPanel der Seite im Bereich der id "nav" hinzufügen
+														RootPanel.get("nav").add(navigation);
+														
+														// Anzeige der Menü Elemente
+														MenuBar menu1 = new MenuBar(true);
+														menu1.addItem("Profil", settingDialog);
+														menu1.addItem("Abmelden", logout);
+														
+														// Menü Icon
+														MenuBar menu = new MenuBar();
+														final String image = "<img src='user.png' height='40px' width='40px'/>";
+														SafeHtml addActivityImagePath = new SafeHtml() {
+														
+															private static final long serialVersionUID = 1L;
+
+															@Override
+															public String asString() {
+																return image;
+															}
+														};
+
+														menu.addItem(addActivityImagePath, menu1);
+														RootPanel.get("top").add(menu);
+													
 
 												RootPanel.get("content").add(welcome);
 
@@ -252,104 +263,9 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		});
 	    
 		    
-		Button newContactButton = new Button("Neuen Kontakt anlegen");
-		Button editContactButton = new Button ("Kontakt 8 bearbeiten");
-		Button shareContactButton = new Button ("Kontakt teilen");
-		Button overviewPageButton = new Button ("Übersichtsseite");
+	
 
 
-		
-		newContactButton.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				RootPanel.get("content").clear();
-				ContactForm newcontactForm = new ContactForm();
-			}
-
-		});
-		Button myContactListsButton = new Button("Meine Kontaktlisten");
-
-		myContactListsButton.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				RootPanel.get("content").clear();
-				//ContactListForm3 mycontactlistForm = new ContactListForm3();
-				//Test_CellTable newform = new Test_CellTable(); 
-			}
-
-		});
-		
-		overviewPageButton.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				RootPanel.get("content").clear();
-				ContactsTable startPage = new ContactsTable();
-				//ContactsTable welli = new ContactsTable();
-				//Test_CellTable newform = new Test_CellTable(); 
-			}
-
-		});
-		
-		editContactButton.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				ClientSideSettings.getConnectedAdmin().findContactById(10, new AsyncCallback<Contact>(){
-
-					@Override
-					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void onSuccess(Contact result) {
-						RootPanel.get("content").clear();
-						ContactForm newcontactForm = new ContactForm(result);
-						//Test_CellTable newform = new Test_CellTable(); 
-					}
-					
-				});
-				
-			}
-
-		});
-		
-		
-		shareContactButton.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				ClientSideSettings.getConnectedAdmin().findContactById(154, new AsyncCallback<Contact>(){
-
-					@Override
-					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void onSuccess(Contact result) {
-						RootPanel.get("content").clear();
-						//ContactSharing newContactSharing = new ContactSharing(result);
-						//Test_CellTable newform = new Test_CellTable(); 
-					}
-					
-				});
-				
-			}
-
-		});
-		
-		
-		RootPanel.get("content").add(newContactButton);
-		RootPanel.get("content").add(myContactListsButton);
-		RootPanel.get("content").add(editContactButton);
-		//RootPanel.get("content").add(shareContactButton);
-		RootPanel.get("content").add(overviewPageButton);
 		HorizontalPanel footer = new HorizontalPanel();
 		Anchor startPage = new Anchor ("Startseite", "Connected_ITProjektSS18.html");
 		HTML copyrightText1 = new HTML(" | ");
