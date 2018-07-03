@@ -215,10 +215,21 @@ public class ContactForm extends PopupPanel {
 				// sonst der Kontakt keiner Liste hinzugefügt werden soll
 				final ArrayList<ContactList> contactListToAdd = new ArrayList<ContactList>();
 				if (addButton != null) {
-					//TODO currentUSer
+					
+					if (checkContactlist.getValue()) {
+						for (int i = 0; i < contactlist.getItemCount(); i++) {
+							if (contactlist.isItemSelected(i)) {
+								for (ContactList cl : contactListArray) {
+									if (contactlist.getItemText(i).equals(cl.getName())) {
+										contactListToAdd.add(cl);
+									}
+								}
+							}
+						}
+					}
 					java.sql.Date creationTime = new java.sql.Date(System.currentTimeMillis());
 					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
-							creationTime, creationTime, 2,
+							creationTime, creationTime, ClientSideSettings.getCurrentUser().getBoId(),
 							new AsyncCallback<Contact>() {
 								ArrayList<Contact> contacts = new ArrayList<Contact>();
 
@@ -237,17 +248,7 @@ public class ContactForm extends PopupPanel {
 									userId.add(2);
 									Window.alert("Kontakt wurde angelegt!");
 
-									if (checkContactlist.getValue()) {
-										for (int i = 0; i < contactlist.getItemCount(); i++) {
-											if (contactlist.isItemSelected(i)) {
-												for (ContactList cl : contactListArray) {
-													if (contactlist.getItemText(i).equals(cl.getName())) {
-														contactListToAdd.add(cl);
-													}
-												}
-											}
-										}
-
+								if(contactListToAdd.size() !=0){
 										ClientSideSettings.getConnectedAdmin().addContactsToContactList(contacts,
 												contactListToAdd, new AsyncCallback<Void>() {
 
@@ -261,14 +262,15 @@ public class ContactForm extends PopupPanel {
 													public void onSuccess(Void result) {
 														Window.alert(
 																"Kontakt wurde angelegt und den Kontaktlisten hinzugefügt!");
-														Window.alert(Integer.toString(contactListToAdd.size()));
+														
 
 													}
 
 												});
-									}
+								}
 									hide();
-									Window.Location.reload();
+									RootPanel.get("content").clear();
+									ContactsTable table  = new ContactsTable(null,null);
 								}
 
 							});
@@ -301,7 +303,8 @@ public class ContactForm extends PopupPanel {
 				 */ else {
 					Window.alert("Kontakt angelegt!");
 					hide();
-					Window.Location.reload();
+					RootPanel.get("content").clear();
+					ContactsTable table  = new ContactsTable(null,null);
 				}
 
 			}
@@ -342,8 +345,8 @@ public class ContactForm extends PopupPanel {
 		contactlist.ensureDebugId("cwListBox-multiBox");
 		contactlist.setVisibleItemCount(7);
 		// Alle Kontaktlisten aus DB abrufen
-		//TODO current user
-		ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(2, new AsyncCallback<ArrayList<ContactList>>() {
+		
+		ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<ContactList>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -382,7 +385,7 @@ public class ContactForm extends PopupPanel {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			// TODO Auto-generated method stub
+			Window.alert("Value konnte nicht gefunden werden");
 
 		}
 
@@ -411,7 +414,7 @@ public class ContactForm extends PopupPanel {
 
 								@Override
 								public void onFailure(Throwable caught) {
-									// TODO Auto-generated method stub
+									Window.alert("Property nicht gefunden");
 
 								}
 
@@ -583,9 +586,7 @@ public class ContactForm extends PopupPanel {
 
 														@Override
 														public void onFailure(Throwable caught) {
-															// TODO
-															// Auto-generated
-															// method stub
+														Window.alert("Das Löschen ging schief");
 
 														}
 
@@ -713,18 +714,16 @@ public class ContactForm extends PopupPanel {
 				}
 
 				ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId,
-						selectedContact.getBoId(), 2, new AsyncCallback<Value>() {
+						selectedContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Value>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
-								// TODO Auto-generated method stub
-
+							Window.alert("Konnte Eigenschaft nicht erstellen");
 							}
 
 							@Override
 							public void onSuccess(Value result) {
-								// TODO hier Dialogbox einfügen um zu fragen ob
-								// neue Eigenschaft direkt geteilt werden soll^
+								
 								int rowCount = propertyTable.getRowCount();
 								updatingValue = result;
 								updateBtn = new Button("Eigenschaft bearbeiten");
@@ -758,11 +757,11 @@ public class ContactForm extends PopupPanel {
 				}
 
 				if (addButton != null) {
-					// TODO currentUser
+			
 					try {
 						java.sql.Date creationTime = new java.sql.Date(System.currentTimeMillis());
 						ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(),
-								surnameBox.getText(), creationTime, creationTime, 2, new AsyncCallback<Contact>() {
+								surnameBox.getText(), creationTime, creationTime,ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Contact>() {
 
 									@Override
 									public void onFailure(Throwable caught) {
@@ -800,7 +799,7 @@ public class ContactForm extends PopupPanel {
 									}
 								});
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
+						
 						e.printStackTrace();
 					}
 				} else {
@@ -818,7 +817,7 @@ public class ContactForm extends PopupPanel {
 					}
 
 					ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId,
-							createdContact.getBoId(), 2, new createValueCallback());
+							createdContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(), new createValueCallback());
 				}
 			}
 		}
@@ -859,7 +858,7 @@ public class ContactForm extends PopupPanel {
 
 				@Override
 				public void onClick(ClickEvent event) {
-					// TODO Auto-generated method stub
+					
 					final Value updatedValue = result;
 					eventRow = propertyTable.getCellForEvent(event).getRowIndex();
 					final TextBox valueChangeTextBox = new TextBox();
@@ -870,7 +869,7 @@ public class ContactForm extends PopupPanel {
 							new AsyncCallback<Property>() {
 								@Override
 								public void onFailure(Throwable caught) {
-									// TODO Auto-generated method stub
+									Window.alert("Property nicht gefunden");
 
 								}
 
@@ -981,7 +980,7 @@ public class ContactForm extends PopupPanel {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							// TODO Auto-generated method stub
+							Window.alert("Value konnte nicht gelöscht werden");
 
 						}
 
@@ -1025,7 +1024,7 @@ public class ContactForm extends PopupPanel {
 
 		@Override
 		public void onChange(ChangeEvent event) {
-			// TODO Auto-generated method stub
+			
 
 			if (propertyListBox.getSelectedItemText().equals("oder neue Eigenschaft hinzufügen...")) {
 
