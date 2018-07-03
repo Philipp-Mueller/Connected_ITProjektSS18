@@ -110,7 +110,7 @@ h1 a {
 	background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
     justify-content: flex-top;
 	height: inherit;
-	/*overflow-x: auto;*/
+	overflow-x: auto;
 }
 
 #nav table {
@@ -320,4 +320,8 @@ table.cellListPanel.content {
 	background: #009999;
 	color: #fff;
 	border: none;
+}
+
+strong {
+	font-weight: bold;
 }

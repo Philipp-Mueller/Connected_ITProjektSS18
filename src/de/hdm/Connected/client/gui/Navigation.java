@@ -187,7 +187,13 @@ public class Navigation extends VerticalPanel {
 			public void onSuccess(ArrayList<ContactList> result) {
 				allContactsLists = result;
 				for (final ContactList cl : allContactsLists){
-					final Button showCL = new Button("      " + cl.getName());
+					final Button showCL = new Button();
+					//TODO currentUser
+					if(cl.getCreatorId() != 2){
+						showCL.setHTML("<strong><i> &ensp;" + cl.getName() + "</i></strong>");
+					}else{
+						showCL.setHTML("&ensp;" + cl.getName());
+					}
 					
 					showCL.addClickHandler(new ClickHandler(){
 
@@ -232,6 +238,7 @@ public class Navigation extends VerticalPanel {
 			
 		this.add(BNewContact);
 		this.add(BNewContactList);
+		this.add(new HTML("<div style=\"margin: 0px 0px 5px 5px;\"><hr></div>"));
 		this.add(BMyContacts);
 		this.add(myContactLists);
 
