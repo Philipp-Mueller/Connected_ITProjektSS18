@@ -1,5 +1,6 @@
 package de.hdm.Connected.shared.bo;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 import com.google.gwt.view.client.ProvidesKey;
@@ -42,8 +43,8 @@ public class Contact extends SharedObject{
 	
 	private int contactListId= 0;
 	
-	private Timestamp creationDate = new Timestamp(System.currentTimeMillis());
-	private Timestamp modificationDate= new Timestamp(System.currentTimeMillis());
+	private Date creationDate;
+	private Date modificationDate;
 	
 	/**
 	 * @return the surname
@@ -84,25 +85,25 @@ public class Contact extends SharedObject{
 	/**
 	 * @return the creationDate
 	 */
-	public Timestamp getCreationDate() {
+	public Date getCreationDate() {
 		return creationDate;
 	}
 	/**
 	 * @param creationDate the creationDate to set
 	 */
-	public void setCreationDate(Timestamp creationDate) {
+	public void setCreationDate(Date creationDate) {
 		this.creationDate = creationDate;
 	}
 	/**
 	 * @return the modificationDate
 	 */
-	public Timestamp getModificationDate() {
+	public Date getModificationDate() {
 		return modificationDate;
 	}
 	/**
 	 * @param modificationDate the modificationDate to set
 	 */
-	public void setModificationDate(Timestamp modificationDate) {
+	public void setModificationDate(Date modificationDate) {
 		this.modificationDate = modificationDate;
 	}
 	/**

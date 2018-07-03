@@ -74,7 +74,6 @@ public class ContactListForm2 extends Widget {
 	Label yourContactsLabel = new Label("Deine Kontakte:");
 	ListBox contactListBox = new ListBox();
 	Button newContactListButton = new Button("Neue Kontaktliste erstellen", new newContactListClickhandler());
-	Button uptdateContactListButton = new Button("Kontaktliste bearbeiten");
 	Button shareContactListButton = new Button("Kontaktliste teilen", new shareCotactListClickhandler());
 	Button updateContactListButton = new Button("Kontaktliste umbenennen", new updateContactListClickhandler());
 	// Button sharePartOfClButton = new Button("Kontakte von Kontaktliste
@@ -130,6 +129,8 @@ public class ContactListForm2 extends Widget {
 	public ContactListForm2(int selectedId) {
 
 		row = selectedId;
+		
+		Window.alert(Integer.toString(row));
 
 		// namePanel.add(nameLabel);
 		// namePanel.add(nameBox);
@@ -187,7 +188,7 @@ public class ContactListForm2 extends Widget {
 			public void update(int index, final Contact object, String value) {
 				// TODO Auto-generated method stub
 				
-				ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),
+				ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),2,
 						new AsyncCallback<Map<Property, Value>>() {
 
 							public void onFailure(Throwable caught) {
@@ -198,10 +199,10 @@ public class ContactListForm2 extends Widget {
 								propertyValueMap = result;
 								// Window.alert(Integer.toString(result.size()));
 								// Window.alert(Integer.toString(globalIndex));
-								ContactInfoForm showContact = new ContactInfoForm(object, result);
-
-								showContact.center();
-								showContact.show();
+//								ContactInfoForm showContact = new ContactInfoForm(object, result);
+//
+//								showContact.center();
+//								showContact.show();
 
 							}
 
@@ -227,7 +228,7 @@ public class ContactListForm2 extends Widget {
 			public void update(int index, final Contact object, String value) {
 				// TODO Auto-generated method stub
 				
-				ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),
+				ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(),2,
 						new AsyncCallback<Map<Property, Value>>() {
 
 							public void onFailure(Throwable caught) {
@@ -238,10 +239,10 @@ public class ContactListForm2 extends Widget {
 								propertyValueMap = result;
 								// Window.alert(Integer.toString(result.size()));
 								// Window.alert(Integer.toString(globalIndex));
-								ContactInfoForm showContact = new ContactInfoForm(object, result);
-
-								showContact.center();
-								showContact.show();
+//								ContactInfoForm showContact = new ContactInfoForm(object, result);
+//
+//								showContact.center();
+//								showContact.show();
 
 							}
 
@@ -275,7 +276,7 @@ public class ContactListForm2 extends Widget {
 			public void update(int index, Contact object, String value) {
 				// Value is the button value. Object is the row object.
 
-				ClientSideSettings.getConnectedAdmin().findValueAndProperty(globalContactArray.get(index).getBoId(),
+				ClientSideSettings.getConnectedAdmin().findValueAndProperty(globalContactArray.get(index).getBoId(),2,
 						new AsyncCallback<Map<Property, Value>>() {
 
 							public void onFailure(Throwable caught) {
@@ -450,7 +451,7 @@ public class ContactListForm2 extends Widget {
 				Button addCtoCl = new Button("Kontakte hinzufügen");
 				addCtoCl.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						ContactsTable contactstable = new ContactsTable();
+						ContactsTable contactstable = new ContactsTable(null, null);
 					}
 				});
 				contentPanel.add(addCtoCl);
@@ -467,6 +468,11 @@ public class ContactListForm2 extends Widget {
 			int setSize = set1.size();
 			sizeSt = Integer.toString(setSize);
 			// contentPanel.add(contacttable);
+			List<Contact> list = dataProvider.getList();
+		    for (Contact Contact : result) {
+		      list.add (Contact);
+		    }
+			
 			
 		    ListHandler<Contact> columnSortHandler = new ListHandler<Contact>(result);
 		    
@@ -485,6 +491,16 @@ public class ContactListForm2 extends Widget {
 		        });
 		    
 		    contacttable.addColumnSortHandler(columnSortHandler);
+		    
+		    contacttable.getColumnSortList().push(prenameColumn);
+		    contacttable.setRowCount(result.size(), true);
+		    contacttable.setRowData(0, result);
+		    contacttable.setWidth("70%");
+		    
+		    contacttable.redraw();
+			//RootPanel.get("content").add(contacttable);
+			//RootPanel.get("content").add(pager);
+			
 
 		}
 
@@ -688,14 +704,14 @@ public class ContactListForm2 extends Widget {
 					ContactList cl = new ContactList();
 					cl.setName(nameTextBox.getText());
 					cl.setBoId(clArray.get(row).getBoId());
-					ClientSideSettings.getConnectedAdmin().updateContactList(cl, new AsyncCallback<Void>() {
+					ClientSideSettings.getConnectedAdmin().updateContactList(cl, new AsyncCallback<ContactList>() {
 						@Override
 						public void onFailure(Throwable caught) {
 
 						}
 
 						@Override
-						public void onSuccess(Void result) {
+						public void onSuccess(ContactList result) {
 							Window.alert("Erfolgreich umbenannt");
 							RootPanel.get("content").clear();
 							ContactListForm2 mycontactlistForm = new ContactListForm2(clArray.get(row).getBoId());

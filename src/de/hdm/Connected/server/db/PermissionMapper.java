@@ -124,7 +124,7 @@ public class PermissionMapper {
 	 * 
 	 * @param permission
 	 */
-	public void delete (Permission permission, User cUser) {
+	public void delete (Permission permission) {
 		//DB-Verbindung holen
 		Connection con = DBConnection.connection();
 		
@@ -144,6 +144,35 @@ public class PermissionMapper {
 		e.printStackTrace();
 	}	
 	}
+	
+	public void deletebyUser (Permission permission) {
+		//DB-Verbindung holen
+		Connection con = DBConnection.connection();
+		
+		try {
+			//Leeres SQL-Statement (JDBC) anlegen
+			Statement stmt = con.createStatement();
+			
+			//SQL-Anweisung zum Löschen des übergebenen Datensatzes in der Datenbank
+			stmt.executeUpdate("DELETE FROM permission WHERE id=" + permission.getBoId());
+		
+			/**
+			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
+			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen dazu
+			 * ausgegeben, was passiert ist und wo im Code es passiert ist.
+			 */
+		} catch (SQLException e) {
+		e.printStackTrace();
+	}	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Suchen eines Permission-Objekts anhand der übergebenen Id in der Datenbank.
 	 * 

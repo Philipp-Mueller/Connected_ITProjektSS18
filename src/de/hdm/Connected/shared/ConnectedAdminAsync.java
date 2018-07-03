@@ -1,5 +1,6 @@
 package de.hdm.Connected.shared;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Map;
@@ -38,7 +39,7 @@ public interface ConnectedAdminAsync {
 	
 	void deleteProperty(Property property, AsyncCallback<Void> callback);
 	
-	void createContact(String prename, String surname, Timestamp creationDate, Timestamp modificationDate, int ownerId, AsyncCallback<Contact> callback);
+	void createContact(String prename, String surname, Date creationDate, Date modificationDate, int ownerId, AsyncCallback<Contact> callback);
 	
 	void updateContact(Contact contact, AsyncCallback<Contact> callback);
 	
@@ -52,7 +53,7 @@ public interface ConnectedAdminAsync {
 	
 	void createContactList(String name, int ownerId, AsyncCallback<ContactList> callback); 
 	
-	void updateContactList(ContactList contactlist, AsyncCallback<Void> callback);
+	void updateContactList(ContactList contactlist, AsyncCallback<ContactList> callback);
 	
 	void deleteContactList(ContactList contactlist, AsyncCallback<Void> callback);
 	
@@ -72,13 +73,11 @@ public interface ConnectedAdminAsync {
 	
 	void createPermission(int shareUserId, ArrayList<Integer> shareObjectId, ArrayList<Integer> receiverUserId, AsyncCallback<Void> callback);
 	
-	void deletePermission(Permission permission, User cUser, AsyncCallback<Void> callback);
+	void deletePermission(Permission permission, AsyncCallback<Void> callback);
 	
 	void addContactsToContactList(ArrayList<Contact> contactArray, ArrayList<ContactList> contactlistArray, AsyncCallback<Void> callback);
 	
 	void removeContactFromContactList(int contactid, int contactlistid, AsyncCallback<Void> callback);
-	
-	void removeAccessToObject(int userId, int shareObjectId, AsyncCallback<Void> callback);
 	
 	void findAllProperties(AsyncCallback<ArrayList<Property>> callback);
 	
@@ -106,7 +105,7 @@ public interface ConnectedAdminAsync {
 
 	void getPermissionById(int id, AsyncCallback<Permission> callback);
 
-	void findValueAndProperty(int id, AsyncCallback<Map<Property, Value>> callback);
+	void findValueAndProperty(int contactId, int userId, AsyncCallback<Map<Property, Value>> callback);
 
 	void findValueByValue(String value, AsyncCallback<ArrayList<Value>> callback);
 
@@ -123,5 +122,16 @@ public interface ConnectedAdminAsync {
 	void hasPermission(int shareObjectId, int receiverUserId, AsyncCallback<Boolean> callback);
 	
 	void getContactsByUserPermission(int userId, AsyncCallback<ArrayList<Contact>> callback);
+
+	void getContactListsByUserPermission(int userId, AsyncCallback<ArrayList<ContactList>> callback);
+
+	void getValuesByUserPermission(int contactId, int userId, AsyncCallback<ArrayList<Value>> callback);
+
+	void deletePermissionFromContact(int userId, int contactId, AsyncCallback<Void> callback);
+
+	void updatePermissionsForUser(ArrayList<Integer> newPermissions, int contactId, int userId,
+			AsyncCallback<Void> callback);
+
+	void getValuesByReceiveUserPermission(int contactId, int userId, AsyncCallback<ArrayList<Value>> callback);
 	
 }

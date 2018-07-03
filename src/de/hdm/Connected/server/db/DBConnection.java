@@ -24,8 +24,9 @@ public class DBConnection {
 	 * Testwecke und hat im Produktivsystem keinerlei Funktion.
 	 */
 
-	private static String googleUrl = "";
+	private static String googleUrl =  "jdbc:google:mysql://genuine-ether-199417:europe-west1:itproject-ss2018/connected?user=root&password=test";
 
+	//private static String TestUrl = "jdbc:mysql://localhost:3306/connected?user=root&password=12345";
 	private static String TestUrl = "jdbc:mysql://localhost:3306/connected?user=root";
 
 	/**

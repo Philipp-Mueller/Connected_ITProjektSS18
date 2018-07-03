@@ -30,6 +30,7 @@ import de.hdm.Connected.client.gui.ContactForm;
 import de.hdm.Connected.client.gui.ContactForm_Test;
 import de.hdm.Connected.client.gui.ContactListForm;
 import de.hdm.Connected.client.gui.ContactListForm2;
+import de.hdm.Connected.client.gui.ContactListForm3;
 import de.hdm.Connected.client.gui.ContactSharing;
 import de.hdm.Connected.client.gui.ContactsTable;
 import de.hdm.Connected.client.gui.StartPage;
@@ -37,6 +38,7 @@ import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.FieldVerifier;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.User;
+import de.hdm.Connected.client.gui.Navigation;
 import de.hdm.Connected.client.LoginInfo;
 import de.hdm.Connected.shared.LoginService;
 import de.hdm.Connected.shared.LoginServiceAsync;
@@ -105,8 +107,10 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	
 	public void onModuleLoad() {
 		
-		
-		
+		Navigation navigation = new Navigation();
+		// Das navPanel der Seite im Bereich der id "nav" hinzufügen
+				RootPanel.get("nav").add(navigation);
+			
 		stockStore = Storage.getSessionStorageIfSupported();
 
 		if (stockStore != null) {
@@ -149,6 +153,8 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 				loadLogin();
 			}
 		};
+		
+	
 		
 		// Anzeige der Menü Elemente
 		MenuBar menu1 = new MenuBar(true);
@@ -246,104 +252,9 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		});
 	    
 		    
-		Button newContactButton = new Button("Neuen Kontakt anlegen");
-		Button editContactButton = new Button ("Kontakt 8 bearbeiten");
-		Button shareContactButton = new Button ("Kontakt teilen");
-		Button overviewPageButton = new Button ("Übersichtsseite");
+	
 
 
-		
-		newContactButton.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				RootPanel.get("content").clear();
-				ContactForm newcontactForm = new ContactForm();
-			}
-
-		});
-		Button myContactListsButton = new Button("Meine Kontaktlisten");
-
-		myContactListsButton.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				RootPanel.get("content").clear();
-				ContactListForm2 mycontactlistForm = new ContactListForm2(0);
-				//Test_CellTable newform = new Test_CellTable(); 
-			}
-
-		});
-		
-		overviewPageButton.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				RootPanel.get("content").clear();
-				ContactsTable startPage = new ContactsTable();
-				//ContactsTable welli = new ContactsTable();
-				//Test_CellTable newform = new Test_CellTable(); 
-			}
-
-		});
-		
-		editContactButton.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				ClientSideSettings.getConnectedAdmin().findContactById(10, new AsyncCallback<Contact>(){
-
-					@Override
-					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void onSuccess(Contact result) {
-						RootPanel.get("content").clear();
-						ContactForm newcontactForm = new ContactForm(result);
-						//Test_CellTable newform = new Test_CellTable(); 
-					}
-					
-				});
-				
-			}
-
-		});
-		
-		
-		shareContactButton.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				ClientSideSettings.getConnectedAdmin().findContactById(154, new AsyncCallback<Contact>(){
-
-					@Override
-					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void onSuccess(Contact result) {
-						RootPanel.get("content").clear();
-						//ContactSharing newContactSharing = new ContactSharing(result);
-						//Test_CellTable newform = new Test_CellTable(); 
-					}
-					
-				});
-				
-			}
-
-		});
-		
-		
-		RootPanel.get("content").add(newContactButton);
-		RootPanel.get("content").add(myContactListsButton);
-		RootPanel.get("content").add(editContactButton);
-		//RootPanel.get("content").add(shareContactButton);
-		RootPanel.get("content").add(overviewPageButton);
 		HorizontalPanel footer = new HorizontalPanel();
 		Anchor startPage = new Anchor ("Startseite", "Connected_ITProjektSS18.html");
 		HTML copyrightText1 = new HTML(" | ");
