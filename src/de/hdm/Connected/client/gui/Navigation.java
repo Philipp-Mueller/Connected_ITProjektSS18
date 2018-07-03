@@ -76,7 +76,6 @@ public class Navigation extends VerticalPanel {
 				newContact.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 
 					public void setPosition(int offsetWidth, int offsetHeight) {
-						// TODO Auto-generated method stub
 						int left = (Window.getClientWidth() - offsetWidth) / 3;
 						int top = (Window.getClientHeight() - offsetHeight) / 3;
 
@@ -175,11 +174,11 @@ public class Navigation extends VerticalPanel {
 	    
 	    
 	    
-	    ClientSideSettings.getConnectedAdmin().findAllContactlists(new AsyncCallback<ArrayList<ContactList>>(){
+	    ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<ContactList>>(){
 	   
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
+
 				
 			}
 
@@ -188,8 +187,8 @@ public class Navigation extends VerticalPanel {
 				allContactsLists = result;
 				for (final ContactList cl : allContactsLists){
 					final Button showCL = new Button();
-					//TODO currentUser
-					if(cl.getCreatorId() != 2){
+
+					if(cl.getCreatorId() != ClientSideSettings.getCurrentUser().getBoId()){
 						showCL.setHTML("<strong><i> &ensp;" + cl.getName() + "</i></strong>");
 					}else{
 						showCL.setHTML("&ensp;" + cl.getName());
