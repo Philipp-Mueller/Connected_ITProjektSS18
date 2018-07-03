@@ -237,7 +237,9 @@ public class ContactSharing extends PopupPanel {
 				usersWithPermission.setVisible(false);
 				receiverUser.setVisible(true);
 				shareButton.setText("Kontakt teilen");
-				selectionModel.clear();
+				dataProvider.getList().clear();
+				dataProvider.getList().addAll(propertiesAndValues);
+				propertyValueTable.redraw();
 
 				ClientSideSettings.getConnectedAdmin().findUserByEmail(suggestBox.getText(), new AsyncCallback<User>() {
 
@@ -338,7 +340,9 @@ public class ContactSharing extends PopupPanel {
 			public void onSelectionChange(SelectionChangeEvent event) {
 							
 				changingUser = selectionModel_Single.getSelectedObject();
-						
+				dataProvider.getList().clear();
+				dataProvider.getList().addAll(propertiesAndValues);
+			    propertyValueTable.redraw();
 				//Aktionenn bei anwählen eines Eintrag der Liste.
 				if (changingUser != null) {
 					shareButton.setText("Teilhaberschaft ändern");
@@ -356,12 +360,18 @@ public class ContactSharing extends PopupPanel {
 									selectionModel.clear();
 									receiverUser.setVisible(false);
 									for (Map.Entry<Property, Value> entry : result.entrySet()) {
+										if (changingUser.getBoId() == entry.getValue().getCreatorId()){
+											dataProvider.getList().remove(entry);
+											propertyValueTable.redraw();
+										}else{
+										
 										for (int i = 0; i < propertiesAndValues.size(); i++) {
 											if (entry.getValue().getBoId() == propertiesAndValues.get(i).getValue()
 													.getBoId()) {
 												selectionModel.setSelected(propertiesAndValues.get(i), true);
 											}
-
+											
+										}
 										}
 									}
 
@@ -506,7 +516,7 @@ public class ContactSharing extends PopupPanel {
 								for(Entry<Property,Value> entry : selectedSet){
 									newPermissions.add(entry.getValue().getBoId());
 								}
-								Window.alert(Integer.toString(newPermissions.size()));
+								
 								ClientSideSettings.getConnectedAdmin().updatePermissionsForUser(newPermissions, sharingContact.getBoId(), changingUser.getBoId(),new AsyncCallback<Void>(){
 
 									@Override
