@@ -313,9 +313,11 @@ table.cellListPanel.content {
 .gwt-PopupPanel button {
 	background: #009999;
 	color: #fff;
+	border: none;
 }
 
 .gwt-DialogBox button {
 	background: #009999;
 	color: #fff;
+	border: none;
 }
