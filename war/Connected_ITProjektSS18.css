@@ -145,11 +145,6 @@ h1 a {
 	color: #fff;
 }
 
-#nav button:focus{
-	background: #009999;
-	color: #fff;
-}
-
 #nav .gwt-Button-buttonpressednav{
 	background: #009999 !important;
 	color: #fff;
@@ -267,7 +262,7 @@ table {
     cursor: pointer;
 }
 .lblWelcome {
-	font-family: 'Marck Script', cursive;
+	font-family: 'Montserrat', sans-serif;
 	text-align: center;
 	color: #90A4AE;
 	font-size: 4rem;
@@ -286,28 +281,6 @@ table {
 	border-style: hidden;
 	border-color: transparent; 
 	border-width: 0px;
-}
-
-td .GBG2FFLDAB {
-	padding: 15px 0px 15px 20px;
-
-}
-
-td .GBG2FFLDCB {
-	padding: 15px 0px 15px 20px;
-
-}
-
-td .GBG2FFLDBB {
-	padding: 15px 0px 15px 20px;
-	background: #009999;
-	color: #fff;
-	border-radius: 4px;
-	width: 70%;
-}
-
-td .GBG2FFLDDB {
-	padding: 15px 0px 15px 20px;
 }
 
 table.content td{
@@ -335,4 +308,9 @@ margin-left: inherit;
 table.cellListPanel.content {
 	text-align: left;
   margin-left: inherit;
+}
+
+.gwt-PopupPanel button {
+	background: #009999;
+	color: #fff;
 }
