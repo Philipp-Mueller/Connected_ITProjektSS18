@@ -142,7 +142,7 @@ public class Navigation extends VerticalPanel {
 				
 				BMyContacts.addStyleName("gwt-Button-buttonpressednav");
 			
-				ContactsTable allContacts = new ContactsTable();
+				ContactsTable allContacts = new ContactsTable(null, null);
 			}
 		});
 		

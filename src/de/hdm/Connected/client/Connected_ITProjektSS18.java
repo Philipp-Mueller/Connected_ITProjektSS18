@@ -286,7 +286,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content").clear();
-				ContactsTable startPage = new ContactsTable();
+				ContactsTable startPage = new ContactsTable(null, null);
 				//ContactsTable welli = new ContactsTable();
 				//Test_CellTable newform = new Test_CellTable(); 
 			}

@@ -132,357 +132,362 @@ public class ContactListForm3 extends CellTable {
 			@Override
 			public void onSuccess(ArrayList<Contact> result) {
 				
-				contacts = result;
+				ContactsTable load = new ContactsTable(result, mainContactlist);
 				
-			ClickableTextCell prenameCell = new ClickableTextCell();	
-				
-		Column<Contact, String> prenameColumn = new Column<Contact, String> (prenameCell) {
-			
-			 public String getValue(Contact object) {
-				    return object.getPrename();
-				  }
-			
-			};
-			
-			prenameColumn.setSortable(true);
-			
-			prenameColumn.setFieldUpdater(new FieldUpdater<Contact, String>(){
-
-				@Override
-				public void update(int index, final Contact object, String value) {
-					// TODO Auto-generated method stub
-					
-					ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(), 2, 
-							new AsyncCallback<Map<Property, Value>>() {
-
-								public void onFailure(Throwable caught) {
-									Window.alert("Ops, da ist etwas schief gelaufen!");
-								}
-
-								public void onSuccess(Map<Property, Value> result) {
-									propertyValueMap = result;
-									// Window.alert(Integer.toString(result.size()));
-									// Window.alert(Integer.toString(globalIndex));
-									ContactInfoForm showContact = new ContactInfoForm(object, result);
-
-									showContact.center();
-									showContact.show();
-
-								}
-
-							});
-					
-				}
-				
-			});
-			
-			cellTable.addColumn(prenameColumn, "Vorname");
-			
-			ClickableTextCell surnameCell = new ClickableTextCell();	
-			
-			Column<Contact, String> surnameColumn = new Column<Contact, String>(surnameCell) {
-				public String getValue(Contact contact) {
-					return contact.getSurname();
-				}
-			};
-			
-			surnameColumn.setSortable(true);
-			
-			surnameColumn.setFieldUpdater(new FieldUpdater<Contact, String>(){
-
-				@Override
-				public void update(int index, final Contact object, String value) {
-					// TODO Auto-generated method stub
-					
-					ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(), 2, 
-							new AsyncCallback<Map<Property, Value>>() {
-
-								public void onFailure(Throwable caught) {
-									Window.alert("Ops, da ist etwas schief gelaufen!");
-								}
-
-								public void onSuccess(Map<Property, Value> result) {
-									propertyValueMap = result;
-									// Window.alert(Integer.toString(result.size()));
-									// Window.alert(Integer.toString(globalIndex));
-									ContactInfoForm showContact = new ContactInfoForm(object, result);
-
-									showContact.center();
-									showContact.show();
-
-								}
-
-							});
-					
-				}
-				
-			});
-			cellTable.addColumn(surnameColumn, "Nachname");	
-			
-			ClickableTextCell shareButton = new ClickableTextCell(){
-				 @Override
-					public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
-					 String title = "Kontakt teilen";
-				           if (data != null) {
-				               sb.appendHtmlConstant("<img title='" + title + "' src=" + "/share.png" + " alt=" + "Kontakt bearbeiten" + " height=" +"25"+ " width=" + "25"+">");
-				                	             
-				            }
-					 }
-			};
-			
-			Column<Contact,String> shareColumn = new Column<Contact,String> (shareButton) {
-				  public String getValue(Contact object) {
-				    return "";
-				  }
-				};
-				
-		    shareColumn.setCellStyleNames("iconButton");
-			shareColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
-				@Override
-				public void update(int index, Contact object, String value) {
-					buttonPressed = true;
-					Window.alert("Hallooo");
-					
-					
-				}		
-			});
-			
-			
-			cellTable.addColumn(shareColumn);
-			
-			
-			
-		ClickableTextCell updateButton = new ClickableTextCell(){
-			 @Override
-				public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
-				 String title = "Kontakt bearbeiten";
-			           if (data != null) {
-			               sb.appendHtmlConstant("<img title='" + title + "'src=" + "/edit.png" + " alt=" + "Kontakt bearbeiten" + " height=" +"25"+ " width=" + "25"+">");
-			                	             
-			            }
-				 }
-		};
-		
-		Column<Contact,String> updateColumn = new Column<Contact,String> (updateButton) {
-			  public String getValue(Contact object) {
-			    return "";
-			  }
-			};
-			
-	    updateColumn.setCellStyleNames("iconButton");
-	    updateColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
-			@Override
-			public void update(int index, Contact object, String value) {
-				buttonPressed = true;
-				//Window.alert("Hallooo");
-				final ContactForm updatePopUp = new ContactForm(object);
-
-				// Enable glass background.
-				updatePopUp.setGlassEnabled(true);				
-				//updatePopUp.setPopupPosition(200, 300);
-				 updatePopUp.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-
-		                public void setPosition(int offsetWidth, int offsetHeight) {
-		                    // TODO Auto-generated method stub
-		                    int left = (Window.getClientWidth() - offsetWidth) / 3;
-		                    int top = (Window.getClientHeight() - offsetHeight) / 3;
-
-		                    updatePopUp.setPopupPosition(left, top);
-		                }
-		            });
-
-				updatePopUp.show();
-			
-				
-				  
-			
-			}		
-		});
-		
-		
-		cellTable.addColumn(updateColumn);
-	
-		ClickableTextCell deleteButton = new ClickableTextCell(){
-			 @Override
-			public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
-				 String title = "Kontakt löschen";
-		           if (data != null) {
-		               sb.appendHtmlConstant("<img title='" + title + "' src=" + "/delete.png" + " alt=" + "Kontakt löschen" + " height=" +"25"+ " width=" + "25"+">");
-		                	             
-		            }
-			 }
-			 };
-			 
-		
-		Column<Contact,String> deleteColumn = new Column<Contact,String> (deleteButton) {
-			  public String getValue(Contact object) {
-			    return "";
-			  }
-			};
-		deleteColumn.setCellStyleNames("iconButton");
-		deleteColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
-
-			@Override
-			public void update(int index, final Contact object, String value) {
-				// TODO Auto-generated method stub
-				//Clickhandler
-				User user = new User();
-				user.setBoId(2);
-				buttonPressed = true;
-				
-				deleteDialog deleteD = new deleteDialog(index);
-				deleteD.center();
-				deleteD.show();
-				
-//				ClientSideSettings.getConnectedAdmin().deleteContact(object, user, new AsyncCallback<Void>(){
+//				
+//				contacts = result;
+//				
+//			ClickableTextCell prenameCell = new ClickableTextCell();	
+//				
+//		Column<Contact, String> prenameColumn = new Column<Contact, String> (prenameCell) {
+//			
+//			 public String getValue(Contact object) {
+//				    return object.getPrename();
+//				  }
+//			
+//			};
+//			
+//			prenameColumn.setSortable(true);
+//			
+//			prenameColumn.setFieldUpdater(new FieldUpdater<Contact, String>(){
 //
-//					@Override
-//					public void onFailure(Throwable caught) {
-//						// TODO Auto-generated method stub
-//						
-//					}
-//
-//					@Override
-//					public void onSuccess(Void result) {
-//						// TODO Auto-generated method stub
-//						for(int i=0; i<contacts.size(); i++){
-//							if(contacts.get(i).getBoId() == object.getBoId()){
-//								contacts.remove(i);
-//							}
-//						}
-//						dataProvider.getList().clear();
-//						dataProvider.getList().addAll(contacts);
-//						Window.alert("Kontakt " + object.getPrename() + " " + object.getSurname() + " wurde gelöscht");
-//					}
+//				@Override
+//				public void update(int index, final Contact object, String value) {
+//					// TODO Auto-generated method stub
 //					
-//				});
-				
-				
-			}		
-		});
-		
-		
-		cellTable.addColumn(deleteColumn);
-		dataProvider.getList().clear();
-		dataProvider.addDataDisplay(cellTable);
-		
-		
-	/*	final SingleSelectionModel<Contact> selectionModel = new SingleSelectionModel<Contact>();
-		cellTable.setSelectionModel(selectionModel);
-		selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-			//final PopupPanel contactPopup = new PopupPanel(true, false);
-				public void onSelectionChange(SelectionChangeEvent event) {
-				final Contact selected = selectionModel.getSelectedObject();
-				if (selected != null && !buttonPressed) {
-				//Window.alert("You selected: " + selected.prename + " " + selected.surname);
-					
-					ClientSideSettings.getConnectedAdmin().findValueAndProperty(selected.getBoId(),
-							new AsyncCallback<Map<Property, Value>>() {
-
-								public void onFailure(Throwable caught) {
-									Window.alert("Ops, da ist etwas schief gelaufen!");
-								}
-
-								public void onSuccess(Map<Property, Value> result) {
-									propertyValueMap = result;
-									// Window.alert(Integer.toString(result.size()));
-									// Window.alert(Integer.toString(globalIndex));
-									ShowContactInfo_Dialog showContact = new ShowContactInfo_Dialog(selected);
-
-									showContact.center();
-									showContact.show();
-
-								}
-
-							});
-					
-					
-				final Anchor selectedContact = new Anchor(selected.getPrename() + selected.getSurname());
-				
-				     
-				HorizontalPanel contactPopupContainer = new HorizontalPanel();
-				contactPopupContainer.setSpacing(10);
-				final HTML contactInfo = new HTML();
-				contactPopupContainer.add(contactInfo);
-				
-				///contactPopup.setWidget(contactPopupContainer);
-
-				contactInfo.setHTML("Vorname: "+ selected.getPrename() + "<br>" + "Nachname: " + selected.getSurname() + "</i>");
-
-			//  int left = selectedContact.getAbsoluteLeft() + 86;
-			//  int top = selectedContact.getAbsoluteTop() + 45;
-		      //contactPopup.setPopupPosition(left, top);
-			//	contactPopup.show();
-			} else if (buttonPressed) {buttonPressed = false;}
-		} 
-   }); */
-		
-		 	List<Contact> list = dataProvider.getList();
-		    for (Contact Contact : contacts) {
-		      list.add (Contact);
-		    }
-		
-		    ListHandler<Contact> columnSortHandler = new ListHandler<Contact>(list);
-		    
-		    columnSortHandler.setComparator(prenameColumn,
-		        new Comparator<Contact>() {
-		          public int compare(Contact c1, Contact c2) {
-		            if (c1 == c2) {
-		              return 0;
-		            }
-
-		            if (c1 != null) {
-		              return (c2 != null) ? c1.getPrename().compareTo(c2.getPrename()) : 1;
-		            }
-		            return -1;
-		          }
-		        });
-		    
-		    cellTable.addColumnSortHandler(columnSortHandler);
-		    
-		    ListHandler<Contact> columnSortHandler2 = new ListHandler<Contact>(list);
-		    
-		    columnSortHandler2.setComparator(surnameColumn,
-		        new Comparator<Contact>() {
-		          public int compare(Contact c1, Contact c2) {
-		            if (c1 == c2) {
-		              return 0;
-		            }
-
-		            // Compare the name columns.
-		            if (c1 != null) {
-		              return (c2 != null) ? c1.getSurname().compareTo(c2.getSurname()) : 1;
-		            }
-		            return -1;
-		          }
-		        });
-		    
-		    cellTable.addColumnSortHandler(columnSortHandler2);
-
-		    cellTable.getColumnSortList().push(prenameColumn);
-
-		cellTable.setRowCount(contacts.size(), true);
-		cellTable.setRowData(0, contacts);
-		cellTable.setWidth("70%");
-
-		buttonPanel.setWidth("100%");
-		buttonPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		
-		buttonPanel.add(new HTML("<h2> Kontaktliste: " +  mainContactlist.getName()+ "</h2>"));
-		buttonPanel.add(newContactListButton);
-		//shareContactListButton.setHTML(("<img border='0' src='share.png' />"));
-		shareContactListButton.addClickHandler(new shareCotactListClickhandler());
-		updateContactListButton.addClickHandler(new updateContactListClickhandler());
-		deleteContactListButton.addClickHandler(new deleteContactListClickhandler());
-		buttonPanel.add(shareContactListButton);
-		buttonPanel.add(updateContactListButton);
-		buttonPanel.add(deleteContactListButton);
-
-		RootPanel.get("content").add(buttonPanel);
-		RootPanel.get("content").add(cellTable);
-		RootPanel.get("content").add(pager);
-	
-		//cellTablePanel.setCellHorizontalAlignment(pager,HasHorizontalAlignment.ALIGN_CENTER);
+//					ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(), 2, 
+//							new AsyncCallback<Map<Property, Value>>() {
+//
+//								public void onFailure(Throwable caught) {
+//									Window.alert("Ops, da ist etwas schief gelaufen!");
+//								}
+//
+//								public void onSuccess(Map<Property, Value> result) {
+//									propertyValueMap = result;
+//									// Window.alert(Integer.toString(result.size()));
+//									// Window.alert(Integer.toString(globalIndex));
+////									ContactInfoForm showContact = new ContactInfoForm(object, result);
+////
+////									showContact.center();
+////									showContact.show();
+//
+//								}
+//
+//							});
+//					
+//				}
+//				
+//			});
+//			
+//			cellTable.addColumn(prenameColumn, "Vorname");
+//			
+//			ClickableTextCell surnameCell = new ClickableTextCell();	
+//			
+//			Column<Contact, String> surnameColumn = new Column<Contact, String>(surnameCell) {
+//				public String getValue(Contact contact) {
+//					return contact.getSurname();
+//				}
+//			};
+//			
+//			surnameColumn.setSortable(true);
+//			
+//			surnameColumn.setFieldUpdater(new FieldUpdater<Contact, String>(){
+//
+//				@Override
+//				public void update(int index, final Contact object, String value) {
+//					// TODO Auto-generated method stub
+//					
+//					ClientSideSettings.getConnectedAdmin().findValueAndProperty(object.getBoId(), 2, 
+//							new AsyncCallback<Map<Property, Value>>() {
+//
+//								public void onFailure(Throwable caught) {
+//									Window.alert("Ops, da ist etwas schief gelaufen!");
+//								}
+//
+//								public void onSuccess(Map<Property, Value> result) {
+//									propertyValueMap = result;
+//									// Window.alert(Integer.toString(result.size()));
+//									// Window.alert(Integer.toString(globalIndex));
+////									ContactInfoForm showContact = new ContactInfoForm(object, result);
+////
+////									showContact.center();
+////									showContact.show();
+//
+//								}
+//
+//							});
+//					
+//				}
+//				
+//			});
+//			cellTable.addColumn(surnameColumn, "Nachname");	
+//			
+//			ClickableTextCell shareButton = new ClickableTextCell(){
+//				 @Override
+//					public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
+//					 String title = "Kontakt teilen";
+//				           if (data != null) {
+//				               sb.appendHtmlConstant("<img title='" + title + "' src=" + "/share.png" + " alt=" + "Kontakt bearbeiten" + " height=" +"25"+ " width=" + "25"+">");
+//				                	             
+//				            }
+//					 }
+//			};
+//			
+//			Column<Contact,String> shareColumn = new Column<Contact,String> (shareButton) {
+//				  public String getValue(Contact object) {
+//				    return "";
+//				  }
+//				};
+//				
+//		    shareColumn.setCellStyleNames("iconButton");
+//			shareColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
+//				@Override
+//				public void update(int index, Contact object, String value) {
+//					buttonPressed = true;
+//					Window.alert("Hallooo");
+//					
+//					
+//				}		
+//			});
+//			
+//			
+//			cellTable.addColumn(shareColumn);
+//			
+//			
+//			
+//		ClickableTextCell updateButton = new ClickableTextCell(){
+//			 @Override
+//				public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
+//				 String title = "Kontakt bearbeiten";
+//			           if (data != null) {
+//			               sb.appendHtmlConstant("<img title='" + title + "'src=" + "/edit.png" + " alt=" + "Kontakt bearbeiten" + " height=" +"25"+ " width=" + "25"+">");
+//			                	             
+//			            }
+//				 }
+//		};
+//		
+//		Column<Contact,String> updateColumn = new Column<Contact,String> (updateButton) {
+//			  public String getValue(Contact object) {
+//			    return "";
+//			  }
+//			};
+//			
+//	    updateColumn.setCellStyleNames("iconButton");
+//	    updateColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
+//			@Override
+//			public void update(int index, Contact object, String value) {
+//				buttonPressed = true;
+//				//Window.alert("Hallooo");
+//				final ContactForm updatePopUp = new ContactForm(object);
+//
+//				// Enable glass background.
+//				updatePopUp.setGlassEnabled(true);				
+//				//updatePopUp.setPopupPosition(200, 300);
+//				 updatePopUp.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+//
+//		                public void setPosition(int offsetWidth, int offsetHeight) {
+//		                    // TODO Auto-generated method stub
+//		                    int left = (Window.getClientWidth() - offsetWidth) / 3;
+//		                    int top = (Window.getClientHeight() - offsetHeight) / 3;
+//
+//		                    updatePopUp.setPopupPosition(left, top);
+//		                }
+//		            });
+//
+//				updatePopUp.show();
+//			
+//				
+//				  
+//			
+//			}		
+//		});
+//		
+//		
+//		cellTable.addColumn(updateColumn);
+//	
+//		ClickableTextCell deleteButton = new ClickableTextCell(){
+//			 @Override
+//			public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
+//				 String title = "Kontakt löschen";
+//		           if (data != null) {
+//		               sb.appendHtmlConstant("<img title='" + title + "' src=" + "/delete.png" + " alt=" + "Kontakt löschen" + " height=" +"25"+ " width=" + "25"+">");
+//		                	             
+//		            }
+//			 }
+//			 };
+//			 
+//		
+//		Column<Contact,String> deleteColumn = new Column<Contact,String> (deleteButton) {
+//			  public String getValue(Contact object) {
+//			    return "";
+//			  }
+//			};
+//		deleteColumn.setCellStyleNames("iconButton");
+//		
+//		//Das brauch ich
+//		deleteColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
+//
+//			@Override
+//			public void update(int index, final Contact object, String value) {
+//				// TODO Auto-generated method stub
+//				//Clickhandler
+//				User user = new User();
+//				user.setBoId(2);
+//				buttonPressed = true;
+//				
+//				deleteDialog deleteD = new deleteDialog(index);
+//				deleteD.center();
+//				deleteD.show();
+//				
+////				ClientSideSettings.getConnectedAdmin().deleteContact(object, user, new AsyncCallback<Void>(){
+////
+////					@Override
+////					public void onFailure(Throwable caught) {
+////						// TODO Auto-generated method stub
+////						
+////					}
+////
+////					@Override
+////					public void onSuccess(Void result) {
+////						// TODO Auto-generated method stub
+////						for(int i=0; i<contacts.size(); i++){
+////							if(contacts.get(i).getBoId() == object.getBoId()){
+////								contacts.remove(i);
+////							}
+////						}
+////						dataProvider.getList().clear();
+////						dataProvider.getList().addAll(contacts);
+////						Window.alert("Kontakt " + object.getPrename() + " " + object.getSurname() + " wurde gelöscht");
+////					}
+////					
+////				});
+//				
+//				
+//			}		
+//		});
+//		
+//		
+//		cellTable.addColumn(deleteColumn);
+//		dataProvider.getList().clear();
+//		dataProvider.addDataDisplay(cellTable);
+//		
+//		
+//	/*	final SingleSelectionModel<Contact> selectionModel = new SingleSelectionModel<Contact>();
+//		cellTable.setSelectionModel(selectionModel);
+//		selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+//			//final PopupPanel contactPopup = new PopupPanel(true, false);
+//				public void onSelectionChange(SelectionChangeEvent event) {
+//				final Contact selected = selectionModel.getSelectedObject();
+//				if (selected != null && !buttonPressed) {
+//				//Window.alert("You selected: " + selected.prename + " " + selected.surname);
+//					
+//					ClientSideSettings.getConnectedAdmin().findValueAndProperty(selected.getBoId(),
+//							new AsyncCallback<Map<Property, Value>>() {
+//
+//								public void onFailure(Throwable caught) {
+//									Window.alert("Ops, da ist etwas schief gelaufen!");
+//								}
+//
+//								public void onSuccess(Map<Property, Value> result) {
+//									propertyValueMap = result;
+//									// Window.alert(Integer.toString(result.size()));
+//									// Window.alert(Integer.toString(globalIndex));
+//									ShowContactInfo_Dialog showContact = new ShowContactInfo_Dialog(selected);
+//
+//									showContact.center();
+//									showContact.show();
+//
+//								}
+//
+//							});
+//					
+//					
+//				final Anchor selectedContact = new Anchor(selected.getPrename() + selected.getSurname());
+//				
+//				     
+//				HorizontalPanel contactPopupContainer = new HorizontalPanel();
+//				contactPopupContainer.setSpacing(10);
+//				final HTML contactInfo = new HTML();
+//				contactPopupContainer.add(contactInfo);
+//				
+//				///contactPopup.setWidget(contactPopupContainer);
+//
+//				contactInfo.setHTML("Vorname: "+ selected.getPrename() + "<br>" + "Nachname: " + selected.getSurname() + "</i>");
+//
+//			//  int left = selectedContact.getAbsoluteLeft() + 86;
+//			//  int top = selectedContact.getAbsoluteTop() + 45;
+//		      //contactPopup.setPopupPosition(left, top);
+//			//	contactPopup.show();
+//			} else if (buttonPressed) {buttonPressed = false;}
+//		} 
+//   }); */
+//		
+//		 	List<Contact> list = dataProvider.getList();
+//		    for (Contact Contact : contacts) {
+//		      list.add (Contact);
+//		    }
+//		
+//		    ListHandler<Contact> columnSortHandler = new ListHandler<Contact>(list);
+//		    
+//		    columnSortHandler.setComparator(prenameColumn,
+//		        new Comparator<Contact>() {
+//		          public int compare(Contact c1, Contact c2) {
+//		            if (c1 == c2) {
+//		              return 0;
+//		            }
+//
+//		            if (c1 != null) {
+//		              return (c2 != null) ? c1.getPrename().compareTo(c2.getPrename()) : 1;
+//		            }
+//		            return -1;
+//		          }
+//		        });
+//		    
+//		    cellTable.addColumnSortHandler(columnSortHandler);
+//		    
+//		    ListHandler<Contact> columnSortHandler2 = new ListHandler<Contact>(list);
+//		    
+//		    columnSortHandler2.setComparator(surnameColumn,
+//		        new Comparator<Contact>() {
+//		          public int compare(Contact c1, Contact c2) {
+//		            if (c1 == c2) {
+//		              return 0;
+//		            }
+//
+//		            // Compare the name columns.
+//		            if (c1 != null) {
+//		              return (c2 != null) ? c1.getSurname().compareTo(c2.getSurname()) : 1;
+//		            }
+//		            return -1;
+//		          }
+//		        });
+//		    
+//		    cellTable.addColumnSortHandler(columnSortHandler2);
+//
+//		    cellTable.getColumnSortList().push(prenameColumn);
+//
+//		cellTable.setRowCount(contacts.size(), true);
+//		cellTable.setRowData(0, contacts);
+//		cellTable.setWidth("70%");
+//
+//		buttonPanel.setWidth("100%");
+//		buttonPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+//		
+//		buttonPanel.add(new HTML("<h2> Kontaktliste: " +  mainContactlist.getName()+ "</h2>"));
+//		buttonPanel.add(newContactListButton);
+//		//shareContactListButton.setHTML(("<img border='0' src='share.png' />"));
+//		shareContactListButton.addClickHandler(new shareCotactListClickhandler());
+//		updateContactListButton.addClickHandler(new updateContactListClickhandler());
+//		deleteContactListButton.addClickHandler(new deleteContactListClickhandler());
+//		buttonPanel.add(shareContactListButton);
+//		buttonPanel.add(updateContactListButton);
+//		buttonPanel.add(deleteContactListButton);
+//
+//		RootPanel.get("content").add(buttonPanel);
+//		RootPanel.get("content").add(cellTable);
+//		RootPanel.get("content").add(pager);
+//	
+//		//cellTablePanel.setCellHorizontalAlignment(pager,HasHorizontalAlignment.ALIGN_CENTER);
 
 	}
 

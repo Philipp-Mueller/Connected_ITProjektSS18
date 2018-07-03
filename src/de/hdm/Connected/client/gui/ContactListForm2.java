@@ -199,10 +199,10 @@ public class ContactListForm2 extends Widget {
 								propertyValueMap = result;
 								// Window.alert(Integer.toString(result.size()));
 								// Window.alert(Integer.toString(globalIndex));
-								ContactInfoForm showContact = new ContactInfoForm(object, result);
-
-								showContact.center();
-								showContact.show();
+//								ContactInfoForm showContact = new ContactInfoForm(object, result);
+//
+//								showContact.center();
+//								showContact.show();
 
 							}
 
@@ -239,10 +239,10 @@ public class ContactListForm2 extends Widget {
 								propertyValueMap = result;
 								// Window.alert(Integer.toString(result.size()));
 								// Window.alert(Integer.toString(globalIndex));
-								ContactInfoForm showContact = new ContactInfoForm(object, result);
-
-								showContact.center();
-								showContact.show();
+//								ContactInfoForm showContact = new ContactInfoForm(object, result);
+//
+//								showContact.center();
+//								showContact.show();
 
 							}
 
@@ -451,7 +451,7 @@ public class ContactListForm2 extends Widget {
 				Button addCtoCl = new Button("Kontakte hinzufügen");
 				addCtoCl.addClickHandler(new ClickHandler() {
 					public void onClick(ClickEvent event) {
-						ContactsTable contactstable = new ContactsTable();
+						ContactsTable contactstable = new ContactsTable(null, null);
 					}
 				});
 				contentPanel.add(addCtoCl);
