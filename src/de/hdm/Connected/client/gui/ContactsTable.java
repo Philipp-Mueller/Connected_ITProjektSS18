@@ -143,7 +143,7 @@ public class ContactsTable extends CellTable {
 		cellTable.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 
 
-		ClientSideSettings.getConnectedAdmin().getContactsByUserPermission(2, new AsyncCallback<ArrayList<Contact>>() {
+		ClientSideSettings.getConnectedAdmin().getContactsByUserPermission(ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<Contact>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -239,8 +239,8 @@ public class ContactsTable extends CellTable {
 				Column<Contact, String> prenameColumn = new Column<Contact, String>(prenameCell) {
 					
 					public void render(Context context, Contact value, SafeHtmlBuilder sb) {
-						int userId = 2;
-					//TODO getCurrentUser
+						int userId = ClientSideSettings.getCurrentUser().getBoId();
+
 						if(value == null) {
 							return;
 						}else if(value.getCreatorId() != userId){
@@ -270,9 +270,9 @@ public class ContactsTable extends CellTable {
 
 					@Override
 					public void update(int index, final Contact object, String value) {
-						// TODO Auto-generated method stub
 
-						ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(object.getBoId(),2,
+
+						ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(object.getBoId(),ClientSideSettings.getCurrentUser().getBoId(),
 								new AsyncCallback<ArrayList<Value>>() {
 
 									public void onFailure(Throwable caught) {
@@ -303,8 +303,8 @@ public class ContactsTable extends CellTable {
 				Column<Contact, String> surnameColumn = new Column<Contact, String>(surnameCell) {
 					
 					public void render(Context context, Contact value, SafeHtmlBuilder sb) {
-						int userId = 2;
-					//TODO getCurrentUser
+						int userId = ClientSideSettings.getCurrentUser().getBoId();
+
 						if(value == null) {
 							return;
 						}else if(value.getCreatorId() != userId){
@@ -332,9 +332,9 @@ public class ContactsTable extends CellTable {
 
 					@Override
 					public void update(int index, final Contact object, String value) {
-						// TODO Auto-generated method stub
 
-						ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(object.getBoId(),2,
+
+						ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(object.getBoId(),ClientSideSettings.getCurrentUser().getBoId(),
 								new AsyncCallback<ArrayList<Value>>() {
 
 							public void onFailure(Throwable caught) {
@@ -390,7 +390,7 @@ public class ContactsTable extends CellTable {
 						sharePopUp.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 
 							public void setPosition(int offsetWidth, int offsetHeight) {
-								// TODO Auto-generated method stub
+
 								int left = (Window.getClientWidth() - offsetWidth) / 3;
 								int top = (Window.getClientHeight() - offsetHeight) / 3;
 
@@ -438,7 +438,7 @@ public class ContactsTable extends CellTable {
 						updatePopUp.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 
 							public void setPosition(int offsetWidth, int offsetHeight) {
-								// TODO Auto-generated method stub
+
 								int left = (Window.getClientWidth() - offsetWidth) / 3;
 								int top = (Window.getClientHeight() - offsetHeight) / 3;
 
@@ -476,7 +476,7 @@ public class ContactsTable extends CellTable {
 
 					@Override
 					public void update(int index, final Contact object, String value) {
-						// TODO Auto-generated method stub
+
 						// Clickhandler
 						final DialogBox agreeDelete = new DialogBox();
 						VerticalPanel vpanel = new VerticalPanel();
@@ -494,7 +494,7 @@ public class ContactsTable extends CellTable {
 							public void onClick(ClickEvent event) {
 						
 						User user = new User();
-						user.setBoId(2);
+						user.setBoId(ClientSideSettings.getCurrentUser().getBoId());
 						buttonPressed = true;
 						ClientSideSettings.getConnectedAdmin().deleteContact(object, user, new AsyncCallback<Void>() {
 
@@ -541,7 +541,7 @@ public class ContactsTable extends CellTable {
 
 						@Override
 						public void update(int index, final Contact object, String value) {
-							// TODO Auto-generated method stub
+
 							//Clickhandler
 							User user = new User();
 							user.setBoId(2);
@@ -673,7 +673,7 @@ public class ContactsTable extends CellTable {
 						newContact.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 
 							public void setPosition(int offsetWidth, int offsetHeight) {
-								// TODO Auto-generated method stub
+
 								int left = (Window.getClientWidth() - offsetWidth) / 3;
 								int top = (Window.getClientHeight() - offsetHeight) / 3;
 
@@ -699,7 +699,7 @@ public class ContactsTable extends CellTable {
 						addCToCl.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 
 							public void setPosition(int offsetWidth, int offsetHeight) {
-								// TODO Auto-generated method stub
+
 								int left = (Window.getClientWidth() - offsetWidth) / 3;
 								int top = (Window.getClientHeight() - offsetHeight) / 3;
 
@@ -734,7 +734,7 @@ public class ContactsTable extends CellTable {
 
 					@Override
 					public void onClick(ClickEvent event) {
-						// TODO Auto-generated method stub
+
 						if(!(searchBox.getText() == "") && firstTimePressed){
 							firstTimePressed = false;
 						searchBox.setText("");
@@ -834,7 +834,7 @@ public class ContactsTable extends CellTable {
 						Window.alert(Integer.toString(selectedUser.size()));
 						if (selectedContactsArray.size() > 1) {
 							ClientSideSettings.getConnectedAdmin().giveContactPermissonToUsers(selectedContactsArray,
-									selectedUser, 1, new AsyncCallback<Void>() {
+									selectedUser, ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Void>() {
 
 										@Override
 										public void onFailure(Throwable caught) {
@@ -878,7 +878,7 @@ public class ContactsTable extends CellTable {
 					}
 
 					@Override
-					// jede Kontaktliste wird der ListBox hinzugefügt
+					// jeder User wird der ListBox hinzugefügt
 					public void onSuccess(ArrayList<User> result) {
 						allUsers = result;
 						for (User u : result) {
@@ -906,7 +906,7 @@ public class ContactsTable extends CellTable {
 
 		@Override
 		public void onKeyUp(KeyUpEvent event) {
-			// TODO Auto-generated method stub
+
 			if(searchBox.getText() != ""){
 				String searchString = "*" + searchBox.getText().toLowerCase() + "*";
 				searchString= searchString.replaceAll("\\*", "\\\\w*");
@@ -942,11 +942,11 @@ public class ContactsTable extends CellTable {
 				// Enable animation.
 				setAnimationEnabled(true);
 				
-				ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(2, new AsyncCallback<ArrayList<ContactList>>(){
+				ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<ContactList>>(){
 
 					@Override
 					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
+							Window.alert("Ops, da ist wohl etwas schief gelafuen");
 						
 					}
 
@@ -1144,17 +1144,16 @@ public class ContactsTable extends CellTable {
 
 				userListbox.clear();
 
-				// RootPanel.get("content").add(buttonPanel);
 
 				userListbox.setEnabled(true);
 
 				// multi auswahl freischalten in ListBox
 				userListbox.ensureDebugId("cwListBox-multiBox");
 				userListbox.setVisibleItemCount(7);
-				// Alle Kontaktlisten aus DB abrufen
+				
 
 				publicUserArray = new ArrayList<User>();
-				// TODO nur KOntaktlisten des aktuellen Users abrufen!
+
 				ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>() {
 
 					@Override
@@ -1163,7 +1162,7 @@ public class ContactsTable extends CellTable {
 					}
 
 					@Override
-					// jede Kontaktliste wird der ListBox hinzugefügt
+					// jeder User wird der ListBox hinzugefügt
 					public void onSuccess(ArrayList<User> result) {
 						publicUserArray = result;
 						for (User u : result) {
@@ -1194,7 +1193,7 @@ public class ContactsTable extends CellTable {
 							}
 						}
 
-						ClientSideSettings.getConnectedAdmin().givePermissionToUsers(mainContactlist.getBoId(), uArray, 1,
+						ClientSideSettings.getConnectedAdmin().givePermissionToUsers(mainContactlist.getBoId(), uArray, ClientSideSettings.getCurrentUser().getBoId(),
 								new AsyncCallback<Void>() {
 
 									@Override
