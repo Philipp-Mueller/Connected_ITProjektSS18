@@ -314,3 +314,8 @@ table.cellListPanel.content {
 	background: #009999;
 	color: #fff;
 }
+
+.gwt-DialogBox button {
+	background: #009999;
+	color: #fff;
+}
