@@ -89,11 +89,11 @@ public ContactlistsCell(){
 
 	
 	
-ClientSideSettings.getConnectedAdmin().findAllContactlists(new AsyncCallback<ArrayList<ContactList>>(){
+ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<ContactList>>(){
 
 	@Override
 	public void onFailure(Throwable caught) {
-		// TODO Auto-generated method stub
+
 		
 	}
 

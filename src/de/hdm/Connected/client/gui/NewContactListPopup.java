@@ -51,7 +51,7 @@ public class NewContactListPopup extends DialogBox {
 				ContactList cl = new ContactList();
 				cl.setName(nameTextBox.getText());
 
-				ClientSideSettings.getConnectedAdmin().createContactList(nameTextBox.getText(), 2,
+				ClientSideSettings.getConnectedAdmin().createContactList(nameTextBox.getText(), ClientSideSettings.getCurrentUser().getBoId(),
 						new AsyncCallback<ContactList>() {
 							@Override
 							public void onFailure(Throwable caught) {

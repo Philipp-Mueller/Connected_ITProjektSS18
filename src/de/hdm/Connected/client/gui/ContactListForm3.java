@@ -530,7 +530,7 @@ public class ContactListForm3 extends CellTable {
 				}
 			}
 
-			ClientSideSettings.getConnectedAdmin().givePermissionToUsers(mainContactlist.getBoId(), uArray, 1,
+			ClientSideSettings.getConnectedAdmin().givePermissionToUsers(mainContactlist.getBoId(), uArray, ClientSideSettings.getCurrentUser().getBoId(),
 					new AsyncCallback<Void>() {
 
 						@Override
@@ -763,7 +763,7 @@ public class ContactListForm3 extends CellTable {
 						}
 					}
 
-					ClientSideSettings.getConnectedAdmin().givePermissionToUsers(mainContactlist.getBoId(), uArray, 1,
+					ClientSideSettings.getConnectedAdmin().givePermissionToUsers(mainContactlist.getBoId(), uArray, ClientSideSettings.getCurrentUser().getBoId(),
 							new AsyncCallback<Void>() {
 
 								@Override
@@ -830,7 +830,7 @@ public class ContactListForm3 extends CellTable {
 					ContactList cl = new ContactList();
 					cl.setName(nameTextBox.getText());
 
-					ClientSideSettings.getConnectedAdmin().createContactList(nameTextBox.getText(), 2,
+					ClientSideSettings.getConnectedAdmin().createContactList(nameTextBox.getText(), ClientSideSettings.getCurrentUser().getBoId(),
 							new AsyncCallback<ContactList>() {
 								@Override
 								public void onFailure(Throwable caught) {

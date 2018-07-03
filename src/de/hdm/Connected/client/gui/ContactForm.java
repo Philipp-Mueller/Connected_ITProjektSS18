@@ -123,10 +123,6 @@ public class ContactForm extends PopupPanel {
 		surnameBox.setText(selectedContact.getSurname());
 
 		changeNameButton.addClickHandler(new changeNameClickHandler());
-		nameTable.getColumnFormatter().setWidth(0, "100px");
-		propertyTable.getColumnFormatter().setWidth(0, "150px");
-		newPropertyTable.getColumnFormatter().setWidth(0, "150px");
-		
 
 		nameTable.setWidget(0, 0, new HTML("<strong>Vorname: <strong>"));
 		nameTable.setWidget(0, 1, new HTML(selectedContact.getPrename()));
@@ -136,8 +132,6 @@ public class ContactForm extends PopupPanel {
 		nameTable.getFlexCellFormatter().setAlignment(1, 2, HasHorizontalAlignment.ALIGN_CENTER,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		nameTable.setWidget(1, 2, changeNameButton);
-		propertyTable.setCellSpacing(10);
-		newPropertyTable.setCellSpacing(10);
 		ClientSideSettings.getConnectedAdmin().findAllProperties(new findAllPropertiesCallback());
 	}
 
@@ -229,7 +223,7 @@ public class ContactForm extends PopupPanel {
 					}
 					java.sql.Date creationTime = new java.sql.Date(System.currentTimeMillis());
 					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
-							creationTime, creationTime, ClientSideSettings.getCurrentUser().getBoId(),
+							creationTime, creationTime, 2,
 							new AsyncCallback<Contact>() {
 								ArrayList<Contact> contacts = new ArrayList<Contact>();
 
@@ -631,7 +625,6 @@ public class ContactForm extends PopupPanel {
 				newPropertyBtn.addClickHandler(new addNewPropertyClickHandler());
 
 				valueTextBox = new TextBox();
-				valueTextBox.setWidth("200px");
 
 				newPropertyTable.setWidget(0, 0, new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
 				newPropertyTable.setWidget(1, 0, propertyListBox);
@@ -1134,6 +1127,26 @@ public class ContactForm extends PopupPanel {
 													+ propertyChangeListBox
 															.getSelectedItemText()
 													+ ":</strong></p>"));
+									propertyTable.setWidget(eventRow, 1, new HTML(
+											"<p>" + valueChangeTextBox.getText() + "</p>"));
+									propertyTable.setWidget(eventRow, 2, updateBtn);
+									propertyTable.setWidget(eventRow, 3, deleteBtn);
+								}
+								
+							});
+
+								@Override
+								public void onClick(ClickEvent event) {
+									
+									updateBtn = new Button("Eigenschaft bearbeiten");
+									updateBtn.addClickHandler(new updateBtnClickHandler());
+									deleteBtn = new Button("Eigenschaft entfernen");
+									deleteBtn.addClickHandler(new deleteBtnClickHandler());
+									propertyTable.setWidget(eventRow, 0,
+											new HTML("<p><strong>"
+													+ propertyChangeListBox
+															.getSelectedItemText()
+													+ "</strong></p>"));
 									propertyTable.setWidget(eventRow, 1, new HTML(
 											"<p>" + valueChangeTextBox.getText() + "</p>"));
 									propertyTable.setWidget(eventRow, 2, updateBtn);
