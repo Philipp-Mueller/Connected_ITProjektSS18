@@ -99,6 +99,35 @@ public class ContactContactListMapper {
 		
 		}
 	}
+	//Entfernen eines KOntakts von allen Kontaktlisten
+	
+	public void removeContactFromAllContactList(int contactId) {
+		Connection con = DBConnection.connection();
+		
+		try {
+			Statement stmt = con.createStatement();
+			/**
+			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
+			 * Datenbank.
+			 */
+			stmt.executeUpdate("DELETE FROM contactcontactlist WHERE contactid= " + contactId);
+		}
+		
+		/**
+	 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
+	 * Fehlermeldung genauer zu analyisieren. Es werden Informationen dazu
+	 * ausgegeben, was passiert ist und wo im Code es passiert ist.
+	 */
+	catch (SQLException e) {
+		e.printStackTrace();
+		
+		}
+	}
+	
+	
+	
+	
+	
 	
 	/**
 	 * Sucht Contact-Objekte ahnand einer ContactListId.

@@ -429,6 +429,21 @@ public class ContactsTable extends CellTable {
 					public void update(int index, final Contact object, String value) {
 						// TODO Auto-generated method stub
 						// Clickhandler
+						final DialogBox agreeDelete = new DialogBox();
+						VerticalPanel vpanel = new VerticalPanel();
+						HorizontalPanel buttonPanel = new HorizontalPanel();
+						Button yesButton = new Button("Ja");
+						Button noButton = new Button("Nein");
+						noButton.addClickHandler(new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+								agreeDelete.hide();
+							}
+						});
+						yesButton.addClickHandler(new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+						
 						User user = new User();
 						user.setBoId(2);
 						buttonPressed = true;
@@ -436,13 +451,13 @@ public class ContactsTable extends CellTable {
 
 							@Override
 							public void onFailure(Throwable caught) {
-								// TODO Auto-generated method stub
+								Window.alert("Kontakt konnte nicht gelöscht werden");
 
 							}
 
 							@Override
 							public void onSuccess(Void result) {
-								// TODO Auto-generated method stub
+								
 								for (int i = 0; i < contacts.size(); i++) {
 									if (contacts.get(i).getBoId() == object.getBoId()) {
 										contacts.remove(i);
@@ -452,10 +467,21 @@ public class ContactsTable extends CellTable {
 								dataProvider.getList().addAll(contacts);
 								Window.alert("Kontakt " + object.getPrename() + " " + object.getSurname()
 										+ " wurde gelöscht");
+								agreeDelete.hide();
 							}
 
 						});
-
+							};
+					});
+						
+						vpanel.add(new HTML("Wollen Sie diesen Kontakt wirklich löschen?"));
+						buttonPanel.add(noButton);
+						buttonPanel.add(yesButton);
+						vpanel.add(buttonPanel);
+						agreeDelete.setWidget(vpanel);
+						agreeDelete.setGlassEnabled(true);
+						agreeDelete.center();
+						agreeDelete.show();
 					}
 				});
 

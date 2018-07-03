@@ -323,5 +323,7 @@ public interface ConnectedAdmin extends RemoteService {
 	ArrayList<Value> getValuesByUserPermission(int contactId, int userId) throws IllegalArgumentException;
 
 	void deletePermissionFromContact(int userId, int contactId) throws IllegalArgumentException;
+	
+	ArrayList<Value> getValuesByReceiveUserPermission(int contactId, int userId) throws IllegalArgumentException;
 
 }

@@ -131,5 +131,7 @@ public interface ConnectedAdminAsync {
 
 	void updatePermissionsForUser(ArrayList<Integer> newPermissions, int contactId, int userId,
 			AsyncCallback<Void> callback);
+
+	void getValuesByReceiveUserPermission(int contactId, int userId, AsyncCallback<ArrayList<Value>> callback);
 	
 }
