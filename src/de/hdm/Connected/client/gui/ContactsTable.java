@@ -733,7 +733,7 @@ public class ContactsTable extends CellTable {
 				
 				if(contactlist == null){
 				//buttonPanel.setWidth("1000px");
-				//buttonPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);	
+				//buttonPanel.setHorizontalAlignment(HasHorizontalAlignment.IGHT);	
 				buttonPanel.setSpacing(20);
 				
 				buttonPanel.add(addContactButton);

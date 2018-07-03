@@ -1,9 +1,8 @@
-package de.hdm.Connected.client.ReportGenerator;
+package de.hdm.Connected.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootPanel;
 
-import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.client.gui.ReportGenerator.ReportGeneratorBaseForm;
 import de.hdm.Connected.shared.ReportGenerator.ReportGeneratorServiceAsync;
 

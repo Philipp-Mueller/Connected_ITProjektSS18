@@ -37,7 +37,7 @@ public class Navigation extends VerticalPanel {
 	 Button BMyContacts = new Button ("Meine Kontakte");
 	public void onLoad() {
 		
-		
+		BMyContacts.setStyleName("gwt-Button-buttonpressednav");
 		//ContactlistsCell cellTreeModel = new ContactlistsCell();
 		
 		//CellTree navTree = new CellTree(cellTreeModel, null);
