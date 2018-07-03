@@ -638,7 +638,7 @@ public class ContactSharing extends PopupPanel {
 									Window.alert("Die Eigenschaft wurde erstellt und geteilt");
 									MyDialog.this.hide();
 									// RootPanel.get("content").clear();
-									ContactForm contactForm = new ContactForm(contact);
+									ContactForm contactForm = new ContactForm(contact, null, null);
 
 								}
 

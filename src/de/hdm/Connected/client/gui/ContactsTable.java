@@ -119,7 +119,8 @@ public class ContactsTable extends CellTable {
 	Button shareContactListButton = new Button("<img border='0' src='share.png' width = '25' length = '25'/>");
 	Button updateContactListButton = new Button("<img border='0' src='edit.png' width = '25'  length = '25'/>");
 	Button deleteContactListButton = new Button("<img border='0' src='delete.png' width = '25' length = '25'/>");
-	ContactList mainContactlist = new ContactList();
+	ContactList mainContactlist = null;
+	ArrayList<Contact> withinContactlist = null;
 	ArrayList<User> uArray = new ArrayList<User>();
 	ArrayList<User> publicUserArray = null;
 	
@@ -132,6 +133,7 @@ public class ContactsTable extends CellTable {
 	public ContactsTable(final ArrayList<Contact> contactlist, final ContactList contactlistObject) {
 		
 		mainContactlist = contactlistObject;
+		withinContactlist = contactlist;
 		
 		// Create a Pager to control the table.
 		SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
@@ -427,7 +429,8 @@ public class ContactsTable extends CellTable {
 					public void update(int index, Contact object, String value) {
 						
 						// Window.alert("Hallooo");
-						final ContactForm updatePopUp = new ContactForm(object);
+						
+						final ContactForm updatePopUp = new ContactForm(object, mainContactlist, withinContactlist);
 
 						// Enable glass background.
 						updatePopUp.setGlassEnabled(true);

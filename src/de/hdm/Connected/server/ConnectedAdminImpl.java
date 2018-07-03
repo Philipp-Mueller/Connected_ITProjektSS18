@@ -84,11 +84,14 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		
 		for(int i =0; i<shareObjectId.size();i++){
 			for(int j=0; j<receiverUserId.size();j++){
+			//doppelte Permissions vermeiden
+				if(!(hasPermission(shareObjectId.get(i), receiverUserId.get(j)))){
 			Permission permission = new Permission();
 			permission.setShareUserID(shareUserId);
 			permission.setSharedObjectId(shareObjectId.get(i));
 			permission.setReceiverUserID(receiverUserId.get(j));
 			permissionMapper.insert(permission);
+				}
 			}
 		}
 		
