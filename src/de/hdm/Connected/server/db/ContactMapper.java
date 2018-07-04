@@ -154,11 +154,21 @@ public class ContactMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			/**
+			 * auto-commit ausschalten um sicherzustellen dass beide Statements, also die ganze TRansaktion ausgeführt wird.
+			 */
+			
+			con.setAutoCommit(false);
+			
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Loeschen des uebergebenen Datensatzes in der Datenbank.
 			 */
 			stmt.executeUpdate("DELETE FROM contact WHERE id=" + contact.getBoId());
+			
+			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + contact.getBoId());
+			
+			con.commit();
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
@@ -167,6 +177,12 @@ public class ContactMapper {
 		 */
 		catch (SQLException e2) {
 			e2.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

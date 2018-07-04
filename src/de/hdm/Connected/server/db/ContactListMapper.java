@@ -158,13 +158,22 @@ public class ContactListMapper{
 	public void delete(ContactList contactList) {
 		Connection con = DBConnection.connection();
 		
-		try {
+		try {			
+			/**
+			 * auto-commit ausschalten um sicherzustellen dass beide Statements, also die ganze TRansaktion ausgeführt wird.
+			 */
+			
+			con.setAutoCommit(false);
+			
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
 			 * Datenbank.
 			 */
 			stmt.executeUpdate("DELETE FROM contactlist WHERE id=" + contactList.getBoId());
+			
+			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + contactList.getBoId());
+			con.commit();
 		}
 		
 		/**
@@ -174,6 +183,12 @@ public class ContactListMapper{
 	 */
 	catch (SQLException e2) {
 		e2.printStackTrace();
+		try {
+			con.rollback();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	}
 	/**

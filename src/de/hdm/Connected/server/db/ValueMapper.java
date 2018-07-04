@@ -159,13 +159,23 @@ public class ValueMapper {
 	public void delete(Value value) {
 		Connection con = DBConnection.connection();
 
-		try {
+		try {			
+			/**
+			 * auto-commit ausschalten um sicherzustellen dass beide Statements, also die ganze TRansaktion ausgeführt wird.
+			 */
+			
+			con.setAutoCommit(false);
+			
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Loeschen des uebergebenen Datensatzes in der
 			 * Datenbank.
 			 */
 			stmt.executeUpdate("DELETE FROM value WHERE id=" + value.getBoId());
+			
+			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + value.getBoId());
+			
+			con.commit();
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -174,6 +184,11 @@ public class ValueMapper {
 		 */
 		catch (SQLException e2) {
 			e2.printStackTrace();
+		}try {
+			con.rollback();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
