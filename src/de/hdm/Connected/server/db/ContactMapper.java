@@ -22,7 +22,7 @@ import de.hdm.Connected.shared.bo.Permission;
  * 
  * @author Burak
  */
-public class ContactMapper extends SharedObjectMapper {
+public class ContactMapper {
 
 	/**
 	 * Die Klasse ContactMapper wird nur einmal instantiiert

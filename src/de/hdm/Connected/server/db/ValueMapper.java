@@ -20,7 +20,7 @@ import de.hdm.Connected.shared.bo.Value;
  * 
  * @author Burak
  */
-public class ValueMapper extends SharedObjectMapper {
+public class ValueMapper {
 
 	/**
 	 * Die Klasse ValueMapper wird nur einmal instantiiert

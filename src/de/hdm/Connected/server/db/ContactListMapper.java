@@ -17,7 +17,7 @@ import de.hdm.Connected.shared.bo.ContactList;
   * @author Philipp
   */
  
-public class ContactListMapper extends SharedObjectMapper{
+public class ContactListMapper{
 	/**
 	 * Die Klasse ContactListMapper wird nur einmal instantiiert
 	 * (Singleton-Eigenschaft). Damit diese Eigenschaft erfüllt werden kann,
