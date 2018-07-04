@@ -185,7 +185,7 @@ public class ContactMapper {
 			 * SQL-Anweisung zum Finden des uebergebenen Datensatzes, anhand der Id, in der
 			 * Datenbank.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname, creationDate, modificationDate FROM contact WHERE id=" + id);
+			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname, ownerId, creationDate, modificationDate FROM contact WHERE id=" + id);
 			/**
 			 * Zu einem Primaerschluessel exisitiert nur maximal ein Datenbank-Tupel, somit
 			 * kann auch nur einer zurueckgegeben werden. Es wird mit einer If-Abfragen
@@ -196,6 +196,7 @@ public class ContactMapper {
 				contact.setBoId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
+				contact.setCreatorId(rs.getInt("ownerId"));
 				contact.setCreationDate(rs.getDate("creationDate"));
 				contact.setModificationDate(rs.getDate("modificationDate"));
 				return contact;

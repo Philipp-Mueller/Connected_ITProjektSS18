@@ -213,6 +213,7 @@ public class ContactsTable extends CellTable {
 				}
 				if(contactlist != null){
 					contacts = contactlist;
+					
 				}
 
 				final MultiSelectionModel<Contact> selectionModel = new MultiSelectionModel<Contact>();

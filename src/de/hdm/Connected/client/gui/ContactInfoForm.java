@@ -72,6 +72,7 @@ public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 	 * Abfrage des Erstellers des anzuzeigenden Kontakts
 	 * weist String email die Mailadresse des Erstellers zu
 	 */
+	Window.alert(Integer.toString(contact.getCreatorId()));
 	
 	ClientSideSettings.getConnectedAdmin().findUserById(contact.getCreatorId(), new AsyncCallback<User>(){
 		@Override
@@ -82,7 +83,9 @@ public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 		
 		@Override
 		public void onSuccess(User result) {
-			creator = result;			
+			Window.alert("klappt");
+			creator = result;	
+			Window.alert(Integer.toString(result.getBoId()));
 			contactInfoTable.setWidget(0, 0, new HTML("<strong>Ersteller: </strong>"));
 			contactInfoTable.setWidget(0, 1, new HTML(creator.getLogEmail()));
 			contactInfoTable.setWidget(1, 0, new HTML("<strong>Erstellt: </strong>"));
@@ -146,7 +149,7 @@ public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 	 *zur Anzeige des Popus
 	 *
 	 */	
-	if(contact.getCreatorId() ==ClientSideSettings.getCurrentUser().getBoId()){
+	if(contact.getCreatorId() !=ClientSideSettings.getCurrentUser().getBoId()){
 		v.add(new HTML("<br /><h3> &nbsp; Kontakt: <i>" + contact.getPrename() + " " + contact.getSurname() +"</i></h3><br />"));
 	}else{
 		v.add(new HTML("<br /><h3> &nbsp; Kontakt: " + contact.getPrename() + " " + contact.getSurname() +"</h3><br />"));
