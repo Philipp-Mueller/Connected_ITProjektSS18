@@ -363,7 +363,7 @@ public class ContactSharing extends PopupPanel {
 		selectionModel_Single.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 			//SelectionModel_single SelectionChange Handler
 			public void onSelectionChange(SelectionChangeEvent event) {
-							
+						
 				changingUser = selectionModel_Single.getSelectedObject();
 				dataProvider.getList().clear();
 				dataProvider.getList().addAll(propertiesAndValues);

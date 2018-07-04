@@ -14,9 +14,11 @@ import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.ImageCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dev.shell.Icons;
+import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.BlurEvent;
@@ -25,6 +27,8 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.LoadEvent;
@@ -45,7 +49,9 @@ import com.google.gwt.user.cellview.client.Header;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
@@ -66,6 +72,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.CellPreviewEvent;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.MultiSelectionModel;
@@ -108,8 +115,10 @@ public class ContactsTable extends CellTable {
 	private ContactInfoForm contact = null;
 	
 	private TextBox searchBox = new TextBox();
-	
+	private int row = 0;
+	private int column = 0;
 	boolean isAppend = false;
+	
 	ListDataProvider<Contact> dataProvider = new ListDataProvider<Contact>();
 
 	List<Contact> contacts = new ArrayList<Contact>();
@@ -141,7 +150,52 @@ public class ContactsTable extends CellTable {
 		pager.setDisplay(cellTable);
 
 		cellTable.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+		
+		cellTable.addCellPreviewHandler(new CellPreviewEvent.Handler<Contact>() {
 
+			@Override
+			public void onCellPreview(final CellPreviewEvent<Contact> event) {
+				  if (BrowserEvents.CLICK.equalsIgnoreCase(event.getNativeEvent().getType())) {
+		                row = event.getIndex();
+		                column=event.getColumn();
+		            }
+
+				
+			}
+			// this is to handle row id
+			
+			
+	    });
+
+	// because Doubleclick handler doesn't give row index or column index we will use addCellPreviewHandler to return row index or column index.
+	cellTable.addDomHandler(new DoubleClickHandler() {
+
+	        @Override
+	        public void onDoubleClick(final DoubleClickEvent event) {
+	            System.out.println(" You clicked row = " + row);
+	            System.out.println(" You clicked column = " + column);
+				ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(cellTable.getDisplayedItem(row).getBoId(),ClientSideSettings.getCurrentUser().getBoId(),
+						new AsyncCallback<ArrayList<Value>>() {
+
+					public void onFailure(Throwable caught) {
+						Window.alert("Ops, da ist etwas schief gelaufen!");
+					}
+
+					public void onSuccess(ArrayList<Value> result) {
+						//propertyValueMap = result;
+						// Window.alert(Integer.toString(result.size()));
+						// Window.alert(Integer.toString(globalIndex));
+						ContactInfoForm contact = new ContactInfoForm(cellTable.getDisplayedItem(row), result);
+
+						contact.center();
+						contact.show();
+
+					}
+
+				}); 
+
+	        }
+	    }, DoubleClickEvent.getType());
 
 		ClientSideSettings.getConnectedAdmin().getContactsByUserPermission(ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<Contact>>() {
 
@@ -162,20 +216,19 @@ public class ContactsTable extends CellTable {
 				}
 
 				final MultiSelectionModel<Contact> selectionModel = new MultiSelectionModel<Contact>();
-				cellTable.setSelectionModel(selectionModel,
-						DefaultSelectionEventManager.<Contact>createCheckboxManager());
-
-				selectionModel.addSelectionChangeHandler(new Handler() {
+				cellTable.setSelectionModel(selectionModel);
+				
+				selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 					@Override
 					public void onSelectionChange(SelectionChangeEvent event) {
 						selectedContacts = selectionModel.getSelectedSet();
 						
 						if(selectedContacts !=null){
-										
+									
 						shareSelectedContacts.setVisible(true);
 						addContactstoCL.setVisible(true);
 						search.getElement().getStyle().setMarginLeft(184, Unit.PX);
-				
+						
 						}
 						
 						if(selectionModel.getSelectedSet().size() == 0){
@@ -188,14 +241,28 @@ public class ContactsTable extends CellTable {
 					}
 					
 				});
+				
+				ImageCell image = new ImageCell();
 
-				Column<Contact, Boolean> checkColumn = new Column<Contact, Boolean>(new CheckboxCell(false, false)) {
+				Column<Contact, String> sharedColumn = new Column<Contact, String>(image){
+					
 					@Override
-					public Boolean getValue(Contact object) {
-						// Get the value from the selection model.
-						return selectionModel.isSelected(object);
+					public String getValue(Contact object) {
+						
+						return "";
 					}
+					
+					public void render(Context context, Contact data, SafeHtmlBuilder sb) {
+						String title = "Geteilter Kontakt";
+						if (data != null && (data.getCreatorId() != ClientSideSettings.getCurrentUser().getBoId())) {
+							sb.appendHtmlConstant("<img title='" + title + "' src=" + "/sharing.png" + " alt="
+									+ "Geteilter Kontakt" + " height=" + "23" + " width=" + "23" + ">");
+
+						}
+					}
+					
 				};
+			
 				CheckboxCell cell = new CheckboxCell(true,true);
 				
 				Header<Boolean> checkAllHeader = new Header<Boolean>(cell) {
@@ -228,10 +295,10 @@ public class ContactsTable extends CellTable {
 					
 				});
 				
-				checkColumn.setCellStyleNames("iconButton");
+				sharedColumn.setCellStyleNames("iconButton");
 				
 				if(contactlist == null){
-				cellTable.addColumn(checkColumn, checkAllHeader);
+				cellTable.addColumn(sharedColumn, checkAllHeader);
 				}
 				
 				ClickableTextCell prenameCell = new ClickableTextCell();
@@ -244,9 +311,9 @@ public class ContactsTable extends CellTable {
 						if(value == null) {
 							return;
 						}else if(value.getCreatorId() != userId){
-						sb.appendHtmlConstant("<i><strong>");
+						sb.appendHtmlConstant("<i>");
 						sb.appendEscaped(value.getPrename());
-						sb.appendHtmlConstant("</strong></i>");
+						sb.appendHtmlConstant("</i>");
 								
 						
 						}else if(value.getCreatorId() == userId){
@@ -265,32 +332,13 @@ public class ContactsTable extends CellTable {
 				
 
 				prenameColumn.setSortable(true);
-
+				
 				prenameColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
+				
+					
 
 					@Override
 					public void update(int index, final Contact object, String value) {
-
-
-						ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(object.getBoId(),ClientSideSettings.getCurrentUser().getBoId(),
-								new AsyncCallback<ArrayList<Value>>() {
-
-									public void onFailure(Throwable caught) {
-										Window.alert("Ops, da ist etwas schief gelaufen!");
-									}
-
-									public void onSuccess(ArrayList<Value> result) {
-										//propertyValueMap = result;
-										// Window.alert(Integer.toString(result.size()));
-										// Window.alert(Integer.toString(globalIndex));
-										contact = new ContactInfoForm(object, result);
-
-										contact.center();
-										contact.show();
-
-									}
-
-								});
 
 					}
 
@@ -308,9 +356,9 @@ public class ContactsTable extends CellTable {
 						if(value == null) {
 							return;
 						}else if(value.getCreatorId() != userId){
-						sb.appendHtmlConstant("<div><i><strong>");
+						sb.appendHtmlConstant("<div><i>");
 						sb.appendEscaped(value.getSurname());
-						sb.appendHtmlConstant("</strong></i></div>");
+						sb.appendHtmlConstant("</i></div>");
 								
 						
 						}else if(value.getCreatorId() == userId){
@@ -332,27 +380,6 @@ public class ContactsTable extends CellTable {
 
 					@Override
 					public void update(int index, final Contact object, String value) {
-
-
-						ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(object.getBoId(),ClientSideSettings.getCurrentUser().getBoId(),
-								new AsyncCallback<ArrayList<Value>>() {
-
-							public void onFailure(Throwable caught) {
-								Window.alert("Ops, da ist etwas schief gelaufen!");
-							}
-
-							public void onSuccess(ArrayList<Value> result) {
-								//propertyValueMap = result;
-								// Window.alert(Integer.toString(result.size()));
-								// Window.alert(Integer.toString(globalIndex));
-								ContactInfoForm contact = new ContactInfoForm(object, result);
-
-								contact.center();
-								contact.show();
-
-							}
-
-						});
 
 					}
 
