@@ -309,6 +309,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 */
 	void createPermission(int shareUserId, ArrayList<Integer> shareObjectId, ArrayList<Integer> receiverUserId)
 			throws IllegalArgumentException;
+	public void checkIfPropertyHasValue(int propertyId) throws IllegalArgumentException;
 
 	User findUserById(int userId) throws IllegalArgumentException;
 
