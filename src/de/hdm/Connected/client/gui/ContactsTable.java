@@ -172,8 +172,7 @@ public class ContactsTable extends CellTable {
 
 	        @Override
 	        public void onDoubleClick(final DoubleClickEvent event) {
-	            System.out.println(" You clicked row = " + row);
-	            System.out.println(" You clicked column = " + column);
+	            
 				ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(cellTable.getDisplayedItem(row).getBoId(),ClientSideSettings.getCurrentUser().getBoId(),
 						new AsyncCallback<ArrayList<Value>>() {
 
@@ -217,13 +216,14 @@ public class ContactsTable extends CellTable {
 				}
 
 				final MultiSelectionModel<Contact> selectionModel = new MultiSelectionModel<Contact>();
-				cellTable.setSelectionModel(selectionModel);
+				cellTable.setSelectionModel(selectionModel, DefaultSelectionEventManager.<Contact>createDefaultManager());
 				
-				selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
+				selectionModel.addSelectionChangeHandler(new Handler() {
 					@Override
 					public void onSelectionChange(SelectionChangeEvent event) {
-						selectedContacts = selectionModel.getSelectedSet();
 						
+						selectedContacts = selectionModel.getSelectedSet();
+												
 						if(selectedContacts !=null){
 									
 						shareSelectedContacts.setVisible(true);
@@ -340,7 +340,7 @@ public class ContactsTable extends CellTable {
 
 					@Override
 					public void update(int index, final Contact object, String value) {
-
+						
 					}
 
 				});
