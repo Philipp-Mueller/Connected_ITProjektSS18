@@ -68,6 +68,12 @@ public class ContactMapper extends SharedObjectMapper {
 
 		try {
 			/**
+			 * auto-commit ausschalten um sicherzustellen dass beide Statements, also die ganze TRansaktion ausgeführt wird.
+			 */
+			
+			con.setAutoCommit(false);
+			
+			/**
 			 * leeres SQL-Statement (JDBC) anlegen.
 			 */
 			Statement stmt = con.createStatement();
@@ -76,12 +82,19 @@ public class ContactMapper extends SharedObjectMapper {
 			 * aktuelle id um eins erhoeht. 
 			 */
 			
-				contact.setBoId(super.insert());
-		
+		    ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
+			
+		    
+		    if(rs.next()){
+				contact.setBoId(rs.getInt("maxid")+1);
+			}
+		    
+		    stmt = con.createStatement();
+		    
 			/**
 			 * SQL-Anweisung zum Einfuegen des neuen Contact-Tupels in die Datenbank.
 			 */
-		
+		    stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES " + "(" + contact.getBoId() + ")");
 			
 			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, ownerId, creationDate, modificationDate) VALUES (" + contact.getBoId() + ", '"
 					+ contact.getPrename() + "', '" + contact.getSurname() + "', " + contact.getCreatorId() + ", '" + contact.getCreationDate() +"', '"+ contact.getModificationDate() + "')");
@@ -92,7 +105,13 @@ public class ContactMapper extends SharedObjectMapper {
 			 */
 		} catch (SQLException e2) {
 			e2.printStackTrace();
-		}
+			try {
+				con.rollback();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				}
 		return contact;
 	}
 

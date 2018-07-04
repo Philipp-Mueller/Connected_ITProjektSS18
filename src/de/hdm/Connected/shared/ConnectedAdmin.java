@@ -1,6 +1,7 @@
 package de.hdm.Connected.shared;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 

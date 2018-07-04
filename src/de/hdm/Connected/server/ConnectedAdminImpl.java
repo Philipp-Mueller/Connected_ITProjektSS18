@@ -368,7 +368,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	// und fügt eine Berechtigung für User hinzu, der ContactList erstellt hat
 	
 	@Override
-	public ContactList createContactList(String name, int ownerId){
+	public ContactList createContactList(String name, int ownerId) throws IllegalArgumentException { 
 		ContactList contactList = new ContactList();
 		contactList.setName(name);
 		contactList.setCreatorId(ownerId);
