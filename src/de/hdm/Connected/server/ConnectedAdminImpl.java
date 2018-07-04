@@ -48,6 +48,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	 * Referenzen auf die DatenbankMapper, die Objekte mit der Datenbank
 	 * abgleicht.
 	 */
+	
 	private ContactListMapper contactListMapper = null;
 	private ContactMapper contactMapper = null;
 	private PermissionMapper permissionMapper = null;
@@ -605,16 +606,27 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		propertyMapper.delete(property);
 
 	}
+	
+	/**
+	 * Methode zur Überprüfung ob eine Eigenschaft noch Values besitzt
+	 * wird nicht nicht bei vorgegebenen Eigenschaften angewandt
+	 */
+
+	public void checkIfPropertyHasValue(int propertyId) throws IllegalArgumentException {
+		
+	if (propertyId>=12){
+		if(valueMapper.findByProperty(propertyId).size()==0){
+			propertyMapper.delete(propertyMapper.findById(propertyId));
+		}
+		
+	}
+	}
 
 	
 	// Bis hier
 	////////////////////////////////////////////////////////////////////////
+	
 
-
-	/*@Override
-	public ArrayList<Contact> findContactsByValue(String value) throws IllegalArgumentException {
-		return this.contactMapper.findByValue(value);
-	}*/
 
 	//Für welchen Fall brauchen wir diese Methode? Reicht nicht  Owner(User), Value, All?
 	@Override
@@ -648,12 +660,6 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public Property findPropertyByPropertyId(int id) throws IllegalArgumentException {
 		return this.propertyMapper.findById(id);
 	}
-
-	/*@Override
-	public void addContactToContactList(int contactId, int contactlistId) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-
-	}*/
 
 
 
@@ -708,32 +714,4 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return null;
 	}
 
-
-	
-	/*@Override
-	public ArrayList<Contact> findAllContacts() throws IllegalArgumentException{
-		return this.contactMapper.findAll();
-	}*/
-
-	/*@Override
-	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<ContactList> findAllContactlists() throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-*/
-	//public ArrayList<ContactList> findAllContactlists() throws IllegalArgumentException{
-		//return this.contactListMapper.findAll();
-	//}
 }
