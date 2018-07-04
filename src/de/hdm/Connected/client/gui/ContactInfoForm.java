@@ -1,5 +1,6 @@
 package de.hdm.Connected.client.gui;
 
+import java.util.ArrayList;
 //import java.util.Date;
 import java.util.Map;
 
@@ -27,14 +28,15 @@ import de.hdm.Connected.shared.bo.User;
 
 public class ContactInfoForm extends PopupPanel {
 
-String email;
+private String email;
+private FlexTable contactInfoTable = new FlexTable();
 
 /**
  * Konstruktor des PopUpPanels
  *
  */
 
-public ContactInfoForm(Contact contact, Map<Property, Value> map)  {
+public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 	//PopUp schließt automatisch wenn daneben geklickt wird
 	super(true);
 	//ensureDebugId("cwBasicPopup-simplePopup");
@@ -45,7 +47,7 @@ public ContactInfoForm(Contact contact, Map<Property, Value> map)  {
 	// Enable glass background.
 	setGlassEnabled(true);
 	
-	setWidth("300px");
+	setWidth("500px");
 	
 	
 	/**
@@ -57,7 +59,7 @@ public ContactInfoForm(Contact contact, Map<Property, Value> map)  {
 	 * Erzeugung eines FlexTables
 	 * und Zuweisung der Zellengröße
 	 */
-	FlexTable contactInfoTable = new FlexTable();
+	
 	contactInfoTable.setCellSpacing(22);
 	
 	/**
@@ -111,10 +113,33 @@ public ContactInfoForm(Contact contact, Map<Property, Value> map)  {
 	 *
 	 */	
 	
-	for(Map.Entry<Property, Value> entry : map.entrySet()){
-		int rowCount = contactInfoTable.getRowCount();
-		contactInfoTable.setWidget(rowCount, 0, new HTML("<strong>" + entry.getKey().getName() + ":</strong>"));
-		contactInfoTable.setWidget(rowCount, 1, new HTML(entry.getValue().getName()));
+	for(final Value value : values){
+		
+		ClientSideSettings.getConnectedAdmin().findPropertyByPropertyId(value.getPropertyID(), new AsyncCallback<Property>(){
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onSuccess(Property result) {
+				int rowCount = contactInfoTable.getRowCount();
+				contactInfoTable.setWidget(rowCount, 0, new HTML("<strong>" + result.getName() + ":</strong>"));
+				//TODO currentUser
+				
+				if(value.getCreatorId() != 1){
+				contactInfoTable.setWidget(rowCount, 1, new HTML("<i>" +value.getName() +"</i>")); } 
+				else{
+					contactInfoTable.setWidget(rowCount, 1, new HTML(value.getName()));
+				}
+				center();
+			}
+			
+		});
+		
+		
 	}
 	
 	/**

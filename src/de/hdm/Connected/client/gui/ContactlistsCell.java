@@ -81,7 +81,7 @@ public ContactlistsCell(){
 			 
 			 if (selected != null ) { 
 				 RootPanel.get("content").clear();
-						  ContactListForm3 showCL = new ContactListForm3(selected.getBoId());
+						  ContactListForm3 showCL = new ContactListForm3(selected);
 			 			
 			 }
 			 }

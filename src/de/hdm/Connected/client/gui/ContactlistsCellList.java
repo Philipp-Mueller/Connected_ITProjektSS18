@@ -51,7 +51,7 @@ public class ContactlistsCellList extends Widget {
 	     
     ContactlistsCell clCell = new ContactlistsCell();
 	     
-	cellList = new CellList<ContactList>(clCell, keyProvider);
+	//cellList = new CellList<ContactList>(clCell, keyProvider);
 	
 	ClientSideSettings.getConnectedAdmin().findAllContactlists(new AsyncCallback<ArrayList<ContactList>>() {
 	     

@@ -152,7 +152,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return aktualisiertes ContactList-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public void updateContactList(ContactList contactlist) throws IllegalArgumentException;
+	public ContactList updateContactList(ContactList contactlist) throws IllegalArgumentException;
 	
 	/**
 	 * Löscht ein ContactList-Objekt und alle eventuell darauf basierenden
@@ -227,7 +227,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @param permission
 	 * @throws IllegalArgumentException
 	 */
-	public void deletePermission(Permission permission, User cUser) throws IllegalArgumentException;
+	public void deletePermission(Permission permission) throws IllegalArgumentException;
 	
 	/**
 	 * Fügt ein Contact einer ContactList hinzu
@@ -248,14 +248,6 @@ public interface ConnectedAdmin extends RemoteService {
 	
 	
 	/**
-	 * Löscht die Permission des Users auf das Objekt
-	 * 
-	 * @param shareObjectId, userId
-	 * @throws IllegalArgumentException
-	 */
-	public void removeAccessToObject(int userId, int shareObjectId) throws IllegalArgumentException;
-	
-	/**
 	 * Gibt alle Properties zurück
 	 * 
 	 * @throws IllegalArgumentException
@@ -264,7 +256,7 @@ public interface ConnectedAdmin extends RemoteService {
 	
 	/**
 	 * Gibt alle Contacts zurück
-	 * 
+	 * update
 	 * @throws IllegalArgumentException
 	 */
 	public ArrayList<Contact> findAllContacts() throws IllegalArgumentException;
@@ -293,6 +285,8 @@ public interface ConnectedAdmin extends RemoteService {
 	ArrayList<Permission> getPermissionsByValueId(int valueId) throws IllegalArgumentException;
 
 	void updatePermission(Permission permission) throws IllegalArgumentException;
+	
+	void updatePermissionsForUser(ArrayList<Integer> newPermissions, int contactId, int userId) throws IllegalArgumentException;
 
 	Permission getPermissionById(int id) throws IllegalArgumentException;
 
@@ -327,5 +321,9 @@ public interface ConnectedAdmin extends RemoteService {
 	ArrayList<ContactList> getContactListsByUserPermission(int userId) throws IllegalArgumentException;
 	
 	ArrayList<Value> getValuesByUserPermission(int contactId, int userId) throws IllegalArgumentException;
+
+	void deletePermissionFromContact(int userId, int contactId) throws IllegalArgumentException;
+	
+	ArrayList<Value> getValuesByReceiveUserPermission(int contactId, int userId) throws IllegalArgumentException;
 
 }

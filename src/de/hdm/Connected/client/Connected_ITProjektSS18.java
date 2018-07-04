@@ -253,6 +253,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		});
 	    
 		    
+<<<<<<< HEAD
 		Button newContactButton = new Button("Neuen Kontakt anlegen");
 		Button editContactButton = new Button ("Kontakt bearbeiten");
 		Button shareContactButton = new Button ("Kontakt teilen");
@@ -362,6 +363,11 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		RootPanel.get("content").add(editContactButton);
 		//RootPanel.get("content").add(shareContactButton);
 		RootPanel.get("content").add(overviewPageButton);
+=======
+	
+
+
+>>>>>>> master
 		HorizontalPanel footer = new HorizontalPanel();
 		Anchor startPage = new Anchor ("Startseite", "Connected_ITProjektSS18.html");
 		HTML copyrightText1 = new HTML(" | ");

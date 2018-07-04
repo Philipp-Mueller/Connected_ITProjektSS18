@@ -125,14 +125,18 @@ h1 a {
 =======
     justify-content: flex-top;
 	height: inherit;
+<<<<<<< HEAD
 	overflow-x: auto;
+>>>>>>> master
+=======
+	/*overflow-x: auto;*/
 >>>>>>> master
 }
 
 #nav table {
 	font-family: 'Montserrat', sans-serif;
 	width:100%;
-	padding-left: 0px;
+	padding-right: 15px;
 }
 
 #nav button {
@@ -161,8 +165,8 @@ h1 a {
 	color: #fff;
 }
 
-#nav button:focus{
-	background: #009999;
+#nav .gwt-Button-buttonpressednav{
+	background: #009999 !important;
 	color: #fff;
 }
 
@@ -171,9 +175,13 @@ h1 a {
 	width: 20%;
 	display: block;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	height: inherit;
 =======
 	height: 100%;
+>>>>>>> master
+=======
+	height: 95%;
 >>>>>>> master
 }
 
@@ -282,7 +290,7 @@ table {
     cursor: pointer;
 }
 .lblWelcome {
-	font-family: 'Marck Script', cursive;
+	font-family: 'Montserrat', sans-serif;
 	text-align: center;
 	color: #90A4AE;
 	font-size: 4rem;
@@ -297,35 +305,47 @@ table {
 	font-weight: 300px;
 }
 
-.cellListPanel {
+.contactListPanel {
 	border-style: hidden;
 	border-color: transparent; 
 	border-width: 0px;
-}
-
-td .GBG2FFLDAB {
-	padding: 15px 0px 15px 20px;
-
-}
-
-td .GBG2FFLDCB {
-	padding: 15px 0px 15px 20px;
-
-}
-
-td .GBG2FFLDBB {
-	padding: 15px 0px 15px 20px;
-	background: #009999;
-	color: #fff;
-	border-radius: 4px;
-	width: 70%;
-}
-
-td .GBG2FFLDDB {
-	padding: 15px 0px 15px 20px;
 }
 
 table.content td{
 	border: 1px;
 }
 
+.gwt-Button-buttonpressednav {
+	font-family: 'Montserrat', sans-serif;
+	width: 90%;
+	border: none;
+	background: transparent;
+	color: #666;
+	padding: 15px 0px 15px 20px;
+	text-align: left;
+	font-size: 100%;
+	cursor: pointer;
+	border-radius: 4px;
+}
+
+table.gwt-DisclosurePanel {
+text-align: left;
+margin-left: inherit;
+} 
+
+table.cellListPanel.content {
+	text-align: left;
+  margin-left: inherit;
+}
+
+.gwt-PopupPanel button {
+	background: #009999;
+	color: #fff;
+	border: none;
+}
+
+.gwt-DialogBox button {
+	background: #009999;
+	color: #fff;
+	border: none;
+}
