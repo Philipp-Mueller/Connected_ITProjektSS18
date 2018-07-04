@@ -989,7 +989,7 @@ public class ContactsTable extends CellTable {
 							}
 						}
 						Window.alert(Integer.toString(selectedContactsArray.size()));
-						if (selectedContactsArray.size() > 1) {
+						if (selectedContactsArray.size() > 0) {
 							ClientSideSettings.getConnectedAdmin().addContactsToContactList(selectedContactsArray,
 									selectedCLs, new AsyncCallback<Void>() {
 
