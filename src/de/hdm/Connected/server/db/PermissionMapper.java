@@ -62,6 +62,7 @@ public class PermissionMapper {
 		Connection con = DBConnection.connection();
 	
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 			
@@ -101,6 +102,7 @@ public class PermissionMapper {
 			Connection con = DBConnection.connection();
 
 			try {
+				con.setAutoCommit(true);
 				// Leeres SQL Statement anlegen
 				Statement stmt = con.createStatement();
 				
@@ -129,6 +131,7 @@ public class PermissionMapper {
 		Connection con = DBConnection.connection();
 		
 		try {
+			con.setAutoCommit(true);
 			//Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 			
@@ -150,6 +153,7 @@ public class PermissionMapper {
 		Connection con = DBConnection.connection();
 		
 		try {
+			con.setAutoCommit(true);
 			//Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 			
@@ -184,6 +188,7 @@ public class PermissionMapper {
 		Connection con = DBConnection.connection();
 		
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 				
@@ -226,6 +231,7 @@ public class PermissionMapper {
 		ArrayList<Permission> result = new ArrayList<Permission>();
 		
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 			
@@ -272,6 +278,7 @@ public class PermissionMapper {
 		ArrayList<Permission> result = new ArrayList<Permission>();
 		
 		try{
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 
@@ -319,6 +326,7 @@ public class PermissionMapper {
 		ArrayList<Permission> result = new ArrayList<Permission>();
 		
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 
@@ -365,6 +373,7 @@ public class PermissionMapper {
 		ArrayList<Permission> result = new ArrayList<Permission>();
 		
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement anlegen
 			Statement stmt = con.createStatement();
 
@@ -412,6 +421,7 @@ public class PermissionMapper {
 		ArrayList<Permission> result = new ArrayList<Permission>();
 		
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 
@@ -453,6 +463,7 @@ public class PermissionMapper {
 		ArrayList<Permission> result = new ArrayList<Permission>();
 		
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 
@@ -493,6 +504,7 @@ public class PermissionMapper {
 		Permission permission = null;
 		
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 
@@ -532,6 +544,7 @@ public class PermissionMapper {
 		boolean permission = false;
 		
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 
@@ -574,6 +587,7 @@ public class PermissionMapper {
 		ArrayList<Permission> result = new ArrayList<Permission>();
 		
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 
@@ -622,6 +636,7 @@ public class PermissionMapper {
 		ArrayList<Permission> result = new ArrayList<Permission>();
 		
 		try{
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 

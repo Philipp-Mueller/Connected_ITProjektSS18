@@ -110,6 +110,7 @@ public class ValueMapper {
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
 			 */
 			con.commit();
+		
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 			try {
@@ -119,6 +120,7 @@ public class ValueMapper {
 				e.printStackTrace();
 			}
 		}
+		
 		return value;
 	}
 
@@ -132,6 +134,7 @@ public class ValueMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Aktualisieren des uebergebenen Datensatzes in
@@ -176,6 +179,7 @@ public class ValueMapper {
 			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + value.getBoId());
 			
 			con.commit();
+		
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -202,6 +206,7 @@ public class ValueMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden des uebergebenen Datensatzes, anhand der
@@ -245,6 +250,7 @@ public class ValueMapper {
 
 		ArrayList<Value> result = new ArrayList<Value>();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden des Datensatzes, anhand des uebergebenen
@@ -293,6 +299,7 @@ public class ValueMapper {
 
 		ArrayList<Value> result = new ArrayList<Value>();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der ContactId,
@@ -341,6 +348,7 @@ public class ValueMapper {
 
 		ArrayList<Value> result = new ArrayList<Value>();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der
@@ -389,6 +397,7 @@ public class ValueMapper {
 
 		ArrayList<Value> result = new ArrayList<Value>();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der
@@ -435,6 +444,7 @@ public class ValueMapper {
 
 		ArrayList<Value> result = new ArrayList<Value>();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der

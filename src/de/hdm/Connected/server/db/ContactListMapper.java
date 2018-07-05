@@ -106,6 +106,7 @@ public class ContactListMapper{
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
 			 */
 			con.commit();
+		
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 			try {
@@ -130,6 +131,7 @@ public class ContactListMapper{
 		Connection con = DBConnection.connection();
 		
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/**
@@ -174,6 +176,7 @@ public class ContactListMapper{
 			
 			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + contactList.getBoId());
 			con.commit();
+		
 		}
 		
 		/**
@@ -202,7 +205,9 @@ public class ContactListMapper{
 		Connection con = DBConnection.connection();
 		
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
+		
 			/**
 			 * SQL-Anweisung zum Finden des übergebenen Datensatzes, anhand der
 			 * Id, in der Datenbank.
@@ -246,7 +251,9 @@ public class ContactListMapper{
 		ArrayList<ContactList> result = new ArrayList<ContactList>();
 		
 		try{
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
+			
 			/**
 			 * SQL-Anweisung zum Finden des Datensatzes, nach dem gesuchten Namen, in der Datenbank, sortiert nach der Id.
 			 */
@@ -290,9 +297,10 @@ public class ContactListMapper{
 		ArrayList<ContactList> result = new ArrayList<ContactList>();
 		
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
-			
+		
 			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der Id in der Datenbank
 			ResultSet rs = stmt.executeQuery("SELECT id, name, ownerId FROM contactlist ORDER BY id");
 			/**

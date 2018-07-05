@@ -103,6 +103,8 @@ public class ContactMapper {
 			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
 			 * passiert ist und wo im Code es passiert ist.
 			 */
+			con.commit();
+		
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 			try {
@@ -126,6 +128,7 @@ public class ContactMapper {
 		Timestamp currentTime = new Timestamp (System.currentTimeMillis());
 		
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Aktualisieren des uebergebenen Datensatzes in der
@@ -169,6 +172,7 @@ public class ContactMapper {
 			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + contact.getBoId());
 			
 			con.commit();
+		
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
@@ -196,6 +200,7 @@ public class ContactMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden des uebergebenen Datensatzes, anhand der Id, in der
@@ -238,6 +243,7 @@ public class ContactMapper {
 
 		ArrayList<Contact> result = new ArrayList<Contact>();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden aller Datensaetze in der Datenbank, sortiert nach
@@ -283,6 +289,7 @@ public class ContactMapper {
 
 		ArrayList<Contact> result = new ArrayList<Contact>();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden des Datensatzes, anhand des uebergebenen Namens, in
@@ -326,6 +333,7 @@ public class ContactMapper {
 
 		ArrayList<Contact> result = new ArrayList<Contact>();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden des Datensatzes, anhand des uebergebenen Namens, in
@@ -373,6 +381,7 @@ public class ContactMapper {
 		ArrayList<Contact> result = new ArrayList<Contact>();
 
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 
@@ -420,6 +429,7 @@ public class ContactMapper {
 		ArrayList<Contact> result = new ArrayList<Contact>();
 
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 
@@ -467,6 +477,7 @@ public class ContactMapper {
 
 		ArrayList<Contact> result = new ArrayList<Contact>();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden des Datensatzes, anhand des uebergebenen Value, in
@@ -508,6 +519,7 @@ public class ContactMapper {
 		java.sql.Date currentTime = new java.sql.Date(System.currentTimeMillis());
 		
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Aktualisieren des uebergebenen Datensatzes in der

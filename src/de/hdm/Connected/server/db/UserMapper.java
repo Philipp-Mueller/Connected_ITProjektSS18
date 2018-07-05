@@ -117,6 +117,7 @@ public class UserMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in
@@ -145,6 +146,7 @@ public class UserMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
@@ -173,6 +175,7 @@ public class UserMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden des übergebenen Datensatzes, anhand der
@@ -214,6 +217,7 @@ public class UserMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden aller Datensätze, anhand der eMail, in
@@ -254,6 +258,7 @@ public class UserMapper {
 
 		ArrayList<User> result = new ArrayList<User>();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden aller Datensaetze in der Datenbank, sortiert nach

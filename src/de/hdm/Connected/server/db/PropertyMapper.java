@@ -61,6 +61,7 @@ public class PropertyMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 
@@ -102,6 +103,7 @@ public class PropertyMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 
@@ -132,6 +134,7 @@ public class PropertyMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 
@@ -161,6 +164,7 @@ public class PropertyMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 
@@ -202,6 +206,7 @@ public class PropertyMapper {
 		ArrayList<Property> result = new ArrayList<Property>();
 
 		try {
+			con.setAutoCommit(true);
 			// Leeres SQL-Statement (JDBC) anlegen
 			Statement stmt = con.createStatement();
 			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der
