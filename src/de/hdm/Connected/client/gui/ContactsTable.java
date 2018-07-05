@@ -1098,8 +1098,9 @@ public class ContactsTable extends CellTable<Contact> {
 							RootPanel.get("content").clear();
 							ContactListForm3 reload = new ContactListForm3(result);
 							RootPanel.get("nav").clear();
-							Navigation reloadN = new Navigation();
-							RootPanel.get("nav").add(reloadN);
+							NavigationTreeModel treemodel = new NavigationTreeModel(result);
+							RootPanel.get("nav").add(treemodel);
+							
 						}
 					});
 					updateDialog.this.hide();
@@ -1318,9 +1319,10 @@ public class ContactsTable extends CellTable<Contact> {
 						public void onSuccess(Void result) {
 							Window.alert("Löschen von " + mainContactlist.getName() + " war erfolgreich!");
 							RootPanel.get("content").clear();
-							// ContactListForm2 neuLaden = new
-							// ContactListForm2(mainContactlist.getBoId());
-
+							ContactsTable table = new ContactsTable(null,null);
+							RootPanel.get("nav").clear();
+							NavigationTreeModel navi = new NavigationTreeModel(null);
+							RootPanel.get("nav").add(navi);							
 						}
 
 					});

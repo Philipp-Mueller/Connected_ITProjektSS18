@@ -72,6 +72,9 @@ public class NewContactListPopup extends DialogBox {
 								RootPanel.get("content").clear();
 //								Neuladen der Kontatliste
 								ContactListForm3 reload = new ContactListForm3(result);
+								RootPanel.get("nav").clear();
+								NavigationTreeModel treemodel = new NavigationTreeModel(result);
+								RootPanel.get("nav").add(treemodel);
 								
 							}
 						});
