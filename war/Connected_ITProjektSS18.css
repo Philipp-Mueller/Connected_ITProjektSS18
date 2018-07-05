@@ -39,7 +39,7 @@ body {
 	display: flex;
 	width: 100%;
 	flex: 0 1 auto;
-	background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
+	background: #999 url('background.png') no-repeat left 50%;
 	background-size: cover;
 	justify-content: space-between;
 	padding-right: 30px;
@@ -73,8 +73,6 @@ h1 a {
 	height: 0px;
 	overflow-y: hidden;
 }
-	
-
 
 #usermenu .gwt-HTML {
 	padding: 20px 0px;
@@ -107,21 +105,11 @@ h1 a {
 	font-weight: 300px;
 	display: flex;
 	flex-flow: column;
-	background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
+	background: #999 url('background.png') no-repeat left 50%;
     justify-content: flex-top;
 	height: inherit;
-<<<<<<< HEAD
-<<<<<<< HEAD
 	overflow-x: auto;
->>>>>>> master
-=======
-	/*overflow-x: auto;*/
->>>>>>> master
-=======
-	overflow-x: auto;
->>>>>>> master
 }
-
 #nav table {
 	font-family: 'Montserrat', sans-serif;
 	width:100%;
@@ -160,22 +148,10 @@ h1 a {
 }
 
 #nav-wrapper {
-	background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
+	background: #999 url('background.png') no-repeat left 50%;
 	width: 20%;
 	display: block;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	height: inherit;
-=======
 	height: 100%;
->>>>>>> master
-=======
-	height: 95%;
->>>>>>> master
-=======
-	height: 95%;
->>>>>>> master
 }
 
 #content button {
@@ -191,7 +167,7 @@ h1 a {
 	width: 100%;
 	position: flex;
 	margin-left: 75px;
-  padding-left: 75px;
+  	padding-left: 75px;
 	margin-top: 10px;
 }
 
@@ -245,7 +221,7 @@ h1 a {
 
 #footer {
     font-family: 'Montserrat', sans-serif;
-	  position:absolute;
+	 position:absolute;
     bottom: 0;
     padding: 10px 0px;
     text-align: center;
@@ -254,8 +230,7 @@ h1 a {
     width: 100%;
    	display: flex;
    	justify-content: center;
-    background: #999 url('http://www.jemome.com/cdn/2009/08/light-blue-gradient-website-background_1613200.jpg') no-repeat left 50%;
-    
+    background: #999 url('background.png') no-repeat left 50%; 
 }
 
 #footer .gwt-HTML {
