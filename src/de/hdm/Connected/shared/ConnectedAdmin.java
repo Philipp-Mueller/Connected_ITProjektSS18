@@ -1,6 +1,7 @@
 package de.hdm.Connected.shared;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -309,6 +310,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 */
 	void createPermission(int shareUserId, ArrayList<Integer> shareObjectId, ArrayList<Integer> receiverUserId)
 			throws IllegalArgumentException;
+	public void checkIfPropertyHasValue(int propertyId) throws IllegalArgumentException;
 
 	User findUserById(int userId) throws IllegalArgumentException;
 

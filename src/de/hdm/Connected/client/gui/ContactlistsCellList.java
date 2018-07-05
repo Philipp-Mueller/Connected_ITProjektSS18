@@ -79,7 +79,7 @@ public class ContactlistsCellList extends Widget {
 			final ContactList selected = selectionModel.getSelectedObject();
 			if (selected != null && !buttonPressed) {
 				RootPanel.get("content").clear();
-				ContactListForm2 clForm = new ContactListForm2(selected.getBoId());
+				//ContactListForm2 clForm = new ContactListForm2(selected.getBoId());
 			}
 			
 			else if (buttonPressed) {
@@ -94,19 +94,8 @@ public class ContactlistsCellList extends Widget {
 	
 	cellList.setStylePrimaryName("cellList");
 	
-<<<<<<< HEAD
-	VerticalPanel panel = new VerticalPanel();
-	panel.setBorderWidth(1);	    
-    panel.setWidth("200");
-	panel.add(cellList);
-	
-	panel.setStylePrimaryName("cellListPanel");
-	RootPanel.get().add(panel);
-	
-=======
 	RootPanel.get("nav").add(cellList);
 			
->>>>>>> master
 			}
 	 	});
 	 }

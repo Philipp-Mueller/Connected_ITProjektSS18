@@ -23,7 +23,7 @@ public interface ReportGeneratorServiceAsync {
 	void allProperties(AsyncCallback<List<Property>> callback);
 	void allValues(Integer propertyId, AsyncCallback<List<Value>> callback);
 	void searchContacts(boolean allContacts, boolean sharedContacts, String userEmail,
-			Map<Integer, String> propertyValueMap, AsyncCallback<List<Contact>> callback);
+			Map<Integer, String> propertyValueMap, AsyncCallback<List<ReportObjekt>> callback);
 	
 	
 

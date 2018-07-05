@@ -22,7 +22,7 @@ import de.hdm.Connected.shared.bo.Permission;
  * 
  * @author Burak
  */
-public class ContactMapper extends SharedObjectMapper {
+public class ContactMapper {
 
 	/**
 	 * Die Klasse ContactMapper wird nur einmal instantiiert
@@ -68,6 +68,12 @@ public class ContactMapper extends SharedObjectMapper {
 
 		try {
 			/**
+			 * auto-commit ausschalten um sicherzustellen dass beide Statements, also die ganze TRansaktion ausgeführt wird.
+			 */
+			
+			con.setAutoCommit(false);
+			
+			/**
 			 * leeres SQL-Statement (JDBC) anlegen.
 			 */
 			Statement stmt = con.createStatement();
@@ -76,12 +82,19 @@ public class ContactMapper extends SharedObjectMapper {
 			 * aktuelle id um eins erhoeht. 
 			 */
 			
-				contact.setBoId(super.insert());
-		
+		    ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
+			
+		    
+		    if(rs.next()){
+				contact.setBoId(rs.getInt("maxid")+1);
+			}
+		    
+		    stmt = con.createStatement();
+		    
 			/**
 			 * SQL-Anweisung zum Einfuegen des neuen Contact-Tupels in die Datenbank.
 			 */
-		
+		    stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES " + "(" + contact.getBoId() + ")");
 			
 			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, ownerId, creationDate, modificationDate) VALUES (" + contact.getBoId() + ", '"
 					+ contact.getPrename() + "', '" + contact.getSurname() + "', " + contact.getCreatorId() + ", '" + contact.getCreationDate() +"', '"+ contact.getModificationDate() + "')");
@@ -92,7 +105,13 @@ public class ContactMapper extends SharedObjectMapper {
 			 */
 		} catch (SQLException e2) {
 			e2.printStackTrace();
-		}
+			try {
+				con.rollback();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				}
 		return contact;
 	}
 
@@ -135,11 +154,21 @@ public class ContactMapper extends SharedObjectMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			/**
+			 * auto-commit ausschalten um sicherzustellen dass beide Statements, also die ganze TRansaktion ausgeführt wird.
+			 */
+			
+			con.setAutoCommit(false);
+			
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Loeschen des uebergebenen Datensatzes in der Datenbank.
 			 */
 			stmt.executeUpdate("DELETE FROM contact WHERE id=" + contact.getBoId());
+			
+			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + contact.getBoId());
+			
+			con.commit();
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
@@ -148,6 +177,12 @@ public class ContactMapper extends SharedObjectMapper {
 		 */
 		catch (SQLException e2) {
 			e2.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -166,7 +201,7 @@ public class ContactMapper extends SharedObjectMapper {
 			 * SQL-Anweisung zum Finden des uebergebenen Datensatzes, anhand der Id, in der
 			 * Datenbank.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname, creationDate, modificationDate FROM contact WHERE id=" + id);
+			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname, ownerId, creationDate, modificationDate FROM contact WHERE id=" + id);
 			/**
 			 * Zu einem Primaerschluessel exisitiert nur maximal ein Datenbank-Tupel, somit
 			 * kann auch nur einer zurueckgegeben werden. Es wird mit einer If-Abfragen
@@ -177,6 +212,7 @@ public class ContactMapper extends SharedObjectMapper {
 				contact.setBoId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
+				contact.setCreatorId(rs.getInt("ownerId"));
 				contact.setCreationDate(rs.getDate("creationDate"));
 				contact.setModificationDate(rs.getDate("modificationDate"));
 				return contact;

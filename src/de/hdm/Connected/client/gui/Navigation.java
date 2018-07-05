@@ -1,7 +1,10 @@
 package de.hdm.Connected.client.gui;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> master
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -9,6 +12,9 @@ import java.util.List;
 
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.TextCell;
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -19,22 +25,17 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.HTML;
-<<<<<<< HEAD
-import com.google.gwt.user.client.ui.HasText;
-=======
 import com.google.gwt.user.client.ui.PopupPanel;
->>>>>>> master
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.ListDataProvider;
+import com.google.gwt.view.client.ProvidesKey;
+import com.google.gwt.view.client.SelectionModel;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 import de.hdm.Connected.client.ClientSideSettings;
-<<<<<<< HEAD
-import de.hdm.Connected.shared.bo.Contact;
-import de.hdm.Connected.client.gui.ContactsTable;
-=======
 import de.hdm.Connected.shared.bo.ContactList;
->>>>>>> master
 
 
 public class Navigation extends VerticalPanel {
@@ -45,6 +46,7 @@ public class Navigation extends VerticalPanel {
 	 Button BMyContacts = new Button ("Meine Kontakte");
 	public void onLoad() {
 		
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 		Button cButton = new Button ("Meine Kontakte");
@@ -77,6 +79,9 @@ public class Navigation extends VerticalPanel {
 
 =======
 		
+=======
+		BMyContacts.setStyleName("gwt-Button-buttonpressednav");
+>>>>>>> master
 =======
 		BMyContacts.setStyleName("gwt-Button-buttonpressednav");
 >>>>>>> master
@@ -118,7 +123,6 @@ public class Navigation extends VerticalPanel {
 				newContact.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 
 					public void setPosition(int offsetWidth, int offsetHeight) {
-						// TODO Auto-generated method stub
 						int left = (Window.getClientWidth() - offsetWidth) / 3;
 						int top = (Window.getClientHeight() - offsetHeight) / 3;
 
@@ -217,11 +221,11 @@ public class Navigation extends VerticalPanel {
 	    
 	    
 	    
-	    ClientSideSettings.getConnectedAdmin().findAllContactlists(new AsyncCallback<ArrayList<ContactList>>(){
+	    ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<ContactList>>(){
 	   
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
+
 				
 			}
 
@@ -229,7 +233,13 @@ public class Navigation extends VerticalPanel {
 			public void onSuccess(ArrayList<ContactList> result) {
 				allContactsLists = result;
 				for (final ContactList cl : allContactsLists){
-					final Button showCL = new Button("      " + cl.getName());
+					final Button showCL = new Button();
+
+					if(cl.getCreatorId() != ClientSideSettings.getCurrentUser().getBoId()){
+						showCL.setHTML("<strong><i> &ensp;" + cl.getName() + "</i></strong>");
+					}else{
+						showCL.setHTML("&ensp;" + cl.getName());
+					}
 					
 					showCL.addClickHandler(new ClickHandler(){
 
@@ -274,13 +284,18 @@ public class Navigation extends VerticalPanel {
 			
 		this.add(BNewContact);
 		this.add(BNewContactList);
+		this.add(new HTML("<div style=\"margin: 0px 0px 5px 5px;\"><hr></div>"));
 		this.add(BMyContacts);
 		this.add(myContactLists);
+<<<<<<< HEAD
 <<<<<<< HEAD
 		
 		
 		
 			
+>>>>>>> master
+=======
+
 >>>>>>> master
 =======
 

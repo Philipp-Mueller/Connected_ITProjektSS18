@@ -17,7 +17,7 @@ import de.hdm.Connected.shared.bo.ContactList;
   * @author Philipp
   */
  
-public class ContactListMapper extends SharedObjectMapper{
+public class ContactListMapper{
 	/**
 	 * Die Klasse ContactListMapper wird nur einmal instantiiert
 	 * (Singleton-Eigenschaft). Damit diese Eigenschaft erfüllt werden kann,
@@ -66,7 +66,12 @@ public class ContactListMapper extends SharedObjectMapper{
 	
 		
 		try {
+			/**
+			 * auto-commit ausschalten um sicherzustellen dass beide Statements, also die ganze TRansaktion ausgeführt wird.
+			 */
 			
+			con.setAutoCommit(false);
+		
 			/**
 			 * leeres SQL-Statement (JDBC) anlegen.
 			 */
@@ -76,14 +81,22 @@ public class ContactListMapper extends SharedObjectMapper{
 			 * aktuelle id um eins erhoeht. 
 			 */
 		
-		
-			contactList.setBoId(super.insert());
-	
+		    ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
+			
+		    
+		    if(rs.next()){
+				contactList.setBoId(rs.getInt("maxid")+1);
+			}
+		    
+			    
+		    
+		    stmt = con.createStatement();
+		    
 			/**
 			 * SQL-Anweisung zum Einfügen des neuen ContactList-Tupels in die
 			 * Datenbank.
 			 */
-	
+		    stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES " + "(" + contactList.getBoId() + ")");
 			
 			stmt.executeUpdate("INSERT INTO contactlist (id, name, ownerId) VALUES " + "(" + contactList.getBoId() + ", '"
 					+ contactList.getName() + "', " + contactList.getCreatorId()+ ")");
@@ -92,8 +105,15 @@ public class ContactListMapper extends SharedObjectMapper{
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
 			 */
+			con.commit();
 		} catch (SQLException e2) {
 			e2.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return contactList;
@@ -138,13 +158,22 @@ public class ContactListMapper extends SharedObjectMapper{
 	public void delete(ContactList contactList) {
 		Connection con = DBConnection.connection();
 		
-		try {
+		try {			
+			/**
+			 * auto-commit ausschalten um sicherzustellen dass beide Statements, also die ganze TRansaktion ausgeführt wird.
+			 */
+			
+			con.setAutoCommit(false);
+			
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
 			 * Datenbank.
 			 */
 			stmt.executeUpdate("DELETE FROM contactlist WHERE id=" + contactList.getBoId());
+			
+			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + contactList.getBoId());
+			con.commit();
 		}
 		
 		/**
@@ -154,6 +183,12 @@ public class ContactListMapper extends SharedObjectMapper{
 	 */
 	catch (SQLException e2) {
 		e2.printStackTrace();
+		try {
+			con.rollback();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	}
 	/**

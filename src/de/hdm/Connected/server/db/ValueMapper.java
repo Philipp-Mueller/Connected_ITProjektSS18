@@ -20,7 +20,7 @@ import de.hdm.Connected.shared.bo.Value;
  * 
  * @author Burak
  */
-public class ValueMapper extends SharedObjectMapper {
+public class ValueMapper {
 
 	/**
 	 * Die Klasse ValueMapper wird nur einmal instantiiert
@@ -69,6 +69,12 @@ public class ValueMapper extends SharedObjectMapper {
 
 		try {
 			/**
+			 * auto-commit ausschalten um sicherzustellen dass beide Statements, also die ganze TRansaktion ausgeführt wird.
+			 */
+			
+			con.setAutoCommit(false);			
+			
+			/**
 			 * leeres SQL-Statement (JDBC) anlegen.
 			 */
 			Statement stmt = con.createStatement();
@@ -77,12 +83,23 @@ public class ValueMapper extends SharedObjectMapper {
 			 * aktuelle id um eins erhoeht. 
 			 */
 		
-			value.setBoId(super.insert());
+
+		    ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
+			
+		    
+		    if(rs.next()){
+				value.setBoId(rs.getInt("maxid")+1);
+			}
 		
-			/*
-			 * SQL-Anweisung zum Einfuegen des neuen Value-Tupels in die
+		    
+		    stmt = con.createStatement();
+		    
+			/**
+			 * SQL-Anweisung zum Einfügen des neuen ContactList-Tupels in die
 			 * Datenbank.
 			 */
+		    stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES " + "(" + value.getBoId() + ")");
+			
 
 	
 			stmt.executeUpdate("INSERT INTO value (id, name, propertyId, contactId, ownerId) VALUES (" + value.getBoId() + ", '"
@@ -92,8 +109,15 @@ public class ValueMapper extends SharedObjectMapper {
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
 			 */
+			con.commit();
 		} catch (SQLException e2) {
 			e2.printStackTrace();
+			try {
+				con.rollback();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return value;
 	}
@@ -135,13 +159,23 @@ public class ValueMapper extends SharedObjectMapper {
 	public void delete(Value value) {
 		Connection con = DBConnection.connection();
 
-		try {
+		try {			
+			/**
+			 * auto-commit ausschalten um sicherzustellen dass beide Statements, also die ganze TRansaktion ausgeführt wird.
+			 */
+			
+			con.setAutoCommit(false);
+			
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Loeschen des uebergebenen Datensatzes in der
 			 * Datenbank.
 			 */
 			stmt.executeUpdate("DELETE FROM value WHERE id=" + value.getBoId());
+			
+			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + value.getBoId());
+			
+			con.commit();
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -150,6 +184,11 @@ public class ValueMapper extends SharedObjectMapper {
 		 */
 		catch (SQLException e2) {
 			e2.printStackTrace();
+		}try {
+			con.rollback();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
