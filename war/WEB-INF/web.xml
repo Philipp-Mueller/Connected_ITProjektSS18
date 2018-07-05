@@ -33,6 +33,16 @@
     <servlet-name>ReportGeneratorServiceImpl</servlet-name>
     <url-pattern>/connected_itprojektss18reportgenerator/connectedreportgenerator</url-pattern>
   </servlet-mapping>
+  
+    <servlet-mapping>
+    <servlet-name>loginService</servlet-name>
+    <url-pattern>/connected_itprojektss18reportgenerator/login</url-pattern>
+  </servlet-mapping>
+  
+    <servlet-mapping>
+    <servlet-name>connectedAdminImpl</servlet-name>
+    <url-pattern>/connected_itprojektss18reportgenerator/connectedadmin</url-pattern>
+  </servlet-mapping> 
 
  <servlet> 
     <servlet-name>loginService</servlet-name>
