@@ -18,10 +18,11 @@ import com.google.gwt.user.client.ui.Widget;
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.bo.ContactList;
 
-/*
+/**
  * Die Klasse Navigation erweitert die von GWT angebotene Klasse VerticalPanel 
- * und ermöglicht es dem Nutzer, zwischen verschiedenen Ansichten (Kontakten und Kontaktlisten) 
- * zu wechseln.
+ * und dient der Darstellung einer Navigationsleiste, mit deren Hilfe
+ * der Nutzer zwischen verschiedenen Ansichten (Kontakten und Kontaktlisten) 
+ * wechseln sowie neue Kontakte und Kontaklisten erstellen kann.
  * 
  * @autor 
  * 
