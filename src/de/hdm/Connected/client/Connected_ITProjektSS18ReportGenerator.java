@@ -47,14 +47,6 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
 	// Settings
 	final Settings settings = new Settings();
 	
-	// Footer Attribute
-	private HorizontalPanel footer = new HorizontalPanel();
-	private Anchor connectedLink = new Anchor("Connected", "Connected_ITProjektSS18.html");
-	private HTML copyrightText2 = new HTML(" | ");
-	private Anchor reportGeneratorLink = new Anchor(" ReportGenerator", "Connected_ITProjektSS18ReportGenerator.html");
-	private HTML copyrightText = new HTML(" | 2018 Connected | ");
-	private Anchor impressumLink = new Anchor("Impressum");
-
 	/**
 	 * Create a remote service proxy to talk to the server-side Greeting
 	 * service.
@@ -175,7 +167,14 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
 				log("Error: " + error);
 			}
 		});
-			
+
+		// Footer Attribute
+		HorizontalPanel footer = new HorizontalPanel();
+		Anchor connectedLink = new Anchor("Connected", "Connected_ITProjektSS18.html");
+		HTML copyrightText2 = new HTML(" | ");
+		Anchor reportGeneratorLink = new Anchor(" ReportGenerator", "Connected_ITProjektSS18ReportGenerator.html");
+		HTML copyrightText = new HTML(" | 2018 Connected | ");
+		Anchor impressumLink = new Anchor("Impressum");
 
         //Footer Impressum
         impressumLink.addClickHandler(new ClickHandler() {
@@ -196,7 +195,7 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
                         + "<li>Aridag, Burak</li>"
                         + "<li>Bittner, Moritz</li>"
                         + "<li>Müller, Philip</li>"
-                        + "<li>Ribeiro, Patricia Rodrigues</li>"
+                        + "<li>Rodrigues Ribeiro, Patricia</li>"
                         + "<li>Semmler, Denise</li></ul>"
                         + "<h3>Kontakt</h3>"
                         + "<p><strong>Telefon:</strong> 0711 8923 10 (Zentrale)</p>"
