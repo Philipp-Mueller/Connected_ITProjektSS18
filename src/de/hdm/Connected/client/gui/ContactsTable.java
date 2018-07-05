@@ -1310,9 +1310,12 @@ public class ContactsTable extends CellTable<Contact> {
 
 				public void onClick(ClickEvent event) {
 
-					ContactList cl = new ContactList();
-					cl.setBoId(mainContactlist.getBoId());
-					ClientSideSettings.getConnectedAdmin().deleteContactList(cl, new AsyncCallback<Void>() {
+//					ContactList cl = new ContactList();
+//					cl.setBoId(mainContactlist.getBoId());
+					Window.alert(Integer.toString(mainContactlist.getBoId()));
+//					Window.alert(Integer.toString(ClientSideSettings.getCurrentUser()));
+					Window.alert(mainContactlist.getName());
+					ClientSideSettings.getConnectedAdmin().deleteContactList(mainContactlist, ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Void>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
