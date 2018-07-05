@@ -81,7 +81,7 @@ public class ContactsTable extends CellTable<Contact> {
 
 	private Button addContactButton = new Button(" + Kontakt");
 	private Button shareSelectedContacts = new Button("Ausgewählte Kontakte teilen");
-	private Button addContactstoCL = new Button("Kontakte einer Kontaktliste hinzufügen");
+	private Button addContactstoCL = new Button("Kontakte zu Kontaktlisten hinzufügen");
 	private ContactInfoForm contact = null;
 
 	private TextBox searchBox = new TextBox();
@@ -934,6 +934,9 @@ public class ContactsTable extends CellTable<Contact> {
 
 			// Enable animation.
 			setAnimationEnabled(true);
+			contactlistListbox.ensureDebugId("cwListBox-multiBox");
+			contactlistListbox.setMultipleSelect(true);
+			contactlistListbox.setVisibleItemCount(7);
 
 			ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(
 					ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<ContactList>>() {
@@ -1007,8 +1010,7 @@ public class ContactsTable extends CellTable<Contact> {
 			VerticalPanel v = new VerticalPanel();
 			HorizontalPanel buttonPanel = new HorizontalPanel();
 
-			contactlistListbox.ensureDebugId("cwListBox-multiBox");
-			contactlistListbox.setVisibleItemCount(7);
+
 
 			buttonPanel.add(ok);
 			buttonPanel.add(zurück);
