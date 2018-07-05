@@ -79,9 +79,15 @@ public class ContactSharing extends PopupPanel {
 	private SuggestBox suggestBox = new SuggestBox(oracle);
 	private String selectedUser;
 	private Button addButton = new Button("+");
+	private Label instruction = new Label();
+	HTML creatorLabel = new HTML();
+	
+	Label creator = new Label();
+	private Label selectValues = new Label();
+	private Label changeValues = new Label();
 	// Map<Property, Value> propertyValueMap = new HashMap<Property, Value>();
 
-	public ContactSharing(final Contact sharingContact) {
+	public ContactSharing(final Contact sharingContact, User creator) {
 		this.setAnimationEnabled(true);
 		closeButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -93,9 +99,21 @@ public class ContactSharing extends PopupPanel {
 			}
 		});
 
+				
+		
 		receiverUser.setVisible(false);
+		selectValues.setVisible(false);
+		changeValues.setVisible(false);
+		propertyValueTable.setVisible(false);
 		root.add(new HTML("<h3> Kontakt <i>" + sharingContact.getPrename() + " " + sharingContact.getSurname()
-				+ "</i> teilen</h3><br />"));
+				+ "</i> teilen</h3>"));
+		root.add(new HTML("Ersteller: " + creator.getLogEmail() + "<br />"));
+		root.add(new HTML("<br /><hr><br />"));
+		
+		instruction.getElement().setInnerHTML("Bitte einen User auswählen um dessen Berechtigung zu bearbeiten oder <br> rechts einen User eingeben um den Kontakt mit diesem zu teilen.");
+		
+		root.add(instruction);
+		root.add(new HTML("<br />"));
 
 		// root.add(new HTML("Kontakt bereits geteilit mit: <br />"));
 
@@ -235,8 +253,14 @@ public class ContactSharing extends PopupPanel {
 			@Override
 			public void onClick(ClickEvent event) {
 				usersWithPermission.setVisible(false);
+				changeValues.setVisible(false);
+				selectValues.setVisible(true);
 				receiverUser.setVisible(true);
+				if(!propertyValueTable.isVisible()){
+					propertyValueTable.setVisible(true);
+				};
 				shareButton.setText("Kontakt teilen");
+				selectionModel.clear();
 				dataProvider.getList().clear();
 				dataProvider.getList().addAll(propertiesAndValues);
 				propertyValueTable.redraw();
@@ -310,6 +334,12 @@ public class ContactSharing extends PopupPanel {
 					public void onClick(ClickEvent event) {
 						receiverUserDataProvider.getList().remove(object);
 						receiverUser.redraw();
+						if(receiverUserDataProvider.getList().size() == 0){
+							receiverUser.setVisible(false);
+							selectValues.setVisible(false);
+							changeValues.setVisible(true);
+							usersWithPermission.setVisible(true);
+						}
 						agreeDelete.hide();
 						
 					}
@@ -338,7 +368,7 @@ public class ContactSharing extends PopupPanel {
 		selectionModel_Single.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 			//SelectionModel_single SelectionChange Handler
 			public void onSelectionChange(SelectionChangeEvent event) {
-							
+						
 				changingUser = selectionModel_Single.getSelectedObject();
 				dataProvider.getList().clear();
 				dataProvider.getList().addAll(propertiesAndValues);
@@ -359,6 +389,8 @@ public class ContactSharing extends PopupPanel {
 								public void onSuccess(Map<Property, Value> result) {
 									selectionModel.clear();
 									receiverUser.setVisible(false);
+									changeValues.setVisible(true);
+									propertyValueTable.setVisible(true);
 									for (Map.Entry<Property, Value> entry : result.entrySet()) {
 										if (changingUser.getBoId() == entry.getValue().getCreatorId()){
 											dataProvider.getList().remove(entry);
@@ -388,12 +420,12 @@ public class ContactSharing extends PopupPanel {
 			}
 		});
 		//alle Eigenschaft auf der der aktuelle Nutzer zugriff hat auswählen
-		ClientSideSettings.getConnectedAdmin().findValueAndProperty(sharingContact.getBoId(), 2,
+		ClientSideSettings.getConnectedAdmin().findValueAndProperty(sharingContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(),
 				new AsyncCallback<Map<Property, Value>>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						// TODO Auto-generated method stub
+
 
 					}
 
@@ -468,8 +500,10 @@ public class ContactSharing extends PopupPanel {
 						textPanel.add(addButton);
 
 						root.add(horizontal);
-
-						root.add(new HTML("Bitte wählen Sie die Eigenschaften aus, die Sie teilen möchten:<br />"));
+						changeValues.getElement().setInnerHTML("Bitte unten die Eigenschaftsberechtigungen ändern.<br />");
+						selectValues.getElement().setInnerHTML("Bitte wählen Sie die Eigenschaften aus, die Sie teilen möchten:<br />");
+						root.add(selectValues);
+						root.add(changeValues);
 						root.add(propertyValueTable);
 
 						
@@ -495,8 +529,8 @@ public class ContactSharing extends PopupPanel {
 									selectedUsers.add(receiverUser.getVisibleItems().get(i).getBoId());
 								}
 
-								// TODO getCurrentUser()
-								ClientSideSettings.getConnectedAdmin().createPermission(3, selectedValues,
+
+								ClientSideSettings.getConnectedAdmin().createPermission(ClientSideSettings.getCurrentUser().getBoId(), selectedValues,
 										selectedUsers, new AsyncCallback<Void>() {
 
 											@Override
@@ -555,7 +589,7 @@ public class ContactSharing extends PopupPanel {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// TODO Auto-generated method stub
+
 
 			}
 
@@ -563,10 +597,10 @@ public class ContactSharing extends PopupPanel {
 			public void onSuccess(ArrayList<User> result) {
 				oracle.clear();
 				for (User u : result) {
-					// if(u.getBoId() !=
-					// ClientSideSettings.getCurrentUser().getBoId()){
+					if(u.getBoId() !=
+					 ClientSideSettings.getCurrentUser().getBoId()){
 					oracle.add(u.getLogEmail());
-					// }
+					 }
 				}
 
 			}
@@ -590,7 +624,8 @@ public class ContactSharing extends PopupPanel {
 			// Set the dialog box's caption.
 			setText("Neue Eigenschaft für Kontakt " + contact.getPrename() + " " + contact.getSurname()
 					+ " an Teilhaber teilen?");
-
+			
+			
 			// Enable animation.
 			setAnimationEnabled(true);
 
@@ -623,12 +658,12 @@ public class ContactSharing extends PopupPanel {
 						}
 					}
 
-					ClientSideSettings.getConnectedAdmin().givePermissionToUsers(value.getBoId(), userArray, 3,
+					ClientSideSettings.getConnectedAdmin().givePermissionToUsers(value.getBoId(), userArray, ClientSideSettings.getCurrentUser().getBoId(),
 							new AsyncCallback<Void>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
-									// TODO Auto-generated method stub
+
 
 								}
 
@@ -638,7 +673,7 @@ public class ContactSharing extends PopupPanel {
 									Window.alert("Die Eigenschaft wurde erstellt und geteilt");
 									MyDialog.this.hide();
 									// RootPanel.get("content").clear();
-									ContactForm contactForm = new ContactForm(contact);
+									ContactForm contactForm = new ContactForm(contact, null, null);
 
 								}
 

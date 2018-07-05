@@ -1,6 +1,7 @@
 package de.hdm.Connected.shared;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -127,7 +128,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return aktualisiertes Value-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public Value updateValue(Value value) throws IllegalArgumentException;
+	public Value updateValue(Value value, int oldPropertyId) throws IllegalArgumentException;
 	
 	/**
 	 * Löscht ein Value-Objekt und alle eventuell darauf basierenden
@@ -211,6 +212,15 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public Property findPropertyByPropertyId(int id) throws IllegalArgumentException;
+	
+	/**
+	 * Gibt eine spezifische Property anhand seines namen aus
+	 * 
+	 * @param name
+	 * @throws IllegalArgumentException
+	 */
+	public Property findPropertyByName(String name) throws IllegalArgumentException;
+	
 	
 	/**
 	 * Gibt alle Permissions eines User aus
@@ -309,6 +319,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 */
 	void createPermission(int shareUserId, ArrayList<Integer> shareObjectId, ArrayList<Integer> receiverUserId)
 			throws IllegalArgumentException;
+	public void checkIfPropertyHasValue(int propertyId) throws IllegalArgumentException;
 
 	User findUserById(int userId) throws IllegalArgumentException;
 

@@ -16,6 +16,12 @@ import de.hdm.Connected.client.ClientSideSettings;
 
 import de.hdm.Connected.shared.bo.ContactList;
 
+
+/**Klasse, die von DialogBox erbt
+ * Wird benutzt um das Popup zum erstellen einer neuen Kontaktliste anzuzeigen
+ * 
+ * @author Moritz**/
+
 public class NewContactListPopup extends DialogBox {
 	
 	public NewContactListPopup() {
@@ -38,6 +44,7 @@ public class NewContactListPopup extends DialogBox {
 		v.add(h);
 
 		Button close = new Button("Abbrechen");
+		/**Schließen des Popups**/
 		close.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				NewContactListPopup.this.hide();
@@ -46,12 +53,13 @@ public class NewContactListPopup extends DialogBox {
 		});
 
 		Button ok = new Button("Erstellen");
+		/**Bei Klick auf erstellen wird die Service Methode zum erstellen der KOntaktliste aufgerufen**/
 		ok.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				ContactList cl = new ContactList();
 				cl.setName(nameTextBox.getText());
 
-				ClientSideSettings.getConnectedAdmin().createContactList(nameTextBox.getText(), 2,
+				ClientSideSettings.getConnectedAdmin().createContactList(nameTextBox.getText(), ClientSideSettings.getCurrentUser().getBoId(),
 						new AsyncCallback<ContactList>() {
 							@Override
 							public void onFailure(Throwable caught) {
@@ -62,8 +70,11 @@ public class NewContactListPopup extends DialogBox {
 							public void onSuccess(ContactList result) {
 								Window.alert("Erfolgreich erstellt");
 								RootPanel.get("content").clear();
-//								Navigation reloadN = new Navigation();
+//								Neuladen der Kontatliste
 								ContactListForm3 reload = new ContactListForm3(result);
+								RootPanel.get("nav").clear();
+								NavigationTreeModel treemodel = new NavigationTreeModel(result);
+								RootPanel.get("nav").add(treemodel);
 								
 							}
 						});

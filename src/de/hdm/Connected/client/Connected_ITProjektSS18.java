@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.hdm.Connected.client.gui.ContactsTable;
 import de.hdm.Connected.client.gui.Navigation;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.LoginService;
@@ -88,7 +89,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	 */
 	
 	public void onModuleLoad() {
-		
+	
 		
 		stockStore = Storage.getSessionStorageIfSupported();
 
@@ -118,9 +119,10 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		// Menü start
 		final Command settingDialog = new Command() {
 			public void execute() {
-
+				// Letztes hinzugefügtes Widget
+				//settings.setReturnWidget(RootPanel.get("content").getWidget(RootPanel.get("content").getWidgetCount()-1));
+				settings.setReturnWidget(welcome);
 				RootPanel.get("content").clear();
-				
 				RootPanel.get("content").add(settings);
 			}
 		};
@@ -163,8 +165,11 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 							if (result != null) {
 								log("User: " + result.getLogEmail());
 								currentUser = result;
+								ClientSideSettings.setCurrentUser(result);
 								settings.run();
-								welcome.run();
+								//welcome.run();
+								ContactsTable ct = new ContactsTable(null, null);
+
 
 								Navigation navigation = new Navigation();
 								// Das navPanel der Seite im Bereich der id "nav" hinzufügen
@@ -207,6 +212,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 											public void onSuccess(User result) {
 												log("Create new User: "+ result.getName());
 												currentUser = result;
+												ClientSideSettings.setCurrentUser(result);
 												settings.run();
 												welcome.run();
 
@@ -262,10 +268,6 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			}
 		});
 	    
-		    
-	
-
-
 		HorizontalPanel footer = new HorizontalPanel();
 		Anchor startPage = new Anchor ("Startseite", "Connected_ITProjektSS18.html");
 		HTML copyrightText1 = new HTML(" | ");
@@ -292,12 +294,12 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 						+ "Wirtschaftsinformatik und digitale Medien, "
 						+ "IT-Projekt SS 18.</strong></p>"
 						+ "<h3>Projektteam</h3>"
-						+ "<ul><li>xxx</li>"
-						+ "<li>xxx</li>"
-						+ "<li>xxx</li>"
-						+ "<li>xxx</li>"
-						+ "<li>xxx</li>"
-						+ "<li>xxx</li></ul>"
+						+ "<ul><li>Alexeyeva, Viktoriya</li>"
+						+ "<li>Aridag, Burak</li>"
+						+ "<li>Bittner, Moritz</li>"
+						+ "<li>Müller, Philip</li>"
+						+ "<li>Ribeiro, Patricia Rodrigues</li>"
+						+ "<li>Semmler, Denise</li></ul>"
 						+ "<h3>Kontakt</h3>"
 						+ "<p><strong>Telefon:</strong> 0711 8923 10 (Zentrale)</p>"
 						+ "<p><strong>Website:</strong> <a href='http://www.hdm-stuttgart.de' target='_blank'>"

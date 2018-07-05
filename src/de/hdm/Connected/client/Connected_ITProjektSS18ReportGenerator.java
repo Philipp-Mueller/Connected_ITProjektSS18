@@ -177,21 +177,32 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
 		});
 			
 
-		//Footer Impressum
-		impressumLink.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				RootPanel.get("content").clear();
-				RootPanel.get("content")
-						.add(new HTML("<h2>Impressum nach §5 TMG</h2>" + "<h3>Verantwortlich</h3>"
-								+ "<p>Hochschule der Medien<br />" + "Nobelstraße 8<br />" + "70569 Stuttgart<br /></p>"
-								+ "<p><strong>Projektarbeit innerhalb des Studiengangs "
-								+ "Wirtschaftsinformatik und digitale Medien, " + "IT-Projekt SS 18.</strong></p>"
-								+ "<h3>Projektteam</h3>" + "<ul><li>xxx</li>" + "<li>xxx</li>" + "<li>xxx</li>"
-								+ "<li>xxx</li>" + "<li>xxx</li>" + "<li>xxx</li></ul>" + "<h3>Kontakt</h3>"
-								+ "<p><strong>Telefon:</strong> 0711 8923 10 (Zentrale)</p>"
-								+ "<p><strong>Website:</strong> <a href='http://www.hdm-stuttgart.de' target='_blank'>"
-								+ "www.hdm-stuttgart.de</a></p>"));
+        //Footer Impressum
+        impressumLink.addClickHandler(new ClickHandler() {
+
+            @Override
+            public void onClick(ClickEvent event) {
+                RootPanel.get("content").clear();
+                RootPanel.get("content").add(new HTML("<h2>Impressum nach §5 TMG</h2>"
+                        + "<h3>Verantwortlich</h3>"
+                        + "<p>Hochschule der Medien<br />"
+                        + "Nobelstraße 8<br />"
+                        + "70569 Stuttgart<br /></p>"
+                        + "<p><strong>Projektarbeit innerhalb des Studiengangs "
+                        + "Wirtschaftsinformatik und digitale Medien, "
+                        + "IT-Projekt SS 18.</strong></p>"
+                        + "<h3>Projektteam</h3>"
+                        + "<ul><li>Alexeyeva, Viktoriya</li>"
+                        + "<li>Aridag, Burak</li>"
+                        + "<li>Bittner, Moritz</li>"
+                        + "<li>Müller, Philip</li>"
+                        + "<li>Ribeiro, Patricia Rodrigues</li>"
+                        + "<li>Semmler, Denise</li></ul>"
+                        + "<h3>Kontakt</h3>"
+                        + "<p><strong>Telefon:</strong> 0711 8923 10 (Zentrale)</p>"
+                        + "<p><strong>Website:</strong> <a href='http://www.hdm-stuttgart.de' target='_blank'>"
+                        + "www.hdm-stuttgart.de</a></p>"));
+
 
 			}
 
