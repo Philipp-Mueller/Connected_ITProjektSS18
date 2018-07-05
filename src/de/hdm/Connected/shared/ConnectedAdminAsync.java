@@ -57,6 +57,8 @@ public interface ConnectedAdminAsync {
 	
 	void deleteContactList(ContactList contactlist, AsyncCallback<Void> callback);
 	
+	void deleteContactList(ContactList contactlist, int userid, AsyncCallback<Void> callback);
+	
 	void findContactsByContactListId(int contactlistId, AsyncCallback<ArrayList<Contact>> callback);
 	
 	void findContactsByValue(String value, AsyncCallback<ArrayList<Contact>> callback);
