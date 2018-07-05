@@ -942,7 +942,7 @@ public class ContactsTable extends CellTable<Contact> {
 
 						@Override
 						public void onSuccess(ArrayList<ContactList> result) {
-							Window.alert(Integer.toString(result.size()));
+							
 							allCLs = result;
 							for (ContactList cl : result) {
 								contactlistListbox.addItem(cl.getName());
@@ -971,7 +971,7 @@ public class ContactsTable extends CellTable<Contact> {
 							selectedCLs.add(allCLs.get(i));
 						}
 					}
-					Window.alert(Integer.toString(selectedContactsArray.size()));
+				
 					if (selectedContactsArray.size() > 0) {
 						ClientSideSettings.getConnectedAdmin().addContactsToContactList(selectedContactsArray,
 								selectedCLs, new AsyncCallback<Void>() {
@@ -986,10 +986,6 @@ public class ContactsTable extends CellTable<Contact> {
 									// hinzugefügt
 									public void onSuccess(Void result) {
 										Window.alert("Alle Kontakte wurden den Kontaktlisten hinzugefügt!");
-										Window.alert(Integer.toString(selectedContactsArray.size()));
-										Window.alert(Integer.toString(selectedCLs.size()));
-										// Window.alert(Integer.toString(cArray.size()));
-										// Window.alert(Integer.toString(uArray.size()));
 										AddContactsToContactList.this.hide();
 									}
 

@@ -776,7 +776,7 @@ public class ContactListForm3 extends CellTable {
 								// hinzugefügt
 								public void onSuccess(Void result) {
 									Window.alert("Teilen von " + mainContactlist.getName() + " war erfolgreich!");
-									Window.alert(Integer.toString(uArray.size()));
+									
 									RootPanel.get("contant").clear();
 									ContactListForm3 reload = new ContactListForm3(
 											mainContactlist);
