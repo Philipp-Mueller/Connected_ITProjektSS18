@@ -75,6 +75,8 @@ public class ContactForm extends PopupPanel {
 	ArrayList<TextBox> values = new ArrayList<TextBox>();
 	Map<Integer, String> valuesMap = new HashMap<Integer, String>();
 	Map<Widget, Widget> widgetMap = new HashMap<Widget, Widget>();
+	ContactList selectedCL = new ContactList();
+	ArrayList<Contact> contactsInCL = new ArrayList<Contact>();
 
 	FlexTable checkboxTable = new FlexTable();
 	CheckBox checkContactlist = new CheckBox();
@@ -97,6 +99,10 @@ public class ContactForm extends PopupPanel {
 
 	public ContactForm(Contact contact, final ContactList contactList, final ArrayList<Contact> contacts) {
 		this.selectedContact = contact;
+		
+		selectedCL = contactList;
+		contactsInCL = contacts;
+		
 
 		// RootPanel.get("content").clear();
 
@@ -107,8 +113,7 @@ public class ContactForm extends PopupPanel {
 			public void onClick(ClickEvent event) {
 				// Popup schließen bei Betägigung des Buttons
 				hide();
-				RootPanel.get("content").clear();
-				ContactsTable table = new ContactsTable(contacts, contactList);
+				
 			}
 		});
 
@@ -215,24 +220,25 @@ public class ContactForm extends PopupPanel {
 				// Nur wenn die CheckBox geklickt ist, wird dies ausgeführt, da
 				// sonst der Kontakt keiner Liste hinzugefügt werden soll
 				final ArrayList<ContactList> contactListToAdd = new ArrayList<ContactList>();
-				if (addButton != null) {
 
-					if (checkContactlist.getValue()) {
-						for (int i = 0; i < contactlist.getItemCount(); i++) {
-							if (contactlist.isItemSelected(i)) {
-								for (ContactList cl : contactListArray) {
-									if (contactlist.getItemText(i).equals(cl.getName())) {
-										contactListToAdd.add(cl);
-									}
+				if (checkContactlist.getValue()) {
+					for (int i = 0; i < contactlist.getItemCount(); i++) {
+						if (contactlist.isItemSelected(i)) {
+							for (ContactList cl : contactListArray) {
+								if (contactlist.getItemText(i).equals(cl.getName())) {
+									contactListToAdd.add(cl);
 								}
 							}
 						}
 					}
+				}
+				if (addButton != null) {
+
 					java.sql.Date creationTime = new java.sql.Date(System.currentTimeMillis());
 					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
 							creationTime, creationTime, ClientSideSettings.getCurrentUser().getBoId(),
 							new AsyncCallback<Contact>() {
-								ArrayList<Contact> contacts = new ArrayList<Contact>();
+								
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -242,12 +248,11 @@ public class ContactForm extends PopupPanel {
 
 								@Override
 								public void onSuccess(Contact result) {
+									createdContact = result;
+									ArrayList<Contact> contacts = new ArrayList<Contact>();
 									contacts.add(result);
-									ArrayList<Integer> contactId = new ArrayList<Integer>();
-									ArrayList<Integer> userId = new ArrayList<Integer>();
-									contactId.add(result.getBoId());
-									userId.add(2);
-									Window.alert("Kontakt wurde angelegt!");
+								
+									
 
 									if (contactListToAdd.size() != 0) {
 										ClientSideSettings.getConnectedAdmin().addContactsToContactList(contacts,
@@ -267,6 +272,8 @@ public class ContactForm extends PopupPanel {
 													}
 
 												});
+									}else {
+										Window.alert("Kontakt wurde angelegt!");
 									}
 									hide();
 									RootPanel.get("content").clear();
@@ -275,36 +282,37 @@ public class ContactForm extends PopupPanel {
 
 							});
 				}
-				/*
-				 * if (checkContactlist.getValue()) { for (int i = 0; i <
-				 * contactlist.getItemCount(); i++) { if
-				 * (contactlist.isItemSelected(i)) {
-				 * Window.alert(Integer.toString(contactListArray.get(i).getBoId
-				 * ())); ClientSideSettings.getConnectedAdmin().
-				 * addContactToContactList(createdContact.getBoId(),
-				 * contactListArray.get(i).getBoId(), new AsyncCallback<Void>()
-				 * {
-				 * 
-				 * @Override public void onFailure(Throwable caught) { Window.
-				 * alert("Kontakt konnte Kontaktliste nicht hinzugefügt werden"
-				 * ); }
-				 * 
-				 * @Override public void onSuccess(Void result) { Window.
-				 * alert("Kontakt wurde angelegt und den Kontaktlisten hinzugefügt!"
-				 * ); Window.Location.reload();
-				 * 
-				 * }
-				 * 
-				 * }); }
-				 * 
-				 * }
-				 * 
-				 * }
-				 */ else {
-					Window.alert("Kontakt angelegt!");
-					hide();
-					RootPanel.get("content").clear();
-					ContactsTable table = new ContactsTable(null, null);
+			else {
+				if (contactListToAdd.size() != 0) {
+					ArrayList<Contact> contacts = new ArrayList<Contact>();
+					ClientSideSettings.getConnectedAdmin().addContactsToContactList(contacts,
+							contactListToAdd, new AsyncCallback<Void>() {
+
+								@Override
+								public void onFailure(Throwable caught) {
+									Window.alert(
+											"Kontakt konnte Kontaktliste nicht hinzugefügt werden");
+								}
+
+								@Override
+								public void onSuccess(Void result) {
+									Window.alert(
+											"Kontakt wurde angelegt und den Kontaktlisten hinzugefügt!");
+
+								
+								RootPanel.get("content").clear();
+								ContactsTable table = new ContactsTable(null, null);
+								Window.alert("Kontakt angelegt!");
+								hide();
+								}
+
+							});
+				} else{
+				RootPanel.get("content").clear();
+				ContactsTable table = new ContactsTable(null, null);
+				Window.alert("Kontakt angelegt!");
+				hide();
+				}	
 				}
 
 			}
@@ -317,7 +325,26 @@ public class ContactForm extends PopupPanel {
 		cancelButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				hide();
+				if(createdContact != null){
+				ClientSideSettings.getConnectedAdmin().deleteContact(createdContact, ClientSideSettings.getCurrentUser(), new AsyncCallback<Void>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						
+						
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						hide();
+						createdContact = null;
+					}
+					
+				});
+				}else{
+					hide();
+				}
+			
 
 			}
 		});
@@ -696,7 +723,7 @@ public class ContactForm extends PopupPanel {
 
 		public void onSuccess(ArrayList<Property> result) {
 			// alle Eigenschaften in Vektor laden
-			if (selectedContact != null || loadFlag) {
+			if (selectedContact != null ) {
 				propertyArray = new ArrayList<Property>();
 				for (int i = 0; i < result.size(); i++) {
 					Property propertyItem = result.get(i);
@@ -710,7 +737,9 @@ public class ContactForm extends PopupPanel {
 					loadFlag = false;
 				} 
 			}
-			  if(selectedContact == null || (selectedContact != null && !loadFlag) ) {
+		
+			if((selectedContact == null) || (selectedContact != null && !loadFlag) ) {
+							
 				propertyArray = new ArrayList<Property>();
 				propertyListBox = new ListBox();
 				propertyListBox.setWidth("250px");
@@ -799,6 +828,8 @@ public class ContactForm extends PopupPanel {
 				if (addButton != null) {
 
 					try {
+						
+						
 						java.sql.Date creationTime = new java.sql.Date(System.currentTimeMillis());
 						ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(),
 								surnameBox.getText(), creationTime, creationTime,
@@ -832,11 +863,11 @@ public class ContactForm extends PopupPanel {
 										valueTextBox = new TextBox();
 										valueTextBox.setWidth("200px");
 
-										newPropertyTable.setWidget(rowCount, 0,
+										newPropertyTable.setWidget(0, 0,
 												new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
-
-										newPropertyTable.setWidget(rowCount + 1, 1, valueTextBox);
-										newPropertyTable.setWidget(rowCount + 1, 2, newPropertyBtn);
+									
+										newPropertyTable.setWidget( 1, 1, valueTextBox);
+										newPropertyTable.setWidget( 1, 2, newPropertyBtn);
 
 									}
 								});
@@ -1097,12 +1128,25 @@ public class ContactForm extends PopupPanel {
 
 				newPropertyTextBox = new TextBox();
 				newPropertyTextBox.setWidth("200px");
+				
+				Button cancelButton = new Button ("Abbrechen");
+				cancelButton.addClickHandler(new ClickHandler() {
+					
+					@Override
+					public void onClick(ClickEvent event) {
+						newPropertyTable.setWidget(1, 0, propertyListBox);
+						newPropertyTable.setWidget(1, 1, valueTextBox);
+						newPropertyTable.setWidget(1, 2, newPropertyBtn);
+						newPropertyTable.removeCell(1, 3)
+						;}
+				});
+				
 				Button propertySaveButton = new Button("Speichern");
 				propertySaveButton.addClickHandler(new savePropertyClickHandler());
-				newPropertyTable.setWidget(rowCount, 0, new HTML("Eigenschaftsname:"));
-				newPropertyTable.setWidget(rowCount, 1, newPropertyTextBox);
-				newPropertyTable.setWidget(rowCount, 2, propertySaveButton);
-
+				newPropertyTable.setWidget(1, 0, new HTML("Eigenschaftsname:"));
+				newPropertyTable.setWidget(1, 1, newPropertyTextBox);
+				newPropertyTable.setWidget(1, 2, propertySaveButton);
+				newPropertyTable.setWidget(1, 3, cancelButton);
 			}
 		}
 
@@ -1115,37 +1159,58 @@ public class ContactForm extends PopupPanel {
 
 		@Override
 		public void onClick(ClickEvent event) {
+			
+			ClientSideSettings.getConnectedAdmin().findPropertyByName(newPropertyTextBox.getText(), new AsyncCallback<Property>(){
 
-			ClientSideSettings.getConnectedAdmin().createProperty(newPropertyTextBox.getText(),
-					new AsyncCallback<Property>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					Window.alert("Da lief etwas schief");
+				}
 
-						@Override
-						public void onFailure(Throwable caught) {
-							Window.alert("Eigenschaft nicht gespeichert");
+				@Override
+				public void onSuccess(Property result) {
+					if (result == null){
+						ClientSideSettings.getConnectedAdmin().createProperty(newPropertyTextBox.getText(),
+								new AsyncCallback<Property>() {
 
-						}
+									@Override
+									public void onFailure(Throwable caught) {
+										Window.alert("Eigenschaft nicht gespeichert");
 
-						@Override
+									}
 
-						public void onSuccess(Property result) {
+									@Override
 
-							propertyArray.add(result);
+									public void onSuccess(Property result) {
 
-							propertyListBox.setItemText(propertyListBox.getItemCount() - 1, result.getName());
+										propertyArray.add(result);
 
-							propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
-							propertyListBox.addChangeHandler(new listBoxChangeHandler());
+										propertyListBox.setItemText(propertyListBox.getItemCount() - 1, result.getName());
 
-							int rowIndex = newPropertyTable.getRowCount();
-							newPropertyTable.removeRow(rowIndex - 1);
+										propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
+										propertyListBox.addChangeHandler(new listBoxChangeHandler());
 
-							newPropertyTable.setWidget(0, 0, new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
-							newPropertyTable.setWidget(1, 0, propertyListBox);
-							newPropertyTable.setWidget(1, 1, valueTextBox);
-							newPropertyTable.setWidget(1, 2, newPropertyBtn);
-						}
+										int rowIndex = newPropertyTable.getRowCount();
+										newPropertyTable.removeRow(rowIndex - 1);
 
-					});
+										newPropertyTable.setWidget(0, 0, new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
+										newPropertyTable.setWidget(1, 0, propertyListBox);
+										newPropertyTable.setWidget(1, 1, valueTextBox);
+										newPropertyTable.setWidget(1, 2, newPropertyBtn);
+									}
+
+								});
+					
+						
+					}else{
+						Window.alert("Diese Eigenschaft ist bereits vorhanden, bitte aus der Liste auswählen");
+					}
+					
+				}
+				
+			});
+
+		
 
 		}
 	}
@@ -1348,6 +1413,8 @@ public class ContactForm extends PopupPanel {
 									HasVerticalAlignment.ALIGN_MIDDLE);
 							nameTable.setWidget(1, 2, changeNameButton);
 							changeNameButton.addClickHandler(new changeNameClickHandler());
+							RootPanel.get("content").clear();
+							ContactsTable table = new ContactsTable(contactsInCL,selectedCL);
 						}
 
 					});
