@@ -1120,10 +1120,11 @@ public class ContactsTable extends CellTable<Contact> {
 
 		public shareDialog() {
 			// Set the dialog box's caption.
-			setText("Kontaktliste" + mainContactlist.getName() + "teilen:");
+			setText("Kontaktliste " + mainContactlist.getName() + " teilen:");
 
 			// Enable animation.
 			setAnimationEnabled(true);
+		
 
 			// Enable glass background.
 			setGlassEnabled(true);
@@ -1136,6 +1137,7 @@ public class ContactsTable extends CellTable<Contact> {
 			userListbox.clear();
 
 			userListbox.setEnabled(true);
+			userListbox.setMultipleSelect(true);
 
 			// multi auswahl freischalten in ListBox
 			userListbox.ensureDebugId("cwListBox-multiBox");
