@@ -140,8 +140,8 @@ public class Settings extends VerticalPanel {
 			public void onClick(ClickEvent event) {
 
 				RootPanel.get("content").clear();
-				RootPanel.get("content").add(returnWidget); 
-				//ContactsTable ct = new ContactsTable(null, null);
+				//RootPanel.get("content").add(returnWidget); 
+				ContactsTable ct = new ContactsTable(null, null);
 				log("clear");
 			}
 		});
