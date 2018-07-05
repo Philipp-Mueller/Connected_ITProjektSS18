@@ -637,6 +637,14 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 		}
 	}
+	
+	/**
+	 * Methode zur Überprüfung ob eine Eigenschaft mit einem Namen schn gibt
+	 */
+	
+	public Property findPropertyByName(String name) throws IllegalArgumentException {
+		return this.propertyMapper.findByName(name);
+	}
 
 	// Bis hier
 	////////////////////////////////////////////////////////////////////////

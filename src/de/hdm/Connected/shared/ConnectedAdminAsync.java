@@ -135,5 +135,7 @@ public interface ConnectedAdminAsync {
 	void getValuesByReceiveUserPermission(int contactId, int userId, AsyncCallback<ArrayList<Value>> callback);
 
 	void checkIfPropertyHasValue(int propertyId, AsyncCallback<Void> callback);
+
+	void findPropertyByName(String name, AsyncCallback<Property> callback);
 	
 }

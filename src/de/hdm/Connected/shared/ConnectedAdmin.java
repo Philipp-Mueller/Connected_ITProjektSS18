@@ -214,6 +214,15 @@ public interface ConnectedAdmin extends RemoteService {
 	public Property findPropertyByPropertyId(int id) throws IllegalArgumentException;
 	
 	/**
+	 * Gibt eine spezifische Property anhand seines namen aus
+	 * 
+	 * @param name
+	 * @throws IllegalArgumentException
+	 */
+	public Property findPropertyByName(String name) throws IllegalArgumentException;
+	
+	
+	/**
 	 * Gibt alle Permissions eines User aus
 	 * 
 	 * @param userId
