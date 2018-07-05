@@ -80,12 +80,14 @@ public class ContactSharing extends PopupPanel {
 	private String selectedUser;
 	private Button addButton = new Button("+");
 	private Label instruction = new Label();
+	HTML creatorLabel = new HTML();
 	
+	Label creator = new Label();
 	private Label selectValues = new Label();
 	private Label changeValues = new Label();
 	// Map<Property, Value> propertyValueMap = new HashMap<Property, Value>();
 
-	public ContactSharing(final Contact sharingContact) {
+	public ContactSharing(final Contact sharingContact, User creator) {
 		this.setAnimationEnabled(true);
 		closeButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -97,13 +99,16 @@ public class ContactSharing extends PopupPanel {
 			}
 		});
 
+				
+		
 		receiverUser.setVisible(false);
 		selectValues.setVisible(false);
 		changeValues.setVisible(false);
 		propertyValueTable.setVisible(false);
 		root.add(new HTML("<h3> Kontakt <i>" + sharingContact.getPrename() + " " + sharingContact.getSurname()
-				+ "</i> teilen</h3><br />"));
-		root.add(new HTML("<hr><br />"));
+				+ "</i> teilen</h3>"));
+		root.add(new HTML("Ersteller: " + creator.getLogEmail() + "<br />"));
+		root.add(new HTML("<br /><hr><br />"));
 		
 		instruction.getElement().setInnerHTML("Bitte einen User auswählen um dessen Berechtigung zu bearbeiten oder <br> rechts einen User eingeben um den Kontakt mit diesem zu teilen.");
 		
@@ -592,10 +597,10 @@ public class ContactSharing extends PopupPanel {
 			public void onSuccess(ArrayList<User> result) {
 				oracle.clear();
 				for (User u : result) {
-					// if(u.getBoId() !=
-					// ClientSideSettings.getCurrentUser().getBoId()){
+					if(u.getBoId() !=
+					 ClientSideSettings.getCurrentUser().getBoId()){
 					oracle.add(u.getLogEmail());
-					// }
+					 }
 				}
 
 			}
@@ -619,7 +624,8 @@ public class ContactSharing extends PopupPanel {
 			// Set the dialog box's caption.
 			setText("Neue Eigenschaft für Kontakt " + contact.getPrename() + " " + contact.getSurname()
 					+ " an Teilhaber teilen?");
-
+			
+			
 			// Enable animation.
 			setAnimationEnabled(true);
 

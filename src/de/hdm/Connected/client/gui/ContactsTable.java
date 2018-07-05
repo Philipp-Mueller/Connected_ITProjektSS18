@@ -359,24 +359,39 @@ public class ContactsTable extends CellTable<Contact> {
 							@Override
 							public void update(int index, Contact object, String value) {
 								// Window.alert("Hallooo");
-								final ContactSharing sharePopUp = new ContactSharing(object);
+								final Contact shareContact = object;
+								ClientSideSettings.getConnectedAdmin().findUserById(shareContact.getCreatorId(), new AsyncCallback<User>(){
 
-								// Enable glass background.
-								sharePopUp.setGlassEnabled(true);
-								// updatePopUp.setPopupPosition(200, 300);
-								sharePopUp.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-
-									public void setPosition(int offsetWidth, int offsetHeight) {
-
-										int left = (Window.getClientWidth() - offsetWidth) / 3;
-										int top = (Window.getClientHeight() - offsetHeight) / 3;
-
-										sharePopUp.setPopupPosition(left, top);
+									@Override
+									public void onFailure(Throwable caught) {
+										// TODO Auto-generated method stub
+										
 									}
+
+									@Override
+									public void onSuccess(User result) {
+										final ContactSharing sharePopUp = new ContactSharing(shareContact, result);
+
+										// Enable glass background.
+										sharePopUp.setGlassEnabled(true);
+										// updatePopUp.setPopupPosition(200, 300);
+										sharePopUp.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+
+											public void setPosition(int offsetWidth, int offsetHeight) {
+
+												int left = (Window.getClientWidth() - offsetWidth) / 3;
+												int top = (Window.getClientHeight() - offsetHeight) / 3;
+
+												sharePopUp.setPopupPosition(left, top);
+											}
+										});
+
+										sharePopUp.show();
+
+									}
+										
+																		
 								});
-
-								sharePopUp.show();
-
 							}
 						});
 
@@ -814,8 +829,7 @@ public class ContactsTable extends CellTable<Contact> {
 						if (userListbox.isItemSelected(i)) {
 						}
 					}
-					Window.alert(Integer.toString(selectedContactsArray.size()));
-					Window.alert(Integer.toString(selectedUser.size()));
+					
 					if (selectedContactsArray.size() > 1) {
 						ClientSideSettings.getConnectedAdmin().giveContactPermissonToUsers(selectedContactsArray,
 								selectedUser, ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Void>() {
@@ -829,11 +843,6 @@ public class ContactsTable extends CellTable<Contact> {
 									// jede Kontaktliste wird der ListBox
 									// hinzugefügt
 									public void onSuccess(Void result) {
-										Window.alert("Alle Kontakte erfolgreich geteilt!");
-										Window.alert(Integer.toString(selectedContactsArray.size()));
-										Window.alert(Integer.toString(selectedUser.size()));
-										// Window.alert(Integer.toString(cArray.size()));
-										// Window.alert(Integer.toString(uArray.size()));
 										allUsers.clear();
 										userListbox.clear();
 										Window.Location.reload();
