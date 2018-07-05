@@ -355,7 +355,7 @@ public class ValueMapper extends SharedObjectMapper {
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der
 			 * PropertyId, in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId, creatorId FROM value WHERE propertyId = '"
+			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId,ownerId FROM value WHERE propertyId = '"
 					+ propertyId + "' AND LOWER(name) LIKE '%" + valueDescription.toLowerCase() + "%'" + "ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
