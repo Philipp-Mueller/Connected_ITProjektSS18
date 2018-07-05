@@ -576,14 +576,18 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	}
 
 	@Override
-	public Value updateValue(Value value) throws IllegalArgumentException {
+	public Value updateValue(Value value, int oldPropertyId) throws IllegalArgumentException {
+		
 		this.contactMapper.updateContactModificationDate(value.getContactID());
+		checkIfPropertyHasValue(oldPropertyId);	
+		
 		return this.valueMapper.update(value);
 	}
 
 	@Override
 	public void deleteValue(Value value) throws IllegalArgumentException {
-		valueMapper.delete(value);
+		this.valueMapper.delete(value);
+		checkIfPropertyHasValue(value.getPropertyID());		
 	}
 
 	@Override
@@ -626,9 +630,9 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 	public void checkIfPropertyHasValue(int propertyId) throws IllegalArgumentException {
 
-		if (propertyId >= 12) {
-			if (valueMapper.findByProperty(propertyId).size() == 0) {
-				propertyMapper.delete(propertyMapper.findById(propertyId));
+		if (propertyId >= 11) {
+			if (this.valueMapper.findByProperty(propertyId).size() == 0) {
+				this.propertyMapper.delete(propertyMapper.findById(propertyId));
 			}
 
 		}

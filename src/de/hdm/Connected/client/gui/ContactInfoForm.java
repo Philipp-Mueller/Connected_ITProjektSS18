@@ -126,15 +126,12 @@ public class ContactInfoForm extends PopupPanel {
 									if(value.getCreatorId() != ClientSideSettings.getCurrentUser().getBoId()) {
 									contactInfoTable.setWidget(rowCount, 0,
 											new HTML("<p><i><strong>" + result.getName() + ":</strong></i></p>"));
+									
+									contactInfoTable.setWidget(rowCount, 1,
+											new HTML("<i>" + value.getName() + "</i>"));
 									} else {
 										contactInfoTable.setWidget(rowCount, 0,
 										new HTML("<p><strong>" + result.getName() + ":</strong></p>"));
-									}
-
-									if (value.getCreatorId() != ClientSideSettings.getCurrentUser().getBoId()) {
-										contactInfoTable.setWidget(rowCount, 1,
-												new HTML("<i>" + value.getName() + "</i>"));
-									} else {
 										contactInfoTable.setWidget(rowCount, 1, new HTML(value.getName()));
 									}
 									center();

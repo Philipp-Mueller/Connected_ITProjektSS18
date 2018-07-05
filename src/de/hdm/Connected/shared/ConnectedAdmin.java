@@ -128,7 +128,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return aktualisiertes Value-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public Value updateValue(Value value) throws IllegalArgumentException;
+	public Value updateValue(Value value, int oldPropertyId) throws IllegalArgumentException;
 	
 	/**
 	 * Löscht ein Value-Objekt und alle eventuell darauf basierenden
