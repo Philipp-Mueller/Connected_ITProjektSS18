@@ -96,9 +96,9 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 			
 			//Jetzt müssen wir unterscheiden, ob shared contacts geladen werden sollen
 			if(sharedContacts){
-				ergebnisKontakte = allSharedContactsPerUser(u.getBoId());
+				ergebnisKontakte = allSharedContactsPerUser(u.getId());
 			}else{
-				ergebnisKontakte = allContactsPerUser(u.getBoId());
+				ergebnisKontakte = allContactsPerUser(u.getId());
 			}
 		}else{
 			
@@ -131,14 +131,14 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 		//Für jeden ErgebnisKontakt die Eigenschaften aufbauen
 		for(Contact c : ergebnisKontakte) {
 			//Eigenschaften lesen
-			List<Value> eigenschaften = valueMapper.findByContactId(c.getBoId());
+			List<Value> eigenschaften = valueMapper.findByContactId(c.getId());
 			
 			//Reportobjekt aufbauen
 			Map<Integer,String> eigenschaftsMap = new HashMap<Integer,String>();
 			
 			//Für jede mögliche Eigenschaft prüfen ob der Nutzer dazu ein Wert hat
 			for(Property p : allproperties) {
-				eigenschaftsMap.put(p.getBoId(), findeWertZuEigenschaft(p.getBoId(),eigenschaften));
+				eigenschaftsMap.put(p.getId(), findeWertZuEigenschaft(p.getId(),eigenschaften));
 			}
 			ReportObjekt ro = new ReportObjekt(c.getPrename(), c.getSurname(), eigenschaftsMap);
 			ergebnisReport.add(ro);
@@ -196,7 +196,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 	
 	private String findeWertZuEigenschaft(int id, List<Value> list) {
 		for(Value v : list) {
-			if(v.getBoId()==id) {
+			if(v.getId()==id) {
 				return v.getName();
 			}
 		}

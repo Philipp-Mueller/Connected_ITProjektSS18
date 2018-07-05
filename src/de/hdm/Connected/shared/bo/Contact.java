@@ -36,7 +36,7 @@ public class Contact extends SharedObject{
 	public static final ProvidesKey<Contact> KEY_PROVIDER = new ProvidesKey<Contact>() {
 	      @Override
 	      public Object getKey(Contact item) {
-	        return item == null ? null : item.getBoId();
+	        return item == null ? null : item.getId();
 	      }
 	    };
 	

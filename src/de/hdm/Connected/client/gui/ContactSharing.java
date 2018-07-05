@@ -113,7 +113,7 @@ public class ContactSharing extends PopupPanel {
 		// root.add(new HTML("Kontakt bereits geteilit mit: <br />"));
 
 		// Anzeigen der User, die bereits Zugriff auf diesen Kontakt haben
-		ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(sharingContact.getBoId(),
+		ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(sharingContact.getId(),
 				new AsyncCallback<ArrayList<Permission>>() {
 
 					@Override
@@ -188,7 +188,7 @@ public class ContactSharing extends PopupPanel {
 									@Override
 									public void onClick(ClickEvent event) {
 										
-										ClientSideSettings.getConnectedAdmin().deletePermissionFromContact(object.getBoId(), sharingContact.getBoId(), new AsyncCallback<Void>(){
+										ClientSideSettings.getConnectedAdmin().deletePermissionFromContact(object.getId(), sharingContact.getId(), new AsyncCallback<Void>(){
 
 											@Override
 											public void onFailure(Throwable caught) {
@@ -371,8 +371,8 @@ public class ContactSharing extends PopupPanel {
 				//Aktionenn bei anwählen eines Eintrag der Liste.
 				if (changingUser != null) {
 					shareButton.setText("Teilhaberschaft ändern");
-					ClientSideSettings.getConnectedAdmin().findValueAndProperty(sharingContact.getBoId(),
-							changingUser.getBoId(), new AsyncCallback<Map<Property, Value>>() {
+					ClientSideSettings.getConnectedAdmin().findValueAndProperty(sharingContact.getId(),
+							changingUser.getId(), new AsyncCallback<Map<Property, Value>>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -387,14 +387,14 @@ public class ContactSharing extends PopupPanel {
 									changeValues.setVisible(true);
 									propertyValueTable.setVisible(true);
 									for (Map.Entry<Property, Value> entry : result.entrySet()) {
-										if (changingUser.getBoId() == entry.getValue().getCreatorId()){
+										if (changingUser.getId() == entry.getValue().getCreatorId()){
 											dataProvider.getList().remove(entry);
 											propertyValueTable.redraw();
 										}else{
 										
 										for (int i = 0; i < propertiesAndValues.size(); i++) {
-											if (entry.getValue().getBoId() == propertiesAndValues.get(i).getValue()
-													.getBoId()) {
+											if (entry.getValue().getId() == propertiesAndValues.get(i).getValue()
+													.getId()) {
 												selectionModel.setSelected(propertiesAndValues.get(i), true);
 											}
 											
@@ -415,7 +415,7 @@ public class ContactSharing extends PopupPanel {
 			}
 		});
 		//alle Eigenschaft auf der der aktuelle Nutzer zugriff hat auswählen
-		ClientSideSettings.getConnectedAdmin().findValueAndProperty(sharingContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(),
+		ClientSideSettings.getConnectedAdmin().findValueAndProperty(sharingContact.getId(), ClientSideSettings.getCurrentUser().getId(),
 				new AsyncCallback<Map<Property, Value>>() {
 
 					@Override
@@ -512,20 +512,20 @@ public class ContactSharing extends PopupPanel {
 								Window.alert(Integer.toString(selectedSet.size()));
 								ArrayList<Integer> selectedValues = new ArrayList<Integer>();
 								ArrayList<Integer> selectedUsers = new ArrayList<Integer>();
-								selectedValues.add(sharingContact.getBoId());
+								selectedValues.add(sharingContact.getId());
 								Iterator<Entry<Property, Value>> iterator = selectedSet.iterator();
 
 								while (iterator.hasNext()) {
 									Map.Entry<Property, Value> entry = iterator.next();
-									selectedValues.add(entry.getValue().getBoId());
+									selectedValues.add(entry.getValue().getId());
 								}
 
 								for (int i = 0; i < receiverUser.getVisibleItems().size(); i++) {
-									selectedUsers.add(receiverUser.getVisibleItems().get(i).getBoId());
+									selectedUsers.add(receiverUser.getVisibleItems().get(i).getId());
 								}
 
 
-								ClientSideSettings.getConnectedAdmin().createPermission(ClientSideSettings.getCurrentUser().getBoId(), selectedValues,
+								ClientSideSettings.getConnectedAdmin().createPermission(ClientSideSettings.getCurrentUser().getId(), selectedValues,
 										selectedUsers, new AsyncCallback<Void>() {
 
 											@Override
@@ -543,10 +543,10 @@ public class ContactSharing extends PopupPanel {
 							} else {
 								ArrayList<Integer> newPermissions = new ArrayList<Integer>();
 								for(Entry<Property,Value> entry : selectedSet){
-									newPermissions.add(entry.getValue().getBoId());
+									newPermissions.add(entry.getValue().getId());
 								}
 								
-								ClientSideSettings.getConnectedAdmin().updatePermissionsForUser(newPermissions, sharingContact.getBoId(), changingUser.getBoId(),new AsyncCallback<Void>(){
+								ClientSideSettings.getConnectedAdmin().updatePermissionsForUser(newPermissions, sharingContact.getId(), changingUser.getId(),new AsyncCallback<Void>(){
 
 									@Override
 									public void onFailure(Throwable caught) {
@@ -652,7 +652,7 @@ public class ContactSharing extends PopupPanel {
 						}
 					}
 
-					ClientSideSettings.getConnectedAdmin().givePermissionToUsers(value.getBoId(), userArray, ClientSideSettings.getCurrentUser().getBoId(),
+					ClientSideSettings.getConnectedAdmin().givePermissionToUsers(value.getId(), userArray, ClientSideSettings.getCurrentUser().getId(),
 							new AsyncCallback<Void>() {
 
 								@Override
@@ -681,7 +681,7 @@ public class ContactSharing extends PopupPanel {
 			v.add(new HTML(
 					"Dieser Kontakt wurde schon anderen User geteilt, wollen Sie diese neu erstellte Eigenschaft direkt an einen dieser User teilen?"));
 
-			ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(contact.getBoId(),
+			ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(contact.getId(),
 					new AsyncCallback<ArrayList<Permission>>() {
 
 						@Override

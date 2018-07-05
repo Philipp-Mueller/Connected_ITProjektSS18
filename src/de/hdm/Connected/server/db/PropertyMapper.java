@@ -69,13 +69,13 @@ public class PropertyMapper {
 
 			if (rs.next()) {
 				// Ergebnis-Tupel in Objekt umwandeln
-				property.setBoId(rs.getInt("maxid") + 1);
+				property.setId(rs.getInt("maxid") + 1);
 			}
 
 			stmt = con.createStatement();
 			// SQL-Anweisung zum Einfügen des neuen Property-Tupels in die
 			// Datenbank
-			stmt.executeUpdate("INSERT INTO property (id, name) VALUES " + "(" + property.getBoId() + ",'"
+			stmt.executeUpdate("INSERT INTO property (id, name) VALUES " + "(" + property.getId() + ",'"
 					+ property.getName() + "')");
 
 			/**
@@ -107,7 +107,7 @@ public class PropertyMapper {
 
 			// SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in
 			// der Datenbank
-			stmt.executeUpdate("UPDATE property SET name='" + property.getName() + "'WHERE id=" + property.getBoId());
+			stmt.executeUpdate("UPDATE property SET name='" + property.getName() + "'WHERE id=" + property.getId());
 
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -137,7 +137,7 @@ public class PropertyMapper {
 
 			// SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
 			// Datenbank
-			stmt.executeUpdate("DELETE FROM property WHERE id=" + property.getBoId());
+			stmt.executeUpdate("DELETE FROM property WHERE id=" + property.getId());
 
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -174,7 +174,7 @@ public class PropertyMapper {
 			if (rs.next()) {
 				// Ergebnis-Tupel in Objekt umwandeln
 				Property property = new Property();
-				property.setBoId(rs.getInt("id"));
+				property.setId(rs.getInt("id"));
 				property.setName(rs.getString("name"));
 				return property;
 			}
@@ -217,7 +217,7 @@ public class PropertyMapper {
 
 			while (rs.next()) {
 				Property property = new Property();
-				property.setBoId(rs.getInt("id"));
+				property.setId(rs.getInt("id"));
 				property.setName(rs.getString("name"));
 				result.add(property);
 			}

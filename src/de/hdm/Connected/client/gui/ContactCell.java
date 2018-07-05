@@ -19,17 +19,17 @@ private User user = new User();
 	 */
 	@Override
 	public void render(Context context, Contact value, SafeHtmlBuilder sb) {
-		user.setBoId(2);
+		user.setId(2);
 	
 		if(value == null) {
 			return;
-		}else if(value.getCreatorId() != user.getBoId()){
+		}else if(value.getCreatorId() != user.getId()){
 		sb.appendHtmlConstant("<i>");
 		sb.appendEscaped(value.getPrename());
 		sb.appendHtmlConstant("</i>");
 				
 		
-		}else if(value.getCreatorId() == user.getBoId()){
+		}else if(value.getCreatorId() == user.getId()){
 			sb.appendHtmlConstant("<div>");
 			sb.appendEscaped(value.getPrename());
 			sb.appendHtmlConstant("</div>");

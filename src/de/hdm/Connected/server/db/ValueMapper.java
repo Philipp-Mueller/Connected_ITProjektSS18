@@ -77,7 +77,7 @@ public class ValueMapper extends SharedObjectMapper {
 			 * aktuelle id um eins erhoeht. 
 			 */
 		
-			value.setBoId(super.insert());
+			value.setId(super.insert());
 		
 			/*
 			 * SQL-Anweisung zum Einfuegen des neuen Value-Tupels in die
@@ -85,7 +85,7 @@ public class ValueMapper extends SharedObjectMapper {
 			 */
 
 	
-			stmt.executeUpdate("INSERT INTO value (id, name, propertyId, contactId, ownerId) VALUES (" + value.getBoId() + ", '"
+			stmt.executeUpdate("INSERT INTO value (id, name, propertyId, contactId, ownerId) VALUES (" + value.getId() + ", '"
 					+ value.getName() + "', " + value.getPropertyID() + ", " + value.getContactID() +  ", " + value.getCreatorId() + ")");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -114,7 +114,7 @@ public class ValueMapper extends SharedObjectMapper {
 			 * der Datenbank.
 			 */
 			stmt.executeUpdate("UPDATE value SET name='" + value.getName() + "', propertyId = '" + value.getPropertyID()
-					+ "', contactId = '" + value.getContactID() + "' WHERE id= " + value.getBoId());
+					+ "', contactId = '" + value.getContactID() + "' WHERE id= " + value.getId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -141,7 +141,7 @@ public class ValueMapper extends SharedObjectMapper {
 			 * SQL-Anweisung zum Loeschen des uebergebenen Datensatzes in der
 			 * Datenbank.
 			 */
-			stmt.executeUpdate("DELETE FROM value WHERE id=" + value.getBoId());
+			stmt.executeUpdate("DELETE FROM value WHERE id=" + value.getId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -177,7 +177,7 @@ public class ValueMapper extends SharedObjectMapper {
 			 */
 			if (rs.next()) {
 				Value value = new Value();
-				value.setBoId(rs.getInt("id"));
+				value.setId(rs.getInt("id"));
 				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
@@ -223,7 +223,7 @@ public class ValueMapper extends SharedObjectMapper {
 			 */
 			while (rs.next()) {
 				Value value = new Value();
-				value.setBoId(rs.getInt("id"));
+				value.setId(rs.getInt("id"));
 				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
@@ -271,7 +271,7 @@ public class ValueMapper extends SharedObjectMapper {
 			 */
 			while (rs.next()) {
 				Value value = new Value();
-				value.setBoId(rs.getInt("id"));
+				value.setId(rs.getInt("id"));
 				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
@@ -319,7 +319,7 @@ public class ValueMapper extends SharedObjectMapper {
 			 */
 			while (rs.next()) {
 				Value value = new Value();
-				value.setBoId(rs.getInt("id"));
+				value.setId(rs.getInt("id"));
 				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
@@ -367,7 +367,7 @@ public class ValueMapper extends SharedObjectMapper {
 			 */
 			while (rs.next()) {
 				Value value = new Value();
-				value.setBoId(rs.getInt("id"));
+				value.setId(rs.getInt("id"));
 				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
@@ -405,7 +405,7 @@ public class ValueMapper extends SharedObjectMapper {
 
 			while (rs.next()) {
 				Value value = new Value();
-				value.setBoId(rs.getInt("id"));
+				value.setId(rs.getInt("id"));
 				value.setName(rs.getString("description"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));

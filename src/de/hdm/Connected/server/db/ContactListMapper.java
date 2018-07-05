@@ -77,7 +77,7 @@ public class ContactListMapper extends SharedObjectMapper{
 			 */
 		
 		
-			contactList.setBoId(super.insert());
+			contactList.setId(super.insert());
 	
 			/**
 			 * SQL-Anweisung zum Einfügen des neuen ContactList-Tupels in die
@@ -85,7 +85,7 @@ public class ContactListMapper extends SharedObjectMapper{
 			 */
 	
 			
-			stmt.executeUpdate("INSERT INTO contactlist (id, name, ownerId) VALUES " + "(" + contactList.getBoId() + ", '"
+			stmt.executeUpdate("INSERT INTO contactlist (id, name, ownerId) VALUES " + "(" + contactList.getId() + ", '"
 					+ contactList.getName() + "', " + contactList.getCreatorId()+ ")");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -116,7 +116,7 @@ public class ContactListMapper extends SharedObjectMapper{
 			 * SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in
 			 * der Datenbank.
 			 */
-			stmt.executeUpdate("UPDATE contactlist SET name='" + contactList.getName() + "' WHERE id=" + contactList.getBoId());
+			stmt.executeUpdate("UPDATE contactlist SET name='" + contactList.getName() + "' WHERE id=" + contactList.getId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -144,7 +144,7 @@ public class ContactListMapper extends SharedObjectMapper{
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
 			 * Datenbank.
 			 */
-			stmt.executeUpdate("DELETE FROM contactlist WHERE id=" + contactList.getBoId());
+			stmt.executeUpdate("DELETE FROM contactlist WHERE id=" + contactList.getId());
 		}
 		
 		/**
@@ -181,7 +181,7 @@ public class ContactListMapper extends SharedObjectMapper{
 			 */
 			if (rs.next()) {
 				ContactList contactList = new ContactList();
-				contactList.setBoId(rs.getInt("id"));
+				contactList.setId(rs.getInt("id"));
 				contactList.setName(rs.getString("name"));
 				contactList.setCreatorId(rs.getInt("ownerId"));
 				return contactList;			
@@ -226,7 +226,7 @@ public class ContactListMapper extends SharedObjectMapper{
 			
 			while (rs.next()) {
 				ContactList contactList = new ContactList();
-				contactList.setBoId(rs.getInt("id"));
+				contactList.setId(rs.getInt("id"));
 				contactList.setName(rs.getString("name"));
 			    contactList.setCreatorId(rs.getInt("ownerId"));
 				result.add(contactList);
@@ -270,7 +270,7 @@ public class ContactListMapper extends SharedObjectMapper{
 
 			while (rs.next()) {
 				ContactList contactlist = new ContactList();
-				contactlist.setBoId(rs.getInt("id"));
+				contactlist.setId(rs.getInt("id"));
 				contactlist.setName(rs.getString("name"));
 				contactlist.setCreatorId(rs.getInt("ownerId"));
 				result.add(contactlist);

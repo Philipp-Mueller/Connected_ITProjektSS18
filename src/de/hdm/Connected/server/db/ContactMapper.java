@@ -76,14 +76,14 @@ public class ContactMapper extends SharedObjectMapper {
 			 * aktuelle id um eins erhoeht. 
 			 */
 			
-				contact.setBoId(super.insert());
+				contact.setId(super.insert());
 		
 			/**
 			 * SQL-Anweisung zum Einfuegen des neuen Contact-Tupels in die Datenbank.
 			 */
 		
 			
-			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, ownerId, creationDate, modificationDate) VALUES (" + contact.getBoId() + ", '"
+			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, ownerId, creationDate, modificationDate) VALUES (" + contact.getId() + ", '"
 					+ contact.getPrename() + "', '" + contact.getSurname() + "', " + contact.getCreatorId() + ", '" + contact.getCreationDate() +"', '"+ contact.getModificationDate() + "')");
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
@@ -113,7 +113,7 @@ public class ContactMapper extends SharedObjectMapper {
 			 * Datenbank.
 			 */
 			stmt.executeUpdate("UPDATE contact SET prename='" + contact.getPrename() + "', surname= '"
-					+ contact.getSurname() + "', modificationDate= '"+ currentTime + "' WHERE id= " + contact.getBoId());
+					+ contact.getSurname() + "', modificationDate= '"+ currentTime + "' WHERE id= " + contact.getId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
@@ -139,7 +139,7 @@ public class ContactMapper extends SharedObjectMapper {
 			/**
 			 * SQL-Anweisung zum Loeschen des uebergebenen Datensatzes in der Datenbank.
 			 */
-			stmt.executeUpdate("DELETE FROM contact WHERE id=" + contact.getBoId());
+			stmt.executeUpdate("DELETE FROM contact WHERE id=" + contact.getId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
@@ -174,7 +174,7 @@ public class ContactMapper extends SharedObjectMapper {
 			 */
 			if (rs.next()) {
 				Contact contact = new Contact();
-				contact.setBoId(rs.getInt("id"));
+				contact.setId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				contact.setCreationDate(rs.getDate("creationDate"));
@@ -217,7 +217,7 @@ public class ContactMapper extends SharedObjectMapper {
 
 			while (rs.next()) {
 				Contact contact = new Contact();
-				contact.setBoId(rs.getInt("id"));
+				contact.setId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				contact.setCreatorId(rs.getInt("ownerid"));
@@ -263,7 +263,7 @@ public class ContactMapper extends SharedObjectMapper {
 			 */
 			while (rs.next()) {
 				Contact contact = new Contact();
-				contact.setBoId(rs.getInt("id"));
+				contact.setId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				result.add(contact);
@@ -306,7 +306,7 @@ public class ContactMapper extends SharedObjectMapper {
 			 */
 			while (rs.next()) {
 				Contact contact = new Contact();
-				contact.setBoId(rs.getInt("id"));
+				contact.setId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				result.add(contact);
@@ -353,7 +353,7 @@ public class ContactMapper extends SharedObjectMapper {
 
 			while (rs.next()) {
 				Contact contact = new Contact();
-				contact.setBoId(rs.getInt("id"));
+				contact.setId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				result.add(contact);
@@ -399,7 +399,7 @@ public class ContactMapper extends SharedObjectMapper {
 
 			while (rs.next()) {
 				Contact contact = new Contact();
-				contact.setBoId(rs.getInt("id"));
+				contact.setId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				contact.setCreatorId(rs.getInt("ownerid"));
@@ -447,7 +447,7 @@ public class ContactMapper extends SharedObjectMapper {
 			 */
 			while (rs.next()) {
 				Contact contact = new Contact();
-				contact.setBoId(rs.getInt("id"));
+				contact.setId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				result.add(contact);

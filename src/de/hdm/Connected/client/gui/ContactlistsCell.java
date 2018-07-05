@@ -89,7 +89,7 @@ public ContactlistsCell(){
 
 	
 	
-ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<ContactList>>(){
+ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(ClientSideSettings.getCurrentUser().getId(), new AsyncCallback<ArrayList<ContactList>>(){
 
 	@Override
 	public void onFailure(Throwable caught) {
@@ -146,17 +146,17 @@ public <T> NodeInfo<?> getNodeInfo(T value) {
           @Override
           public void render(Context context, ContactList key, SafeHtmlBuilder sb) {
         	
-        	  user.setBoId(2);
+        	  user.setId(2);
         		
       		if(key == null) {
       			return;
-      		} else if(key.getCreatorId() != user.getBoId()){
+      		} else if(key.getCreatorId() != user.getId()){
       		sb.appendHtmlConstant("<i>");
       		sb.appendEscaped(key.getName());
       		sb.appendHtmlConstant("</i>");
       				
       		
-      		} else if(key.getCreatorId() == user.getBoId()){
+      		} else if(key.getCreatorId() == user.getId()){
       			sb.appendHtmlConstant("<div>");
       			sb.appendEscaped(key.getName());
       			sb.appendHtmlConstant("</div>");

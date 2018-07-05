@@ -70,11 +70,11 @@ public class PermissionMapper {
 		
 			if (rs.next()) {
 				// Ergebnis-Tupel in Objekt umwandeln
-				permission.setBoId(rs.getInt("maxid") + 1);
+				permission.setId(rs.getInt("maxid") + 1);
 			}
 			stmt = con.createStatement();
 			// SQL-Anweisung zum Einfügen des neuen Permission-Tupels in die Datenbank
-			stmt.executeUpdate("INSERT INTO permission (id, sharedObjectID, receiverUserID, shareUserID) VALUES " + "(" + permission.getBoId() + ", "
+			stmt.executeUpdate("INSERT INTO permission (id, sharedObjectID, receiverUserID, shareUserID) VALUES " + "(" + permission.getId() + ", "
 					+ permission.getSharedObjectId() + ", "+ permission.getReceiverUserID() + ", " + permission.getShareUserID() + ")");
 			
 			/**
@@ -106,7 +106,7 @@ public class PermissionMapper {
 				
 				// SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in der Datenbank
 				stmt.executeUpdate("UPDATE permission  SET" + "sharedObjectID='" + permission.getSharedObjectId() + "'," + "UserID='" + permission.getReceiverUserID() + "'," + "shareUserID='" 
-						+ permission.getShareUserID() + "'WHERE id='" + permission.getBoId() + "'");
+						+ permission.getShareUserID() + "'WHERE id='" + permission.getId() + "'");
 				
 				/**
 				 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -133,7 +133,7 @@ public class PermissionMapper {
 			Statement stmt = con.createStatement();
 			
 			//SQL-Anweisung zum Löschen des übergebenen Datensatzes in der Datenbank
-			stmt.executeUpdate("DELETE FROM permission WHERE id=" + permission.getBoId());
+			stmt.executeUpdate("DELETE FROM permission WHERE id=" + permission.getId());
 		
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -154,7 +154,7 @@ public class PermissionMapper {
 			Statement stmt = con.createStatement();
 			
 			//SQL-Anweisung zum Löschen des übergebenen Datensatzes in der Datenbank
-			stmt.executeUpdate("DELETE FROM permission WHERE id=" + permission.getBoId());
+			stmt.executeUpdate("DELETE FROM permission WHERE id=" + permission.getId());
 		
 			/**
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -195,7 +195,7 @@ public class PermissionMapper {
 			 */
 			if (rs.next()) {
 				Permission permission = new Permission();
-				permission.setBoId(rs.getInt("id"));
+				permission.setId(rs.getInt("id"));
 				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
 				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));
@@ -241,7 +241,7 @@ public class PermissionMapper {
 			
 			while (rs.next()) {
 				Permission permission = new Permission();
-				permission.setBoId(rs.getInt("id"));
+				permission.setId(rs.getInt("id"));
 				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
 				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));
@@ -287,7 +287,7 @@ public class PermissionMapper {
 			
 			while (rs.next()) {
 				Permission permission = new Permission();
-				permission.setBoId(rs.getInt("id"));
+				permission.setId(rs.getInt("id"));
 				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
 				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));
@@ -334,7 +334,7 @@ public class PermissionMapper {
 			
 			while (rs.next()) {
 				Permission permission = new Permission();
-				permission.setBoId(rs.getInt("id"));
+				permission.setId(rs.getInt("id"));
 				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
 				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));
@@ -380,7 +380,7 @@ public class PermissionMapper {
 			
 			while (rs.next()) {
 				Permission permission = new Permission();
-				permission.setBoId(rs.getInt("id"));
+				permission.setId(rs.getInt("id"));
 				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
 				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));
@@ -427,7 +427,7 @@ public class PermissionMapper {
 			
 			while (rs.next()) {
 				Permission permission = new Permission();
-				permission.setBoId(rs.getInt("id"));
+				permission.setId(rs.getInt("id"));
 				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
 				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));
@@ -468,7 +468,7 @@ public class PermissionMapper {
 			
 			while (rs.next()) {
 				Permission permission = new Permission();
-				permission.setBoId(rs.getInt("id"));
+				permission.setId(rs.getInt("id"));
 				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
 				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));
@@ -507,7 +507,7 @@ public class PermissionMapper {
 			 */
 			if(rs.next()){
 				permission = new Permission();
-				permission.setBoId(rs.getInt("id"));
+				permission.setId(rs.getInt("id"));
 				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
 				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));
@@ -589,7 +589,7 @@ public class PermissionMapper {
 			
 			while (rs.next()) {
 				Permission permission = new Permission();
-				permission.setBoId(rs.getInt("id"));
+				permission.setId(rs.getInt("id"));
 				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
 				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));
@@ -637,7 +637,7 @@ public class PermissionMapper {
 			
 			while (rs.next()) {
 				Permission permission = new Permission();
-				permission.setBoId(rs.getInt("id"));
+				permission.setId(rs.getInt("id"));
 				permission.setSharedObjectId(rs.getInt("sharedObjectID"));
 				permission.setReceiverUserID(rs.getInt("receiverUserID"));
 				permission.setShareUserID(rs.getInt("shareUserID"));

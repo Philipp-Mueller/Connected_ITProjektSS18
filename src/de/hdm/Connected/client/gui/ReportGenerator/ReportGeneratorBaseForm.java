@@ -430,9 +430,9 @@ public class ReportGeneratorBaseForm extends Widget {
 			@Override
 			public void onSuccess(List<Property> result) {
 				for (Property p : result) {
-					String propertyId = String.valueOf(p.getBoId());
+					String propertyId = String.valueOf(p.getId());
 					propertyListBox.addItem(p.getName(), propertyId);
-					propertyIdUndName.put(p.getBoId(), p.getName());
+					propertyIdUndName.put(p.getId(), p.getName());
 				}
 				ReportGeneratorBaseForm.this.propertyId = Integer.valueOf(propertyListBox.getSelectedValue());
 

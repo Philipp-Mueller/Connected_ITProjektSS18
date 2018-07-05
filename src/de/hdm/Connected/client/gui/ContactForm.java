@@ -229,7 +229,7 @@ public class ContactForm extends PopupPanel {
 					}
 					java.sql.Date creationTime = new java.sql.Date(System.currentTimeMillis());
 					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
-							creationTime, creationTime, ClientSideSettings.getCurrentUser().getBoId(),
+							creationTime, creationTime, ClientSideSettings.getCurrentUser().getId(),
 							new AsyncCallback<Contact>() {
 								ArrayList<Contact> contacts = new ArrayList<Contact>();
 
@@ -244,7 +244,7 @@ public class ContactForm extends PopupPanel {
 									contacts.add(result);
 									ArrayList<Integer> contactId = new ArrayList<Integer>();
 									ArrayList<Integer> userId = new ArrayList<Integer>();
-									contactId.add(result.getBoId());
+									contactId.add(result.getId());
 									userId.add(2);
 									Window.alert("Kontakt wurde angelegt!");
 
@@ -346,7 +346,7 @@ public class ContactForm extends PopupPanel {
 		contactlist.setVisibleItemCount(7);
 		// Alle Kontaktlisten aus DB abrufen
 		
-		ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<ContactList>>() {
+		ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(ClientSideSettings.getCurrentUser().getId(), new AsyncCallback<ArrayList<ContactList>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -511,7 +511,7 @@ public class ContactForm extends PopupPanel {
 																		if ((propertyChangeListBox
 																				.getSelectedItemText())
 																						.equals(p.getName())) {
-																			propertyId = p.getBoId();
+																			propertyId = p.getId();
 																		}
 																	}
 
@@ -672,7 +672,7 @@ public class ContactForm extends PopupPanel {
 					}
 
 				}
-				ClientSideSettings.getConnectedAdmin().findValuesByContactId(selectedContact.getBoId(),
+				ClientSideSettings.getConnectedAdmin().findValuesByContactId(selectedContact.getId(),
 						new findValueCallback());
 			} else {
 
@@ -709,12 +709,12 @@ public class ContactForm extends PopupPanel {
 				int propertyId = 0;
 				for (Property p : propertyArray) {
 					if ((propertyListBox.getSelectedItemText()).equals(p.getName())) {
-						propertyId = p.getBoId();
+						propertyId = p.getId();
 					}
 				}
 
 				ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId,
-						selectedContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Value>() {
+						selectedContact.getId(), ClientSideSettings.getCurrentUser().getId(), new AsyncCallback<Value>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
@@ -761,7 +761,7 @@ public class ContactForm extends PopupPanel {
 					try {
 						java.sql.Date creationTime = new java.sql.Date(System.currentTimeMillis());
 						ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(),
-								surnameBox.getText(), creationTime, creationTime,ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Contact>() {
+								surnameBox.getText(), creationTime, creationTime,ClientSideSettings.getCurrentUser().getId(), new AsyncCallback<Contact>() {
 
 									@Override
 									public void onFailure(Throwable caught) {
@@ -809,7 +809,7 @@ public class ContactForm extends PopupPanel {
 					propertyName = propertyListBox.getSelectedItemText();
 					for (Property p : propertyArray) {
 						if ((propertyListBox.getSelectedItemText()).equals(p.getName())) {
-							propertyId = p.getBoId();
+							propertyId = p.getId();
 							if (p.getName().equals("Geburtsdatum")) {
 								propertyListBox.removeItem(propertyListBox.getSelectedIndex());
 							}
@@ -817,7 +817,7 @@ public class ContactForm extends PopupPanel {
 					}
 
 					ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId,
-							createdContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(), new createValueCallback());
+							createdContact.getId(), ClientSideSettings.getCurrentUser().getId(), new createValueCallback());
 				}
 			}
 		}
@@ -918,7 +918,7 @@ public class ContactForm extends PopupPanel {
 
 											for (Property p : propertyArray) {
 												if ((propertyChangeListBox.getSelectedItemText()).equals(p.getName())) {
-													propertyId = p.getBoId();
+													propertyId = p.getId();
 												}
 											}
 
@@ -1151,7 +1151,7 @@ public class ContactForm extends PopupPanel {
 
 									for (Property p : propertyArray) {
 										if ((propertyChangeListBox.getSelectedItemText()).equals(p.getName())) {
-											propertyId = p.getBoId();
+											propertyId = p.getId();
 										}
 									}
 

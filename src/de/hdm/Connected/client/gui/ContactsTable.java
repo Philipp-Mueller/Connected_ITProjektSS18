@@ -143,7 +143,7 @@ public class ContactsTable extends CellTable {
 		cellTable.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 
 
-		ClientSideSettings.getConnectedAdmin().getContactsByUserPermission(ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<Contact>>() {
+		ClientSideSettings.getConnectedAdmin().getContactsByUserPermission(ClientSideSettings.getCurrentUser().getId(), new AsyncCallback<ArrayList<Contact>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -239,7 +239,7 @@ public class ContactsTable extends CellTable {
 				Column<Contact, String> prenameColumn = new Column<Contact, String>(prenameCell) {
 					
 					public void render(Context context, Contact value, SafeHtmlBuilder sb) {
-						int userId = ClientSideSettings.getCurrentUser().getBoId();
+						int userId = ClientSideSettings.getCurrentUser().getId();
 
 						if(value == null) {
 							return;
@@ -272,7 +272,7 @@ public class ContactsTable extends CellTable {
 					public void update(int index, final Contact object, String value) {
 
 
-						ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(object.getBoId(),ClientSideSettings.getCurrentUser().getBoId(),
+						ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(object.getId(),ClientSideSettings.getCurrentUser().getId(),
 								new AsyncCallback<ArrayList<Value>>() {
 
 									public void onFailure(Throwable caught) {
@@ -303,7 +303,7 @@ public class ContactsTable extends CellTable {
 				Column<Contact, String> surnameColumn = new Column<Contact, String>(surnameCell) {
 					
 					public void render(Context context, Contact value, SafeHtmlBuilder sb) {
-						int userId = ClientSideSettings.getCurrentUser().getBoId();
+						int userId = ClientSideSettings.getCurrentUser().getId();
 
 						if(value == null) {
 							return;
@@ -334,7 +334,7 @@ public class ContactsTable extends CellTable {
 					public void update(int index, final Contact object, String value) {
 
 
-						ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(object.getBoId(),ClientSideSettings.getCurrentUser().getBoId(),
+						ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(object.getId(),ClientSideSettings.getCurrentUser().getId(),
 								new AsyncCallback<ArrayList<Value>>() {
 
 							public void onFailure(Throwable caught) {
@@ -501,7 +501,7 @@ public class ContactsTable extends CellTable {
 							public void onClick(ClickEvent event) {
 						
 						User user = new User();
-						user.setBoId(ClientSideSettings.getCurrentUser().getBoId());
+						user.setId(ClientSideSettings.getCurrentUser().getId());
 						buttonPressed = true;
 						ClientSideSettings.getConnectedAdmin().deleteContact(object, user, new AsyncCallback<Void>() {
 
@@ -515,7 +515,7 @@ public class ContactsTable extends CellTable {
 							public void onSuccess(Void result) {
 								
 								for (int i = 0; i < contacts.size(); i++) {
-									if (contacts.get(i).getBoId() == object.getBoId()) {
+									if (contacts.get(i).getId() == object.getId()) {
 										contacts.remove(i);
 									}
 								}
@@ -551,7 +551,7 @@ public class ContactsTable extends CellTable {
 
 							//Clickhandler
 							User user = new User();
-							user.setBoId(2);
+							user.setId(2);
 							buttonPressed = true;
 							
 							deleteDialog deleteD = new deleteDialog(index);
@@ -841,7 +841,7 @@ public class ContactsTable extends CellTable {
 						Window.alert(Integer.toString(selectedUser.size()));
 						if (selectedContactsArray.size() > 1) {
 							ClientSideSettings.getConnectedAdmin().giveContactPermissonToUsers(selectedContactsArray,
-									selectedUser, ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Void>() {
+									selectedUser, ClientSideSettings.getCurrentUser().getId(), new AsyncCallback<Void>() {
 
 										@Override
 										public void onFailure(Throwable caught) {
@@ -949,7 +949,7 @@ public class ContactsTable extends CellTable {
 				// Enable animation.
 				setAnimationEnabled(true);
 				
-				ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<ContactList>>(){
+				ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(ClientSideSettings.getCurrentUser().getId(), new AsyncCallback<ArrayList<ContactList>>(){
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -1102,7 +1102,7 @@ public class ContactsTable extends CellTable {
 					public void onClick(ClickEvent event) {
 						ContactList cl = new ContactList();
 						cl.setName(nameTextBox.getText());
-						cl.setBoId(mainContactlist.getBoId());
+						cl.setId(mainContactlist.getId());
 						ClientSideSettings.getConnectedAdmin().updateContactList(cl, new AsyncCallback<ContactList>() {
 							@Override
 							public void onFailure(Throwable caught) {
@@ -1200,7 +1200,7 @@ public class ContactsTable extends CellTable {
 							}
 						}
 
-						ClientSideSettings.getConnectedAdmin().givePermissionToUsers(mainContactlist.getBoId(), uArray, ClientSideSettings.getCurrentUser().getBoId(),
+						ClientSideSettings.getConnectedAdmin().givePermissionToUsers(mainContactlist.getId(), uArray, ClientSideSettings.getCurrentUser().getId(),
 								new AsyncCallback<Void>() {
 
 									@Override
@@ -1258,10 +1258,10 @@ public class ContactsTable extends CellTable {
 					public void onClick(ClickEvent event) {
 
 						ClientSideSettings.getConnectedAdmin().removeContactFromContactList(
-								contacts.get(index).getBoId(), mainContactlist.getBoId(),
+								contacts.get(index).getId(), mainContactlist.getId(),
 								new AsyncCallback<Void>() {
-									public int boIdvonContact = contacts.get(index).getBoId();
-									public int boIdvonCL = mainContactlist.getBoId();
+									public int boIdvonContact = contacts.get(index).getId();
+									public int boIdvonCL = mainContactlist.getId();
 
 									public void onFailure(Throwable caught) {
 										Window.alert("Ops, da ist etwas schief gelaufen!");
@@ -1326,7 +1326,7 @@ public class ContactsTable extends CellTable {
 					public void onClick(ClickEvent event) {
 
 						ContactList cl = new ContactList();
-						cl.setBoId(mainContactlist.getBoId());
+						cl.setId(mainContactlist.getId());
 						ClientSideSettings.getConnectedAdmin().deleteContactList(cl, new AsyncCallback<Void>() {
 
 							@Override

@@ -45,7 +45,7 @@ public class ContactlistsCellList extends Widget {
 		ProvidesKey<ContactList> keyProvider = new ProvidesKey<ContactList>() {
 	        public Object getKey(ContactList cl) {
 	           // Always do a null check.
-	           return (cl == null) ? null : cl.getBoId();
+	           return (cl == null) ? null : cl.getId();
 	        }
 	     };	
 	     

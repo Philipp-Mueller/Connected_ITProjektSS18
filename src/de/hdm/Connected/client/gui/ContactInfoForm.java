@@ -128,7 +128,7 @@ public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 				int rowCount = contactInfoTable.getRowCount();
 				contactInfoTable.setWidget(rowCount, 0, new HTML("<p><i><strong>" + result.getName() + ":</strong></i></p>"));
 
-				if(value.getCreatorId() != ClientSideSettings.getCurrentUser().getBoId()){
+				if(value.getCreatorId() != ClientSideSettings.getCurrentUser().getId()){
 				contactInfoTable.setWidget(rowCount, 1, new HTML("<i>" +value.getName() +"</i>")); } 
 				else{
 					contactInfoTable.setWidget(rowCount, 1, new HTML(value.getName()));
@@ -146,7 +146,7 @@ public ContactInfoForm(Contact contact, ArrayList<Value> values)  {
 	 *zur Anzeige des Popus
 	 *
 	 */	
-	if(contact.getCreatorId() ==ClientSideSettings.getCurrentUser().getBoId()){
+	if(contact.getCreatorId() ==ClientSideSettings.getCurrentUser().getId()){
 		v.add(new HTML("<br /><h3> &nbsp; Kontakt: <i>" + contact.getPrename() + " " + contact.getSurname() +"</i></h3><br />"));
 	}else{
 		v.add(new HTML("<br /><h3> &nbsp; Kontakt: " + contact.getPrename() + " " + contact.getSurname() +"</h3><br />"));

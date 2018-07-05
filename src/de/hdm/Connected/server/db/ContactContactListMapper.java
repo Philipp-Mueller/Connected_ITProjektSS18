@@ -160,7 +160,7 @@ public class ContactContactListMapper {
 		 */
 		while (rs.next()) {
 			Contact contact = new Contact();
-			contact.setBoId(rs.getInt("contactid"));
+			contact.setId(rs.getInt("contactid"));
 			result.add(contact);
 		}
 		/**

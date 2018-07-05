@@ -121,7 +121,7 @@ public class ContactListForm3 extends CellTable {
 		
 		
 		
-		ClientSideSettings.getConnectedAdmin().findContactsByContactListId(mainContactlist.getBoId(), new AsyncCallback<ArrayList<Contact>>(){
+		ClientSideSettings.getConnectedAdmin().findContactsByContactListId(mainContactlist.getId(), new AsyncCallback<ArrayList<Contact>>(){
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -530,7 +530,7 @@ public class ContactListForm3 extends CellTable {
 				}
 			}
 
-			ClientSideSettings.getConnectedAdmin().givePermissionToUsers(mainContactlist.getBoId(), uArray, ClientSideSettings.getCurrentUser().getBoId(),
+			ClientSideSettings.getConnectedAdmin().givePermissionToUsers(mainContactlist.getId(), uArray, ClientSideSettings.getCurrentUser().getId(),
 					new AsyncCallback<Void>() {
 
 						@Override
@@ -664,7 +664,7 @@ public class ContactListForm3 extends CellTable {
 				public void onClick(ClickEvent event) {
 					ContactList cl = new ContactList();
 					cl.setName(nameTextBox.getText());
-					cl.setBoId(mainContactlist.getBoId());
+					cl.setId(mainContactlist.getId());
 					ClientSideSettings.getConnectedAdmin().updateContactList(cl, new AsyncCallback<ContactList>() {
 						@Override
 						public void onFailure(Throwable caught) {
@@ -763,7 +763,7 @@ public class ContactListForm3 extends CellTable {
 						}
 					}
 
-					ClientSideSettings.getConnectedAdmin().givePermissionToUsers(mainContactlist.getBoId(), uArray, ClientSideSettings.getCurrentUser().getBoId(),
+					ClientSideSettings.getConnectedAdmin().givePermissionToUsers(mainContactlist.getId(), uArray, ClientSideSettings.getCurrentUser().getId(),
 							new AsyncCallback<Void>() {
 
 								@Override
@@ -830,7 +830,7 @@ public class ContactListForm3 extends CellTable {
 					ContactList cl = new ContactList();
 					cl.setName(nameTextBox.getText());
 
-					ClientSideSettings.getConnectedAdmin().createContactList(nameTextBox.getText(), ClientSideSettings.getCurrentUser().getBoId(),
+					ClientSideSettings.getConnectedAdmin().createContactList(nameTextBox.getText(), ClientSideSettings.getCurrentUser().getId(),
 							new AsyncCallback<ContactList>() {
 								@Override
 								public void onFailure(Throwable caught) {
@@ -882,10 +882,10 @@ public class ContactListForm3 extends CellTable {
 				public void onClick(ClickEvent event) {
 
 					ClientSideSettings.getConnectedAdmin().removeContactFromContactList(
-							contacts.get(index).getBoId(), mainContactlist.getBoId(),
+							contacts.get(index).getId(), mainContactlist.getId(),
 							new AsyncCallback<Void>() {
-								public int boIdvonContact = contacts.get(index).getBoId();
-								public int boIdvonCL = mainContactlist.getBoId();
+								public int boIdvonContact = contacts.get(index).getId();
+								public int boIdvonCL = mainContactlist.getId();
 
 								public void onFailure(Throwable caught) {
 									Window.alert("Ops, da ist etwas schief gelaufen!");
@@ -950,7 +950,7 @@ public class ContactListForm3 extends CellTable {
 				public void onClick(ClickEvent event) {
 
 					ContactList cl = new ContactList();
-					cl.setBoId(mainContactlist.getBoId());
+					cl.setId(mainContactlist.getId());
 					ClientSideSettings.getConnectedAdmin().deleteContactList(cl, new AsyncCallback<Void>() {
 
 						@Override

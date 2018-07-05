@@ -82,7 +82,7 @@ public class UserMapper {
 			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM user");
 
 			if (rs.next()) {
-				user.setBoId(rs.getInt("maxid") + 1);
+				user.setId(rs.getInt("maxid") + 1);
 			}
 			stmt = con.createStatement();
 			/**
@@ -90,7 +90,7 @@ public class UserMapper {
 			 * Datenbank.
 			 */
 
-			stmt.executeUpdate("INSERT INTO user (id, name, logEmail) VALUES (" + user.getBoId() + ", '"
+			stmt.executeUpdate("INSERT INTO user (id, name, logEmail) VALUES (" + user.getId() + ", '"
 					+ user.getName() + "', '"
 					+ user.getLogEmail() + "')");
 
@@ -122,7 +122,7 @@ public class UserMapper {
 			 * SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in
 			 * der Datenbank.
 			 */
-			stmt.executeUpdate("UPDATE user SET logEmail='" + user.getLogEmail() + "', name='"+ user.getName() +"' WHERE id= " + user.getBoId());
+			stmt.executeUpdate("UPDATE user SET logEmail='" + user.getLogEmail() + "', name='"+ user.getName() +"' WHERE id= " + user.getId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -150,7 +150,7 @@ public class UserMapper {
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
 			 * Datenbank.
 			 */
-			stmt.executeUpdate("DELETE FROM user WHERE id=" + user.getBoId());
+			stmt.executeUpdate("DELETE FROM user WHERE id=" + user.getId());
 		}
 		/**
 		 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
@@ -187,7 +187,7 @@ public class UserMapper {
 			 */
 			if (rs.next()) {
 				User user = new User();
-				user.setBoId(rs.getInt("id"));
+				user.setId(rs.getInt("id"));
 				user.setLogEmail(rs.getString("logEmail"));
 				user.setName(rs.getString("name"));
 				return user;
@@ -228,7 +228,7 @@ public class UserMapper {
 			 */
 			if (rs.next()) {
 				User user = new User();
-				user.setBoId(rs.getInt("id"));
+				user.setId(rs.getInt("id"));
 				user.setLogEmail(rs.getString("logEmail"));
 				user.setName(rs.getString("name"));
 				return user;
@@ -269,7 +269,7 @@ public class UserMapper {
 
 			while (rs.next()) {
 				User u = new User();
-				u.setBoId(rs.getInt("id"));
+				u.setId(rs.getInt("id"));
 				u.setLogEmail(rs.getString("logEmail"));
 				u.setName(rs.getString("name"));
 				result.add(u);
