@@ -149,9 +149,7 @@ public class ContactsTable extends CellTable<Contact> {
 							}
 
 							public void onSuccess(ArrayList<Value> result) {
-								// propertyValueMap = result;
-								// Window.alert(Integer.toString(result.size()));
-								// Window.alert(Integer.toString(globalIndex));
+							
 								ContactInfoForm contact = new ContactInfoForm(cellTable.getDisplayedItem(row), result);
 
 								contact.center();
@@ -265,6 +263,12 @@ public class ContactsTable extends CellTable<Contact> {
 
 								for (Contact c : contacts) {
 									selectionModel.setSelected(c, value);
+								}
+								
+								if(!addContactstoCL.isVisible()){
+									addContactstoCL.setVisible(true);
+								}else if(!shareSelectedContacts.isVisible()){
+									shareSelectedContacts.setVisible(true);
 								}
 
 							}
@@ -1188,7 +1192,6 @@ public class ContactsTable extends CellTable<Contact> {
 								// hinzugefügt
 								public void onSuccess(Void result) {
 									Window.alert("Teilen von " + mainContactlist.getName() + " war erfolgreich!");
-									Window.alert(Integer.toString(uArray.size()));
 									RootPanel.get("contant").clear();
 									ContactListForm3 reload = new ContactListForm3(mainContactlist);
 								}
