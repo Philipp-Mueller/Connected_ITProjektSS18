@@ -265,10 +265,6 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 			}
 		});
 	    
-		    
-	
-
-
 		HorizontalPanel footer = new HorizontalPanel();
 		Anchor startPage = new Anchor ("Startseite", "Connected_ITProjektSS18.html");
 		HTML copyrightText1 = new HTML(" | ");

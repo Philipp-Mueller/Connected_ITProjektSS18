@@ -1,16 +1,10 @@
 package de.hdm.Connected.client.gui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
-import com.google.gwt.cell.client.Cell;
-import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -20,59 +14,72 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.view.client.ProvidesKey;
-import com.google.gwt.view.client.SelectionModel;
-import com.google.gwt.view.client.SingleSelectionModel;
 
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.bo.ContactList;
 
+/**
+ * Die Klasse Navigation erweitert die von GWT angebotene Klasse VerticalPanel 
+ * und dient der Darstellung einer Navigationsleiste, mit deren Hilfe
+ * der Nutzer zwischen verschiedenen Ansichten (Kontakten und Kontaktlisten) 
+ * wechseln sowie neue Kontakte und Kontaklisten erstellen kann.
+ * 
+ * @autor 
+ * 
+ */
 
 public class Navigation extends VerticalPanel {
+	 
+	 //ArrayList für die Spreicherung der Kontaklisten
 	 ArrayList<ContactList> allContactsLists = null;
+	 
+	 //VerticalPanel, welches dem DisclosurePanel hinzugefügt wird, um Kontaklisten-Buttons anzuzeigen
 	 private VerticalPanel contactListPanel = new VerticalPanel();
+	 
+	 //HeaderButton für das DisclosurePanel
 	 Button headerButton = new Button();
-	 int i =0;
-	 Button BMyContacts = new Button ("Meine Kontakte");
-	public void onLoad() {
-		
-		BMyContacts.setStyleName("gwt-Button-buttonpressednav");
-		//ContactlistsCell cellTreeModel = new ContactlistsCell();
-		
-		//CellTree navTree = new CellTree(cellTreeModel, null);
-		//ContactListsTreeViewModel contactListsTreeModel = new ContactListsTreeViewModel();
-		
-		//CellTree contactListsTree = new CellTree (contactListsTreeModel, null);
-		
-		final Button BNewContact = new Button ("Neuen Kontakt anlegen");
-		final Button BNewContactList = new Button ("Neue Kontaktliste anlegen");
-		// BNewContact.addStyleName("");
-		
-		BNewContact.addClickHandler(new ClickHandler() {
+	 
+	 int i = 0;
+	 
+	 Button myContactsButton = new Button ("Meine Kontakte");
+	 
+	 /**
+	  * Die onLoad()-Methode wird aufgerufen, sobald das Widget 
+	  * (VerticalPanel) zur Anzeige gebracht wird.
+	  */
+	 
+	 public void onLoad() {
+		 
+		//Zuweisen einer css-Klasse für späteres Styling
+		myContactsButton.setStyleName("gwt-Button-buttonpressednav");
 
+		final Button newContactButton = new Button ("Neuen Kontakt anlegen");
+		
+		final Button newContactListButton = new Button ("Neue Kontaktliste anlegen");
+		
+		//Beim Klicken wird ein PopUp für das Erstellen eines neuen Kontakts aufgerufen
+		newContactButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				
+				newContactButton.removeStyleName("gwt-Button-buttonpressednav");
 				
-				
-				BNewContact.removeStyleName("gwt-Button-buttonpressednav");
-				BNewContactList.removeStyleName("gwt-Button-buttonpressednav");
+				newContactListButton.removeStyleName("gwt-Button-buttonpressednav");
 
 				Iterator<Widget> iterator = contactListPanel.iterator();
 				
-				while(iterator.hasNext()){
+				while (iterator.hasNext()) {
 					Widget w = iterator.next();
-					if(w instanceof Button){
+					if (w instanceof Button) {
 						w.removeStyleName("gwt-Button-buttonpressednav");									
 					}
 				}
 				
-				
 				final ContactForm newContact = new ContactForm();
-				// Enable glass background.
+				
 				newContact.setGlassEnabled(true);					
 				
+				//Position des PopUp-Panels
 				newContact.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 
 					public void setPosition(int offsetWidth, int offsetHeight) {
@@ -86,72 +93,59 @@ public class Navigation extends VerticalPanel {
 			}
 		});
 		
-		
-		// BNewContactList.addStyleName("");
-		
-		BNewContactList.addClickHandler(new ClickHandler() {
-		// BNewContactList.addStyleName("");
-			
+		//Beim Klicken wird ein PopUp für das Erstellen einer neuen Kontaktliste aufgerufen
+		newContactListButton.addClickHandler(new ClickHandler() {
+
 			@Override
 			public void onClick(ClickEvent event) {
-				BNewContact.removeStyleName("gwt-Button-buttonpressednav");
-				BMyContacts.removeStyleName("gwt-Button-buttonpressednav");
+				newContactButton.removeStyleName("gwt-Button-buttonpressednav");
+				myContactsButton.removeStyleName("gwt-Button-buttonpressednav");
 
 				Iterator<Widget> iterator = contactListPanel.iterator();
 				
-				while(iterator.hasNext()){
+				while (iterator.hasNext()){
 					Widget w = iterator.next();
-					if(w instanceof Button){
+					if (w instanceof Button){
 						w.removeStyleName("gwt-Button-buttonpressednav");									
 					}
 				}
 				
+				//Anzeigen des PopUp-Panels
 				NewContactListPopup addContactListForm = new NewContactListPopup();
 				addContactListForm.center();
 				addContactListForm.show();
 				Navigation reload = new Navigation();
 				
-				
 			}
 		});
 		
-	
-		// BMyContacts.addStyleName("");
-		
-		
-		BMyContacts.addClickHandler(new ClickHandler() {
-		// BMyContacts.addStyleName("");
-			
-		
+		//Beim Klicken werden im content-Bereich alle Kontakte des Users in CellTable-Form angezeigt
+		myContactsButton.addClickHandler(new ClickHandler() {
+
 			@Override
 			public void onClick(ClickEvent event) {
 				RootPanel.get("content").clear();
-				BNewContact.removeStyleName("gwt-Button-buttonpressednav");
-				BNewContactList.removeStyleName("gwt-Button-buttonpressednav");
+				newContactButton.removeStyleName("gwt-Button-buttonpressednav");
+				newContactListButton.removeStyleName("gwt-Button-buttonpressednav");
 			
 
 				Iterator<Widget> iterator = contactListPanel.iterator();
 				
-				while(iterator.hasNext()){
+				while (iterator.hasNext()){
 					Widget w = iterator.next();
-					if(w instanceof Button){
+					if (w instanceof Button){
 						w.removeStyleName("gwt-Button-buttonpressednav");									
 					}
 				}
 				
-				BMyContacts.addStyleName("gwt-Button-buttonpressednav");
+				myContactsButton.addStyleName("gwt-Button-buttonpressednav");
 			
 				ContactsTable allContacts = new ContactsTable(null, null);
 			}
 		});
 		
-	//	ContactlistsCellList cellList = new ContactlistsCellList();
-		//CellTree?
-		//String header  = "Meine Kontaktlisten";
-		
+		//DisclosurePanel, welches beim Aufklappen alle Kontaktlisten des Users anzeigt
 		DisclosurePanel myContactLists = new DisclosurePanel();
-			//myContactLists.setContent(contactListsTree);
-		
 		
 		headerButton.setHTML("&#x25BA  Meine Kontaktlisten");
 		headerButton.addClickHandler(new ClickHandler(){
@@ -159,86 +153,78 @@ public class Navigation extends VerticalPanel {
 			@Override
 			public void onClick(ClickEvent event) {
 				
-				if(headerButton.getHTML() == "►  Meine Kontaktlisten"){
-					headerButton.setHTML("&#x25BC  Meine Kontaktlisten");}
-				else{headerButton.setHTML("&#x25BA  Meine Kontaktlisten");}
-				
+				if (headerButton.getHTML() == "►  Meine Kontaktlisten") {
+					headerButton.setHTML("&#x25BC  Meine Kontaktlisten");
+					} else { 
+						headerButton.setHTML("&#x25BA  Meine Kontaktlisten");
+				}
 			}
 			
 		});
-	
+		
+		//Header des DisclosurePanels wird als Button realisiert
 	    myContactLists.setHeader(headerButton);
-	   // myContactLists.setContent(cellList);
-	    Button BSharedContacts = new Button ("Geteilte Kontakte");
-		// BSharedContacts.addStyleName("");
 	    
-	    
-	    
+	    /* Darstellen aller Kontaklisten des Users in der Navigation, 
+	     * wobei jeder Kontakliste ein Button unter dem DisclosurePanel entspricht.
+	     */
 	    ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<ContactList>>(){
-	   
-			@Override
+		
+	    	@Override
 			public void onFailure(Throwable caught) {
-
-				
 			}
 
 			@Override
 			public void onSuccess(ArrayList<ContactList> result) {
 				allContactsLists = result;
-				for (final ContactList cl : allContactsLists){
+				for (final ContactList cl : allContactsLists) {
 					final Button showCL = new Button();
-
-					if(cl.getCreatorId() != ClientSideSettings.getCurrentUser().getBoId()){
+					if (cl.getCreatorId() != ClientSideSettings.getCurrentUser().getBoId()){
 						showCL.setHTML("<strong><i> &ensp;" + cl.getName() + "</i></strong>");
-					}else{
+					} else {
 						showCL.setHTML("&ensp;" + cl.getName());
 					}
 					
+				/* Beim Klicken auf den Button werden im content-Bereich 
+				 * alle Kontakte angezeigt, die in dieser Kontaktliste gespeicht sind.
+				 */
 					showCL.addClickHandler(new ClickHandler(){
 
 						@Override
 						public void onClick(ClickEvent event) {
 							RootPanel.get("content").clear();
 							ContactListForm3 showContactList = new ContactListForm3(cl);
-							BNewContact.removeStyleName("gwt-Button-buttonpressednav");
-							BNewContactList.removeStyleName("gwt-Button-buttonpressednav");
-							BMyContacts.removeStyleName("gwt-Button-buttonpressednav");
+							newContactButton.removeStyleName("gwt-Button-buttonpressednav");
+							newContactListButton.removeStyleName("gwt-Button-buttonpressednav");
+							myContactsButton.removeStyleName("gwt-Button-buttonpressednav");
 							
 							Iterator<Widget> iterator = contactListPanel.iterator();
 							
-							while(iterator.hasNext()){
+							while (iterator.hasNext()) {
 								Widget w = iterator.next();
-								if(w instanceof Button){
+								if (w instanceof Button) {
 									w.removeStyleName("gwt-Button-buttonpressednav");									
 								}
 							}
 							showCL.addStyleName("gwt-Button-buttonpressednav");
-							
 						}
 						
 					});
+					//Kontaklisten-Buttons werden dem Kontaklisten-VerticalPanel zugewiesen
 					contactListPanel.add(showCL);
 				}
 			}
 	    	
 	    });
 		
+	    //Zuweisen dem DisclosurePanel eines VerticalPanels mit Kontaklisten
 	    myContactLists.setContent(contactListPanel);
-		BSharedContacts.addClickHandler(new ClickHandler() {
-		// BSharedContacts.addStyleName("");
-			
-			
-			@Override
-			public void onClick(ClickEvent event) {
-				//geteilte Kontakte 
-			}
-		});
 
-			
-		this.add(BNewContact);
-		this.add(BNewContactList);
+	    //Alle Buttons und DisclosurePanel werden der Navigation zugewiesen
+		this.add(newContactButton);
+		this.add(newContactListButton);
 		this.add(new HTML("<div style=\"margin: 0px 0px 5px 5px;\"><hr></div>"));
-		this.add(BMyContacts);
+		this.add(myContactsButton);
 		this.add(myContactLists);
 
 	}		
