@@ -56,6 +56,15 @@ public class NewContactListPopup extends DialogBox {
 		/**Bei Klick auf erstellen wird die Service Methode zum erstellen der KOntaktliste aufgerufen**/
 		ok.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				
+
+				//Eingabeüberprüfung
+				if (nameTextBox.getText().matches("")) {
+					Window.alert("Bitte Wert eintragen!");
+					return;
+				}
+
+				
 				ContactList cl = new ContactList();
 				cl.setName(nameTextBox.getText());
 
