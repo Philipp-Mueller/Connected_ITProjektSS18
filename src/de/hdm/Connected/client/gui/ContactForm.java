@@ -16,6 +16,7 @@ import java.util.Vector;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import com.google.gwt.dev.javac.Shared;
+import com.google.gwt.dom.client.Style.Unit;
 //import com.google.appengine.labs.repackaged.com.google.common.collect.Multiset.Entry;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -110,6 +111,7 @@ public class ContactForm extends PopupPanel {
 		selectedCL = contactList;
 		contactsInCL = contacts;
 		
+		
 
 
 		// Enable animation.
@@ -174,6 +176,8 @@ public class ContactForm extends PopupPanel {
 		});
 
 		VerticalPanel root = new VerticalPanel();
+	
+
 
 		HorizontalPanel topPanel = new HorizontalPanel();
 
@@ -212,7 +216,8 @@ public class ContactForm extends PopupPanel {
 		root.add(newPropertyTable);
 
 		HorizontalPanel bottomPanel = new HorizontalPanel();
-
+		
+		
 	
 
 		Button saveButton = new Button("Kontakt abspeichern");
@@ -269,7 +274,7 @@ public class ContactForm extends PopupPanel {
 									contacts.add(result);
 								
 									
-
+									// wenn eine Kontaktlist ausgewählt, dann Kontakt dieser hinzufügen
 									if (contactListToAdd.size() != 0) {
 										ClientSideSettings.getConnectedAdmin().addContactsToContactList(contacts,
 												contactListToAdd, new AsyncCallback<Void>() {
@@ -303,6 +308,7 @@ public class ContactForm extends PopupPanel {
 				//Aufruf wenn Kontakt direkt KOntaktliste hinzugefügt werden soll
 				if (contactListToAdd.size() != 0) {
 					ArrayList<Contact> contacts = new ArrayList<Contact>();
+					contacts.add(createdContact);
 					ClientSideSettings.getConnectedAdmin().addContactsToContactList(contacts,
 							contactListToAdd, new AsyncCallback<Void>() {
 
@@ -320,7 +326,6 @@ public class ContactForm extends PopupPanel {
 								
 								RootPanel.get("content").clear();
 								ContactsTable table = new ContactsTable(null, null);
-								Window.alert("Kontakt angelegt!");
 								hide();
 								}
 
@@ -337,7 +342,7 @@ public class ContactForm extends PopupPanel {
 
 		});
 
-		bottomPanel.add(saveButton);
+		
 		/**
 		 * cancelButton Clickhandler
 		 * 
@@ -371,6 +376,11 @@ public class ContactForm extends PopupPanel {
 		});
 
 		bottomPanel.add(cancelButton);
+	
+		bottomPanel.setCellHorizontalAlignment(saveButton, HasHorizontalAlignment.ALIGN_RIGHT);
+		saveButton.getElement().getStyle().setMarginLeft(320, Unit.PX);
+		bottomPanel.add(saveButton);
+		
 
 		/**
 		 * contactlist auswählen Clickhandler
@@ -574,10 +584,22 @@ public class ContactForm extends PopupPanel {
 															
 																@Override
 																public void onClick(ClickEvent event) {
+																	//TextBox überprüfung
 																	if (valueChangeTextBox.getText().matches("")) {
 																		Window.alert("Bitte eine Eigenschaft eintragen!");
 																		return;
 																	}
+																	
+																	//Bei Telefonnummern nur Ziffern!
+																	if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyListBox.getSelectedItemText() == "Mobil (privat)" || propertyListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
+																		if (!valueTextBox.getText().matches("[0-9]+")) {
+																				Window.alert("Bitte nur Ziffern eintragen!");
+																				return;
+																		} 	
+
+																	}
+																	
+																	
 																	eventRow = propertyTable.getCellForEvent(event)
 																			.getRowIndex();
 																	int propertyId = 0;
@@ -845,9 +867,19 @@ public class ContactForm extends PopupPanel {
 		
 		
 			if (selectedContact != null) {
+				//TextBox überprüfung
 				if (valueTextBox.getText().matches("")) {
 					Window.alert("Bitte eine Eigenschaft eintragen!");
 					return;
+				}
+				
+				//Bei Telefonnummern nur Ziffern!
+				if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyListBox.getSelectedItemText() == "Mobil (privat)" || propertyListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
+					if (!valueTextBox.getText().matches("[0-9]+")) {
+							Window.alert("Bitte nur Ziffern eintragen!");
+							return;
+					} 	
+
 				}
 				
 				int propertyId = 0;
@@ -972,14 +1004,23 @@ public class ContactForm extends PopupPanel {
 						e.printStackTrace();
 					}
 				} else {
+					//TextBox überprüfung
 					if (valueTextBox.getText().matches("")) {
 						Window.alert("Bitte eine Eigenschaft eintragen!");
 						return;
+					} 
+					//Bei Nummern nur Ziffern zulässig!
+if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyListBox.getSelectedItemText() == "Mobil (privat)" || propertyListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
+						if (!valueTextBox.getText().matches("[0-9]+")) {
+								Window.alert("Bitte nur Ziffern eintragen!");
+								return;
+						} 	
+	
 					}
 					
+					
 					int propertyId = 0;
-					newPropertyBtn.removeFromParent();
-					newPropertyBtn = null;
+				
 					propertyName = propertyListBox.getSelectedItemText();
 					for (Property p : propertyArray) {
 						if ((propertyListBox.getSelectedItemText()).equals(p.getName())) {
@@ -1008,7 +1049,8 @@ public class ContactForm extends PopupPanel {
 						Window.alert("Geburtsdatum bitte im Format \"01.01.99\" eingeben");
 						return;
 					}
-					
+					newPropertyBtn.removeFromParent();
+					newPropertyBtn = null;
 				}
 			}
 		}
@@ -1109,6 +1151,14 @@ public class ContactForm extends PopupPanel {
 											if (valueChangeTextBox.getText().matches("")) {
 												Window.alert("Bitte eine Eigenschaft eintragen!");
 												return;
+											}
+											
+											if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyListBox.getSelectedItemText() == "Mobil (privat)" || propertyListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
+												if (!valueTextBox.getText().matches("[0-9]+")) {
+														Window.alert("Bitte nur Ziffern eintragen!");
+														return;
+												} 	
+							
 											}
 										
 											int propertyId = 0;
@@ -1307,10 +1357,12 @@ public class ContactForm extends PopupPanel {
 
 		@Override
 		public void onClick(ClickEvent event) {
+			//TextBox überprüfung
 			if (newPropertyTextBox.getText().matches("")) {
 				Window.alert("Bitte einen Eigenschaftsnamen eintragen!");
 				return;
 			}
+		
 			
 			ClientSideSettings.getConnectedAdmin().findPropertyByName(newPropertyTextBox.getText(), new AsyncCallback<Property>(){
 
@@ -1433,10 +1485,22 @@ public class ContactForm extends PopupPanel {
 
 								@Override
 								public void onClick(ClickEvent event) {
+									
+									//TextBox überprüfung
 									if (valueChangeTextBox.getText().matches("")) {
 										Window.alert("Bitte eine Eigenschaft eintragen!");
 										return;
 									}
+									
+									//Bei Telefonnummern nur Ziffern!
+									if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyListBox.getSelectedItemText() == "Mobil (privat)" || propertyListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
+										if (!valueTextBox.getText().matches("[0-9]+")) {
+												Window.alert("Bitte nur Ziffern eintragen!");
+												return;
+										} 	
+
+									}
+									
 									int propertyId = 0;
 									final int oldPropertyId = updatingValue.getPropertyID();
 									for (Property p : propertyArray) {
