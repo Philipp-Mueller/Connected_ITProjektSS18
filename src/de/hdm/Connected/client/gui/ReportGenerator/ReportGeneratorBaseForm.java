@@ -36,6 +36,7 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
+
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.ReportGenerator.ReportGeneratorServiceAsync;
 import de.hdm.Connected.shared.ReportGenerator.ReportObjekt;
@@ -120,7 +121,7 @@ public class ReportGeneratorBaseForm extends Widget {
 		filterVpanelLinks.add(labelFilter);
 		filterVpanelLinks.add(trennStrich1);
 		trennStrich1.getElement().getStyle().setMarginBottom(2, Unit.EM);
-		
+		trennStrich1.getElement().getStyle().setWidth(20, Unit.EM);
 		
 		// AllContacts RadioButton
 		allContactsRb.getElement().getStyle().setMarginBottom(2, Unit.EM);
@@ -151,7 +152,7 @@ public class ReportGeneratorBaseForm extends Widget {
 		filterVpanelLinks.add(trennStrich2);
 		trennStrich2.getElement().getStyle().setMarginTop(2, Unit.EM);
 		trennStrich2.getElement().getStyle().setMarginBottom(2, Unit.EM);
-
+		trennStrich2.getElement().getStyle().setWidth(20, Unit.EM);
 		
 		
 		// SharedContact RadioButton
@@ -204,7 +205,7 @@ public class ReportGeneratorBaseForm extends Widget {
 		filterVpanelLinks.add(trennStrich3);
 		trennStrich3.getElement().getStyle().setMarginTop(2, Unit.EM);
 		trennStrich3.getElement().getStyle().setMarginBottom(2, Unit.EM);
-		
+		trennStrich3.getElement().getStyle().setWidth(20, Unit.EM);
 		
 		//Eigenschaftssuche RadioButton
 		propertySearchRb.getElement().getStyle().setMarginTop(2, Unit.EM);
@@ -337,10 +338,11 @@ public class ReportGeneratorBaseForm extends Widget {
 		filterVpanelLinks.add(trennStrich4);
 		trennStrich4.getElement().getStyle().setMarginTop(2, Unit.EM);
 		trennStrich4.getElement().getStyle().setMarginBottom(2, Unit.EM);
+		trennStrich4.getElement().getStyle().setWidth(20, Unit.EM);
 		
 		
 		//Filter Anwenden button
-		Button filterAnwenden = new Button("Filter Anwenden", new ClickHandler() {
+		Button filterAnwenden = new Button("Filter anwenden", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
 				ReportGeneratorBaseForm.this.valueDescription = valueBox.getText();
@@ -377,7 +379,7 @@ public class ReportGeneratorBaseForm extends Widget {
 		// Filter löschen Button
 		Button filterLoeschen = new Button("Filter löschen", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				//Default page view
+				//Seitenansicht mit Default werten
 				allContactsRb.setChecked(true);
 				userListBox.setEnabled(false);
 				userListBox.setSelectedIndex(0);
@@ -393,9 +395,10 @@ public class ReportGeneratorBaseForm extends Widget {
 				allContacts = true;
 				sharedContacts = false;
 				
+				
 			}
 		});
-		
+		filterLoeschen.getElement().getStyle().setMarginRight(1, Unit.EM);
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 		buttonPanel.add(filterLoeschen);
 		buttonPanel.add(filterAnwenden);
@@ -445,14 +448,14 @@ public class ReportGeneratorBaseForm extends Widget {
 	    
 	    
 	    
-	    //
+	    //Filter in der Tabelle Vorname
 	    columnSortHandler.setComparator(nameColumn,
 	        new Comparator<ReportObjekt>() {
 	          public int compare(ReportObjekt c1, ReportObjekt c2) {
 	            if (c1 == c2) {
 	              return 0;
 	            }
-
+	         // Vergleicht den Vornamen in den Spalten.
 	            if (c1 != null) {
 	              return (c2 != null) ? c1.getVorname().compareTo(c2.getVorname()) : 1;
 	            }
@@ -468,7 +471,7 @@ public class ReportGeneratorBaseForm extends Widget {
 	    
 	    
 	    
-	    //
+	    //Filter in der Tabelle Nachname
 	    columnSortHandler2.setComparator(surnameColumn,
 	        new Comparator<ReportObjekt>() {
 	          public int compare(ReportObjekt c1, ReportObjekt c2) {
@@ -476,7 +479,7 @@ public class ReportGeneratorBaseForm extends Widget {
 	              return 0;
 	            }
 
-	            // Vergleicht den Namen in den Spalten.
+	            // Vergleicht den Nachnamen in den Spalten.
 	            if (c1 != null) {
 	              return (c2 != null) ? c1.getNachname().compareTo(c2.getNachname()) : 1;
 	            }
@@ -512,7 +515,6 @@ public class ReportGeneratorBaseForm extends Widget {
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 		hp.getElement().getStyle().setMarginLeft(10, Unit.EM);
 		datenHpanelRechts.add(hp);
-		
 
 	}
 
