@@ -50,7 +50,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 	public final static String value_URL = Window.Location.getParameter("url");
 	private static VerticalPanel loginPanel = new VerticalPanel();
 	private static Label loginLabel = new Label(
-			"Please sign in to your Google Account to access the Connected application.");
+			"Melde dich mit deinem Google-Konto an um Connected nutzen zu können.");
 	private static Anchor signInLink = new Anchor("Sign In");
 	public static User currentUser = new User();
 
