@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.Vector;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
+
 import com.google.gwt.dev.javac.Shared;
 //import com.google.appengine.labs.repackaged.com.google.common.collect.Multiset.Entry;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -485,6 +487,8 @@ public class ContactForm extends PopupPanel {
 											eventRow = propertyTable.getCellForEvent(event).getRowIndex();
 											final TextBox valueChangeTextBox = new TextBox();
 											valueChangeTextBox.setWidth("200px");
+											
+										
 											valueChangeTextBox.setText(updatingOldValue.getName());
 
 											ClientSideSettings.getConnectedAdmin().findPropertyByPropertyId(
@@ -587,13 +591,24 @@ public class ContactForm extends PopupPanel {
 																		}
 																	}
 
-																	if (propertyChangeListBox.getSelectedItemText()
-																			.equals("Geburtsdatum")) {
-																		birthdayFlag = true;
-																	} else if (oldPropertyId == 1) {
-																		birthdayFlag = false;
+																							
+																	try {
+																		if (propertyChangeListBox.getSelectedItemText().equals("Geburtsdatum")) {
+																			birthdayFlag = true;
+																			DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("dd.MM.yyyy");
+																			java.util.Date date = dateTimeFormat.parse(valueChangeTextBox.getText());
+																			updatingOldValue.setName(valueChangeTextBox.getText());
+																		} else if (oldPropertyId == 1) {
+																			birthdayFlag = false;
+																			updatingOldValue.setName(valueChangeTextBox.getText());
+																		} else{
+																			updatingOldValue.setName(valueChangeTextBox.getText());
+																		}
+																	} catch (Exception e) {
+																		Window.alert("Geburtsdatum bitte im Format \"01.01.99\" eingeben");
+																		return;
 																	}
-
+																	
 																	updatingOldValue
 																			.setName(valueChangeTextBox.getText());
 																	updatingOldValue.setPropertyID(propertyId);
@@ -842,12 +857,18 @@ public class ContactForm extends PopupPanel {
 					}
 				}
 				
-				String value;
+				String value = "";		
+				try{
+				
 				if(propertyListBox.getSelectedItemText().equals("Geburtsdatum")){
-					java.util.Date date = birthday.getValue();
-					String dateString = DateTimeFormat.getFormat("dd.MM.yyyy").format(date);
-					value = dateString;
+					DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("dd.MM.yyyy");
+					java.util.Date date = dateTimeFormat.parse(valueTextBox.getText());
+					value = valueTextBox.getText();
 				}else {value = valueTextBox.getText();}
+				} catch (Exception e) {
+					Window.alert("Geburtsdatum bitte im Format \"01.01.99\" eingeben");
+					return;
+				}
 				
 				ClientSideSettings.getConnectedAdmin().createValue(value, propertyId,
 						selectedContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(),
@@ -863,6 +884,7 @@ public class ContactForm extends PopupPanel {
 								// die Reihen Widget setzen
 								int rowCount = propertyTable.getRowCount();
 								updatingValue = result;
+								valueTextBox.setText("");
 								updateBtn = new Button("Eigenschaft bearbeiten");
 								deleteBtn = new Button("Eigenschaft entfernen");
 								updateBtn.addClickHandler(new updateBtnClickHandler());
@@ -967,20 +989,26 @@ public class ContactForm extends PopupPanel {
 							}
 						}
 					}
-					
-					if(propertyListBox.getSelectedItemText().equals("Geburtsdatum")){
-						java.util.Date date = birthday.getValue();
-						String dateString = DateTimeFormat.getFormat("dd.MM.yyyy").format(date);
-						ClientSideSettings.getConnectedAdmin().createValue(dateString,propertyId,
+				
+					try {
+						if(propertyListBox.getSelectedItemText().equals("Geburtsdatum")){
+							DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("dd.MM.yyyy");
+							java.util.Date date = dateTimeFormat.parse(valueTextBox.getText());
+						
+							ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(),propertyId,
+									createdContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(),
+									new createValueCallback());					
+						} else{			
+						
+						ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId,
 								createdContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(),
-								new createValueCallback());					
-					} else{
-			
-					
-					ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId,
-							createdContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(),
-							new createValueCallback());
+								new createValueCallback());
+						}
+					} catch (Exception e) {
+						Window.alert("Geburtsdatum bitte im Format \"01.01.99\" eingeben");
+						return;
 					}
+					
 				}
 			}
 		}
@@ -1077,6 +1105,7 @@ public class ContactForm extends PopupPanel {
 
 										@Override
 										public void onClick(ClickEvent event) {
+																				
 											if (valueChangeTextBox.getText().matches("")) {
 												Window.alert("Bitte eine Eigenschaft eintragen!");
 												return;
@@ -1090,19 +1119,24 @@ public class ContactForm extends PopupPanel {
 												}
 											}
 
-											if (propertyChangeListBox.getSelectedItemText().equals("Geburtsdatum")) {
-												birthdayFlag = true;
-												java.util.Date date = birthday.getValue();
-												String dateString = DateTimeFormat.getFormat("dd.MM.yyyy").format(date);
-												updatedValue.setName(dateString);
-											} else if (oldPropertyId == 1) {
-												birthdayFlag = false;
-												updatedValue.setName(valueChangeTextBox.getText());
-											} else{
-												updatedValue.setName(valueChangeTextBox.getText());
-											}
 											
+												try {
+													if (propertyChangeListBox.getSelectedItemText().equals("Geburtsdatum")) {
+														birthdayFlag = true;
+														DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("dd.MM.yyyy");
+														java.util.Date date = dateTimeFormat.parse(valueChangeTextBox.getText());
+														
+																										
+													} else if (oldPropertyId == 1) {
+														birthdayFlag = false;
+													}
+												} catch (Exception e) {
+													Window.alert("Geburtsdatum bitte im Format \"01.01.99\" eingeben");
+													return;
+												}
 											
+											updatedValue.setName(valueChangeTextBox.getText());
+										
 											updatedValue.setPropertyID(propertyId);
 											ClientSideSettings.getConnectedAdmin().updateValue(updatedValue,
 													oldPropertyId, new AsyncCallback<Value>() {
@@ -1411,18 +1445,21 @@ public class ContactForm extends PopupPanel {
 										}
 									}
 
-									if (propertyChangeListBox.getSelectedItemText().equals("Geburtsdatum")) {
-										birthdayFlag = true;
-										java.util.Date date = birthday.getValue();
-										String dateString = DateTimeFormat.getFormat("dd.MM.yyyy").format(date);
-										updatingValue.setName(dateString);
-									} else if (oldPropertyId == 1) {
-										birthdayFlag = false;
-										updatingValue.setName(valueChangeTextBox.getText());
-									} else {
-										updatingValue.setName(valueChangeTextBox.getText());
+									try {
+										if (propertyChangeListBox.getSelectedItemText().equals("Geburtsdatum")) {
+											birthdayFlag = true;
+											DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("dd.MM.yyyy");
+											java.util.Date date = dateTimeFormat.parse(valueChangeTextBox.getText());
+											
+										} else if (oldPropertyId == 1) {
+											birthdayFlag = false;
+										}
+									} catch (Exception e) {
+										Window.alert("Geburtsdatum bitte im Format \"01.01.99\" eingeben");
+										return;
 									}
-
+									
+									updatingValue.setName(valueChangeTextBox.getText());
 									updatingValue.setPropertyID(propertyId);
 									ClientSideSettings.getConnectedAdmin().updateValue(updatingValue, oldPropertyId,
 											new AsyncCallback<Value>() {
