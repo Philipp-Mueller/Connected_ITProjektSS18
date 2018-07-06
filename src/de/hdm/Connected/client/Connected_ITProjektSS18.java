@@ -161,7 +161,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 
 						@Override
 						public void onSuccess(User result) {
-							// Ruft den User auf der mit der Google email in der DB eingetragen ist³
+							// Ruft den User auf der mit der Google email in der DB eingetragen ist
 							if (result != null) {
 								log("User: " + result.getLogEmail());
 								currentUser = result;
@@ -267,6 +267,8 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 
 			}
 		});
+	    
+	    //Footer und Impressum hinzufügen
 	    
 		HorizontalPanel footer = new HorizontalPanel();
 		Anchor startPage = new Anchor ("Startseite", "Connected_ITProjektSS18.html");

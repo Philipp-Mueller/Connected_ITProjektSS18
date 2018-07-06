@@ -133,6 +133,8 @@ public class Settings extends VerticalPanel {
 		}
 
 		lbAusgabeEmail.setText(currentUser.getLogEmail());
+		
+		//Abbrechen Button
 
 		btnAbbrechenButton.addClickHandler(new ClickHandler() {
 
@@ -146,6 +148,7 @@ public class Settings extends VerticalPanel {
 			}
 		});
 
+		//Profil speichern
 		btnSichernButton.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -179,6 +182,7 @@ public class Settings extends VerticalPanel {
 			}
 		});
 
+		//Profil löschen
 		btnDeleteAccount.addClickHandler(new ClickHandler() {
 
 			@Override

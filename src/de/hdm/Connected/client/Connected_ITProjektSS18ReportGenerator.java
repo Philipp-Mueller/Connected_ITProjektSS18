@@ -96,7 +96,7 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
 						@Override
 						public void onSuccess(User result) {
 							// Ruft den User auf der mit der Google email in der DB
-							// eingetragen ist³
+							// eingetragen ist
 							if (result != null) {
 								log("User: " + result.getLogEmail());
 								currentUser = result;
