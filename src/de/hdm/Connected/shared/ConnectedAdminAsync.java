@@ -57,6 +57,8 @@ public interface ConnectedAdminAsync {
 	
 	void deleteContactList(ContactList contactlist, AsyncCallback<Void> callback);
 	
+	void deleteContactList(ContactList contactlist, int userid, AsyncCallback<Void> callback);
+	
 	void findContactsByContactListId(int contactlistId, AsyncCallback<ArrayList<Contact>> callback);
 	
 	void findContactsByValue(String value, AsyncCallback<ArrayList<Contact>> callback);
@@ -112,6 +114,8 @@ public interface ConnectedAdminAsync {
 	void findValueById(int id, AsyncCallback<Value> callback);
 	
 	void giveContactPermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid, AsyncCallback<Void> callback);
+	
+	void giveContactlistPermissionToUsers(ContactList contactlist, ArrayList<User> userArray, int shareuserid, AsyncCallback<Void> callback);
 	
 	void givePermissionToUsers(int shareObjectId, ArrayList<User> userArray, int shareuserid, AsyncCallback<Void> callback);
 

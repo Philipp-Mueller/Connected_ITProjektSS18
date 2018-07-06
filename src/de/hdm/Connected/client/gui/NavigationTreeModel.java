@@ -18,15 +18,29 @@ import com.google.gwt.user.client.ui.Widget;
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.bo.ContactList;
 
-public class NavigationTreeModel extends VerticalPanel{
+/**
+ * Die Klasse NavigationTreeModel steuert das Verhalten des Navigationbaumes
+ * und stellt die Navigationshierarchie bereit.
+ * 
+ * @author 
+ *
+ */
+
+public class NavigationTreeModel extends VerticalPanel {
 	
-	 //ArrayList für die Spreicherung der Kontaklisten
+	 /*
+	  * ArrayList für die Spreicherung der Kontaklisten
+	  */
 	 ArrayList<ContactList> allContactsLists = null;
 	 
-	 //VerticalPanel, welches dem DisclosurePanel hinzugefügt wird, um Kontaklisten-Buttons anzuzeigen
+	 /*
+	  * VerticalPanel, welches dem DisclosurePanel hinzugefügt wird, um Kontaklisten-Buttons anzuzeigen
+	  */
 	 private VerticalPanel contactListPanel = new VerticalPanel();
 	 
-	 //HeaderButton für das DisclosurePanel
+	 /*
+	  * HeaderButton für das DisclosurePanel
+	  */
 	 Button headerButton = new Button();
 	 
 	 int i = 0;
@@ -34,23 +48,23 @@ public class NavigationTreeModel extends VerticalPanel{
 	 Button myContactsButton = new Button ("Meine Kontakte");
 	 
 	 /**
-	  * Die onLoad()-Methode wird aufgerufen, sobald das Widget 
-	  * (VerticalPanel) zur Anzeige gebracht wird.
-	  */
-	
-		 
-	public NavigationTreeModel (final ContactList contactList){
-		//Zuweisen einer css-Klasse für späteres Styling
+	  * Die onLoad()-Methode wird aufgerufen, sobald das Widget zur Anzeige gebracht wird.
+	  */ 
+	public NavigationTreeModel (final ContactList contactList) {
+		/*
+		 * Zuweisen einer css-Klasse für späteres Styling
+		 */
 		if(contactList == null){
 			myContactsButton.setStyleName("gwt-Button-buttonpressednav");
 		}
 		
-
 		final Button newContactButton = new Button ("Neuen Kontakt anlegen");
 		
 		final Button newContactListButton = new Button ("Neue Kontaktliste anlegen");
 		
-		//Beim Klicken wird ein PopUp für das Erstellen eines neuen Kontakts aufgerufen
+		/*
+		 * Beim Klicken wird ein PopUp für das Erstellen eines neuen Kontakts aufgerufen
+		 */
 		newContactButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -72,7 +86,9 @@ public class NavigationTreeModel extends VerticalPanel{
 				
 				newContact.setGlassEnabled(true);					
 				
-				//Position des PopUp-Panels
+				/*
+				 * Position des PopUp-Panels
+				 */
 				newContact.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 
 					public void setPosition(int offsetWidth, int offsetHeight) {
@@ -86,7 +102,9 @@ public class NavigationTreeModel extends VerticalPanel{
 			}
 		});
 		
-		//Beim Klicken wird ein PopUp für das Erstellen einer neuen Kontaktliste aufgerufen
+		/*
+		 * Beim Klicken wird ein PopUp für das Erstellen einer neuen Kontaktliste aufgerufen
+		 */
 		newContactListButton.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -112,7 +130,9 @@ public class NavigationTreeModel extends VerticalPanel{
 			}
 		});
 		
-		//Beim Klicken werden im content-Bereich alle Kontakte des Users in CellTable-Form angezeigt
+		/*
+		 * Beim Klicken werden im content-Bereich alle Kontakte des Users in CellTable-Form angezeigt
+		 */
 		myContactsButton.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -137,7 +157,9 @@ public class NavigationTreeModel extends VerticalPanel{
 			}
 		});
 		
-		//DisclosurePanel, welches beim Aufklappen alle Kontaktlisten des Users anzeigt
+		/*
+		 * DisclosurePanel, welches beim Aufklappen alle Kontaktlisten des Users anzeigt
+		 */
 		DisclosurePanel myContactLists = new DisclosurePanel();
 		if(contactList != null)
 		{
@@ -158,7 +180,9 @@ public class NavigationTreeModel extends VerticalPanel{
 			
 		});
 		
-		//Header des DisclosurePanels wird als Button realisiert
+		/*
+		 * Header des DisclosurePanels wird als Button realisiert
+		 */
 	    myContactLists.setHeader(headerButton);
 	    
 	    /* Darstellen aller Kontaklisten des Users in der Navigation, 
@@ -212,17 +236,23 @@ public class NavigationTreeModel extends VerticalPanel{
 						}
 						
 					});
-					//Kontaklisten-Buttons werden dem Kontaklisten-VerticalPanel zugewiesen
+					/*
+					 * Kontaklisten-Buttons werden dem Kontaklisten-VerticalPanel hinzugefügt
+					 */
 					contactListPanel.add(showCL);
 				}
 			}
 	    	
 	    });
 		
-	    //Zuweisen dem DisclosurePanel eines VerticalPanels mit Kontaklisten
+	    /*Hinzufügen dem DisclosurePanel eines VerticalPanels mit Kontaklisten
+	     * 
+	     */
 	    myContactLists.setContent(contactListPanel);
 
-	    //Alle Buttons und DisclosurePanel werden der Navigation zugewiesen
+	    /*
+	     * Alle Buttons und DisclosurePanel werden der Navigation hinzugefügt
+	     */
 		this.add(newContactButton);
 		this.add(newContactListButton);
 		this.add(new HTML("<div style=\"margin: 0px 0px 5px 5px;\"><hr></div>"));

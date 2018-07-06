@@ -63,26 +63,27 @@ public class ContactSharing extends PopupPanel {
 	private CellTable<User> usersWithPermission = new CellTable<User>();
 	private CellTable<User> receiverUser = new CellTable<User>();
 	private Set<Entry<Property, Value>> selectedSet = new HashSet<Entry<Property, Value>>();
-	List<Entry<Property, Value>> propertiesAndValues = new ArrayList<Entry<Property, Value>>();
+	private List<Entry<Property, Value>> propertiesAndValues = new ArrayList<Entry<Property, Value>>();
 	final MultiSelectionModel<Entry<Property, Value>> selectionModel = new MultiSelectionModel<Entry<Property, Value>>();
 	final SingleSelectionModel<User> selectionModel_Single = new SingleSelectionModel<User>();
-	ArrayList<User> allUsers = null;
-	ArrayList<User> permissionUser = null;
+	private ArrayList<User> allUsers = null;
+	private ArrayList<User> permissionUser = null;
 	private User changingUser =  null;
 	final ListBox userListBox = new ListBox(true);
-	VerticalPanel root = new VerticalPanel();
-	VerticalPanel boxPanel = new VerticalPanel();
-	HorizontalPanel horizontal = new HorizontalPanel();
-	Button shareButton = new Button("Kontakt teilen");
-	Button closeButton = new Button("Abbrechen");
+	private VerticalPanel root = new VerticalPanel();
+	private VerticalPanel boxPanel = new VerticalPanel();
+	private HorizontalPanel horizontal = new HorizontalPanel();
+	private Button shareButton = new Button("Kontakt teilen");
+	private Button closeButton = new Button("Abbrechen");
 	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
 	private SuggestBox suggestBox = new SuggestBox(oracle);
 	private String selectedUser;
 	private Button addButton = new Button("+");
 	private Label instruction = new Label();
-	HTML creatorLabel = new HTML();
+	private HTML creatorLabel = new HTML();
+	private HTML noUserLabel = new HTML();
 	
-	Label creator = new Label();
+	private Label creator = new Label();
 	private Label selectValues = new Label();
 	private Label changeValues = new Label();
 	// Map<Property, Value> propertyValueMap = new HashMap<Property, Value>();
@@ -98,7 +99,7 @@ public class ContactSharing extends PopupPanel {
 
 			}
 		});
-
+		// Die Verschiedenen Elemente anzeigen oder ausblenden
 				
 		
 		receiverUser.setVisible(false);
@@ -112,12 +113,15 @@ public class ContactSharing extends PopupPanel {
 		
 		instruction.getElement().setInnerHTML("Bitte einen User auswählen um dessen Berechtigung zu bearbeiten oder <br> rechts einen User eingeben um den Kontakt mit diesem zu teilen.");
 		
+		noUserLabel.setVisible(false);
+		noUserLabel.setHTML("Diese Kontakt ist mit keinem anderen User geteilt");
+		
 		root.add(instruction);
 		root.add(new HTML("<br />"));
 
 		// root.add(new HTML("Kontakt bereits geteilit mit: <br />"));
 
-		// Anzeigen der User, die bereits Zugriff auf diesen Kontakt haben
+		/**Anzeigen der User, die bereits Zugriff auf diesen Kontakt haben*/
 		ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(sharingContact.getBoId(),
 				new AsyncCallback<ArrayList<Permission>>() {
 
@@ -128,6 +132,9 @@ public class ContactSharing extends PopupPanel {
 
 					@Override
 					public void onSuccess(ArrayList<Permission> result) {
+						if(result.size() == 0){
+							noUserLabel.setVisible(true);
+						}
 						permissionUser = new ArrayList<User>();
 						// User der Permissions abrufen
 						for (Permission p : result) {
@@ -148,6 +155,7 @@ public class ContactSharing extends PopupPanel {
 
 									});
 						}
+						/** CellTable Coulns erstellen*/
 						TextColumn<User> nameColumn = new TextColumn<User>() {
 							public String getValue(User user) {
 								return user.getLogEmail();
@@ -235,9 +243,12 @@ public class ContactSharing extends PopupPanel {
 					}
 
 				});
-
+		/** Alle user für die SuggestBox laden, die über das Oracle vorgeschlagen werden */
 		loadAllUser();
-
+		/**
+		 * suggestBox KeyUpHandler, bei betätigung Vorschläge anzeigen
+		 * 
+		 */
 		suggestBox.addKeyUpHandler(new KeyUpHandler() {
 
 			@Override
@@ -247,7 +258,7 @@ public class ContactSharing extends PopupPanel {
 		});
 
 		suggestBox.getElement().getStyle().setMarginLeft(20, Unit.PX);
-
+		/** Bei Hinzufügen des kontakts, schaltet es auf den "kontakt an neuen User" Modus um*/
 		addButton.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -275,7 +286,7 @@ public class ContactSharing extends PopupPanel {
 
 					@Override
 					public void onSuccess(User result) {
-						// receiverUserData.add(result);
+					
 						suggestBox.setText("");
 						receiverUserDataProvider.getList().add(result);
 						receiverUserDataProvider.addDataDisplay(receiverUser);
@@ -305,7 +316,7 @@ public class ContactSharing extends PopupPanel {
 				}
 			}
 		};
-
+		//CellTable für Empfänge User erstellen
 		Column<User, String> reiceiveDeleteColumn = new Column<User, String>(deleteButton) {
 			public String getValue(User object) {
 				return "";
@@ -313,7 +324,7 @@ public class ContactSharing extends PopupPanel {
 		};
 		reiceiveDeleteColumn.setCellStyleNames("iconButton");
 		reiceiveDeleteColumn.setFieldUpdater(new FieldUpdater<User, String>() {
-
+			//dies passiert wenn ein User aus der Liste gelöscht wird
 			@Override
 			public void update(int index, final User object, String value) {
 				// DialogBox anzeigen ob man diesen Kontakt wirklich aus der
@@ -364,7 +375,9 @@ public class ContactSharing extends PopupPanel {
 		usersWithPermission.setSelectionModel(selectionModel_Single);
 		
 
-
+		/**
+		 * Single selection model festlegen. Dieses dient der Auswhal im Celltable, es darf jedoch nur 1 Eintrag makiert werden.
+		 */
 		selectionModel_Single.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 			//SelectionModel_single SelectionChange Handler
 			public void onSelectionChange(SelectionChangeEvent event) {
@@ -449,7 +462,7 @@ public class ContactSharing extends PopupPanel {
 						};
 
 						propertyValueTable.setSelectionModel(selectionModel,
-								DefaultSelectionEventManager.<Entry<Property, Value>>createCheckboxManager());
+								DefaultSelectionEventManager.<Entry<Property, Value>>createDefaultManager());
 
 						selectionModel.addSelectionChangeHandler(new Handler() {
 							@Override
@@ -459,18 +472,7 @@ public class ContactSharing extends PopupPanel {
 							}
 						});
 
-						Column<Entry<Property, Value>, Boolean> checkColumn = new Column<Entry<Property, Value>, Boolean>(
-								new CheckboxCell(false, false)) {
-							@Override
-							public Boolean getValue(Entry<Property, Value> object) {
-								// Get the value from the selection model.
-								return selectionModel.isSelected(object);
-							}
-						};
-
-						propertyValueTable.addColumn(checkColumn, "Eigenschaft teilen");
-						propertyValueTable.setColumnWidth(checkColumn, 40, Unit.PX);
-
+						
 						propertyValueTable.addColumn(propertyColumn, "Eigenschaft");
 						propertyValueTable.addColumn(valueColumn, "Ausprägung");
 
@@ -500,13 +502,16 @@ public class ContactSharing extends PopupPanel {
 						textPanel.add(addButton);
 
 						root.add(horizontal);
+						root.add(noUserLabel);
 						changeValues.getElement().setInnerHTML("Bitte unten die Eigenschaftsberechtigungen ändern.<br />");
 						selectValues.getElement().setInnerHTML("Bitte wählen Sie die Eigenschaften aus, die Sie teilen möchten:<br />");
 						root.add(selectValues);
 						root.add(changeValues);
 						root.add(propertyValueTable);
 
-						
+						/**
+						 * Dieser ClickHandler legt fest, was passiert wenn ein Kontakt geteilt wird.
+						 */
 						shareButton.addClickHandler(new ClickHandler() {
 
 							@Override
@@ -514,12 +519,12 @@ public class ContactSharing extends PopupPanel {
 								
 							    if(shareButton.getText().equals("Kontakt teilen")){
 							    	
-								Window.alert(Integer.toString(selectedSet.size()));
+								
 								ArrayList<Integer> selectedValues = new ArrayList<Integer>();
 								ArrayList<Integer> selectedUsers = new ArrayList<Integer>();
 								selectedValues.add(sharingContact.getBoId());
 								Iterator<Entry<Property, Value>> iterator = selectedSet.iterator();
-
+								//asugewählten Values teilen
 								while (iterator.hasNext()) {
 									Map.Entry<Property, Value> entry = iterator.next();
 									selectedValues.add(entry.getValue().getBoId());
@@ -541,6 +546,7 @@ public class ContactSharing extends PopupPanel {
 											@Override
 											public void onSuccess(Void result) {
 												Window.alert("Der Kontakt wurde geteilt");
+												hide();
 											}
 
 										});
@@ -574,6 +580,7 @@ public class ContactSharing extends PopupPanel {
 							    
 							}	    
 						});
+						//Widgets dem rootVerticalPanel hinzufügen
 						root.add(shareButton);
 						root.add(closeButton);
 						setWidget(root);
@@ -583,7 +590,9 @@ public class ContactSharing extends PopupPanel {
 				});
 
 	}
-
+	/**
+	 * Laden der Vörschläge in das Oracle. Hier sind es die User an die geteilt werden kann, außer dem eigenen.
+	 */
 	private void loadAllUser() {
 		ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>() {
 
@@ -607,14 +616,22 @@ public class ContactSharing extends PopupPanel {
 
 		});
 	}
-
+	/**
+	 * Wenn Kontakt geteilt wurde und eine neue Eigenschaft erstellt wird kann diese direkt auch geteilt werden.
+	 * @param contact
+	 * @param value
+	 */
 	public ContactSharing(Contact contact, Value value) {
 
 		MyDialog shareNewValue = new MyDialog(contact, value);
-		shareNewValue.center();
+	
 
 	}
-
+/**
+ * Wenn Kontakt geteilt wurde und eine neue Eigenschaft erstellt wird kann diese direkt auch geteilt werden.
+ * @author Philipp
+ *
+ */
 	private class MyDialog extends DialogBox {
 
 		public MyDialog(final Contact contact, final Value value) {
@@ -626,12 +643,7 @@ public class ContactSharing extends PopupPanel {
 					+ " an Teilhaber teilen?");
 			
 			
-			// Enable animation.
-			setAnimationEnabled(true);
-
-			// Enable glass background.
-			setGlassEnabled(true);
-
+		
 			final ListBox userPermissionList = new ListBox(true);
 
 			Button noButton = new Button("Nein");
@@ -686,7 +698,7 @@ public class ContactSharing extends PopupPanel {
 
 			v.add(new HTML(
 					"Dieser Kontakt wurde schon anderen User geteilt, wollen Sie diese neu erstellte Eigenschaft direkt an einen dieser User teilen?"));
-
+			//User die Permission haben abrufen
 			ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(contact.getBoId(),
 					new AsyncCallback<ArrayList<Permission>>() {
 
@@ -697,6 +709,14 @@ public class ContactSharing extends PopupPanel {
 
 						@Override
 						public void onSuccess(ArrayList<Permission> result) {
+							if(result.size() != 0){
+								show();
+								// Enable animation.
+								setAnimationEnabled(true);
+
+								// Enable glass background.
+								setGlassEnabled(true);
+							    center();
 
 							for (Permission p : result) {
 								ClientSideSettings.getConnectedAdmin().findUserById(p.getReceiverUserID(),
@@ -716,17 +736,17 @@ public class ContactSharing extends PopupPanel {
 
 										});
 							}
-
+							}
 						}
 
 					});
-
+			//Widgets den Panels hinzufügen
 			v.add(userPermissionList);
 			v.add(h);
 			h.add(yesButton);
 			h.add(noButton);
 			setWidget(v);
-			this.show();
+			
 
 		}
 	}
