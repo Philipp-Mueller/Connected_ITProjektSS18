@@ -55,7 +55,7 @@ public class ContactContactListMapper {
 	 * @param contactId, contactListId
 	 */
 	public void addContactToContactList(int contactId, int contactListId) {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
@@ -63,14 +63,14 @@ public class ContactContactListMapper {
 		try {
 			Statement stmt = con.createStatement();
 			
-			/**
+			/*
 			 * SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in
 			 * der Datenbank.
 			 */
 			stmt.executeUpdate("INSERT INTO contactcontactlist (contactid, contactlistid) VALUES " 
 			 + "("+ contactId + ", " + contactListId + ")");
 		}
-		/**
+		/*
 		 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 		 * Fehlermeldung genauer zu analyisieren. Es werden Informationen dazu
 		 * ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -80,20 +80,20 @@ public class ContactContactListMapper {
 		}	
 	}
 	
-	/**
+	/*
 	 * Löscht ein Contact-Objekt aus der ContactList.
 	 * 
 	 * @param contactId, contactListId
 	 */
 	public void removeContactFromContactList(int contactId, int contactListId) {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
 		
 		try {
 			Statement stmt = con.createStatement();
-			/**
+			/*
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
 			 * Datenbank.
 			 */
@@ -101,7 +101,7 @@ public class ContactContactListMapper {
 					" AND " + "contactlistid= " + contactListId);
 		}
 		
-	/**
+	/*
 	 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 	 * Fehlermeldung genauer zu analyisieren. Es werden Informationen dazu
 	 * ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -117,21 +117,21 @@ public class ContactContactListMapper {
 	 * @param contactId
 	 */
 	public void removeContactFromAllContactList(int contactId) {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
 		
 		try {
 			Statement stmt = con.createStatement();
-			/**
+			/*
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
 			 * Datenbank.
 			 */
 			stmt.executeUpdate("DELETE FROM contactcontactlist WHERE contactid= " + contactId);
 		}
 		
-	/**
+	/*
 	 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 	 * Fehlermeldung genauer zu analyisieren. Es werden Informationen dazu
 	 * ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -148,7 +148,7 @@ public class ContactContactListMapper {
 	 * @return ArrayList <Contact>
 	 */
 	public ArrayList <Contact> findContactsByContactListId(int contactListId) {
-	/**
+	/*
 	 * DB-Verbindung holen
 	 */
 	Connection con = DBConnection.connection();
@@ -158,14 +158,14 @@ public class ContactContactListMapper {
 	try {
 		Statement stmt = con.createStatement();
 		
-		/**
+		/*
 		 * SQL-Anweisung zum Finden des Datensatzes, anhand des uebergebenen Namens, in
 		 * der Datenbank, sortiert nach der Id.
 		 */
 		ResultSet rs = stmt.executeQuery(
 				"SELECT contactid FROM contactcontactlist WHERE " + "contactlistid= " + contactListId);
 		
-		/**
+		/*
 		 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle
 		 * mit dem uebergebenen Namen vorhanden ist, muss das Abfragen des ResultSet so
 		 * oft erfolgen (while-Schleife), bis alle Tupel durchlaufen wurden. Die
@@ -177,7 +177,7 @@ public class ContactContactListMapper {
 			contact.setBoId(rs.getInt("contactid"));
 			result.add(contact);
 		}
-		/**
+		/*
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
 		 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
 		 * passiert ist und wo im Code es passiert ist.
@@ -186,7 +186,7 @@ public class ContactContactListMapper {
 		e.printStackTrace();
 		
 		}
-		 /**
+		 /*
 		  * Rückgabe der ArrayList
 		  */
 		 return result;

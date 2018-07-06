@@ -59,24 +59,21 @@ public class ValueMapper {
 	 * @return value
 	 */
 	public Value insert(Value value) {
-		/**
+		/*
 		 * DB-Verbindung holen.
 		 */
 		Connection con = DBConnection.connection();
-
 		try {
-			
-			/**
+			/*
 			 * Auto-commit ausschalten, um sicherzustellen, dass beide Statements, also die ganze Transaktion ausgeführt wird.
 			 */
 			con.setAutoCommit(false);			
-			
-			/**
+			/*
 			 * leeres SQL-Statement (JDBC) anlegen.
 			 */
 			Statement stmt = con.createStatement();
 			
-			/**
+			/*
 			 * Abfrage des zuletzt hinzugefuegten Primaerschluessel (id) in der SharedObject-Klasse. Es wird durch den Aufruf von "super.insert()" in der Superklasse SharedObjectMapper die
 			 * aktuelle id um eins erhoeht. 
 			 */
@@ -88,7 +85,7 @@ public class ValueMapper {
 		
 		    stmt = con.createStatement();
 		    
-			/**
+			/*
 			 * SQL-Anweisung zum Einfügen des neuen ContactList-Tupels in die
 			 * Datenbank.
 			 */
@@ -96,8 +93,7 @@ public class ValueMapper {
 	
 			stmt.executeUpdate("INSERT INTO value (id, name, propertyId, contactId, ownerId) VALUES (" + value.getBoId() + ", '"
 					+ value.getName() + "', " + value.getPropertyID() + ", " + value.getContactID() +  ", " + value.getCreatorId() + ")");
-			
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -109,11 +105,10 @@ public class ValueMapper {
 			try {
 				con.rollback();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		/**
+		/*
 		 * Rückgabe der Value
 		 */
 		return value;
@@ -126,7 +121,7 @@ public class ValueMapper {
 	 * @return value
 	 */
 	public Value update(Value value) {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
@@ -134,8 +129,7 @@ public class ValueMapper {
 		try {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
-			
-			/**
+			/*
 			 * SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in
 			 * der Datenbank.
 			 */
@@ -143,7 +137,7 @@ public class ValueMapper {
 					+ "', contactId = '" + value.getContactID() + "' WHERE id= " + value.getBoId());
 		}
 		
-		/**
+		/*
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
 		 * Fehlermeldung genauer zu analyisieren. Es werden Informationen dazu
 		 * ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -151,6 +145,10 @@ public class ValueMapper {
 		catch (SQLException e2) {
 			e2.printStackTrace();
 		}
+		
+		/*
+		 * Rückgabe der Value
+		 */
 		return value;
 	}
 
@@ -160,19 +158,17 @@ public class ValueMapper {
 	 * @param value
 	 */
 	public void delete(Value value) {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
 		try {
-			
-			/**
+			/*
 			 * Auto-commit ausschalten, um sicherzustellen, dass beide Statements, also die ganze Transaktion ausgeführt wird.
 			 */
 			con.setAutoCommit(false);
-			
 			Statement stmt = con.createStatement();
-			/**
+			/*
 			 * SQL-Anweisung zum Loeschen des uebergebenen Datensatzes in der
 			 * Datenbank.
 			 */
@@ -181,10 +177,9 @@ public class ValueMapper {
 			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + value.getBoId());
 			
 			con.commit();
-		
 		}
 		
-		/**
+		/*
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
 		 * Fehlermeldung genauer zu analyisieren. Es werden Informationen dazu
 		 * ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -205,21 +200,20 @@ public class ValueMapper {
 	 * @return value
 	 */
 	public Value findById(int id) {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
 		try {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
-			
-			/**
+			/*
 			 * SQL-Anweisung zum Finden des übergebenen Datensatzes, anhand der
 			 * Id, in der Datenbank.
 			 */
 			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId, ownerId FROM value WHERE id=" + id);
 			
-			/**
+			/*
 			 * Zu einem Primaerschluessel exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurueckgegeben werden.
 			 * Es wird mit einer If-Abfragen geprueft, ob es fuer den
@@ -235,7 +229,7 @@ public class ValueMapper {
 				return value;
 			}
 			
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -253,7 +247,7 @@ public class ValueMapper {
 	 * @return ArrayList<Value>
 	 */
 	public ArrayList<Value> findByValue(String bez) {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
@@ -263,14 +257,14 @@ public class ValueMapper {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
-			/**
+			/*
 			 * SQL-Anweisung zum Finden des Datensatzes, anhand des übergebenen
 			 * bez, in der Datenbank, sortiert nach der Id.
 			 */
 			ResultSet rs = stmt.executeQuery(
 					"SELECT id, name, propertyId, contactId, ownerId FROM value WHERE bez LIKE '" + bez + "' ORDER BY id");
 			
-			/**
+			/*
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle Value mit dem übergebenen bez vorhanden ist, muss das
 			 * Abfragen des ResultSet so oft erfolgen (while-Schleife), bis alle
@@ -287,7 +281,7 @@ public class ValueMapper {
 				result.add(value);
 			}
 			
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -295,6 +289,9 @@ public class ValueMapper {
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
+		/*
+		 * Rückgabe der ArrayList
+		 */
 		return result;
 	}
 
@@ -306,7 +303,7 @@ public class ValueMapper {
 	 * @return ArrayList<Value>
 	 */
 	public ArrayList<Value> findByContactId(int contactId) {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
@@ -316,13 +313,13 @@ public class ValueMapper {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
-			/**
+			/*
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der ContactId,
 			 * in der Datenbank, sortiert nach der Id.
 			 */
 			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId, ownerId FROM value WHERE contactId = "
 					+ contactId + " ORDER BY id");
-			/**
+			/*
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle Value mit dem übergebenen ContactID vorhanden ist, muss
 			 * das Abfragen des ResultSet so oft erfolgen (while-Schleife), bis
@@ -339,7 +336,7 @@ public class ValueMapper {
 				value.setCreatorId(rs.getInt("ownerId"));
 				result.add(value);
 			}
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -347,6 +344,9 @@ public class ValueMapper {
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
+		/*
+		 * Rückgabe der ArrayList
+		 */
 		return result;
 	}
 
@@ -359,7 +359,7 @@ public class ValueMapper {
 	 */
 
 	public ArrayList<Value> findByProperty(int propertyId) {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
@@ -370,14 +370,14 @@ public class ValueMapper {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
-			/**
+			/*
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der
 			 * PropertyId, in der Datenbank, sortiert nach der Id.
 			 */
 			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId, ownerId FROM value WHERE propertyId = "
 					+ propertyId + " ORDER BY id");
 			
-			/**
+			/*
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle Value mit dem übergebenen PropertyId vorhanden ist, muss
 			 * das Abfragen des ResultSet so oft erfolgen (while-Schleife), bis
@@ -395,7 +395,7 @@ public class ValueMapper {
 				result.add(value);
 			}
 			
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -403,6 +403,9 @@ public class ValueMapper {
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
+		/*
+		 * Rückgabe der ArrayList
+		 */
 		return result;
 	}
 
@@ -415,7 +418,7 @@ public class ValueMapper {
 	 */
 
 	public ArrayList<Value> findByPropertyAndDescription(int propertyId, String valueDescription) {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
@@ -425,14 +428,14 @@ public class ValueMapper {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
-			/**
+			/*
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der
 			 * PropertyId, in der Datenbank, sortiert nach der Id.
 			 */
 			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId,ownerId FROM value WHERE propertyId = '"
 					+ propertyId + "' AND LOWER(name) LIKE '%" + valueDescription.toLowerCase() + "%'" + "ORDER BY id");
 			
-			/**
+			/*
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
 			 * Tabelle Value mit dem uebergebenen PropertyId vorhanden ist, muss
 			 * das Abfragen des ResultSet so oft erfolgen (while-Schleife), bis
@@ -450,7 +453,7 @@ public class ValueMapper {
 				result.add(value);
 			}
 			
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -458,6 +461,9 @@ public class ValueMapper {
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
+		/*
+		 * Rückgabe der ArrayList
+		 */
 		return result;
 	}
 
@@ -468,7 +474,7 @@ public class ValueMapper {
 	 */
 
 	public ArrayList<Value> findAllValues() {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
@@ -477,7 +483,7 @@ public class ValueMapper {
 		try {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
-			/**
+			/*
 			 * SQL-Anweisung zum Finden aller Datensätze in der Datenbank, sortiert nach
 			 * der Id.
 			 */
@@ -493,7 +499,7 @@ public class ValueMapper {
 				result.add(value);
 			}
 			
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -501,6 +507,9 @@ public class ValueMapper {
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
+		/*
+		 * Rückgabe der ArrayList
+		 */
 		return result;
 	}
 

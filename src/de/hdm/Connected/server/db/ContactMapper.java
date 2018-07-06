@@ -61,24 +61,23 @@ public class ContactMapper {
 	 * @return contact
 	 */
 	public Contact insert(Contact contact) {
-		/**
+		/*
 		 * DB-Verbindung holen.
 		 */
 		Connection con = DBConnection.connection();
 
 		try {
-			/**
+			/*
 			 * Auto-commit ausschalten, um sicherzustellen, dass beide Statements, also die ganze Ttansaktion ausgeführt wird.
 			 */
-			
 			con.setAutoCommit(false);
 			
-			/**
+			/*
 			 * leeres SQL-Statement (JDBC) anlegen.
 			 */
 			Statement stmt = con.createStatement();
 			
-			/**
+			/*
 			 * Abfrage des zuletzt hinzugefügten Primaerschlüssel (id) in der SharedObject-Klasse. Es wird durch den Aufruf von "super.insert() in der Superklasse SharedObjectMapper die
 			 * aktuelle id um eins erhöht. 
 			 */
@@ -90,14 +89,14 @@ public class ContactMapper {
 		    
 		    stmt = con.createStatement();
 		    
-			/**
+			/*
 			 * SQL-Anweisung zum Einfügen des neuen Contact-Tupels in die Datenbank.
 			 */
 		    stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES " + "(" + contact.getBoId() + ")");
 			
 			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, ownerId, creationDate, modificationDate) VALUES (" + contact.getBoId() + ", '"
 					+ contact.getPrename() + "', '" + contact.getSurname() + "', " + contact.getCreatorId() + ", '" + contact.getCreationDate() +"', '"+ contact.getModificationDate() + "')");
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die Fehlermeldung
 			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
 			 * passiert ist und wo im Code es passiert ist.
@@ -109,10 +108,12 @@ public class ContactMapper {
 			try {
 				con.rollback();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		/*
+		 * Rückgabe des Kontakts
+		 */
 		return contact;
 	}
 
@@ -123,23 +124,23 @@ public class ContactMapper {
 	 * @return contact
 	 */
 	public Contact update(Contact contact) {
-		/**
+		/*
 		 * DB-Verbindung holen.
 		 */
 		Connection con = DBConnection.connection();
 		
-		/**
+		/*
 		 * Timestamp erzeugen
 		 */
 		Timestamp currentTime = new Timestamp (System.currentTimeMillis());
 		
 		try {
-			/**
+			/*
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
-			/**
+			/*
 			 * SQL-Anweisung zum Aktualisieren des uebergebenen Datensatzes in der
 			 * Datenbank.
 			 */
@@ -147,7 +148,7 @@ public class ContactMapper {
 					+ contact.getSurname() + "', modificationDate= '"+ currentTime + "' WHERE id= " + contact.getBoId());
 		}
 		
-		/**
+		/*
 		 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die Fehlermeldung
 		 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
 		 * passiert ist und wo im Code es passiert ist.
@@ -155,6 +156,9 @@ public class ContactMapper {
 		catch (SQLException e2) {
 			e2.printStackTrace();
 		}
+		/*
+		 * Rückgabe des Kontakts
+		 */
 		return contact;
 	}
 
@@ -164,20 +168,19 @@ public class ContactMapper {
 	 * @param contact
 	 */
 	public void delete(Contact contact) {
-		/**
+		/*
 		 * DB-Verbindung holen.
 		 */
 		Connection con = DBConnection.connection();
 
 		try {
-			/**
+			/*
 			 * Auto-commit ausschalten, um sicherzustellen dass beide Statements, also die ganze TRansaktion ausgeführt wird.
 			 */
-			
 			con.setAutoCommit(false);
 			
 			Statement stmt = con.createStatement();
-			/**
+			/*
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der Datenbank.
 			 */
 			stmt.executeUpdate("DELETE FROM contact WHERE id=" + contact.getBoId());
@@ -185,10 +188,8 @@ public class ContactMapper {
 			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + contact.getBoId());
 			
 			con.commit();
-		
 		}
-		
-		/**
+		/*
 		 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
 		 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
 		 * passiert ist und wo im Code es passiert ist.
@@ -198,7 +199,6 @@ public class ContactMapper {
 			try {
 				con.rollback();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -211,7 +211,7 @@ public class ContactMapper {
 	 * @return contact
 	 */
 	public Contact findById(int id) {
-		/**
+		/*
 		 * DB-Verbindung holen.
 		 */
 		Connection con = DBConnection.connection();
@@ -219,12 +219,12 @@ public class ContactMapper {
 		try {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
-			/**
+			/*
 			 * SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der Id in der
 			 * Datenbank.
 			 */
 			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname, ownerId, creationDate, modificationDate FROM contact WHERE id=" + id);
-			/**
+			/*
 			 * Zu einem Primaerschlüssel exisitiert nur maximal ein Datenbank-Tupel, somit
 			 * kann auch nur einer zurückgegeben werden. Es wird mit einer If-Abfragen
 			 * geprüft, ob es für den angefragten Primärschlüssel ein DB-Tupel gibt.
@@ -239,7 +239,7 @@ public class ContactMapper {
 				contact.setModificationDate(rs.getDate("modificationDate"));
 				return contact;
 			}
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
 			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
 			 * passiert ist und wo im Code es passiert ist.
@@ -265,18 +265,17 @@ public class ContactMapper {
 		try {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
-			/**
+			/*
 			 * SQL-Anweisung zum Finden aller Datensätze in der Datenbank, sortiert nach
 			 * der Id.
 			 */
 			ResultSet rs = stmt.executeQuery("SELECT id, prename, surname, ownerid, creationDate, modificationDate FROM contact ORDER BY prename");
-			/**
+			/*
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle contact
 			 * vorhanden ist, muss das Abfragen des ResultSet so oft erfolgen
 			 * (while-Schleife), bis alle Tupel durchlaufen wurden. Die DB-Tupel werden in
 			 * Java-Objekte transformiert und anschliessend der ArrayList hinzugefuegt.
 			 */
-
 			while (rs.next()) {
 				Contact contact = new Contact();
 				contact.setBoId(rs.getInt("id"));
@@ -287,7 +286,7 @@ public class ContactMapper {
 				contact.setModificationDate(rs.getDate("modificationDate"));
 				result.add(contact);
 			}
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
 			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
 			 * passiert ist und wo im Code es passiert ist.
@@ -295,6 +294,9 @@ public class ContactMapper {
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
+		/*
+		 * Rückgabe der ArrayList
+		 */
 		return result;
 	}
 
@@ -305,7 +307,7 @@ public class ContactMapper {
 	 * @return ArrayList<Contact>
 	 */
 	public ArrayList<Contact> findByPrename(String prename) {
-		/**
+		/*
 		 * DB-Verbindung holen.
 		 */
 		Connection con = DBConnection.connection();
@@ -314,13 +316,13 @@ public class ContactMapper {
 		try {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
-			/**
+			/*
 			 * SQL-Anweisung zum Finden des Datensatzes, anhand des uebergebenen Namens, in
 			 * der Datenbank, sortiert nach der Id.
 			 */
 			ResultSet rs = stmt.executeQuery(
 					"SELECT id, prename, surname FROM contact WHERE prename LIKE '" + prename + "' ORDER BY id");
-			/**
+			/*
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle Contact
 			 * mit dem uebergebenen Namen vorhanden ist, muss das Abfragen des ResultSet so
 			 * oft erfolgen (while-Schleife), bis alle Tupel durchlaufen wurden. Die
@@ -334,7 +336,7 @@ public class ContactMapper {
 				contact.setSurname(rs.getString("surname"));
 				result.add(contact);
 			}
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
 			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
 			 * passiert ist und wo im Code es passiert ist.
@@ -342,7 +344,7 @@ public class ContactMapper {
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
-		/**
+		/*
 		 * Rückgabe der ArrayList
 		 */
 		return result;
@@ -355,7 +357,7 @@ public class ContactMapper {
 	 * @return ArrayList<Contact>
 	 */
 	public ArrayList<Contact> findBySurname(String surname) {
-		/**
+		/*
 		 * DB-Verbindung holen.
 		 */
 		Connection con = DBConnection.connection();
@@ -364,13 +366,13 @@ public class ContactMapper {
 		try {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
-			/**
+			/*
 			 * SQL-Anweisung zum Finden des Datensatzes, anhand des übergebenen Namens in
 			 * der Datenbank, sortiert nach der Id.
 			 */
 			ResultSet rs = stmt.executeQuery(
 					"SELECT id, prename, surname FROM contact WHERE surname LIKE '" + surname + "' ORDER BY id");
-			/**
+			/*
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle Contact
 			 * mit dem übergebenen Namen vorhanden ist, muss das Abfragen des ResultSet so
 			 * oft erfolgen (while-Schleife), bis alle Tupel durchlaufen wurden. Die
@@ -384,7 +386,7 @@ public class ContactMapper {
 				contact.setSurname(rs.getString("surname"));
 				result.add(contact);
 			}
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die Fehlermeldung
 			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
 			 * passiert ist und wo im Code es passiert ist.
@@ -392,7 +394,7 @@ public class ContactMapper {
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
-		/**
+		/*
 		 * Rückgabe der ArrayList
 		 */
 		return result;
@@ -407,7 +409,7 @@ public class ContactMapper {
 	 */
 
 	public ArrayList<Contact> findByContactListId(int contactListID) {
-		/**
+		/*
 		 * DB-Verbindung holen.
 		 */
 		Connection con = DBConnection.connection();
@@ -415,19 +417,19 @@ public class ContactMapper {
 		ArrayList<Contact> result = new ArrayList<Contact>();
 
 		try {
-			/**
+			/*
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 
-			/**
+			/*
 			 * SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der ContactListId in der Datenbank
 			 */
 			ResultSet rs = stmt.executeQuery(
 					"SELECT id, prename, surname  FROM contact " + " WHERE contactListID=" + contactListID);
 			
-			/**
+			/*
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle
 			 * permission vorhanden ist, muss das Abfragen des ResultSet so oft erfolgen
 			 * (while-Schleife), bis alle Tupel durchlaufen wurden. Die DB-Tupel werden in
@@ -440,7 +442,7 @@ public class ContactMapper {
 				contact.setSurname(rs.getString("surname"));
 				result.add(contact);
 			}
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die Fehlermeldung
 			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
 			 * passiert ist und wo im Code es passiert ist.
@@ -448,7 +450,7 @@ public class ContactMapper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		/**
+		/*
 		 * Rückgabe der ArrayList
 		 */
 		return result;
@@ -461,25 +463,25 @@ public class ContactMapper {
 	 * @return ArrayList<Contact>
 	 */
 	public ArrayList<Contact> findByOwnerId(int userID) {
-		/**DB-Verbindung holen
-		 * 
+		/*
+		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
 
 		ArrayList<Contact> result = new ArrayList<Contact>();
 
 		try {
-			/**
+			/*
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 
-			/**SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der userId in der Datenbank
+			/*SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der userId in der Datenbank
 			 * 
 			 */
 			ResultSet rs = stmt.executeQuery("SELECT id , prename, surname, ownerid, creationDate, modificationDate FROM contact WHERE ownerid =" + userID);
-			/**
+			/*
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle
 			 * permission vorhanden ist, muss das Abfragen des ResultSet so oft erfolgen
 			 * (while-Schleife), bis alle Tupel durchlaufen wurden. Die DB-Tupel werden in
@@ -497,7 +499,7 @@ public class ContactMapper {
 				result.add(contact);
 				
 			}
-				/**
+				/*
 				 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die Fehlermeldung
 				 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
 				 * passiert ist und wo im Code es passiert ist.
@@ -505,8 +507,8 @@ public class ContactMapper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		/**Rückgabe der ArrayList
-		 * 
+		/*
+		 *Rückgabe der ArrayList 
 		 */
 		return result;
 	}
@@ -518,7 +520,7 @@ public class ContactMapper {
 	 * @return ArrayList<Contact>
 	 */
 	public ArrayList<Contact> findByValue(String value) {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
@@ -527,13 +529,13 @@ public class ContactMapper {
 		try {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
-			/**
+			/*
 			 * SQL-Anweisung zum Finden des Datensatzes, anhand des übergebenen Value in
 			 * der Datenbank, sortiert nach der Id.
 			 */
 			ResultSet rs = stmt.executeQuery(
 					"SELECT id, prename, surname FROM contact WHERE value LIKE '" + value + "' ORDER BY id");
-			/**
+			/*
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle Contact
 			 * mit dem übergebenen Namen vorhanden ist, muss das Abfragen des ResultSet so
 			 * oft erfolgen (while-Schleife), bis alle Tupel durchlaufen wurden. Die
@@ -547,7 +549,7 @@ public class ContactMapper {
 				contact.setSurname(rs.getString("surname"));
 				result.add(contact);
 			}
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die Fehlermeldung
 			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
 			 * passiert ist und wo im Code es passiert ist.
@@ -555,7 +557,7 @@ public class ContactMapper {
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
-		/**
+		/*
 		 * Rückgabe der ArrayList
 		 */
 		return result;
@@ -566,13 +568,12 @@ public class ContactMapper {
 	 * 
 	 * @param contactId
 	 */
-	
 	public void updateContactModificationDate(int contactId){
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
-		/**
+		/*
 		 * Modifizierungsdatum erzeugen
 		 */
 		java.sql.Date currentTime = new java.sql.Date(System.currentTimeMillis());
@@ -580,13 +581,13 @@ public class ContactMapper {
 		try {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
-			/**
+			/*
 			 * SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in der
 			 * Datenbank.
 			 */
 			stmt.executeUpdate("UPDATE contact SET modificationDate='" + currentTime + "' WHERE id= " + contactId);
 		}
-		/**
+		/*
 		 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die Fehlermeldung
 		 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
 		 * passiert ist und wo im Code es passiert ist.

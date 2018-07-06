@@ -58,24 +58,22 @@ public class UserMapper {
 	 * @return user
 	 */
 	public User insert(User user) {
-		/**
+		/*
 		 * DB-Verbindung holen.
 		 */
 		Connection con = DBConnection.connection();
 
 		try {
-			
-			/**
+			/*
 			 * leeres SQL-Statement (JDBC) anlegen.
 			 */
 			Statement stmt = con.createStatement();
-
-			/**
+			
+			/*
 			 * Abfrage des zuletzt hinzugefügten Primärschlüssel (id). Die
 			 * aktuelle id wird um eins erhöht. Statement ausfüllen und als
 			 * Query an die Datenbank senden.
 			 */
-
 			ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM user");
 
 			if (rs.next()) {
@@ -83,7 +81,7 @@ public class UserMapper {
 			}
 			stmt = con.createStatement();
 			
-			/**
+			/*
 			 * SQL-Anweisung zum Einfügen des neuen User-Tupels in die
 			 * Datenbank.
 			 */
@@ -91,7 +89,7 @@ public class UserMapper {
 					+ user.getName() + "', '"
 					+ user.getLogEmail() + "')");
 
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -99,6 +97,9 @@ public class UserMapper {
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
+		/*
+		 * Rückgabe des Users
+		 */
 		return user;
 	}
 
@@ -109,7 +110,7 @@ public class UserMapper {
 	 * @return user
 	 */
 	public User update(User user) {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
@@ -118,14 +119,14 @@ public class UserMapper {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
-			/**
+			/*
 			 * SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in
 			 * der Datenbank.
 			 */
 			stmt.executeUpdate("UPDATE user SET logEmail='" + user.getLogEmail() + "', name='"+ user.getName() +"' WHERE id= " + user.getBoId());
 		}
 		
-		/**
+		/*
 		 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 		 * Fehlermeldung genauer zu analyisieren. Es werden Informationen dazu
 		 * ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -133,6 +134,9 @@ public class UserMapper {
 		catch (SQLException e2) {
 			e2.printStackTrace();
 		}
+		/*
+		 * Rückgabe des Users
+		 */
 		return user;
 	}
 
@@ -142,7 +146,7 @@ public class UserMapper {
 	 * @param user
 	 */
 	public void delete(User user) {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
@@ -151,14 +155,14 @@ public class UserMapper {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
-			/**
+			/*
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
 			 * Datenbank.
 			 */
 			stmt.executeUpdate("DELETE FROM user WHERE id=" + user.getBoId());
 		}
 		
-		/**
+		/*
 		 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 		 * Fehlermeldung genauer zu analyisieren. Es werden Informationen dazu
 		 * ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -175,7 +179,7 @@ public class UserMapper {
 	 * @return user
 	 */
 	public User findById(int id) {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
@@ -184,13 +188,13 @@ public class UserMapper {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
-			/**
+			/*
 			 * SQL-Anweisung zum Finden des übergebenen Datensatzes, anhand der
 			 * Id, in der Datenbank.
 			 */
 			ResultSet rs = stmt.executeQuery("SELECT id, name, logEmail FROM user WHERE id=" + id);
 			
-			/**
+			/*
 			 * Zu einem eindeutigen Wert exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurückgegeben werden.
 			 * Es wird mit einer If-Abfragen geprüft, ob es für den angefragten
@@ -204,7 +208,7 @@ public class UserMapper {
 				return user;
 			}
 			
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -223,7 +227,7 @@ public class UserMapper {
 	 */
 
 	public User findByEmail(String logEmail) {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
@@ -232,13 +236,13 @@ public class UserMapper {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
-			/**
+			/*
 			 * SQL-Anweisung zum Finden aller Datensätze, anhand der eMail, in
 			 * der Datenbank.
 			 */
 			ResultSet rs = stmt.executeQuery("SELECT id, name, logEmail FROM user WHERE logEmail LIKE '" + logEmail + "'");
 			
-			/**
+			/*
 			 * Zu einem eindeutigen Wert exisitiert nur maximal ein
 			 * Datenbank-Tupel, somit kann auch nur einer zurückgegeben werden.
 			 * Es wird mit einer If-Abfragen geprüft, ob es für den angefragten
@@ -252,7 +256,7 @@ public class UserMapper {
 				return user;
 			}
 			
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
 			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
@@ -269,7 +273,7 @@ public class UserMapper {
 	 * @return ArrayList<Contact>
 	 */
 	public ArrayList<User> findAll() {
-		/**
+		/*
 		 * DB-Verbindung holen
 		 */
 		Connection con = DBConnection.connection();
@@ -279,13 +283,13 @@ public class UserMapper {
 			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
-			/**
+			/*
 			 * SQL-Anweisung zum Finden aller Datensätze in der Datenbank, sortiert nach
 			 * der Id.
 			 */
 			ResultSet rs = stmt.executeQuery("SELECT id, name, logEmail from user ORDER BY id");
 			
-			/**
+			/*
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der Tabelle contact
 			 * vorhanden ist, muss das Abfragen des ResultSet so oft erfolgen
 			 * (while-Schleife), bis alle Tupel durchlaufen wurden. Die DB-Tupel werden in
@@ -300,7 +304,7 @@ public class UserMapper {
 				result.add(u);
 			}
 			
-			/**
+			/*
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die Fehlermeldung
 			 * genauer zu analyisieren. Es werden Informationen dazu ausgegeben, was
 			 * passiert ist und wo im Code es passiert ist.
@@ -308,6 +312,9 @@ public class UserMapper {
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
+		/*
+		 * Rückgabe der ArrayList
+		 */
 		return result;
 	}
 
