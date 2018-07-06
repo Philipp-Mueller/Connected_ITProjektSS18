@@ -112,7 +112,7 @@ public class ContactsTable extends CellTable<Contact> {
 		mainContactlist = contactlistObject;
 		withinContactlist = contactlist;
 
-		// Create a Pager to control the table.
+		//Pager um umschalten zu können wenn es mehr als 15 Einträge in dem Cell Table();
 		SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
 		pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
 		pager.setDisplay(cellTable);
@@ -129,12 +129,13 @@ public class ContactsTable extends CellTable<Contact> {
 				}
 
 			}
-			// this is to handle row id
+			
 
 		});
 
-		// because Doubleclick handler doesn't give row index or column index we
-		// will use addCellPreviewHandler to return row index or column index.
+		/**
+		 *Dom-Handler um herauszufinden in welche Reihe geklickt wurde umd somit mit Doppeklick die ContactInfo zu öffnen.
+		 */
 		cellTable.addDomHandler(new DoubleClickHandler() {
 
 			@Override
