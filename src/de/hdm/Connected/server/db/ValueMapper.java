@@ -103,8 +103,13 @@ public class ValueMapper {
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
 			 */
 			con.commit();
+<<<<<<< HEAD
 			
 			} catch (SQLException e2) {
+=======
+		
+		} catch (SQLException e2) {
+>>>>>>> master
 			e2.printStackTrace();
 			try {
 				con.rollback();
@@ -113,6 +118,7 @@ public class ValueMapper {
 				e.printStackTrace();
 			}
 		}
+		
 		return value;
 	}
 
@@ -129,6 +135,7 @@ public class ValueMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/**
@@ -177,6 +184,7 @@ public class ValueMapper {
 			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + value.getBoId());
 			
 			con.commit();
+		
 		}
 		
 		/**
@@ -206,6 +214,7 @@ public class ValueMapper {
 		 */
 		Connection con = DBConnection.connection();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/**
@@ -255,6 +264,7 @@ public class ValueMapper {
 
 		ArrayList<Value> result = new ArrayList<Value>();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/**
@@ -307,6 +317,7 @@ public class ValueMapper {
 
 		ArrayList<Value> result = new ArrayList<Value>();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/**
@@ -360,6 +371,7 @@ public class ValueMapper {
 		ArrayList<Value> result = new ArrayList<Value>();
 		
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/**
@@ -414,13 +426,14 @@ public class ValueMapper {
 
 		ArrayList<Value> result = new ArrayList<Value>();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/**
 			 * SQL-Anweisung zum Finden aller Datensaetze, anhand der
 			 * PropertyId, in der Datenbank, sortiert nach der Id.
 			 */
-			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId, creatorId FROM value WHERE propertyId = '"
+			ResultSet rs = stmt.executeQuery("SELECT id, name, propertyId, contactId,ownerId FROM value WHERE propertyId = '"
 					+ propertyId + "' AND LOWER(name) LIKE '%" + valueDescription.toLowerCase() + "%'" + "ORDER BY id");
 			
 			/**
@@ -466,6 +479,7 @@ public class ValueMapper {
 
 		ArrayList<Value> result = new ArrayList<Value>();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden aller Datensätze in der Datenbank, sortiert nach

@@ -101,7 +101,11 @@ public class ContactListMapper{
 			 */
 			con.commit();
 		
+<<<<<<< HEAD
 			} catch (SQLException e2) {
+=======
+		} catch (SQLException e2) {
+>>>>>>> master
 			e2.printStackTrace();
 			
 			try {
@@ -129,6 +133,7 @@ public class ContactListMapper{
 		Connection con = DBConnection.connection();
 		
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/**
@@ -178,6 +183,7 @@ public class ContactListMapper{
 			
 			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + contactList.getBoId());
 			con.commit();
+		
 		}
 		
 		/**
@@ -210,7 +216,9 @@ public class ContactListMapper{
 		Connection con = DBConnection.connection();
 		
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
+		
 			/**
 			 * SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der
 			 * Id in der Datenbank.
@@ -256,7 +264,9 @@ public class ContactListMapper{
 		ArrayList<ContactList> result = new ArrayList<ContactList>();
 		
 		try{
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
+			
 			/**
 			 * SQL-Anweisung zum Finden des Datensatzes nach dem gesuchten Namen in der Datenbank, sortiert nach der Id.
 			 */
@@ -304,6 +314,7 @@ public class ContactListMapper{
 		ArrayList<ContactList> result = new ArrayList<ContactList>();
 		
 		try {
+<<<<<<< HEAD
 			/**Leeres SQL-Statement (JDBC) anlegen
 			 * 
 			 */
@@ -313,6 +324,13 @@ public class ContactListMapper{
 			 * SQL-Anweisung zum Finden aller Datensätze in der Datenbank, sortiert nach
 			 * der Id.
 			 */
+=======
+			con.setAutoCommit(true);
+			// Leeres SQL-Statement (JDBC) anlegen
+			Statement stmt = con.createStatement();
+		
+			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der Id in der Datenbank
+>>>>>>> master
 			ResultSet rs = stmt.executeQuery("SELECT id, name, ownerId FROM contactlist ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der

@@ -22,8 +22,8 @@ public interface ReportGeneratorServiceAsync {
 	void allUsers(AsyncCallback<List<User>> callback);
 	void allProperties(AsyncCallback<List<Property>> callback);
 	void allValues(Integer propertyId, AsyncCallback<List<Value>> callback);
-	void searchContacts(boolean allContacts, boolean sharedContacts, String userEmail,
-			Map<Integer, String> propertyValueMap, AsyncCallback<List<ReportObjekt>> callback);
+	void searchContacts(boolean allContacts, boolean sharedContacts, boolean detailSearch, String userEmail,
+			Map<Integer, String> propertyValueMap, int userId, AsyncCallback<List<ReportObjekt>> callback);
 	
 	
 

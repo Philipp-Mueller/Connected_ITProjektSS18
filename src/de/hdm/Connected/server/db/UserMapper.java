@@ -115,6 +115,7 @@ public class UserMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/**
@@ -147,6 +148,7 @@ public class UserMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/**
@@ -179,6 +181,7 @@ public class UserMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/**
@@ -226,6 +229,7 @@ public class UserMapper {
 		Connection con = DBConnection.connection();
 
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/**
@@ -272,6 +276,7 @@ public class UserMapper {
 
 		ArrayList<User> result = new ArrayList<User>();
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/**

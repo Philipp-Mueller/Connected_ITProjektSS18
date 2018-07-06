@@ -128,7 +128,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @return aktualisiertes Value-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	public Value updateValue(Value value) throws IllegalArgumentException;
+	public Value updateValue(Value value, int oldPropertyId) throws IllegalArgumentException;
 	
 	/**
 	 * Löscht ein Value-Objekt und alle eventuell darauf basierenden
@@ -212,6 +212,15 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public Property findPropertyByPropertyId(int id) throws IllegalArgumentException;
+	
+	/**
+	 * Gibt eine spezifische Property anhand seines namen aus
+	 * 
+	 * @param name
+	 * @throws IllegalArgumentException
+	 */
+	public Property findPropertyByName(String name) throws IllegalArgumentException;
+	
 	
 	/**
 	 * Gibt alle Permissions eines User aus
@@ -327,5 +336,7 @@ public interface ConnectedAdmin extends RemoteService {
 	void deletePermissionFromContact(int userId, int contactId) throws IllegalArgumentException;
 	
 	ArrayList<Value> getValuesByReceiveUserPermission(int contactId, int userId) throws IllegalArgumentException;
+
+	void deleteContactList(ContactList contactList, int userid) throws IllegalArgumentException;
 
 }

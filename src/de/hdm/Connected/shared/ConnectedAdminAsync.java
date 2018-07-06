@@ -47,7 +47,7 @@ public interface ConnectedAdminAsync {
 	
 	void createValue(String name, int propertyId, int contactId, int ownerId, AsyncCallback<Value> callback);
 	
-	void updateValue(Value value, AsyncCallback<Value> callback);
+	void updateValue(Value value, int oldPropertyId, AsyncCallback<Value> callback);
 	
 	void deleteValue(Value value, AsyncCallback<Void> callback);
 	
@@ -56,6 +56,8 @@ public interface ConnectedAdminAsync {
 	void updateContactList(ContactList contactlist, AsyncCallback<ContactList> callback);
 	
 	void deleteContactList(ContactList contactlist, AsyncCallback<Void> callback);
+	
+	void deleteContactList(ContactList contactlist, int userid, AsyncCallback<Void> callback);
 	
 	void findContactsByContactListId(int contactlistId, AsyncCallback<ArrayList<Contact>> callback);
 	
@@ -135,5 +137,7 @@ public interface ConnectedAdminAsync {
 	void getValuesByReceiveUserPermission(int contactId, int userId, AsyncCallback<ArrayList<Value>> callback);
 
 	void checkIfPropertyHasValue(int propertyId, AsyncCallback<Void> callback);
+
+	void findPropertyByName(String name, AsyncCallback<Property> callback);
 	
 }

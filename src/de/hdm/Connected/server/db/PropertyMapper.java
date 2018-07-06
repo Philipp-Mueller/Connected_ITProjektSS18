@@ -59,9 +59,14 @@ public class PropertyMapper {
 		 */
 		Connection con = DBConnection.connection();
 		try {
+<<<<<<< HEAD
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
+=======
+			con.setAutoCommit(true);
+			// Leeres SQL-Statement (JDBC) anlegen
+>>>>>>> master
 			Statement stmt = con.createStatement();
 
 			/**
@@ -113,10 +118,15 @@ public class PropertyMapper {
 		 */
 		Connection con = DBConnection.connection();
 		try {
+<<<<<<< HEAD
 			
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
+=======
+			con.setAutoCommit(true);
+			// Leeres SQL-Statement (JDBC) anlegen
+>>>>>>> master
 			Statement stmt = con.createStatement();
 
 			/**
@@ -151,10 +161,15 @@ public class PropertyMapper {
 		 */
 		Connection con = DBConnection.connection();
 		try {
+<<<<<<< HEAD
 			
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
+=======
+			con.setAutoCommit(true);
+			// Leeres SQL-Statement (JDBC) anlegen
+>>>>>>> master
 			Statement stmt = con.createStatement();
 
 			/**
@@ -185,10 +200,15 @@ public class PropertyMapper {
 		 */
 		Connection con = DBConnection.connection();
 		try {
+<<<<<<< HEAD
 			
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
+=======
+			con.setAutoCommit(true);
+			// Leeres SQL-Statement (JDBC) anlegen
+>>>>>>> master
 			Statement stmt = con.createStatement();
 
 			/**
@@ -235,10 +255,15 @@ public class PropertyMapper {
 		
 		ArrayList<Property> result = new ArrayList<Property>();
 		try {
+<<<<<<< HEAD
 			
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
+=======
+			con.setAutoCommit(true);
+			// Leeres SQL-Statement (JDBC) anlegen
+>>>>>>> master
 			Statement stmt = con.createStatement();
 			
 			/**
@@ -274,4 +299,39 @@ public class PropertyMapper {
 		 */
 		return result;
 	}
+	
+	public Property findByName(String name) {
+		// DB-Verbindung holen
+		Connection con = DBConnection.connection();
+
+		try {
+			con.setAutoCommit(true);
+			// Leeres SQL-Statement (JDBC) anlegen
+			Statement stmt = con.createStatement();
+
+			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der
+			// Id in der Datenbank
+			ResultSet rs = stmt.executeQuery("SELECT id, name FROM property WHERE name='" + name + "'" );
+			/**
+			 * Da id Primärschlüssel ist, kann max. nur ein Tupel zurückgegeben
+			 * werden. Es wird geprüft, ob ein Ergebnis vorliegt.
+			 */
+			if (rs.next()) {
+				// Ergebnis-Tupel in Objekt umwandeln
+				Property property = new Property();
+				property.setBoId(rs.getInt("id"));
+				property.setName(rs.getString("name"));
+				return property;
+			}
+			/**
+			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die
+			 * Fehlermeldung genauer zu analyisieren. Es werden Informationen
+			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
+			 */
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 }
