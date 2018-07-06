@@ -53,32 +53,35 @@ public class ReportGeneratorBaseForm extends Widget {
 	// Attribute Vertical Panel
 	private VerticalPanel filterVpanelLinks = new VerticalPanel();
 	private VerticalPanel datenHpanelRechts = new VerticalPanel();
-	//private VerticalPanel vPanel2 = new VerticalPanel();
+	private VerticalPanel vPanel2 = new VerticalPanel();
 
 	// Attribute Horizontal Panel
 	private HorizontalPanel hPanelFilter = new HorizontalPanel();
 	private HorizontalPanel hPanelRbAllContacts = new HorizontalPanel();
 	private HorizontalPanel hPanelRbSharedContacts = new HorizontalPanel();
+	private HorizontalPanel hPanelRbDetailSearch = new HorizontalPanel();
 	private HorizontalPanel hPanelValueButton = new HorizontalPanel();
 	private HorizontalPanel hPanelValueChosenButton = new HorizontalPanel();
 	
 	// Attribute RadioButton
-	private RadioButton allContactsRb = new RadioButton(" Alle Kontakte anzeigen");
-	private RadioButton sharedContactsRb = new RadioButton(" Alle getelten Kontakte anzeigen");
+	private RadioButton allContactsRb = new RadioButton(" Alle meine Kontakte");
+	private RadioButton sharedContactsRb = new RadioButton(" Alle meinte geteilten Kontakte");
+	private RadioButton propertySearchRb = new RadioButton(" Eigenschaftssuche");
 
 	// Attribute Listboxen
 	private ListBox userListBox = new ListBox();
 	private ListBox propertyListBox = new ListBox();
-	private ListBox lb = new ListBox();
+	private ListBox valueListBox = new ListBox();
 
 	// Attribute
 	private MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
-	private SuggestBox box = new SuggestBox(oracle);
+	private SuggestBox valueBox = new SuggestBox(oracle);
 	private CellTable<ReportObjekt> table = new CellTable<ReportObjekt>();
 	private ListDataProvider<ReportObjekt> dataProvider = new ListDataProvider<ReportObjekt>();
 	private List<ReportObjekt> contactToShowInReport = new ArrayList<>();
 	private boolean allContacts = false;
 	private boolean sharedContacts = false;
+	private boolean detailSearch = false;
 	private Integer propertyId = null;
 	private String valueDescription = "";
 	protected String userEmail = "";
@@ -86,36 +89,41 @@ public class ReportGeneratorBaseForm extends Widget {
 	private Map<Integer, String> propertyIdUndName = new HashMap<Integer, String>();
 	private SimplePager pager;
 
-	// Attribute Content
+	// HTML Attribute
 	private HTML labelFilter = new HTML("<strong>Filter wählen</strong>");
 	private HTML labelProperty = new HTML("Eigenschaft wählen:");
 	private HTML labelValue = new HTML("Wert eingeben:");
 	private HTML labelPropertyValues = new HTML("Gewählte Eigenschaftswerte:");
 	private HTML labelUser = new HTML("Nutzer wählen:");
-	private HTML labelAllContactsText = new HTML(" Alle Kontakte anzeige");
-	private HTML labelSharedContactsText = new HTML(" Alle geteilten Kontakte anzeige");
-
-	// Footer Attribute
-	private HorizontalPanel footer = new HorizontalPanel();
-	private Anchor connectedLink = new Anchor("Connected", "Connected_ITProjektSS18.html");
-	private HTML copyrightText2 = new HTML(" | ");
-	private Anchor reportGeneratorLink = new Anchor(" ReportGenerator", "Connected_ITProjektSS18ReportGenerator.html");
-	private HTML copyrightText = new HTML(" | © 2018 Connected | ");
-	private Anchor impressumLink = new Anchor("Impressum");
-
+	private HTML labelAllContactsText = new HTML(" Alle meine Kontakte");
+	private HTML labelSharedContactsText = new HTML(" Alle meine geteilten Kontakte");
+	private HTML labelPropertySearchText = new HTML(" Eigenschaftssuche");
+	private HTML trennStrich1 = new HTML("<hr>");
+	private HTML trennStrich2 = new HTML("<hr>");
+	private HTML trennStrich3 = new HTML("<hr>");
+	private HTML trennStrich4 = new HTML("<hr>");
 	
-	public ReportGeneratorBaseForm() {
+	public ReportGeneratorBaseForm(final User currentUser) {
 
-		// Vertical Panel in Horizontal Panels
+		// Panels
 		hPanelFilter.add(filterVpanelLinks);
 		hPanelFilter.add(datenHpanelRechts);
+		filterVpanelLinks.add(trennStrich1);
+		filterVpanelLinks.add(trennStrich2);
+		filterVpanelLinks.add(trennStrich3);
+		filterVpanelLinks.add(trennStrich4);
+		
+		
 		
 		//Überschrift filterVpanelLinks
-		labelFilter.getElement().getStyle().setMarginBottom(2, Unit.EM);
+		labelFilter.getElement().getStyle().setMarginBottom(1, Unit.EM);
 		filterVpanelLinks.add(labelFilter);
+		filterVpanelLinks.add(trennStrich1);
+		trennStrich1.getElement().getStyle().setMarginBottom(2, Unit.EM);
+		
 		
 		// AllContacts RadioButton
-		allContactsRb.getElement().getStyle().setMarginBottom(1, Unit.EM);
+		allContactsRb.getElement().getStyle().setMarginBottom(2, Unit.EM);
 		allContactsRb.setValue(allContacts);
 		allContactsRb.setName(RadioButtonGruppe);
 		allContactsRb.addClickHandler(new ClickHandler() {
@@ -123,14 +131,32 @@ public class ReportGeneratorBaseForm extends Widget {
 			public void onClick(ClickEvent event) {
 				allContacts = ((RadioButton) event.getSource()).getValue();
 				sharedContacts = false;
+				
+				//Nutzer bei Allen Kontakten verbergen
+				if (!allContacts) {
+					allContactsRb.setEnabled(true);
+				} else {
+					userListBox.setEnabled(false);
+					propertyListBox.setEnabled(false);
+					valueBox.setEnabled(false);
+					valueListBox.setEnabled(false);
+				}
+
 			}
 		});
+
 		hPanelRbAllContacts.add(allContactsRb);
 		hPanelRbAllContacts.add(labelAllContactsText);
 		filterVpanelLinks.add(hPanelRbAllContacts);
+		filterVpanelLinks.add(trennStrich2);
+		trennStrich2.getElement().getStyle().setMarginTop(2, Unit.EM);
+		trennStrich2.getElement().getStyle().setMarginBottom(2, Unit.EM);
 
+		
+		
 		// SharedContact RadioButton
-		sharedContactsRb.getElement().getStyle().setMarginBottom(1, Unit.EM);
+		sharedContactsRb.getElement().getStyle().setMarginTop(2, Unit.EM);
+		sharedContactsRb.getElement().getStyle().setMarginBottom(2, Unit.EM);
 		sharedContactsRb.setValue(sharedContacts);
 		sharedContactsRb.setName(RadioButtonGruppe);
 		sharedContactsRb.addClickHandler(new ClickHandler() {
@@ -138,19 +164,35 @@ public class ReportGeneratorBaseForm extends Widget {
 			public void onClick(ClickEvent event) {
 				sharedContacts = ((RadioButton) event.getSource()).getValue();
 				allContacts = false;
+				
+				//Nutzer bei Allen geteilten Kontakten anzeigen
+				if (!sharedContacts) {
+					sharedContactsRb.setEnabled(false);
+				} else {
+					userListBox.setEnabled(true);
+					propertyListBox.setEnabled(false);
+					valueBox.setEnabled(false);
+					valueListBox.setEnabled(false);
+				}
 			}
 		});
 		hPanelRbSharedContacts.add(sharedContactsRb);
 		hPanelRbSharedContacts.add(labelSharedContactsText);
 		filterVpanelLinks.add(hPanelRbSharedContacts);
 		
-		// Abstand zur userListbox und Aufforderungstext zur User-Auswahl
-		labelUser.getElement().getStyle().setMarginRight(1, Unit.EM);
-		labelUser.getElement().getStyle().setMarginTop(1, Unit.EM);
+		
+		
+		// Abstand und Userlabel
+		labelUser.getElement().getStyle().setMarginRight(2, Unit.EM);
+		labelUser.getElement().getStyle().setMarginTop(2, Unit.EM);
 		filterVpanelLinks.add(labelUser);
 
+		
+		
 		// Userlistbox
 		userListBox.setVisibleItemCount(1);
+		userListBox.getElement().getStyle().setMarginLeft(1, Unit.EM);
+		userListBox.getElement().getStyle().setWidth(13, Unit.EM);
 		userListBox.addChangeHandler(new ChangeHandler() {
 
 			@Override
@@ -159,13 +201,59 @@ public class ReportGeneratorBaseForm extends Widget {
 			}
 		});
 		filterVpanelLinks.add(userListBox);
-
-		// Abstand und Aufforderungstext zur interaktion mit denn Eigenschaften
-		labelProperty.getElement().getStyle().setMarginTop(1, Unit.EM);
+		filterVpanelLinks.add(trennStrich3);
+		trennStrich3.getElement().getStyle().setMarginTop(2, Unit.EM);
+		trennStrich3.getElement().getStyle().setMarginBottom(2, Unit.EM);
+		
+		
+		//Eigenschaftssuche RadioButton
+		propertySearchRb.getElement().getStyle().setMarginTop(2, Unit.EM);
+		propertySearchRb.getElement().getStyle().setMarginBottom(2, Unit.EM);
+		propertySearchRb.setValue(detailSearch);
+		propertySearchRb.setName(RadioButtonGruppe);
+		propertySearchRb.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				detailSearch = ((RadioButton) event.getSource()).getValue();
+				allContacts = false;
+				sharedContacts = false;
+				
+				//Detailsuche anzeigen wenn weder alle Kontakte noch geteilte Kontakte ausgewählt sind
+				if (!detailSearch) {
+					propertySearchRb.setEnabled(true);
+				}else{
+					userListBox.setEnabled(false);
+					propertyListBox.setEnabled(true);
+					valueBox.setEnabled(true);
+					valueListBox.setEnabled(true);
+					
+				}
+			}
+			});
+		hPanelRbDetailSearch.add(propertySearchRb);
+		hPanelRbDetailSearch.add(labelPropertySearchText);
+		filterVpanelLinks.add(hPanelRbDetailSearch);
+		
+		//Default page view
+		allContactsRb.setChecked(true);
+		userListBox.setEnabled(false);
+		propertyListBox.setEnabled(false);
+		valueBox.setEnabled(false);
+		valueListBox.setEnabled(false);
+		detailSearch = false;
+		allContacts = true;
+		sharedContacts = false;
+		
+		// Abstand und  Eigenschaftslabel
+		labelProperty.getElement().getStyle().setMarginTop(2, Unit.EM);
 		filterVpanelLinks.add(labelProperty);
 
-		// Abstand Property list box
+		
+		
+		// Eigenschaftslistbox
 		propertyListBox.setVisibleItemCount(1);
+		propertyListBox.getElement().getStyle().setMarginLeft(1, Unit.EM);
+		propertyListBox.getElement().getStyle().setWidth(13, Unit.EM);
 		propertyListBox.addChangeHandler(new ChangeHandler() {
 
 			@Override
@@ -177,15 +265,20 @@ public class ReportGeneratorBaseForm extends Widget {
 		});
 		filterVpanelLinks.add(propertyListBox);
 
+		
+		
 		// Abstand und ValueDescription suggestbox
-		labelValue.getElement().getStyle().setMarginTop(1, Unit.EM);
-		box.addKeyUpHandler(new KeyUpHandler() {
+		labelValue.getElement().getStyle().setMarginTop(2, Unit.EM);
+		valueBox.getElement().getStyle().setWidth(13, Unit.EM);
+		valueBox.addKeyUpHandler(new KeyUpHandler() {
 
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
 				valueDescription = ((SuggestBox) event.getSource()).getText();
 			}
 		});
+		
+		
 		
 		
 		//Button zum Hinzufügen von Eigenschaften
@@ -196,65 +289,72 @@ public class ReportGeneratorBaseForm extends Widget {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				String value = box.getText();
+				String value = valueBox.getText();
 				String propertyText = propertyListBox.getSelectedItemText();
 
 				 // Werte aus der Listbox Anzeige in die HashMap für Übertragung an den Server merken
 				propertyValueMap.put(propertyId, value);
-				lb.addItem(propertyText + ": " + value, propertyId.toString());
+				valueListBox.addItem(propertyText + ": " + value, propertyId.toString());
 			}
 		});
 		filterVpanelLinks.add(labelValue);
-		hPanelValueButton.add(box);
+		hPanelValueButton.add(valueBox);
 		hPanelValueButton.add(newPropertySelection);
 		filterVpanelLinks.add(hPanelValueButton);
 
 		
+		
 		//Button zum entfernen ausgewählter Eigenschaften
 		Button removePropertySelection = new Button("-");
+		removePropertySelection.getElement().getStyle().setWidth(2, Unit.EM);
 		removePropertySelection.getElement().getStyle().setMarginLeft(1, Unit.EM);
 		removePropertySelection.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				Integer selektionsProperties = lb.getSelectedIndex();
+				Integer selektionsProperties = valueListBox.getSelectedIndex();
 
 				
 				
 				 // Werte aus der Hash Map für die Server Übertragung wieder entfernen, da nicht mehr Relevant für die Selektion
-				propertyValueMap.remove(Integer.valueOf(lb.getSelectedValue()));
-				lb.removeItem(selektionsProperties);
+				propertyValueMap.remove(Integer.valueOf(valueListBox.getSelectedValue()));
+				valueListBox.removeItem(selektionsProperties);
 			}
 		});
-		
 		removePropertySelection.getElement().getStyle().setWidth(2, Unit.EM);
 		removePropertySelection.getElement().getStyle().setMarginTop(2, Unit.EM);
 		
 		
+		
 		//Ansicht der Listbox auf 3 Eigenschaften eingrenzen darüber erscheint Scrollbalken
-		labelPropertyValues.getElement().getStyle().setMarginTop(1, Unit.EM);
-		lb.setVisibleItemCount(3);
-		lb.getElement().getStyle().setWidth(12, Unit.EM);
-		
-		
+		labelPropertyValues.getElement().getStyle().setMarginTop(2, Unit.EM);
+		valueListBox.setVisibleItemCount(3);
+		valueListBox.getElement().getStyle().setWidth(14, Unit.EM);
 		filterVpanelLinks.add(labelPropertyValues);
-		hPanelValueChosenButton.add(lb);
+		hPanelValueChosenButton.add(valueListBox);
 		hPanelValueChosenButton.add(removePropertySelection);
 		filterVpanelLinks.add(hPanelValueChosenButton);
+		filterVpanelLinks.add(trennStrich4);
+		trennStrich4.getElement().getStyle().setMarginTop(2, Unit.EM);
+		trennStrich4.getElement().getStyle().setMarginBottom(2, Unit.EM);
 		
 		
-		// Anwenden button
-		Button b = new Button("Filter Anwenden", new ClickHandler() {
+		//Filter Anwenden button
+		Button filterAnwenden = new Button("Filter Anwenden", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
-				ReportGeneratorBaseForm.this.valueDescription = box.getText();
+				ReportGeneratorBaseForm.this.valueDescription = valueBox.getText();
 
 				String mailToServer = "";
-				if(!userEmail.equals("Ohne Nutzer")){
+				Map<Integer, String> propertyValueMapToServer = new HashMap<>();
+				if(!userEmail.equals("Ohne Nutzer")&&userListBox.isEnabled()){
 					mailToServer = userEmail;
 				}
-				
-				rgsa.searchContacts(allContacts, sharedContacts, mailToServer, propertyValueMap,
+				if(propertyListBox.isEnabled()&&propertySearchRb.isChecked()){
+					propertyValueMapToServer = propertyValueMap;
+				}
+				 
+				rgsa.searchContacts(allContacts, sharedContacts,detailSearch, mailToServer, propertyValueMapToServer, currentUser.getBoId(),
 						new AsyncCallback<List<ReportObjekt>>() {
 
 							@Override
@@ -273,14 +373,42 @@ public class ReportGeneratorBaseForm extends Widget {
 			}
 		});
 		// Abstand und Panel hinzufügen
-		b.getElement().getStyle().setMarginTop(1, Unit.EM);
-		b.getElement().getStyle().setMarginBottom(5, Unit.EM);
-		filterVpanelLinks.add(b);
 
+		// Filter löschen Button
+		Button filterLoeschen = new Button("Filter löschen", new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				//Default page view
+				allContactsRb.setChecked(true);
+				userListBox.setEnabled(false);
+				userListBox.setSelectedIndex(0);
+				userEmail="Ohne Nutzer";
+				propertyListBox.setEnabled(false);
+				valueBox.setEnabled(false);
+				valueBox.setValue("");
+				valueListBox.setEnabled(false);
+				valueListBox.setSelectedIndex(0);
+				propertyValueMap = new HashMap<>();
+				valueListBox.clear();
+				detailSearch = false;
+				allContacts = true;
+				sharedContacts = false;
+				
+			}
+		});
+		
+		HorizontalPanel buttonPanel = new HorizontalPanel();
+		buttonPanel.add(filterLoeschen);
+		buttonPanel.add(filterAnwenden);
+		filterVpanelLinks.add(buttonPanel);
+		
+		
+		
 		
 		// Contact Tabelle verbindet die Tabelle mit dem Data Provider.
 		dataProvider.addDataDisplay(table);
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+		
+		
 		
 		//Spaltenbezeichnung "Vorname"
 		TextColumn<ReportObjekt> nameColumn = new TextColumn<ReportObjekt>() {
@@ -292,6 +420,8 @@ public class ReportGeneratorBaseForm extends Widget {
 		nameColumn.setSortable(true);
 		table.addColumn(nameColumn, "Vorname");
 
+		
+		
 		//Spaltenbezeichnung "Nachname"
 		TextColumn<ReportObjekt> surnameColumn = new TextColumn<ReportObjekt>() {
 			@Override
@@ -302,12 +432,18 @@ public class ReportGeneratorBaseForm extends Widget {
 		surnameColumn.setSortable(true);
 		table.addColumn(surnameColumn, "Nachname");
 
+		
+		
 		//
 		table.setRowCount(contactToShowInReport.size(), true);
 		table.setRowData(0, contactToShowInReport);
 
+		
+		
 		//
 	    ListHandler<ReportObjekt> columnSortHandler = new ListHandler<ReportObjekt>(contactToShowInReport);
+	    
+	    
 	    
 	    //
 	    columnSortHandler.setComparator(nameColumn,
@@ -325,8 +461,12 @@ public class ReportGeneratorBaseForm extends Widget {
 	        });
 	    table.addColumnSortHandler(columnSortHandler);
 	    
+	    
+	    
 	    //
 	    ListHandler<ReportObjekt> columnSortHandler2 = new ListHandler<ReportObjekt>(contactToShowInReport);
+	    
+	    
 	    
 	    //
 	    columnSortHandler2.setComparator(surnameColumn,
@@ -349,12 +489,15 @@ public class ReportGeneratorBaseForm extends Widget {
         datenHpanelRechts.add(table);
 		
         
+        
 		// Nachdem die UI erstellt ist werden die Daten für das Dropdown und die Suggestbox geladen
 		loadDataForFiltering();
 
 		
+		
 		 // Vertical panel wird dem RootPanel hinzugefügt (Somit wirds sichtbar)
 		RootPanel.get("content").add(hPanelFilter);
+		
 		
 		
 		//Paginierung der Tabelle
@@ -370,46 +513,11 @@ public class ReportGeneratorBaseForm extends Widget {
 		hp.getElement().getStyle().setMarginLeft(10, Unit.EM);
 		datenHpanelRechts.add(hp);
 		
-		
-		//Footer Impressum
-		impressumLink.addClickHandler(new ClickHandler() {
 
-			@Override
-			public void onClick(ClickEvent event) {
-				RootPanel.get("content").clear();
-				RootPanel.get("content").add(new HTML("<h2>Impressum nach §5 TMG</h2>"
-						+ "<h3>Verantwortlich</h3>"
-						+ "<p>Hochschule der Medien<br />"
-						+ "Nobelstraße 8<br />"
-						+ "70569 Stuttgart<br /></p>"
-						+ "<p><strong>Projektarbeit innerhalb des Studiengangs "
-						+ "Wirtschaftsinformatik und digitale Medien, "
-						+ "IT-Projekt SS 18.</strong></p>"
-						+ "<h3>Projektteam</h3>"
-						+ "<ul><li>Alexeyeva, Viktoriya</li>"
-						+ "<li>Aridag, Burak</li>"
-						+ "<li>Bittner, Moritz</li>"
-						+ "<li>Müller, Philip</li>"
-						+ "<li>Ribeiro, Patricia Rodrigues</li>"
-						+ "<li>Semmler, Denise</li></ul>"
-						+ "<h3>Kontakt</h3>"
-						+ "<p><strong>Telefon:</strong> 0711 8923 10 (Zentrale)</p>"
-						+ "<p><strong>Website:</strong> <a href='http://www.hdm-stuttgart.de' target='_blank'>"
-						+ "www.hdm-stuttgart.de</a></p>"));
-
-			}
-
-		});
-		footer.add(connectedLink);
-		footer.add(copyrightText2);
-		footer.add(reportGeneratorLink);
-		footer.add(copyrightText);
-		footer.add(impressumLink);
-		RootPanel.get("footer").add(footer);
 	}
 
+	//
 	private void loadDataForFiltering() {
-
 		// Users für User Dropbox
 		rgsa.allUsers(new AsyncCallback<List<User>>() {
 			@Override
@@ -418,6 +526,8 @@ public class ReportGeneratorBaseForm extends Widget {
 
 			}
 
+			
+			//
 			@Override
 			public void onSuccess(List<User> result) {
 				userListBox.addItem("Ohne Nutzer");
@@ -427,7 +537,6 @@ public class ReportGeneratorBaseForm extends Widget {
 				ReportGeneratorBaseForm.this.userEmail = userListBox.getSelectedValue();
 			}
 		});
-
 		// Properties für Property dropbox
 		rgsa.allProperties(new AsyncCallback<List<Property>>() {
 			@Override
@@ -436,6 +545,9 @@ public class ReportGeneratorBaseForm extends Widget {
 
 			}
 
+			
+			
+			//
 			@Override
 			public void onSuccess(List<Property> result) {
 				for (Property p : result) {
@@ -453,6 +565,9 @@ public class ReportGeneratorBaseForm extends Widget {
 
 	}
 
+	
+	
+	//
 	private void loadValuesForSuggestion() {
 		// Alle Values für suggestbox
 		rgsa.allValues(ReportGeneratorBaseForm.this.propertyId, new AsyncCallback<List<Value>>() {

@@ -95,9 +95,9 @@ public class ContactsTable extends CellTable<Contact> {
 	Set<Contact> selectedContacts = new HashSet<Contact>();
 
 	// Buttons für ContactList
-	Button shareContactListButton = new Button("<img border='0' src='share.png' width = '25' length = '25'/>");
-	Button updateContactListButton = new Button("<img border='0' src='edit.png' width = '25'  length = '25'/>");
-	Button deleteContactListButton = new Button("<img border='0' src='delete.png' width = '25' length = '25'/>");
+	Button shareContactListButton = new Button("<img border='0' src='share_white.png' width = '20' length = '20'/>");
+	Button updateContactListButton = new Button("<img border='0' src='edit_white.png' width = '20'  length = '20'/>");
+	Button deleteContactListButton = new Button("<img border='0' src='delete_white.png' width = '20' length = '20'/>");
 	ContactList mainContactlist = null;
 	ArrayList<Contact> withinContactlist = null;
 	ArrayList<User> uArray = new ArrayList<User>();
@@ -794,6 +794,8 @@ public class ContactsTable extends CellTable<Contact> {
 							buttonPanel.add(shareContactListButton);
 							buttonPanel.add(updateContactListButton);
 							buttonPanel.add(deleteContactListButton);
+							buttonPanel.add(shareSelectedContacts);
+							shareSelectedContacts.setVisible(false);
 
 							RootPanel.get("content").add(buttonPanel);
 							RootPanel.get("content").add(cellTable);
@@ -815,6 +817,8 @@ public class ContactsTable extends CellTable<Contact> {
 
 			// Enable glass background.
 			setGlassEnabled(true);
+			userListbox.setMultipleSelect(true);
+			
 			Button zurück = new Button("Zurück");
 			zurück.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
@@ -850,7 +854,7 @@ public class ContactsTable extends CellTable<Contact> {
 									public void onSuccess(Void result) {
 										allUsers.clear();
 										userListbox.clear();
-										Window.Location.reload();
+										
 									}
 
 								});
@@ -1121,10 +1125,11 @@ public class ContactsTable extends CellTable<Contact> {
 
 		public shareDialog() {
 			// Set the dialog box's caption.
-			setText("Kontaktliste" + mainContactlist.getName() + "teilen:");
+			setText("Kontaktliste " + mainContactlist.getName() + " teilen:");
 
 			// Enable animation.
 			setAnimationEnabled(true);
+		
 
 			// Enable glass background.
 			setGlassEnabled(true);
@@ -1137,6 +1142,7 @@ public class ContactsTable extends CellTable<Contact> {
 			userListbox.clear();
 
 			userListbox.setEnabled(true);
+			userListbox.setMultipleSelect(true);
 
 			// multi auswahl freischalten in ListBox
 			userListbox.ensureDebugId("cwListBox-multiBox");
@@ -1305,9 +1311,12 @@ public class ContactsTable extends CellTable<Contact> {
 
 				public void onClick(ClickEvent event) {
 
-					ContactList cl = new ContactList();
-					cl.setBoId(mainContactlist.getBoId());
-					ClientSideSettings.getConnectedAdmin().deleteContactList(cl, new AsyncCallback<Void>() {
+//					ContactList cl = new ContactList();
+//					cl.setBoId(mainContactlist.getBoId());
+					Window.alert(Integer.toString(mainContactlist.getBoId()));
+//					Window.alert(Integer.toString(ClientSideSettings.getCurrentUser()));
+					Window.alert(mainContactlist.getName());
+					ClientSideSettings.getConnectedAdmin().deleteContactList(mainContactlist, ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Void>() {
 
 						@Override
 						public void onFailure(Throwable caught) {

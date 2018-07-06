@@ -272,7 +272,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 		Anchor startPage = new Anchor ("Startseite", "Connected_ITProjektSS18.html");
 		HTML copyrightText1 = new HTML(" | ");
 		Anchor reportGeneratorLink = new Anchor (" ReportGenerator", "Connected_ITProjektSS18ReportGenerator.html");
-		HTML copyrightText2 = new HTML(" | © 2018 Connected | ");
+		HTML copyrightText2 = new HTML(" | 2018 Connected | ");
 		Anchor impressumLink = new Anchor("Impressum");
 		footer.add(startPage);
 		footer.add(copyrightText1);
@@ -298,7 +298,7 @@ public class Connected_ITProjektSS18 implements EntryPoint {
 						+ "<li>Aridag, Burak</li>"
 						+ "<li>Bittner, Moritz</li>"
 						+ "<li>Müller, Philip</li>"
-						+ "<li>Ribeiro, Patricia Rodrigues</li>"
+                        + "<li>Rodrigues Ribeiro, Patricia</li>"
 						+ "<li>Semmler, Denise</li></ul>"
 						+ "<h3>Kontakt</h3>"
 						+ "<p><strong>Telefon:</strong> 0711 8923 10 (Zentrale)</p>"
