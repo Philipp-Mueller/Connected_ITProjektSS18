@@ -101,11 +101,7 @@ public class ContactListMapper{
 			 */
 			con.commit();
 		
-<<<<<<< HEAD
 			} catch (SQLException e2) {
-=======
-		} catch (SQLException e2) {
->>>>>>> master
 			e2.printStackTrace();
 			
 			try {
@@ -314,23 +310,16 @@ public class ContactListMapper{
 		ArrayList<ContactList> result = new ArrayList<ContactList>();
 		
 		try {
-<<<<<<< HEAD
 			/**Leeres SQL-Statement (JDBC) anlegen
 			 * 
 			 */
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/**
 			 * SQL-Anweisung zum Finden aller Datensätze in der Datenbank, sortiert nach
 			 * der Id.
 			 */
-=======
-			con.setAutoCommit(true);
-			// Leeres SQL-Statement (JDBC) anlegen
-			Statement stmt = con.createStatement();
-		
-			// SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der Id in der Datenbank
->>>>>>> master
 			ResultSet rs = stmt.executeQuery("SELECT id, name, ownerId FROM contactlist ORDER BY id");
 			/**
 			 * Da es sein kann, dass mehr als nur ein Datenbank-Tupel in der
@@ -355,7 +344,9 @@ public class ContactListMapper{
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
-		// Rückgabe der ArrayList
+		/**
+		 * Rückgabe der ArryList
+		 */
 			return result;
 	}
 }

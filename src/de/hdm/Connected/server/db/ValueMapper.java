@@ -103,13 +103,8 @@ public class ValueMapper {
 			 * dazu ausgegeben, was passiert ist und wo im Code es passiert ist.
 			 */
 			con.commit();
-<<<<<<< HEAD
-			
+
 			} catch (SQLException e2) {
-=======
-		
-		} catch (SQLException e2) {
->>>>>>> master
 			e2.printStackTrace();
 			try {
 				con.rollback();
@@ -118,7 +113,9 @@ public class ValueMapper {
 				e.printStackTrace();
 			}
 		}
-		
+		/**
+		 * Rückgabe der Value
+		 */
 		return value;
 	}
 
@@ -197,7 +194,6 @@ public class ValueMapper {
 		} try {
 			con.rollback();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

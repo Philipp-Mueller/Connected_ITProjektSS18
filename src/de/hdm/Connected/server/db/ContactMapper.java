@@ -134,11 +134,10 @@ public class ContactMapper {
 		Timestamp currentTime = new Timestamp (System.currentTimeMillis());
 		
 		try {
-<<<<<<< HEAD
-			
-=======
+			/**
+			 * Leeres SQL-Statement (JDBC) anlegen
+			 */
 			con.setAutoCommit(true);
->>>>>>> master
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Aktualisieren des uebergebenen Datensatzes in der
@@ -416,14 +415,10 @@ public class ContactMapper {
 		ArrayList<Contact> result = new ArrayList<Contact>();
 
 		try {
-<<<<<<< HEAD
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
-=======
 			con.setAutoCommit(true);
-			// Leeres SQL-Statement (JDBC) anlegen
->>>>>>> master
 			Statement stmt = con.createStatement();
 
 			/**
@@ -474,14 +469,10 @@ public class ContactMapper {
 		ArrayList<Contact> result = new ArrayList<Contact>();
 
 		try {
-<<<<<<< HEAD
-			/**Leeres SQL-Statement (JDBC) anlegen
-			 * 
+			/**
+			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
-=======
 			con.setAutoCommit(true);
-			// Leeres SQL-Statement (JDBC) anlegen
->>>>>>> master
 			Statement stmt = con.createStatement();
 
 			/**SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der userId in der Datenbank
@@ -547,7 +538,7 @@ public class ContactMapper {
 			 * mit dem übergebenen Namen vorhanden ist, muss das Abfragen des ResultSet so
 			 * oft erfolgen (while-Schleife), bis alle Tupel durchlaufen wurden. Die
 			 * DB-Tupel werden in Java-Objekte transformiert und anschliessend der ArrayList
-			 * hinzugefuegt.
+			 * hinzugefügt.
 			 */
 			while (rs.next()) {
 				Contact contact = new Contact();

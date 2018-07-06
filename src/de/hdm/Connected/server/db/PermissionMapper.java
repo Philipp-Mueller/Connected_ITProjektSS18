@@ -61,15 +61,11 @@ public class PermissionMapper {
 		Connection con = DBConnection.connection();
 	
 		try {
-<<<<<<< HEAD
-			
+
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
-=======
-			con.setAutoCommit(true);
-			// Leeres SQL-Statement (JDBC) anlegen
->>>>>>> master
+			con.setAutoCommit(true); 
 			Statement stmt = con.createStatement();
 			
 			/**Statement ausfüllen und als Query an die Datenbank schicken
@@ -122,14 +118,10 @@ public class PermissionMapper {
 			Connection con = DBConnection.connection();
 
 			try {
-<<<<<<< HEAD
 				/**
-				 * Leeres SQL Statement anlegen
+				 * Leeres SQL-Statement (JDBC) anlegen
 				 */
-=======
 				con.setAutoCommit(true);
-				// Leeres SQL Statement anlegen
->>>>>>> master
 				Statement stmt = con.createStatement();
 				
 				/**
@@ -161,15 +153,10 @@ public class PermissionMapper {
 		Connection con = DBConnection.connection();
 		
 		try {
-<<<<<<< HEAD
-			
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
-=======
 			con.setAutoCommit(true);
-			//Leeres SQL-Statement (JDBC) anlegen
->>>>>>> master
 			Statement stmt = con.createStatement();
 			
 			/**
@@ -188,15 +175,21 @@ public class PermissionMapper {
 	}
 	
 	public void deletebyUser (Permission permission) {
-		//DB-Verbindung holen
+		/**
+		 * DB-Verbindung holen
+		 */
 		Connection con = DBConnection.connection();
 		
 		try {
 			con.setAutoCommit(true);
-			//Leeres SQL-Statement (JDBC) anlegen
+			/**Leeres SQL-Statement (JDBC) anlegen
+			 * 
+			 */
 			Statement stmt = con.createStatement();
 			
-			//SQL-Anweisung zum Löschen des übergebenen Datensatzes in der Datenbank
+			/**SQL-Anweisung zum Löschen des übergebenen Datensatzes in der Datenbank
+			 * 
+			 */
 			stmt.executeUpdate("DELETE FROM permission WHERE id=" + permission.getBoId());
 		
 			/**
@@ -222,14 +215,10 @@ public class PermissionMapper {
 		Connection con = DBConnection.connection();
 		
 		try {
-<<<<<<< HEAD
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
-=======
 			con.setAutoCommit(true);
-			// Leeres SQL-Statement (JDBC) anlegen
->>>>>>> master
 			Statement stmt = con.createStatement();
 				
 			/**
@@ -278,15 +267,10 @@ public class PermissionMapper {
 		ArrayList<Permission> result = new ArrayList<Permission>();
 		
 		try {
-<<<<<<< HEAD
-			
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
-=======
 			con.setAutoCommit(true);
-			// Leeres SQL-Statement (JDBC) anlegen
->>>>>>> master
 			Statement stmt = con.createStatement();
 			
 			/**
@@ -338,18 +322,12 @@ public class PermissionMapper {
 		Connection con = DBConnection.connection();
 		
 		ArrayList<Permission> result = new ArrayList<Permission>();
-		
-<<<<<<< HEAD
+
 		try {
-			
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
-=======
-		try{
 			con.setAutoCommit(true);
-			// Leeres SQL-Statement (JDBC) anlegen
->>>>>>> master
 			Statement stmt = con.createStatement();
 
 			/**SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der UserId in der Datenbank
@@ -403,15 +381,10 @@ public class PermissionMapper {
 		ArrayList<Permission> result = new ArrayList<Permission>();
 		
 		try {
-<<<<<<< HEAD
-			
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
-=======
 			con.setAutoCommit(true);
-			// Leeres SQL-Statement (JDBC) anlegen
->>>>>>> master
 			Statement stmt = con.createStatement();
 
 			/**
@@ -465,14 +438,10 @@ public class PermissionMapper {
 		ArrayList<Permission> result = new ArrayList<Permission>();
 		
 		try {
-<<<<<<< HEAD
 			/**
-			 * Leeres SQL-Statement anlegen
+			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
-=======
 			con.setAutoCommit(true);
-			// Leeres SQL-Statement anlegen
->>>>>>> master
 			Statement stmt = con.createStatement();
 
 			/**SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der ValueId in der Datenbank
@@ -525,14 +494,10 @@ public class PermissionMapper {
 		ArrayList<Permission> result = new ArrayList<Permission>();
 		
 		try {
-<<<<<<< HEAD
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
-=======
 			con.setAutoCommit(true);
-			// Leeres SQL-Statement (JDBC) anlegen
->>>>>>> master
 			Statement stmt = con.createStatement();
 
 			/**
@@ -585,14 +550,10 @@ public class PermissionMapper {
 		ArrayList<Permission> result = new ArrayList<Permission>();
 		
 		try {
-<<<<<<< HEAD
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
-=======
 			con.setAutoCommit(true);
-			// Leeres SQL-Statement (JDBC) anlegen
->>>>>>> master
 			Statement stmt = con.createStatement();
 
 			/**
@@ -644,14 +605,10 @@ public class PermissionMapper {
 		Permission permission = null;
 		
 		try {
-<<<<<<< HEAD
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
-=======
 			con.setAutoCommit(true);
-			// Leeres SQL-Statement (JDBC) anlegen
->>>>>>> master
 			Statement stmt = con.createStatement();
 
 			/**
@@ -702,14 +659,10 @@ public class PermissionMapper {
 		boolean permission = false;
 		
 		try {
-<<<<<<< HEAD
 			/**
 			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
-=======
 			con.setAutoCommit(true);
-			// Leeres SQL-Statement (JDBC) anlegen
->>>>>>> master
 			Statement stmt = con.createStatement();
 
 			/**
@@ -757,14 +710,10 @@ public class PermissionMapper {
 		ArrayList<Permission> result = new ArrayList<Permission>();
 		
 		try {
-<<<<<<< HEAD
-			/**Leeres SQL-Statement (JDBC) anlegen
-			 * 
+			/**
+			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
-=======
 			con.setAutoCommit(true);
-			// Leeres SQL-Statement (JDBC) anlegen
->>>>>>> master
 			Statement stmt = con.createStatement();
 
 			/**SQL-Anweisung zum Finden des übergebenen Datensatzes anhand der recieveUserId in der Datenbank
@@ -814,17 +763,12 @@ public class PermissionMapper {
 		Connection con = DBConnection.connection();
 		
 		ArrayList<Permission> result = new ArrayList<Permission>();
-		
-<<<<<<< HEAD
+
 		try {
-			/**Leeres SQL-Statement (JDBC) anlegen
-			 * 
+			/**
+			 * Leeres SQL-Statement (JDBC) anlegen
 			 */
-=======
-		try{
 			con.setAutoCommit(true);
-			// Leeres SQL-Statement (JDBC) anlegen
->>>>>>> master
 			Statement stmt = con.createStatement();
 			/**
 			 * SQL-Anweisung zum Finden aller Datensätze in der Datenbank, sortiert nach Id
