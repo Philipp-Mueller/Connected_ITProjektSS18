@@ -615,16 +615,16 @@ public class ContactSharing extends PopupPanel {
 
 	}
 
-	private class MyDialog extends DialogBox {
+	private class MyDialog extends PopupPanel {
 
 		public MyDialog(final Contact contact, final Value value) {
 			final ArrayList<User> permissionUser = new ArrayList<User>();
 			VerticalPanel v = new VerticalPanel();
 			HorizontalPanel h = new HorizontalPanel();
 			// Set the dialog box's caption.
-			setText("Neue Eigenschaft für Kontakt " + contact.getPrename() + " " + contact.getSurname()
-					+ " an Teilhaber teilen?");
-			
+			v.add(new HTML("<h2>Neue Eigenschaft für Kontakt " + contact.getPrename() + " " + contact.getSurname()
+					+ " an Teilhaber teilen? </h2>"));
+
 			
 			// Enable animation.
 			setAnimationEnabled(true);

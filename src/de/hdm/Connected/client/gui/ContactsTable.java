@@ -1025,7 +1025,7 @@ public class ContactsTable extends CellTable<Contact> {
 		}
 	}
 
-	// Private Klassen für Contactlist
+	/**Clickhandler zur Teilen einer Contactlist**/
 	private class shareCotactListClickhandler implements ClickHandler {
 
 		public void onClick(ClickEvent event) {
@@ -1037,6 +1037,7 @@ public class ContactsTable extends CellTable<Contact> {
 		}
 	}
 
+	/**Clickhandler zum Löschen einer Contactlist**/
 	private class deleteContactListClickhandler implements ClickHandler {
 		public void onClick(ClickEvent event) {
 
@@ -1046,7 +1047,7 @@ public class ContactsTable extends CellTable<Contact> {
 
 		}
 	}
-
+	/**Clickhandler für Updaten einer Kontaktlist**/
 	private class updateContactListClickhandler implements ClickHandler {
 		public void onClick(ClickEvent event) {
 			updateDialog dia = new updateDialog();
@@ -1055,11 +1056,10 @@ public class ContactsTable extends CellTable<Contact> {
 		}
 	}
 
-	private class updateDialog extends DialogBox {
+	/**PopUp zum ändern des Namens der Kontaktliste**/
+	private class updateDialog extends PopupPanel {
 
 		public updateDialog() {
-			// Set the dialog box's caption.
-			setText("Kontaktliste " + mainContactlist.getName() + " umbenennen:");
 
 			// Enable animation.
 			setAnimationEnabled(true);
@@ -1068,7 +1068,8 @@ public class ContactsTable extends CellTable<Contact> {
 			setGlassEnabled(true);
 
 			VerticalPanel v = new VerticalPanel();
-
+			v.add(new HTML("<h2> Kontaktliste " + mainContactlist.getName() + " umbenennen: </h2>"));
+			
 			Label nameLabel = new Label("Name: ");
 			final TextBox nameTextBox = new TextBox();
 			HorizontalPanel h = new HorizontalPanel();
@@ -1120,11 +1121,12 @@ public class ContactsTable extends CellTable<Contact> {
 		}
 	}
 
-	private class shareDialog extends DialogBox {
+	/**PopUp zum teilen einer Kontaktliste**/
+	private class shareDialog extends PopupPanel {
 
 		public shareDialog() {
 			// Set the dialog box's caption.
-			setText("Kontaktliste " + mainContactlist.getName() + " teilen:");
+			//setText("Kontaktliste " + mainContactlist.getName() + " teilen:");
 
 			// Enable animation.
 			setAnimationEnabled(true);
@@ -1136,6 +1138,7 @@ public class ContactsTable extends CellTable<Contact> {
 			VerticalPanel v = new VerticalPanel();
 			v.clear();
 
+			v.add(new HTML("<h2> Kontaktliste " + mainContactlist.getName() + " teilen: </h2>"));
 			v.add(userListbox);
 
 			userListbox.clear();
@@ -1188,7 +1191,7 @@ public class ContactsTable extends CellTable<Contact> {
 						}
 					}
 
-					ClientSideSettings.getConnectedAdmin().givePermissionToUsers(mainContactlist.getBoId(), uArray,
+					ClientSideSettings.getConnectedAdmin().giveContactlistPermissionToUsers(mainContactlist, uArray,
 							ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Void>() {
 
 								@Override
@@ -1218,6 +1221,7 @@ public class ContactsTable extends CellTable<Contact> {
 		}
 	}
 
+	/**Dialog zum Löschen einses Kontakt von einer Kontaktliste**/
 	private class deleteDialog extends DialogBox {
 
 		public deleteDialog(final int index) {
@@ -1285,6 +1289,7 @@ public class ContactsTable extends CellTable<Contact> {
 
 	}
 
+	/**DialogBox zum Löschen einer Kontaktliste**/
 	private class deleteContactListDialog extends DialogBox {
 
 		public deleteContactListDialog() {
