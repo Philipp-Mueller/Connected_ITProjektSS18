@@ -1088,6 +1088,13 @@ public class ContactsTable extends CellTable<Contact> {
 			Button ok = new Button("Speichern");
 			ok.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
+					
+					//Eingabeüberprüfung
+					if (nameTextBox.getText().matches("")) {
+						Window.alert("Bitte Wert eintragen!");
+						return;
+					}
+					
 					ContactList cl = new ContactList();
 					cl.setName(nameTextBox.getText());
 					cl.setBoId(mainContactlist.getBoId());
