@@ -477,8 +477,36 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 			}
 		}
 	}
+	
+	public void giveContactlistPermissionToUsers(ContactList contactlist, ArrayList<User> userArray, int shareuserid)throws IllegalArgumentException{
+		for( int i = 0; i< userArray.size(); i++){
+			//Erstellen der Permission für die Kontaktliste
+			Permission p = new Permission();
+			p.setSharedObjectId(contactlist.getBoId());
+			p.setReceiverUserID(userArray.get(i).getBoId());
+			p.setShareUserID(shareuserid);
+			permissionMapper.insert(p);
+			
+			//Receiver User der Permission
+			User u = userArray.get(i);
+			ArrayList<User> singleUser = new ArrayList<User>();
+			singleUser.add(u);
+			
+			//Erstellen der Permissions für alle Contacts der Liste
+			ArrayList<Contact> shareContacts = findContactsByContactListId(contactlist.getBoId());
+			this.giveContactPermissonToUsers(shareContacts, singleUser, shareuserid);
+			
+			//Erstellen von Permissions für alle Values der Kontakte 
+			for(int m = 0; m<shareContacts.size(); m++){
+			ArrayList<Value> shareValues = this.findValuesByContactId(shareContacts.get(m).getBoId());
+			for(Value v : shareValues){
+				givePermissionToUsers(v.getBoId(), singleUser, shareuserid);
+			}
+			}
+		}
+	}
 
-	/** Anlegen von Permission auf Kontaktliste für ein Array an User**/
+	/** Anlegen von Permission auf Shareobject für ein Array an User**/
 
 	@Override
 	public void givePermissionToUsers(int shareObjectId, ArrayList<User> userArray, int shareuserid)

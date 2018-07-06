@@ -309,6 +309,8 @@ public interface ConnectedAdmin extends RemoteService {
 	public void giveContactPermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid)
 			throws IllegalArgumentException;
 	
+	public void giveContactlistPermissionToUsers(ContactList contactlist, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException;
+	
 	public void givePermissionToUsers(int shareObjectId, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException;
 
 	/**
