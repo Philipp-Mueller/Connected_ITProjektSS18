@@ -1,8 +1,6 @@
 package de.hdm.Connected.client.gui;
 
-import java.awt.Dialog;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -10,10 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -21,7 +17,6 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
@@ -35,16 +30,13 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent.Handler;
-import com.google.gwt.view.client.SelectionChangeEvent.HasSelectionChangedHandlers;
 import com.google.gwt.view.client.SingleSelectionModel;
 
 import de.hdm.Connected.client.ClientSideSettings;
@@ -54,19 +46,28 @@ import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
 
+/**
+ * Klasse um das Teilen Popup des KOntaktes anzuzeigen
+ * @author Philipp
+ *
+ */
+
 public class ContactSharing extends PopupPanel {
 
 	private ListDataProvider<Entry<Property, Value>> dataProvider = new ListDataProvider<Entry<Property, Value>>();
 	private ListDataProvider<User> userDataProvider = new ListDataProvider<User>();
 	private ListDataProvider<User> receiverUserDataProvider = new ListDataProvider<User>();
+	
 	private CellTable<Entry<Property, Value>> propertyValueTable = new CellTable<Entry<Property, Value>>();
 	private CellTable<User> usersWithPermission = new CellTable<User>();
 	private CellTable<User> receiverUser = new CellTable<User>();
+	
 	private Set<Entry<Property, Value>> selectedSet = new HashSet<Entry<Property, Value>>();
+	
 	private List<Entry<Property, Value>> propertiesAndValues = new ArrayList<Entry<Property, Value>>();
 	final MultiSelectionModel<Entry<Property, Value>> selectionModel = new MultiSelectionModel<Entry<Property, Value>>();
 	final SingleSelectionModel<User> selectionModel_Single = new SingleSelectionModel<User>();
-	private ArrayList<User> allUsers = null;
+
 	private ArrayList<User> permissionUser = null;
 	private ArrayList<Integer> permissionUserIds = new ArrayList<Integer>();
 	private User changingUser =  null;
@@ -81,14 +82,14 @@ public class ContactSharing extends PopupPanel {
 	private String selectedUser;
 	private Button addButton = new Button("+");
 	private Label instruction = new Label();
-	private HTML creatorLabel = new HTML();
+	
 	private HTML noUserLabel = new HTML();
 	
-	private Label creator = new Label();
+
 	private Label selectValues = new Label();
 	private Label changeValues = new Label();
-	// Map<Property, Value> propertyValueMap = new HashMap<Property, Value>();
-
+	
+	/** Überladener Konstruktoe den Kontakt zum teilen mit überzugeben*/
 	public ContactSharing(final Contact sharingContact, final User creator) {
 		this.setAnimationEnabled(true);
 		closeButton.addClickHandler(new ClickHandler() {

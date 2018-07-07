@@ -34,17 +34,24 @@ import de.hdm.Connected.shared.bo.ContactList;
 import de.hdm.Connected.shared.bo.Permission;
 import de.hdm.Connected.shared.bo.User;
 
-public class ContactListSharing  extends PopupPanel {
-	
+/**
+ * Sharing PopUp für das Teilen einer Kontaktliste
+ * 
+ * @author Philipp & Moritz
+ *
+ */
+
+public class ContactListSharing extends PopupPanel {
+
 	private ListDataProvider<User> userDataProvider = new ListDataProvider<User>();
 	private ListDataProvider<User> receiverUserDataProvider = new ListDataProvider<User>();
 	private CellTable<User> usersWithPermission = new CellTable<User>();
 	private CellTable<User> receiverUser = new CellTable<User>();
-   
+
 	final SingleSelectionModel<User> selectionModel_Single = new SingleSelectionModel<User>();
 	private ArrayList<User> permissionUser = new ArrayList<User>();
 	private ArrayList<Permission> allPermissonForObject = new ArrayList<Permission>();
-	private User changingUser =  null;
+	private User changingUser = null;
 	private VerticalPanel root = new VerticalPanel();
 	private VerticalPanel boxPanel = new VerticalPanel();
 	private HorizontalPanel horizontal = new HorizontalPanel();
@@ -57,7 +64,7 @@ public class ContactListSharing  extends PopupPanel {
 	private Label instruction = new Label();
 	private HTML creatorLabel = new HTML();
 	private HTML noUserLabel = new HTML();
-	
+
 	private Label creator = new Label();
 	private Label selectValues = new Label();
 	private Label changeValues = new Label();
@@ -75,27 +82,28 @@ public class ContactListSharing  extends PopupPanel {
 				}
 			});
 			// Die Verschiedenen Elemente anzeigen oder ausblenden
-					
-			
+
 			receiverUser.setVisible(false);
 			selectValues.setVisible(false);
 			changeValues.setVisible(false);
-			
+
 			root.add(new HTML("<h3> Teilhaberschaften für Kontaktliste <i>" + sharingContactList.getName() + " "
 					+ "</i>verwalten</h3>"));
 			root.add(new HTML("Ersteller: " + creator.getLogEmail() + "<br />"));
 			root.add(new HTML("<br /><hr><br />"));
-			
-			instruction.getElement().setInnerHTML("Bitte einen User auswählen um dessen Berechtigung zu bearbeiten oder <br> rechts einen User eingeben um den Kontakt mit diesem zu teilen.");
-			
+
+			instruction.getElement().setInnerHTML(
+					"Bitte einen User auswählen um dessen Berechtigung zu bearbeiten oder <br> rechts einen User eingeben um den Kontakt mit diesem zu teilen.");
+
 			noUserLabel.setVisible(false);
 			noUserLabel.setHTML("Diese Kontakt ist mit keinem anderen User geteilt");
-			
+
 			root.add(instruction);
 			root.add(new HTML("<br />"));
 
-
-			/**Anzeigen der User, die bereits Zugriff auf diesen Kontakt haben*/
+			/**
+			 * Anzeigen der User, die bereits Zugriff auf diesen Kontakt haben
+			 */
 			ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(sharingContactList.getBoId(),
 					new AsyncCallback<ArrayList<Permission>>() {
 
@@ -106,11 +114,11 @@ public class ContactListSharing  extends PopupPanel {
 
 						@Override
 						public void onSuccess(ArrayList<Permission> result) {
-							if(result.size() == 0){
+							if (result.size() == 0) {
 								noUserLabel.setVisible(true);
 							}
-							allPermissonForObject =result;
-					
+							allPermissonForObject = result;
+
 							// User der Permissions abrufen
 							for (Permission p : result) {
 								ClientSideSettings.getConnectedAdmin().findUserById(p.getReceiverUserID(),
@@ -132,11 +140,10 @@ public class ContactListSharing  extends PopupPanel {
 
 										});
 							}
-							
-													
+
 							userDataProvider.addDataDisplay(usersWithPermission);
-							
-							/** CellTable Columns erstellen*/
+
+							/** CellTable Columns erstellen */
 							TextColumn<User> nameColumn = new TextColumn<User>() {
 								public String getValue(User user) {
 									return user.getLogEmail();
@@ -148,8 +155,9 @@ public class ContactListSharing  extends PopupPanel {
 								public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
 									String title = "Berechtigung löschen";
 									if (data != null) {
-										sb.appendHtmlConstant("<img title='" + title + "' src=" + "/delete.png" + " alt="
-												+ "Kontakt löschen" + " height=" + "18" + " width=" + "18" + ">");
+										sb.appendHtmlConstant("<img title='" + title + "' src=" + "/delete.png"
+												+ " alt=" + "Kontakt löschen" + " height=" + "18" + " width=" + "18"
+												+ ">");
 
 									}
 								}
@@ -165,8 +173,10 @@ public class ContactListSharing  extends PopupPanel {
 
 								@Override
 								public void update(int index, final User object, String value) {
-									// DialogBox anzeigen ob man diesen User wirklich die Berechtigungen entziehen möchte.
-								
+									// DialogBox anzeigen ob man diesen User
+									// wirklich die Berechtigungen entziehen
+									// möchte.
+
 									final DialogBox agreeDelete = new DialogBox();
 									VerticalPanel vpanel = new VerticalPanel();
 									HorizontalPanel buttonPanel = new HorizontalPanel();
@@ -182,37 +192,37 @@ public class ContactListSharing  extends PopupPanel {
 										@Override
 										public void onClick(ClickEvent event) {
 											Permission deletePermission = null;
-										
-											for(Permission p : allPermissonForObject){
-												if(p.getReceiverUserID() == object.getBoId()){
+
+											for (Permission p : allPermissonForObject) {
+												if (p.getReceiverUserID() == object.getBoId()) {
 													deletePermission = p;
 												}
 											}
-											
-											
-											ClientSideSettings.getConnectedAdmin().deletePermission(deletePermission, new AsyncCallback<Void>(){
 
-												@Override
-												public void onFailure(Throwable caught) {
-													Window.alert("Permisson konnte nicht gelöscht werden");
-													
-												}
+											ClientSideSettings.getConnectedAdmin().deletePermission(deletePermission,
+													new AsyncCallback<Void>() {
 
-												@Override
-												public void onSuccess(Void result) {
-													Window.alert("Berechtigung wurde " + object.getLogEmail() + " entzogen");
-													userDataProvider.getList().remove(object);
-													usersWithPermission.redraw();
-													agreeDelete.hide();
-												}
-												
-											});
-											
-											
-											
+														@Override
+														public void onFailure(Throwable caught) {
+															Window.alert("Permisson konnte nicht gelöscht werden");
+
+														}
+
+														@Override
+														public void onSuccess(Void result) {
+															Window.alert("Berechtigung wurde " + object.getLogEmail()
+																	+ " entzogen");
+															userDataProvider.getList().remove(object);
+															usersWithPermission.redraw();
+															agreeDelete.hide();
+														}
+
+													});
+
 										}
 									});
-									vpanel.add(new HTML("Wollen Sie diesen User die Berechtigungen für den Kontakt entziehen?"));
+									vpanel.add(new HTML(
+											"Wollen Sie diesen User die Berechtigungen für den Kontakt entziehen?"));
 									buttonPanel.add(noButton);
 									buttonPanel.add(yesButton);
 									vpanel.add(buttonPanel);
@@ -220,12 +230,9 @@ public class ContactListSharing  extends PopupPanel {
 									agreeDelete.setGlassEnabled(true);
 									agreeDelete.center();
 									agreeDelete.show();
-								
+
 								}
 							});
-
-								
-							
 
 							usersWithPermission.addColumn(nameColumn, "Bereits geteilt mit:");
 							usersWithPermission.addColumn(deleteColumn);
@@ -233,7 +240,10 @@ public class ContactListSharing  extends PopupPanel {
 						}
 
 					});
-			/** Alle user für die SuggestBox laden, die über das Oracle vorgeschlagen werden */
+			/**
+			 * Alle user für die SuggestBox laden, die über das Oracle
+			 * vorgeschlagen werden
+			 */
 			loadAllUser();
 			/**
 			 * suggestBox KeyUpHandler, bei betätigung Vorschläge anzeigen
@@ -247,7 +257,10 @@ public class ContactListSharing  extends PopupPanel {
 			});
 
 			suggestBox.getElement().getStyle().setMarginLeft(20, Unit.PX);
-			/** Bei Hinzufügen des kontakts, schaltet es auf den "kontakt an neuen User" Modus um*/
+			/**
+			 * Bei Hinzufügen des kontakts, schaltet es auf den "kontakt an
+			 * neuen User" Modus um
+			 */
 			addButton.addClickHandler(new ClickHandler() {
 
 				@Override
@@ -256,29 +269,28 @@ public class ContactListSharing  extends PopupPanel {
 					changeValues.setVisible(false);
 					selectValues.setVisible(true);
 					receiverUser.setVisible(true);
-					
+
 					shareButton.setText("Kontaktliste teilen");
-				
 
+					ClientSideSettings.getConnectedAdmin().findUserByEmail(suggestBox.getText(),
+							new AsyncCallback<User>() {
 
-					ClientSideSettings.getConnectedAdmin().findUserByEmail(suggestBox.getText(), new AsyncCallback<User>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Window.alert("User wurde nicht gefunden");
 
-						@Override
-						public void onFailure(Throwable caught) {
-							Window.alert("User wurde nicht gefunden");
+								}
 
-						}
+								@Override
+								public void onSuccess(User result) {
 
-						@Override
-						public void onSuccess(User result) {
-						
-							suggestBox.setText("");
-							receiverUserDataProvider.getList().add(result);
-							receiverUserDataProvider.addDataDisplay(receiverUser);
+									suggestBox.setText("");
+									receiverUserDataProvider.getList().add(result);
+									receiverUserDataProvider.addDataDisplay(receiverUser);
 
-						}
+								}
 
-					});
+							});
 
 				}
 
@@ -301,7 +313,7 @@ public class ContactListSharing  extends PopupPanel {
 					}
 				}
 			};
-			//CellTable für Empfänge User erstellen
+			// CellTable für Empfänge User erstellen
 			Column<User, String> reiceiveDeleteColumn = new Column<User, String>(deleteButton) {
 				public String getValue(User object) {
 					return "";
@@ -309,7 +321,7 @@ public class ContactListSharing  extends PopupPanel {
 			};
 			reiceiveDeleteColumn.setCellStyleNames("iconButton");
 			reiceiveDeleteColumn.setFieldUpdater(new FieldUpdater<User, String>() {
-				//dies passiert wenn ein User aus der Liste gelöscht wird
+				// dies passiert wenn ein User aus der Liste gelöscht wird
 				@Override
 				public void update(int index, final User object, String value) {
 					// DialogBox anzeigen ob man diesen Kontakt wirklich aus der
@@ -330,14 +342,14 @@ public class ContactListSharing  extends PopupPanel {
 						public void onClick(ClickEvent event) {
 							receiverUserDataProvider.getList().remove(object);
 							receiverUser.redraw();
-							if(receiverUserDataProvider.getList().size() == 0){
+							if (receiverUserDataProvider.getList().size() == 0) {
 								receiverUser.setVisible(false);
 								selectValues.setVisible(false);
 								changeValues.setVisible(true);
 								usersWithPermission.setVisible(true);
 							}
 							agreeDelete.hide();
-							
+
 						}
 					});
 					vpanel.add(new HTML("Wollen Sie diesen User aus der Liste entfernen?"));
@@ -355,29 +367,25 @@ public class ContactListSharing  extends PopupPanel {
 			receiverUser.addColumn(reiceiveDeleteColumn);
 			receiverUserDataProvider.addDataDisplay(receiverUser);
 
-			
-
 			usersWithPermission.setSelectionModel(selectionModel_Single);
-			
 
 			/**
-			 * Single selection model festlegen. Dieses dient der Auswhal im Celltable, es darf jedoch nur 1 Eintrag makiert werden.
+			 * Single selection model festlegen. Dieses dient der Auswhal im
+			 * Celltable, es darf jedoch nur 1 Eintrag makiert werden.
 			 */
 			selectionModel_Single.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-				
+
 				public void onSelectionChange(SelectionChangeEvent event) {
-					
-					//Aktionenn bei anwählen eines Eintrag der Liste.
+
+					// Aktionenn bei anwählen eines Eintrag der Liste.
 					if (changingUser != null) {
-									
+
 						changingUser = selectionModel_Single.getSelectedObject();
 
 					}
-					
+
 				}
 			});
-			
-			
 
 			horizontal.getElement().getStyle().setMarginBottom(30, Unit.PX);
 
@@ -395,51 +403,50 @@ public class ContactListSharing  extends PopupPanel {
 			root.add(horizontal);
 			root.add(noUserLabel);
 			changeValues.getElement().setInnerHTML("Bitte unten die Eigenschaftsberechtigungen ändern.<br />");
-			selectValues.getElement().setInnerHTML("Bitte wählen Sie die Eigenschaften aus, die Sie teilen möchten:<br />");
+			selectValues.getElement()
+					.setInnerHTML("Bitte wählen Sie die Eigenschaften aus, die Sie teilen möchten:<br />");
 			root.add(selectValues);
 			root.add(changeValues);
 
-
 			/**
-			 * Dieser ClickHandler legt fest, was passiert wenn ein Kontakt geteilt wird.
+			 * Dieser ClickHandler legt fest, was passiert wenn ein Kontakt
+			 * geteilt wird.
 			 */
 			shareButton.addClickHandler(new ClickHandler() {
 
 				@Override
 				public void onClick(ClickEvent event) {
-					
-				    if(shareButton.getText().equals("Kontaktliste teilen")){
-				    	
-					
-					
-					ArrayList<User> selectedUsers = new ArrayList<User>();
-					
-					
-					for (int i = 0; i < receiverUser.getVisibleItems().size(); i++) {
-						selectedUsers.add(receiverUser.getVisibleItems().get(i));
+
+					if (shareButton.getText().equals("Kontaktliste teilen")) {
+
+						ArrayList<User> selectedUsers = new ArrayList<User>();
+
+						for (int i = 0; i < receiverUser.getVisibleItems().size(); i++) {
+							selectedUsers.add(receiverUser.getVisibleItems().get(i));
+						}
+
+						ClientSideSettings.getConnectedAdmin().giveContactlistPermissionToUsers(sharingContactList,
+								selectedUsers, ClientSideSettings.getCurrentUser().getBoId(),
+								new AsyncCallback<Void>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Window.alert("Der Kontakt konnte nicht geteilt werden");
+									}
+
+									@Override
+									public void onSuccess(Void result) {
+										Window.alert("Die Kontaktlist wurde geteilt");
+										hide();
+									}
+
+								});
+
 					}
 
-
-					ClientSideSettings.getConnectedAdmin().giveContactlistPermissionToUsers(sharingContactList, selectedUsers, ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Void>() {
-
-								@Override
-								public void onFailure(Throwable caught) {
-									Window.alert("Der Kontakt konnte nicht geteilt werden");
-								}
-
-								@Override
-								public void onSuccess(Void result) {
-									Window.alert("Die Kontaktlist wurde geteilt");
-									hide();
-								}
-
-							});
-
-				}  
-				
 				}
 			});
-			//Widgets dem rootVerticalPanel hinzufügen
+			// Widgets dem rootVerticalPanel hinzufügen
 			root.add(shareButton);
 			root.add(closeButton);
 			setWidget(root);
@@ -448,35 +455,32 @@ public class ContactListSharing  extends PopupPanel {
 			e.printStackTrace();
 		}
 
-		}
+	}
 
+	/**
+	 * Laden der Vörschläge in das Oracle. Hier sind es die User an die geteilt
+	 * werden kann, außer dem eigenen.
+	 */
+	private void loadAllUser() {
+		ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>() {
 
-/**
-* Laden der Vörschläge in das Oracle. Hier sind es die User an die geteilt werden kann, außer dem eigenen.
-*/
-private void loadAllUser() {
-ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>() {
+			@Override
+			public void onFailure(Throwable caught) {
 
-@Override
-public void onFailure(Throwable caught) {
+			}
 
+			@Override
+			public void onSuccess(ArrayList<User> result) {
+				oracle.clear();
+				for (User u : result) {
+					if (u.getBoId() != ClientSideSettings.getCurrentUser().getBoId()) {
+						oracle.add(u.getLogEmail());
+					}
+				}
 
-}
+			}
 
-@Override
-public void onSuccess(ArrayList<User> result) {
-oracle.clear();
-for (User u : result) {
-	if(u.getBoId() !=
-	 ClientSideSettings.getCurrentUser().getBoId()){
-	oracle.add(u.getLogEmail());
-	 }
-}
+		});
 
-}
-
-});
-
-
-}
+	}
 }

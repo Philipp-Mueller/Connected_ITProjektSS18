@@ -1,8 +1,6 @@
 package de.hdm.Connected.client.gui;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -25,7 +23,6 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.bo.Contact;
@@ -46,22 +43,21 @@ public class ContactForm extends PopupPanel {
 	private Contact selectedContact = null;
 	private Contact createdContact = null;
 
-	private Label firstNameLabel = new Label("Vorname:");
 	private TextBox firstNameBox = new TextBox();
-	private Label surnameLabel = new Label("Nachname:");
 	private TextBox surnameBox = new TextBox();
 	private TextBox newPropertyTextBox = null;
-	private ListBox propertyListBox = null;
-	
-
 	private TextBox valueTextBox = null;
+
+	private ListBox propertyListBox = null;
+	final ListBox contactlist = new ListBox(true);
+
 	private Button addButton = new Button("weitere Eigenschaften hinzufügen");
 	private Button newPropertyBtn = null;
 	private Button updateBtn = null;
 	private Button deleteBtn = null;
 	private Button closeButton = new Button("Schließen");
-	private HorizontalPanel itemPanel = new HorizontalPanel();
 
+	private HorizontalPanel itemPanel = new HorizontalPanel();
 	private VerticalPanel propertyPanel = new VerticalPanel();
 	private VerticalPanel valuePanel = new VerticalPanel();
 	private VerticalPanel root = new VerticalPanel();
@@ -69,28 +65,22 @@ public class ContactForm extends PopupPanel {
 	private FlexTable nameTable = new FlexTable();
 	private FlexTable propertyTable = new FlexTable();
 	private FlexTable newPropertyTable = new FlexTable();
+	private FlexTable checkboxTable = new FlexTable();
 
 	private ArrayList<Property> propertyArray = new ArrayList<Property>();
-	private ArrayList<Integer> selectedProperties = new ArrayList<Integer>();
-	private ArrayList<String> propertyValueArray = new ArrayList<String>();
-	private ArrayList<TextBox> values = new ArrayList<TextBox>();
-	private Map<Integer, String> valuesMap = new HashMap<Integer, String>();
-	private Map<Widget, Widget> widgetMap = new HashMap<Widget, Widget>();
-	private ContactList selectedCL = new ContactList();
-	private ArrayList<Contact> contactsInCL = new ArrayList<Contact>();
-
-	private FlexTable checkboxTable = new FlexTable();
-	private CheckBox checkContactlist = new CheckBox();
-	final ListBox contactlist = new ListBox(true);
-	int eventRow = 0;
-	private String propertyName = "";
-	private ArrayList<Value> valuesArray = new ArrayList<Value>();
-	private Value updatingValue = null;
-	boolean birthdayFlag = false;
-	boolean loadFlag = true;
-
 	private ArrayList<ContactList> contactListArray = null;
 	private ArrayList<Value> valuesByContact;
+	private ArrayList<Contact> contactsInCL = new ArrayList<Contact>();
+
+	private ContactList selectedCL = new ContactList();
+	private CheckBox checkContactlist = new CheckBox();
+	private Value updatingValue = null;
+
+	private int eventRow = 0;
+	private String propertyName = "";
+
+	private boolean birthdayFlag = false;
+	private boolean loadFlag = true;
 
 	/**
 	 * Konstruktor wenn ein Kontakt schon existiert.
@@ -100,12 +90,9 @@ public class ContactForm extends PopupPanel {
 
 	public ContactForm(Contact contact, final ContactList contactList, final ArrayList<Contact> contacts) {
 		this.selectedContact = contact;
-		
+
 		selectedCL = contactList;
 		contactsInCL = contacts;
-		
-		
-
 
 		// Enable animation.
 		this.setAnimationEnabled(true);
@@ -114,10 +101,9 @@ public class ContactForm extends PopupPanel {
 			public void onClick(ClickEvent event) {
 				// Popup schließen bei Betägigung des Buttons
 				hide();
-				
+
 			}
 		});
-
 
 		root.add(new HTML("<h3> Kontakt bearbeiten</h3>"));
 		root.add(nameTable);
@@ -134,7 +120,7 @@ public class ContactForm extends PopupPanel {
 		nameTable.getColumnFormatter().setWidth(0, "100px");
 		propertyTable.getColumnFormatter().setWidth(0, "150px");
 		newPropertyTable.getColumnFormatter().setWidth(0, "150px");
-		//NameTable erstellen mit Vor/Nachname
+		// NameTable erstellen mit Vor/Nachname
 		nameTable.setWidget(0, 0, new HTML("<strong>Vorname: <strong>"));
 		nameTable.setWidget(0, 1, new HTML(selectedContact.getPrename()));
 		nameTable.setWidget(1, 0, new HTML("<strong>Nachname: <strong>"));
@@ -145,8 +131,8 @@ public class ContactForm extends PopupPanel {
 		nameTable.setWidget(1, 2, changeNameButton);
 		propertyTable.setCellSpacing(10);
 		newPropertyTable.setCellSpacing(10);
-		
-		//Alle Properties abrufen
+
+		// Alle Properties abrufen
 		ClientSideSettings.getConnectedAdmin().findAllProperties(new findAllPropertiesCallback());
 	}
 
@@ -169,16 +155,14 @@ public class ContactForm extends PopupPanel {
 		});
 
 		VerticalPanel root = new VerticalPanel();
-	
-
 
 		HorizontalPanel topPanel = new HorizontalPanel();
 
-		topPanel.add(new HTML("<h2> Neuen Kontakt erstellen</h2>"));
+		topPanel.add(new HTML("<h2> Neuen Kontakt anlegen</h2>"));
 
 		root.add(topPanel);
-		
-		//NameTable erstellen mit Vor/Nachname
+
+		// NameTable erstellen mit Vor/Nachname
 		nameTable.getColumnFormatter().setWidth(0, "150px");
 		nameTable.getFlexCellFormatter().setWidth(2, 0, "200px");
 		nameTable.setWidget(0, 0, new HTML("<h3> Vorname: </h3>"));
@@ -209,9 +193,6 @@ public class ContactForm extends PopupPanel {
 		root.add(newPropertyTable);
 
 		HorizontalPanel bottomPanel = new HorizontalPanel();
-		
-		
-	
 
 		Button saveButton = new Button("Kontakt abspeichern");
 		saveButton.addClickHandler(new ClickHandler() {
@@ -223,7 +204,7 @@ public class ContactForm extends PopupPanel {
 			public void onClick(ClickEvent event) {
 				// Nur wenn die CheckBox geklickt ist, wird dies ausgeführt, da
 				// sonst der Kontakt keiner Liste hinzugefügt werden soll
-				
+
 				if (firstNameBox.getText().matches("")) {
 					Window.alert("Bitte einen Namen eintragen!");
 					return;
@@ -245,14 +226,13 @@ public class ContactForm extends PopupPanel {
 						}
 					}
 				}
-				//wenn ohne Eigenschaften gespeichert wird
+				// wenn ohne Eigenschaften gespeichert wird
 				if (addButton != null) {
 
 					java.sql.Date creationTime = new java.sql.Date(System.currentTimeMillis());
 					ClientSideSettings.getConnectedAdmin().createContact(firstNameBox.getText(), surnameBox.getText(),
 							creationTime, creationTime, ClientSideSettings.getCurrentUser().getBoId(),
 							new AsyncCallback<Contact>() {
-								
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -265,9 +245,9 @@ public class ContactForm extends PopupPanel {
 									createdContact = result;
 									ArrayList<Contact> contacts = new ArrayList<Contact>();
 									contacts.add(result);
-								
-									
-									// wenn eine Kontaktlist ausgewählt, dann Kontakt dieser hinzufügen
+
+									// wenn eine Kontaktlist ausgewählt, dann
+									// Kontakt dieser hinzufügen
 									if (contactListToAdd.size() != 0) {
 										ClientSideSettings.getConnectedAdmin().addContactsToContactList(contacts,
 												contactListToAdd, new AsyncCallback<Void>() {
@@ -286,7 +266,7 @@ public class ContactForm extends PopupPanel {
 													}
 
 												});
-									}else {
+									} else {
 										Window.alert("Kontakt wurde angelegt!");
 									}
 									hide();
@@ -295,47 +275,43 @@ public class ContactForm extends PopupPanel {
 								}
 
 							});
-				}
-			else {
-				
-				//Aufruf wenn Kontakt direkt KOntaktliste hinzugefügt werden soll
-				if (contactListToAdd.size() != 0) {
-					ArrayList<Contact> contacts = new ArrayList<Contact>();
-					contacts.add(createdContact);
-					ClientSideSettings.getConnectedAdmin().addContactsToContactList(contacts,
-							contactListToAdd, new AsyncCallback<Void>() {
+				} else {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Window.alert(
-											"Kontakt konnte Kontaktliste nicht hinzugefügt werden");
-								}
+					// Aufruf wenn Kontakt direkt KOntaktliste hinzugefügt
+					// werden soll
+					if (contactListToAdd.size() != 0) {
+						ArrayList<Contact> contacts = new ArrayList<Contact>();
+						contacts.add(createdContact);
+						ClientSideSettings.getConnectedAdmin().addContactsToContactList(contacts, contactListToAdd,
+								new AsyncCallback<Void>() {
 
-								@Override
-								public void onSuccess(Void result) {
-									Window.alert(
-											"Kontakt wurde angelegt und den Kontaktlisten hinzugefügt!");
+									@Override
+									public void onFailure(Throwable caught) {
+										Window.alert("Kontakt konnte Kontaktliste nicht hinzugefügt werden");
+									}
 
-								
-								RootPanel.get("content").clear();
-								ContactsTable table = new ContactsTable(null, null);
-								hide();
-								}
+									@Override
+									public void onSuccess(Void result) {
+										Window.alert("Kontakt wurde angelegt und den Kontaktlisten hinzugefügt!");
 
-							});
-				} else{
-				RootPanel.get("content").clear();
-				ContactsTable table = new ContactsTable(null, null);
-				Window.alert("Kontakt angelegt!");
-				hide();
-				}	
+										RootPanel.get("content").clear();
+										ContactsTable table = new ContactsTable(null, null);
+										hide();
+									}
+
+								});
+					} else {
+						RootPanel.get("content").clear();
+						ContactsTable table = new ContactsTable(null, null);
+						Window.alert("Kontakt angelegt!");
+						hide();
+					}
 				}
 
 			}
 
 		});
 
-		
 		/**
 		 * cancelButton Clickhandler
 		 * 
@@ -344,42 +320,40 @@ public class ContactForm extends PopupPanel {
 		cancelButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if(createdContact != null){
-				ClientSideSettings.getConnectedAdmin().deleteContact(createdContact, ClientSideSettings.getCurrentUser(), new AsyncCallback<Void>(){
+				if (createdContact != null) {
+					ClientSideSettings.getConnectedAdmin().deleteContact(createdContact,
+							ClientSideSettings.getCurrentUser(), new AsyncCallback<Void>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						
-						
-					}
+								@Override
+								public void onFailure(Throwable caught) {
 
-					@Override
-					public void onSuccess(Void result) {
-						hide();
-						createdContact = null;
-					}
-					
-				});
-				}else{
+								}
+
+								@Override
+								public void onSuccess(Void result) {
+									hide();
+									createdContact = null;
+								}
+
+							});
+				} else {
 					hide();
 				}
-			
 
 			}
 		});
 
 		bottomPanel.add(cancelButton);
-	
+
 		bottomPanel.setCellHorizontalAlignment(saveButton, HasHorizontalAlignment.ALIGN_RIGHT);
 		saveButton.getElement().getStyle().setMarginLeft(320, Unit.PX);
 		bottomPanel.add(saveButton);
-		
 
 		/**
 		 * contactlist auswählen Clickhandler
 		 * 
 		 */
-		
+
 		checkContactlist.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -401,7 +375,7 @@ public class ContactForm extends PopupPanel {
 		contactlist.ensureDebugId("cwListBox-multiBox");
 		contactlist.setVisibleItemCount(7);
 		// Alle Kontaktlisten aus DB abrufen
-		
+
 		ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(
 				ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<ContactList>>() {
 
@@ -437,10 +411,12 @@ public class ContactForm extends PopupPanel {
 		setWidget(root);
 
 	}
- /**
-  * 	FindValueCallback, wenn ein Kontakt bearbeitet wird , werden die Values abgerufen und dem FlexTable hinzugefügt.
-  * 
-  */
+
+	/**
+	 * FindValueCallback, wenn ein Kontakt bearbeitet wird , werden die Values
+	 * abgerufen und dem FlexTable hinzugefügt.
+	 * 
+	 */
 	private class findValueCallback implements AsyncCallback<ArrayList<Value>> {
 
 		@Override
@@ -482,16 +458,15 @@ public class ContactForm extends PopupPanel {
 									}
 									updateBtn = new Button("Eigenschaft bearbeiten");
 									updateBtn.addClickHandler(new ClickHandler() {
-										/**`
-										 * update Btn ClickHandler
+										/**
+										 * ` update Btn ClickHandler
 										 */
 										@Override
 										public void onClick(ClickEvent event) {
 											eventRow = propertyTable.getCellForEvent(event).getRowIndex();
 											final TextBox valueChangeTextBox = new TextBox();
 											valueChangeTextBox.setWidth("200px");
-											
-										
+
 											valueChangeTextBox.setText(updatingOldValue.getName());
 
 											ClientSideSettings.getConnectedAdmin().findPropertyByPropertyId(
@@ -542,7 +517,7 @@ public class ContactForm extends PopupPanel {
 
 																@Override
 																public void onClick(ClickEvent event) {
-																
+
 																	updatingValue = updatingOldValue;
 
 																	updateBtn = new Button("Eigenschaft bearbeiten");
@@ -564,35 +539,49 @@ public class ContactForm extends PopupPanel {
 																}
 
 															});
-															
+
 															/**
-															 * Änderungen Speichern Clickhandler
+															 * Änderungen
+															 * Speichern
+															 * Clickhandler
 															 * 
 															 */
 
 															Button saveChangesButton = new Button(
 																	"Änderungen speichern");
 															saveChangesButton.addClickHandler(new ClickHandler() {
-															
-															
+
 																@Override
 																public void onClick(ClickEvent event) {
-																	//TextBox überprüfung
+																	// TextBox
+																	// überprüfung
 																	if (valueChangeTextBox.getText().matches("")) {
-																		Window.alert("Bitte eine Eigenschaft eintragen!");
+																		Window.alert(
+																				"Bitte eine Eigenschaft eintragen!");
 																		return;
 																	}
-																	
-																	//Bei Telefonnummern nur Ziffern!
-																	if(propertyChangeListBox.getSelectedItemText() == "Telefon (privat)" || propertyChangeListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyChangeListBox.getSelectedItemText() == "Mobil (privat)" || propertyChangeListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
-																		if (!valueChangeTextBox.getText().matches("[0-9]+")) {
-																				Window.alert("Bitte nur Ziffern eintragen!");
-																				return;
-																		} 	
+
+																	// Bei
+																	// Telefonnummern
+																	// nur
+																	// Ziffern!
+																	if (propertyChangeListBox
+																			.getSelectedItemText() == "Telefon (privat)"
+																			|| propertyChangeListBox
+																					.getSelectedItemText() == "Telefon (geschäftlich)"
+																			|| propertyChangeListBox
+																					.getSelectedItemText() == "Mobil (privat)"
+																			|| propertyChangeListBox
+																					.getSelectedItemText() == "Mobil (geschäftlich)") {
+																		if (!valueChangeTextBox.getText()
+																				.matches("[0-9]+")) {
+																			Window.alert(
+																					"Bitte nur Ziffern eintragen!");
+																			return;
+																		}
 
 																	}
-																	
-																	
+
 																	eventRow = propertyTable.getCellForEvent(event)
 																			.getRowIndex();
 																	int propertyId = 0;
@@ -606,36 +595,47 @@ public class ContactForm extends PopupPanel {
 																		}
 																	}
 
-																							
 																	try {
-																		if (propertyChangeListBox.getSelectedItemText().equals("Geburtsdatum")) {
+																		if (propertyChangeListBox.getSelectedItemText()
+																				.equals("Geburtsdatum")) {
 																			birthdayFlag = true;
-																			DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("dd.MM.yyyy");
-																			java.util.Date date = dateTimeFormat.parse(valueChangeTextBox.getText());
-																			updatingOldValue.setName(valueChangeTextBox.getText());
+																			DateTimeFormat dateTimeFormat = DateTimeFormat
+																					.getFormat("dd.MM.yyyy");
+																			java.util.Date date = dateTimeFormat.parse(
+																					valueChangeTextBox.getText());
+																			updatingOldValue.setName(
+																					valueChangeTextBox.getText());
 																		} else if (oldPropertyId == 1) {
 																			birthdayFlag = false;
-																			updatingOldValue.setName(valueChangeTextBox.getText());
-																		} else{
-																			updatingOldValue.setName(valueChangeTextBox.getText());
+																			updatingOldValue.setName(
+																					valueChangeTextBox.getText());
+																		} else {
+																			updatingOldValue.setName(
+																					valueChangeTextBox.getText());
 																		}
 																	} catch (Exception e) {
-																		Window.alert("Geburtsdatum bitte im Format \"01.01.99\" eingeben");
+																		Window.alert(
+																				"Geburtsdatum bitte im Format \"01.01.99\" eingeben");
 																		return;
 																	}
-																	
+
 																	updatingOldValue
 																			.setName(valueChangeTextBox.getText());
 																	updatingOldValue.setPropertyID(propertyId);
 																	/**
-																	 * Updaten des ausgwählten bzw. geänderten Values
+																	 * Updaten
+																	 * des
+																	 * ausgwählten
+																	 * bzw.
+																	 * geänderten
+																	 * Values
 																	 * 
 																	 */
-																	
+
 																	ClientSideSettings.getConnectedAdmin().updateValue(
 																			updatingOldValue, oldPropertyId,
 																			new AsyncCallback<Value>() {
-																				
+
 																				@Override
 																				public void onFailure(
 																						Throwable caught) {
@@ -646,7 +646,8 @@ public class ContactForm extends PopupPanel {
 																				@Override
 																				public void onSuccess(
 																						final Value result) {
-																					Window.alert(Boolean.toString(birthdayFlag));
+																					Window.alert(Boolean
+																							.toString(birthdayFlag));
 																					ClientSideSettings
 																							.getConnectedAdmin()
 																							.checkIfPropertyHasValue(
@@ -673,7 +674,9 @@ public class ContactForm extends PopupPanel {
 
 																									});
 																					updatingValue = result;
-																					//aktualiserte Row anzeigen	
+																					// aktualiserte
+																					// Row
+																					// anzeigen
 																					updateBtn = new Button(
 																							"Eigenschaft bearbeiten");
 																					updateBtn.addClickHandler(
@@ -703,7 +706,8 @@ public class ContactForm extends PopupPanel {
 																}
 
 															});
-															//Bearbeitungsmodus in Zeile anheften
+															// Bearbeitungsmodus
+															// in Zeile anheften
 															propertyTable.removeCell(eventRow, 3);
 															propertyTable.setWidget(eventRow, 0, propertyChangeListBox);
 															propertyTable.setWidget(eventRow, 1, valueChangeTextBox);
@@ -726,8 +730,8 @@ public class ContactForm extends PopupPanel {
 										public void onClick(ClickEvent event) {
 											eventRow = propertyTable.getCellForEvent(event).getRowIndex();
 
-											ClientSideSettings.getConnectedAdmin().deleteValue(updatingOldValue, ClientSideSettings.getCurrentUser(),
-													new AsyncCallback<Void>() {
+											ClientSideSettings.getConnectedAdmin().deleteValue(updatingOldValue,
+													ClientSideSettings.getCurrentUser(), new AsyncCallback<Void>() {
 
 														@Override
 														public void onFailure(Throwable caught) {
@@ -750,7 +754,8 @@ public class ContactForm extends PopupPanel {
 										}
 
 									});
-									//Anzeigen der Eigenschaften, die Verfügbar sind.
+									// Anzeigen der Eigenschaften, die Verfügbar
+									// sind.
 									propertyTable.setWidget(rowCount, 0,
 											new HTML("<p><strong>" + p.getName() + ":</strong></p>"));
 									propertyTable.setWidget(rowCount, 1, new HTML(updatingOldValue.getName()));
@@ -761,7 +766,7 @@ public class ContactForm extends PopupPanel {
 
 							});
 				}
-				//Befüllen der ListBox zum Anzeigen
+				// Befüllen der ListBox zum Anzeigen
 				for (Property property : propertyArray) {
 					propertyListBox.addItem(property.getName());
 				}
@@ -789,8 +794,10 @@ public class ContactForm extends PopupPanel {
 
 		}
 	}
+
 	/**
-	 * Hier werden alle Properties abegerufen um diese in der ListBox anzeigen zu können.
+	 * Hier werden alle Properties abegerufen um diese in der ListBox anzeigen
+	 * zu können.
 	 * 
 	 */
 	private class findAllPropertiesCallback implements AsyncCallback<ArrayList<Property>> {
@@ -805,7 +812,7 @@ public class ContactForm extends PopupPanel {
 
 		public void onSuccess(ArrayList<Property> result) {
 			// alle Eigenschaften in Vektor laden
-			if (selectedContact != null ) {
+			if (selectedContact != null) {
 				propertyArray = new ArrayList<Property>();
 				for (int i = 0; i < result.size(); i++) {
 					Property propertyItem = result.get(i);
@@ -814,14 +821,14 @@ public class ContactForm extends PopupPanel {
 
 				}
 				if (loadFlag) {
-					ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(selectedContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(), 
-							new findValueCallback());
+					ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(selectedContact.getBoId(),
+							ClientSideSettings.getCurrentUser().getBoId(), new findValueCallback());
 					loadFlag = false;
-				} 
+				}
 			}
-		
-			if((selectedContact == null) || (selectedContact != null && !loadFlag) ) {
-							
+
+			if ((selectedContact == null) || (selectedContact != null && !loadFlag)) {
+
 				propertyArray = new ArrayList<Property>();
 				propertyListBox = new ListBox();
 				propertyListBox.setWidth("250px");
@@ -857,47 +864,50 @@ public class ContactForm extends PopupPanel {
 
 		@Override
 		public void onClick(ClickEvent event) {
-		
-		
+
 			if (selectedContact != null) {
-				//TextBox überprüfung
+				// TextBox überprüfung
 				if (valueTextBox.getText().matches("")) {
 					Window.alert("Bitte eine Eigenschaft eintragen!");
 					return;
 				}
-				
-				//Bei Telefonnummern nur Ziffern!
-				if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyListBox.getSelectedItemText() == "Mobil (privat)" || propertyListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
+
+				// Bei Telefonnummern nur Ziffern!
+				if (propertyListBox.getSelectedItemText() == "Telefon (privat)"
+						|| propertyListBox.getSelectedItemText() == "Telefon (geschäftlich)"
+						|| propertyListBox.getSelectedItemText() == "Mobil (privat)"
+						|| propertyListBox.getSelectedItemText() == "Mobil (geschäftlich)") {
 					if (!valueTextBox.getText().matches("[0-9]+")) {
-							Window.alert("Bitte nur Ziffern eintragen!");
-							return;
-					} 	
+						Window.alert("Bitte nur Ziffern eintragen!");
+						return;
+					}
 
 				}
-				
+
 				int propertyId = 0;
 				for (Property p : propertyArray) {
 					if ((propertyListBox.getSelectedItemText()).equals(p.getName())) {
 						propertyId = p.getBoId();
 					}
 				}
-				
-				String value = "";		
-				try{
-				
-				if(propertyListBox.getSelectedItemText().equals("Geburtsdatum")){
-					DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("dd.MM.yyyy");
-					java.util.Date date = dateTimeFormat.parse(valueTextBox.getText());
-					value = valueTextBox.getText();
-				}else {value = valueTextBox.getText();}
+
+				String value = "";
+				try {
+
+					if (propertyListBox.getSelectedItemText().equals("Geburtsdatum")) {
+						DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("dd.MM.yyyy");
+						java.util.Date date = dateTimeFormat.parse(valueTextBox.getText());
+						value = valueTextBox.getText();
+					} else {
+						value = valueTextBox.getText();
+					}
 				} catch (Exception e) {
 					Window.alert("Geburtsdatum bitte im Format \"01.01.99\" eingeben");
 					return;
 				}
-				
-				ClientSideSettings.getConnectedAdmin().createValue(value, propertyId,
-						selectedContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(),
-						new AsyncCallback<Value>() {
+
+				ClientSideSettings.getConnectedAdmin().createValue(value, propertyId, selectedContact.getBoId(),
+						ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Value>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
@@ -942,7 +952,7 @@ public class ContactForm extends PopupPanel {
 				if (addButton != null) {
 
 					try {
-						
+
 						if (firstNameBox.getText().matches("")) {
 							Window.alert("Bitte einen Vorname eintragen!");
 							return;
@@ -978,7 +988,6 @@ public class ContactForm extends PopupPanel {
 										ClientSideSettings.getConnectedAdmin()
 												.findAllProperties(new findAllPropertiesCallback());
 
-										int rowCount = newPropertyTable.getRowCount();
 										newPropertyBtn = new Button("Eigenschaft speichern");
 										newPropertyBtn.addClickHandler(new addNewPropertyClickHandler());
 										valueTextBox = new TextBox();
@@ -986,9 +995,9 @@ public class ContactForm extends PopupPanel {
 
 										newPropertyTable.setWidget(0, 0,
 												new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
-									
-										newPropertyTable.setWidget( 1, 1, valueTextBox);
-										newPropertyTable.setWidget( 1, 2, newPropertyBtn);
+
+										newPropertyTable.setWidget(1, 1, valueTextBox);
+										newPropertyTable.setWidget(1, 2, newPropertyBtn);
 
 									}
 								});
@@ -997,23 +1006,25 @@ public class ContactForm extends PopupPanel {
 						e.printStackTrace();
 					}
 				} else {
-					//TextBox überprüfung
+					// TextBox überprüfung
 					if (valueTextBox.getText().matches("")) {
 						Window.alert("Bitte eine Eigenschaft eintragen!");
 						return;
-					} 
-					//Bei Nummern nur Ziffern zulässig!
-if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyListBox.getSelectedItemText() == "Mobil (privat)" || propertyListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
-						if (!valueTextBox.getText().matches("[0-9]+")) {
-								Window.alert("Bitte nur Ziffern eintragen!");
-								return;
-						} 	
-	
 					}
-					
-					
+					// Bei Nummern nur Ziffern zulässig!
+					if (propertyListBox.getSelectedItemText() == "Telefon (privat)"
+							|| propertyListBox.getSelectedItemText() == "Telefon (geschäftlich)"
+							|| propertyListBox.getSelectedItemText() == "Mobil (privat)"
+							|| propertyListBox.getSelectedItemText() == "Mobil (geschäftlich)") {
+						if (!valueTextBox.getText().matches("[0-9]+")) {
+							Window.alert("Bitte nur Ziffern eintragen!");
+							return;
+						}
+
+					}
+
 					int propertyId = 0;
-				
+
 					propertyName = propertyListBox.getSelectedItemText();
 					for (Property p : propertyArray) {
 						if ((propertyListBox.getSelectedItemText()).equals(p.getName())) {
@@ -1023,20 +1034,20 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 							}
 						}
 					}
-				
+
 					try {
-						if(propertyListBox.getSelectedItemText().equals("Geburtsdatum")){
+						if (propertyListBox.getSelectedItemText().equals("Geburtsdatum")) {
 							DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("dd.MM.yyyy");
 							java.util.Date date = dateTimeFormat.parse(valueTextBox.getText());
-						
-							ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(),propertyId,
+
+							ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId,
 									createdContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(),
-									new createValueCallback());					
-						} else{			
-						
-						ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId,
-								createdContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(),
-								new createValueCallback());
+									new createValueCallback());
+						} else {
+
+							ClientSideSettings.getConnectedAdmin().createValue(valueTextBox.getText(), propertyId,
+									createdContact.getBoId(), ClientSideSettings.getCurrentUser().getBoId(),
+									new createValueCallback());
 						}
 					} catch (Exception e) {
 						Window.alert("Geburtsdatum bitte im Format \"01.01.99\" eingeben");
@@ -1051,7 +1062,8 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 	}
 
 	/**
-	 * Nachdem ein Value erfolgreich gefunden wurde. Wird Die Form aktualisiert und es kann ein neuer Value hinzugefügt werden.
+	 * Nachdem ein Value erfolgreich gefunden wurde. Wird Die Form aktualisiert
+	 * und es kann ein neuer Value hinzugefügt werden.
 	 * 
 	 */
 
@@ -1119,7 +1131,7 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 
 										@Override
 										public void onClick(ClickEvent event) {
-										
+
 											updatingValue = updatedValue;
 											updateBtn = new Button("Eigenschaft bearbeiten");
 											updateBtn.addClickHandler(new updateBtnClickHandler());
@@ -1140,20 +1152,25 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 
 										@Override
 										public void onClick(ClickEvent event) {
-																				
+
 											if (valueChangeTextBox.getText().matches("")) {
 												Window.alert("Bitte eine Eigenschaft eintragen!");
 												return;
 											}
-											
-											if(propertyChangeListBox.getSelectedItemText() == "Telefon (privat)" || propertyChangeListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyChangeListBox.getSelectedItemText() == "Mobil (privat)" || propertyChangeListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
+
+											if (propertyChangeListBox.getSelectedItemText() == "Telefon (privat)"
+													|| propertyChangeListBox
+															.getSelectedItemText() == "Telefon (geschäftlich)"
+													|| propertyChangeListBox.getSelectedItemText() == "Mobil (privat)"
+													|| propertyChangeListBox
+															.getSelectedItemText() == "Mobil (geschäftlich)") {
 												if (!valueChangeTextBox.getText().matches("[0-9]+")) {
-														Window.alert("Bitte nur Ziffern eintragen!");
-														return;
-												} 	
-							
+													Window.alert("Bitte nur Ziffern eintragen!");
+													return;
+												}
+
 											}
-										
+
 											int propertyId = 0;
 											final int oldPropertyId = updatedValue.getPropertyID();
 											for (Property p : propertyArray) {
@@ -1162,24 +1179,25 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 												}
 											}
 
-											
-												try {
-													if (propertyChangeListBox.getSelectedItemText().equals("Geburtsdatum")) {
-														birthdayFlag = true;
-														DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("dd.MM.yyyy");
-														java.util.Date date = dateTimeFormat.parse(valueChangeTextBox.getText());
-														
-																										
-													} else if (oldPropertyId == 1) {
-														birthdayFlag = false;
-													}
-												} catch (Exception e) {
-													Window.alert("Geburtsdatum bitte im Format \"01.01.99\" eingeben");
-													return;
+											try {
+												if (propertyChangeListBox.getSelectedItemText()
+														.equals("Geburtsdatum")) {
+													birthdayFlag = true;
+													DateTimeFormat dateTimeFormat = DateTimeFormat
+															.getFormat("dd.MM.yyyy");
+													java.util.Date date = dateTimeFormat
+															.parse(valueChangeTextBox.getText());
+
+												} else if (oldPropertyId == 1) {
+													birthdayFlag = false;
 												}
-											
+											} catch (Exception e) {
+												Window.alert("Geburtsdatum bitte im Format \"01.01.99\" eingeben");
+												return;
+											}
+
 											updatedValue.setName(valueChangeTextBox.getText());
-										
+
 											updatedValue.setPropertyID(propertyId);
 											ClientSideSettings.getConnectedAdmin().updateValue(updatedValue,
 													oldPropertyId, new AsyncCallback<Value>() {
@@ -1260,25 +1278,27 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 				public void onClick(ClickEvent event) {
 					eventRow = propertyTable.getCellForEvent(event).getRowIndex();
 
-					ClientSideSettings.getConnectedAdmin().deleteValue(result, ClientSideSettings.getCurrentUser(), new AsyncCallback<Void>() {
+					ClientSideSettings.getConnectedAdmin().deleteValue(result, ClientSideSettings.getCurrentUser(),
+							new AsyncCallback<Void>() {
 
-						@Override
-						public void onFailure(Throwable caught) {
-							Window.alert("Value konnte nicht gelöscht werden");
+								@Override
+								public void onFailure(Throwable caught) {
+									Window.alert("Value konnte nicht gelöscht werden");
 
-						}
+								}
 
-						@Override
-						public void onSuccess(Void result) {
-							Window.alert("Eigenschaft wurde gelöscht!");
-							propertyTable.removeRow(eventRow);
-							if (propertyLabel.getText().equals("Geburtsdatum")) {
-								birthdayFlag = false;
-							}
-							ClientSideSettings.getConnectedAdmin().findAllProperties(new findAllPropertiesCallback());
-						}
+								@Override
+								public void onSuccess(Void result) {
+									Window.alert("Eigenschaft wurde gelöscht!");
+									propertyTable.removeRow(eventRow);
+									if (propertyLabel.getText().equals("Geburtsdatum")) {
+										birthdayFlag = false;
+									}
+									ClientSideSettings.getConnectedAdmin()
+											.findAllProperties(new findAllPropertiesCallback());
+								}
 
-					});
+							});
 				}
 
 			});
@@ -1297,9 +1317,10 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 
 	}
 
-	/**Change Handler der
-	// Eigenschafts-Listboxen------------------------------
-**/
+	/**
+	 * Change Handler der //
+	 * Eigenschafts-Listboxen------------------------------
+	 **/
 	private class listBoxChangeHandler implements ChangeHandler {
 
 		@Override
@@ -1312,19 +1333,19 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 
 				newPropertyTextBox = new TextBox();
 				newPropertyTextBox.setWidth("200px");
-				
-				Button cancelButton = new Button ("Abbrechen");
+
+				Button cancelButton = new Button("Abbrechen");
 				cancelButton.addClickHandler(new ClickHandler() {
-					
+
 					@Override
 					public void onClick(ClickEvent event) {
 						newPropertyTable.setWidget(1, 0, propertyListBox);
 						newPropertyTable.setWidget(1, 1, valueTextBox);
 						newPropertyTable.setWidget(1, 2, newPropertyBtn);
-						newPropertyTable.removeCell(1, 3)
-						;}
+						newPropertyTable.removeCell(1, 3);
+					}
 				});
-				
+
 				Button propertySaveButton = new Button("Speichern");
 				propertySaveButton.addClickHandler(new savePropertyClickHandler());
 				newPropertyTable.setWidget(1, 0, new HTML("Eigenschaftsname:"));
@@ -1336,77 +1357,78 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 
 	}
 
-	/**Click Handler für den neue Eigenschaft speichern
-	// Button*/
+	/**
+	 * Click Handler für den neue Eigenschaft speichern // Button
+	 */
 
 	private class savePropertyClickHandler implements ClickHandler {
 
 		@Override
 		public void onClick(ClickEvent event) {
-			//TextBox überprüfung
+			// TextBox überprüfung
 			if (newPropertyTextBox.getText().matches("")) {
 				Window.alert("Bitte einen Eigenschaftsnamen eintragen!");
 				return;
 			}
-		
-			
-			ClientSideSettings.getConnectedAdmin().findPropertyByName(newPropertyTextBox.getText(), new AsyncCallback<Property>(){
 
-				@Override
-				public void onFailure(Throwable caught) {
-					Window.alert("Da lief etwas schief");
-				}
+			ClientSideSettings.getConnectedAdmin().findPropertyByName(newPropertyTextBox.getText(),
+					new AsyncCallback<Property>() {
 
-				@Override
-				public void onSuccess(Property result) {
-					if (result == null){
-						ClientSideSettings.getConnectedAdmin().createProperty(newPropertyTextBox.getText(),
-								new AsyncCallback<Property>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert("Da lief etwas schief");
+						}
 
-									@Override
-									public void onFailure(Throwable caught) {
-										Window.alert("Eigenschaft nicht gespeichert");
+						@Override
+						public void onSuccess(Property result) {
+							if (result == null) {
+								ClientSideSettings.getConnectedAdmin().createProperty(newPropertyTextBox.getText(),
+										new AsyncCallback<Property>() {
 
-									}
+											@Override
+											public void onFailure(Throwable caught) {
+												Window.alert("Eigenschaft nicht gespeichert");
 
-									@Override
+											}
 
-									public void onSuccess(Property result) {
+											@Override
 
-										propertyArray.add(result);
+											public void onSuccess(Property result) {
 
-										propertyListBox.setItemText(propertyListBox.getItemCount() - 1, result.getName());
+												propertyArray.add(result);
 
-										propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
-										propertyListBox.addChangeHandler(new listBoxChangeHandler());
+												propertyListBox.setItemText(propertyListBox.getItemCount() - 1,
+														result.getName());
 
-										int rowIndex = newPropertyTable.getRowCount();
-										newPropertyTable.removeRow(rowIndex - 1);
+												propertyListBox.addItem("oder neue Eigenschaft hinzufügen...");
+												propertyListBox.addChangeHandler(new listBoxChangeHandler());
 
-										newPropertyTable.setWidget(0, 0, new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
-										newPropertyTable.setWidget(1, 0, propertyListBox);
-										newPropertyTable.setWidget(1, 1, valueTextBox);
-										newPropertyTable.setWidget(1, 2, newPropertyBtn);
-									}
+												int rowIndex = newPropertyTable.getRowCount();
+												newPropertyTable.removeRow(rowIndex - 1);
 
-								});
-					
-						
-					}else{
-						Window.alert("Diese Eigenschaft ist bereits vorhanden, bitte aus der Liste auswählen");
-					}
-					
-				}
-				
-			});
+												newPropertyTable.setWidget(0, 0,
+														new HTML("<h3>Neue Eigenschaften hinzufügen</h3>"));
+												newPropertyTable.setWidget(1, 0, propertyListBox);
+												newPropertyTable.setWidget(1, 1, valueTextBox);
+												newPropertyTable.setWidget(1, 2, newPropertyBtn);
+											}
 
-		
+										});
+
+							} else {
+								Window.alert("Diese Eigenschaft ist bereits vorhanden, bitte aus der Liste auswählen");
+							}
+
+						}
+
+					});
 
 		}
 	}
-	
+
 	/**
-	 * update BUtton ClickHandler, der ClickHandler wenn eine vorhandene Eigenschaft geändert werden soll.
+	 * update BUtton ClickHandler, der ClickHandler wenn eine vorhandene
+	 * Eigenschaft geändert werden soll.
 	 * 
 	 * @author Philipp
 	 *
@@ -1419,11 +1441,11 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 			eventRow = propertyTable.getCellForEvent(event).getRowIndex();
 			final TextBox valueChangeTextBox = new TextBox();
 			valueChangeTextBox.setWidth("200px");
-			if(updatingValue.getName().equals("Geburtsdatum")){
-				
-				
-			}else{
-			valueChangeTextBox.setText(updatingValue.getName());}
+			if (updatingValue.getName().equals("Geburtsdatum")) {
+
+			} else {
+				valueChangeTextBox.setText(updatingValue.getName());
+			}
 
 			ClientSideSettings.getConnectedAdmin().findPropertyByPropertyId(updatingValue.getPropertyID(),
 					new AsyncCallback<Property>() {
@@ -1451,7 +1473,7 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 
 								@Override
 								public void onClick(ClickEvent event) {
-								
+
 									updateBtn = new Button("Eigenschaft bearbeiten");
 									updateBtn.addClickHandler(new updateBtnClickHandler());
 									deleteBtn = new Button("Eigenschaft entfernen");
@@ -1471,22 +1493,25 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 
 								@Override
 								public void onClick(ClickEvent event) {
-									
-									//TextBox überprüfung
+
+									// TextBox überprüfung
 									if (valueChangeTextBox.getText().matches("")) {
 										Window.alert("Bitte eine Eigenschaft eintragen!");
 										return;
 									}
-									
-									//Bei Telefonnummern nur Ziffern!
-									if(propertyChangeListBox.getSelectedItemText() == "Telefon (privat)" || propertyChangeListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyChangeListBox.getSelectedItemText() == "Mobil (privat)" || propertyChangeListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
+
+									// Bei Telefonnummern nur Ziffern!
+									if (propertyChangeListBox.getSelectedItemText() == "Telefon (privat)"
+											|| propertyChangeListBox.getSelectedItemText() == "Telefon (geschäftlich)"
+											|| propertyChangeListBox.getSelectedItemText() == "Mobil (privat)"
+											|| propertyChangeListBox.getSelectedItemText() == "Mobil (geschäftlich)") {
 										if (!valueChangeTextBox.getText().matches("[0-9]+")) {
-												Window.alert("Bitte nur Ziffern eintragen!");
-												return;
-										} 	
+											Window.alert("Bitte nur Ziffern eintragen!");
+											return;
+										}
 
 									}
-									
+
 									int propertyId = 0;
 									final int oldPropertyId = updatingValue.getPropertyID();
 									for (Property p : propertyArray) {
@@ -1500,7 +1525,7 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 											birthdayFlag = true;
 											DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("dd.MM.yyyy");
 											java.util.Date date = dateTimeFormat.parse(valueChangeTextBox.getText());
-											
+
 										} else if (oldPropertyId == 1) {
 											birthdayFlag = false;
 										}
@@ -1508,7 +1533,7 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 										Window.alert("Geburtsdatum bitte im Format \"01.01.99\" eingeben");
 										return;
 									}
-									
+
 									updatingValue.setName(valueChangeTextBox.getText());
 									updatingValue.setPropertyID(propertyId);
 									ClientSideSettings.getConnectedAdmin().updateValue(updatingValue, oldPropertyId,
@@ -1585,31 +1610,35 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 
 			eventRow = propertyTable.getCellForEvent(event).getRowIndex();
 
-			ClientSideSettings.getConnectedAdmin().deleteValue(updatingValue, ClientSideSettings.getCurrentUser(), new AsyncCallback<Void>() {
+			ClientSideSettings.getConnectedAdmin().deleteValue(updatingValue, ClientSideSettings.getCurrentUser(),
+					new AsyncCallback<Void>() {
 
-				@Override
-				public void onFailure(Throwable caught) {
-					Window.alert("Kein Value gefunden");
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert("Kein Value gefunden");
 
-				}
+						}
 
-				@Override
-				public void onSuccess(Void result) {
-					// Wenn Geburtsdatum, dann Flag wieder auf false setzen
-					if (updatingValue.getPropertyID() == 1) {
-						birthdayFlag = false;
-					}
+						@Override
+						public void onSuccess(Void result) {
+							// Wenn Geburtsdatum, dann Flag wieder auf false
+							// setzen
+							if (updatingValue.getPropertyID() == 1) {
+								birthdayFlag = false;
+							}
 
-					propertyTable.removeRow(eventRow);
-					ClientSideSettings.getConnectedAdmin().findAllProperties(new findAllPropertiesCallback());
-					Window.alert("Eigenschaft wurde gelöscht!");
-				}
-			});
+							propertyTable.removeRow(eventRow);
+							ClientSideSettings.getConnectedAdmin().findAllProperties(new findAllPropertiesCallback());
+							Window.alert("Eigenschaft wurde gelöscht!");
+						}
+					});
 		}
 
 	}
+
 	/**
-	 * wenne der Namen geändert wird , wird dieser ClickHandler aufgerufen, dieser aktualisiert das Objekt.
+	 * wenne der Namen geändert wird , wird dieser ClickHandler aufgerufen,
+	 * dieser aktualisiert das Objekt.
 	 * 
 	 */
 	private class changeNameClickHandler implements ClickHandler {
@@ -1661,7 +1690,7 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 							nameTable.setWidget(1, 2, changeNameButton);
 							changeNameButton.addClickHandler(new changeNameClickHandler());
 							RootPanel.get("content").clear();
-							ContactsTable table = new ContactsTable(contactsInCL,selectedCL);
+							ContactsTable table = new ContactsTable(contactsInCL, selectedCL);
 						}
 
 					});

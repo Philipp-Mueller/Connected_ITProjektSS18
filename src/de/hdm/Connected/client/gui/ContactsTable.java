@@ -56,6 +56,12 @@ import de.hdm.Connected.shared.bo.ContactList;
 import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
 
+/**
+ * Klasse um die Übersichtseite der Kontakte anzuzeigen
+ * 
+ * @author Philipp & Moritz
+ *
+ */
 public class ContactsTable extends CellTable<Contact> {
 
 	private CellTable<Contact> cellTable = new CellTable<Contact>();
@@ -123,7 +129,8 @@ public class ContactsTable extends CellTable<Contact> {
 			@Override
 			public void onCellPreview(final CellPreviewEvent<Contact> event) {
 				if (BrowserEvents.CLICK.equalsIgnoreCase(event.getNativeEvent().getType())) {
-					row = event.getIndex();
+					// Index je Seite festlegen
+					row = (event.getIndex() - (pager.getPage() * pager.getPageSize()));
 
 				}
 
@@ -742,7 +749,8 @@ public class ContactsTable extends CellTable<Contact> {
 							buttonPanel.add(searchBox);
 							searchBox.setWidth("215px");
 							search.getElement().getStyle().setMarginLeft(610, Unit.PX);
-							RootPanel.get("content").add(new HTML("<h3> Meine Kontakte <h3>"));
+							RootPanel.get("content").add(new HTML("<br />"));
+							RootPanel.get("content").add(new HTML("<h2> Meine Kontakte <h2>"));
 							RootPanel.get("content").add(buttonPanel);
 							RootPanel.get("content").add(hintPanel);
 							RootPanel.get("content").add(cellTable);

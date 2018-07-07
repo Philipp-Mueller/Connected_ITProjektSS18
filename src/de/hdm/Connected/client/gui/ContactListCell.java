@@ -8,6 +8,11 @@ import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.ContactList;
 import de.hdm.Connected.shared.bo.User;
 
+/**
+ * Klasse um die Contactlisten kursiv darzustellen,wenn sie geshared worden sind
+ * @author Philipp
+ *
+ */
 public class ContactListCell extends AbstractCell<ContactList>{
 
 	
