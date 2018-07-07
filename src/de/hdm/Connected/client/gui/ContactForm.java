@@ -646,8 +646,7 @@ public class ContactForm extends PopupPanel {
 																				@Override
 																				public void onSuccess(
 																						final Value result) {
-																					Window.alert(Boolean
-																							.toString(birthdayFlag));
+																					
 																					ClientSideSettings
 																							.getConnectedAdmin()
 																							.checkIfPropertyHasValue(
