@@ -21,11 +21,11 @@ public interface ReportGeneratorService extends RemoteService {
 
 	
 	void init();
-	List<User> allUsers();
 	List<Property> allProperties();
 	List<Value> allValues(Integer propertyId);
 	List<ReportObjekt> searchContacts(boolean allContacts, boolean sharedContacts, boolean detailSearch,
 			String userEmail, Map<Integer, String> propertyValueMap, int currentUser);
+	List<User> allUsers(int currentUser);
 	
 	
 	
