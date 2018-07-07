@@ -182,7 +182,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	 **/
 	@Override
 	public ArrayList<Permission> getPermissionsByRecieveUserId(int recieveUId) throws IllegalArgumentException {
-		return this.permissionMapper.findByContactId(recieveUId);
+		return this.permissionMapper.findByRecieverUserId(recieveUId);
 	}
 
 	/**

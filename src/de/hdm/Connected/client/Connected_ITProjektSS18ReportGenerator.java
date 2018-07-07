@@ -47,7 +47,7 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
 
 	// Settings
 	final Settings settings = new Settings();
-	
+
 	/**
 	 * Create a remote service proxy to talk to the server-side Greeting
 	 * service.
@@ -60,21 +60,21 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		
-		//Aktion die ausgeführt wird, wenn der Logout Knopf betätigt wird.
+
+		// Aktion die ausgeführt wird, wenn der Logout Knopf betätigt wird.
 		final Command logout = new Command() {
 			public void execute() {
 				Window.open(loginInfo.getLogoutUrl(), "_self", "");
 				loadLogin();
 			}
 		};
-		
-		String targetUrl = GWT.getHostPageBaseURL()+"Connected_ITProjektSS18ReportGenerator.html";
-		
+
+		String targetUrl = GWT.getHostPageBaseURL() + "Connected_ITProjektSS18ReportGenerator.html";
+
 		// Check login status using login service.
 		LoginServiceAsync loginService = GWT.create(LoginService.class);
 		loginService.login(targetUrl, new AsyncCallback<LoginInfo>() {
-			
+
 			@Override
 			public void onSuccess(LoginInfo result) {
 				log("UserInfo1: " + result.getEmailAddress());
@@ -87,21 +87,22 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
 
 						@Override
 						public void onSuccess(User result) {
-							// Ruft den User auf der mit der Google email in der DB
+							// Ruft den User auf der mit der Google email in der
+							// DB
 							// eingetragen ist
 							if (result != null) {
 								log("User: " + result.getLogEmail());
 								currentUser = result;
-								
+
 								// Anzeige der Menü Elemente
 								MenuBar menu1 = new MenuBar(true);
 								menu1.addItem("Abmelden", logout);
-								
+
 								// Menü Icon
 								MenuBar menu = new MenuBar();
 								final String image = "<img src='user.png' height='40px' width='40px'/>";
 								SafeHtml addActivityImagePath = new SafeHtml() {
-								
+
 									private static final long serialVersionUID = 1L;
 
 									@Override
@@ -112,14 +113,13 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
 
 								menu.addItem(addActivityImagePath, menu1);
 								RootPanel.get("top").add(menu);
-								
 
 								ReportGeneratorBaseForm rgB = new ReportGeneratorBaseForm(currentUser);
 								RootPanel.get("content").add(rgB);
 
-
 							} else if (mail != null) {
-								// Erstellt einen neuen User wenn dieser noch nicht
+								// Erstellt einen neuen User wenn dieser noch
+								// nicht
 								// existiert
 								connectedAdminService.createUser(loginInfo, new AsyncCallback<User>() {
 
@@ -140,7 +140,6 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
 								});
 
 							}
-
 						}
 
 						@Override
@@ -152,8 +151,8 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
 				} else {
 					loadLogin();
 				}
-
 			}
+
 			@Override
 			public void onFailure(Throwable error) {
 				log("Error: " + error);
@@ -168,7 +167,7 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
 	native void log(String s) /*-{
 		console.log(s);
 	}-*/;
-	
+
 	/**
 	 * Statische Hilfsmethode für das Laden des LoginDialogs
 	 */

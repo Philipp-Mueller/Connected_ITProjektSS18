@@ -334,8 +334,12 @@ public class ReportGeneratorBaseForm extends Widget {
 					mailToServer = userEmail;
 				}
 				if (propertyListBox.isEnabled() && propertySearchRb.isChecked()) {
+					if(propertyValueMap.size()==0){
+						Window.alert("Bitte geben Sie eine Ausprägung zur Eigenschaft an.");
+					}
 					propertyValueMapToServer = propertyValueMap;
 				}
+				
 
 				rgsa.searchContacts(allContacts, sharedContacts, detailSearch, mailToServer, propertyValueMapToServer,
 						currentUser.getBoId(), new AsyncCallback<List<ReportObjekt>>() {

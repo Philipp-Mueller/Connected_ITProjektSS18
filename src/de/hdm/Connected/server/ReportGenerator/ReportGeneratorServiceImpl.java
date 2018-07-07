@@ -91,6 +91,11 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 		// alle meine Kontakte
 		if (allContacts) {
 			ergebnisKontakte = allContactsPerUser(currentUser);
+			List<Permission> permissionReceiver = this.adminImpl.getPermissionsByRecieveUserId(currentUser);
+			ServersideSettings.getLogger().info("PermissionReceiver: " + permissionReceiver.size());
+			for (Permission p : permissionReceiver) {
+				ergebnisKontakte.add(adminImpl.findContactById(p.getSharedObjectId()));
+			}
 		}
 		// alle meine geteilten Kontakte
 		else if (sharedContacts) {
@@ -137,6 +142,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 		ArrayList<Property> allproperties = adminImpl.findAllProperties();
 		// Für jeden ErgebnisKontakt die Eigenschaften aufbauen
 		for (Contact c : ergebnisKontakte) {
+			if(c!=null){
 			// Eigenschaften lesen
 			List<Value> eigenschaften = adminImpl.findValuesByContactId(c.getBoId());
 
@@ -148,12 +154,12 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 			for (Property p : allproperties) {
 				eigenschaftsMap.put(p.getBoId(), findeWertZuEigenschaft(p.getBoId(), eigenschaften));
 			}
-			
-			//ReportObjekt aus den berechneten Werten zusammenbauen 
+
+			// ReportObjekt aus den berechneten Werten zusammenbauen
 			ReportObjekt ro = new ReportObjekt(c.getPrename(), c.getSurname(), eigenschaftsMap);
 			// Reportobjekt dem Ergebnis hinzufügen
 			ergebnisReport.add(ro);
-
+			}
 		}
 
 		ServersideSettings.getLogger().info("Gefundenen ReportObjekte: " + ergebnisReport.size());
