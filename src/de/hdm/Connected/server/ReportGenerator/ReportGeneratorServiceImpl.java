@@ -221,12 +221,17 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 	}
 
 	private String findeWertZuEigenschaft(int id, List<Value> list) {
+		String shownValue = "";
 		for (Value v : list) {
-			if (v.getBoId() == id) {
-				return v.getName();
+			if (v.getPropertyID() == id) {
+				if(shownValue.isEmpty()){
+					shownValue = v.getName();
+				}else{
+					shownValue = shownValue + ", "+ v.getName();
+				}
 			}
 		}
-		return "";
+		return shownValue;
 	}
 
 	private List<Contact> contactsBasedOnPropertiesAndValues(int propertyId, String valueDescription) {
