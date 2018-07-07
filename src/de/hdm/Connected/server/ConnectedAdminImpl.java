@@ -952,8 +952,6 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		// TODO Auto-generated method stub
 		return null;
 	}
-<<<<<<< HEAD
-=======
 
 	//Report Generator Methoden
 	
@@ -969,6 +967,5 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 
 
->>>>>>> branch 'master' of https://github.com/Philipp-Mueller/Connected_ITProjektSS18.git
 
 }
