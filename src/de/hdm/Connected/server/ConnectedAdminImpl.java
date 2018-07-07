@@ -3,6 +3,7 @@ package de.hdm.Connected.server;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -951,5 +952,23 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		// TODO Auto-generated method stub
 		return null;
 	}
+<<<<<<< HEAD
+=======
+
+	//Report Generator Methoden
+	
+	@Override
+	public List<Value> findAllValues(Integer propertyId) {
+		return this.valueMapper.findByProperty(propertyId);
+	}
+
+	@Override
+	public List<Value> findValuesByPropertyAndDescription(int propertyId, String valueDescription) {
+		return this.valueMapper.findByPropertyAndDescription(propertyId, valueDescription);
+	}
+
+
+
+>>>>>>> branch 'master' of https://github.com/Philipp-Mueller/Connected_ITProjektSS18.git
 
 }

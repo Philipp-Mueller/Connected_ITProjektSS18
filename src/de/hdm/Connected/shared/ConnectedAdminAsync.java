@@ -3,6 +3,7 @@ package de.hdm.Connected.shared;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -141,5 +142,13 @@ public interface ConnectedAdminAsync {
 	void checkIfPropertyHasValue(int propertyId, AsyncCallback<Void> callback);
 
 	void findPropertyByName(String name, AsyncCallback<Property> callback);
+
+	//Report generator Methoden
+	
+	
+	void findAllValues(Integer propertyId, AsyncCallback<List<Value>> callback);
+
+	void findValuesByPropertyAndDescription(int propertyId, String valueDescription,
+			AsyncCallback<List<Value>> callback);
 	
 }
