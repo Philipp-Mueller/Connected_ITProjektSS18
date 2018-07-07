@@ -41,7 +41,7 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
 	private static VerticalPanel loginPanel = new VerticalPanel();
 	private static Label loginLabel = new Label(
 			"Melde dich mit deinem Google-Konto an um Connected Report Generator nutzen zu können.");
-	private static Anchor signInLink = new Anchor("Sign In");
+	private static Anchor signInLink = new Anchor("Anmelden");
 	public static User currentUser = new User();
 
 	// Settings
