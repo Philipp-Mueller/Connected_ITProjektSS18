@@ -81,7 +81,7 @@ public class ContactListForm3 extends PopupPanel {
 						cl.setName(nameTextBox.getText());
 
 						ClientSideSettings.getConnectedAdmin().createContactList(nameTextBox.getText(),
-								ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ContactList>() {
+								ClientSideSettings.getCurrentUser().getId(), new AsyncCallback<ContactList>() {
 									@Override
 									public void onFailure(Throwable caught) {
 
@@ -119,7 +119,7 @@ public class ContactListForm3 extends PopupPanel {
 		mainContactlist = cl;
 
 		/**Servicemethoden aufruf, der den Inhalt der übergebenen Kontaktliste lädt**/
-		ClientSideSettings.getConnectedAdmin().findContactsByContactListId(mainContactlist.getBoId(),
+		ClientSideSettings.getConnectedAdmin().findContactsByContactListId(mainContactlist.getId(),
 				new AsyncCallback<ArrayList<Contact>>() {
 
 					@Override

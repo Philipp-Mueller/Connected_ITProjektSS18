@@ -69,7 +69,7 @@ public class ContactInfoForm extends PopupPanel {
 		 * die Mailadresse des Erstellers zu
 		 */
 
-		if (contact.getCreatorId() != ClientSideSettings.getCurrentUser().getBoId()) {
+		if (contact.getCreatorId() != ClientSideSettings.getCurrentUser().getId()) {
 			v.add(new HTML("<br /><h3> &nbsp; Kontakt: <i>" + contact.getPrename() + " " + contact.getSurname()
 					+ "</i></h3><br />"));
 		} else {
@@ -123,7 +123,7 @@ public class ContactInfoForm extends PopupPanel {
 								@Override
 								public void onSuccess(Property result) {
 									int rowCount = contactInfoTable.getRowCount();
-									if(value.getCreatorId() != ClientSideSettings.getCurrentUser().getBoId()) {
+									if(value.getCreatorId() != ClientSideSettings.getCurrentUser().getId()) {
 									contactInfoTable.setWidget(rowCount, 0,
 											new HTML("<p><i><strong>" + result.getName() + ":</strong></i></p>"));
 									

@@ -77,7 +77,7 @@ public class ContactListMapper{
 		    ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
 			
 		    if(rs.next()){
-				contactList.setBoId(rs.getInt("maxid")+1);
+				contactList.setId(rs.getInt("maxid")+1);
 			}
 		    
 		    stmt = con.createStatement();
@@ -86,9 +86,9 @@ public class ContactListMapper{
 			 * SQL-Anweisung zum Einfügen des neuen ContactList-Tupels in die
 			 * Datenbank.
 			 */
-		    stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES " + "(" + contactList.getBoId() + ")");
+		    stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES " + "(" + contactList.getId() + ")");
 			
-			stmt.executeUpdate("INSERT INTO contactlist (id, name, ownerId) VALUES " + "(" + contactList.getBoId() + ", '"
+			stmt.executeUpdate("INSERT INTO contactlist (id, name, ownerId) VALUES " + "(" + contactList.getId() + ", '"
 					+ contactList.getName() + "', " + contactList.getCreatorId()+ ")");
 			
 			/*
@@ -133,7 +133,7 @@ public class ContactListMapper{
 			 * SQL-Anweisung zum Aktualisieren des übergebenen Datensatzes in
 			 * der Datenbank.
 			 */
-			stmt.executeUpdate("UPDATE contactlist SET name='" + contactList.getName() + "' WHERE id=" + contactList.getBoId());
+			stmt.executeUpdate("UPDATE contactlist SET name='" + contactList.getName() + "' WHERE id=" + contactList.getId());
 		}
 		
 		/*
@@ -172,9 +172,9 @@ public class ContactListMapper{
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
 			 * Datenbank.
 			 */
-			stmt.executeUpdate("DELETE FROM contactlist WHERE id=" + contactList.getBoId());
+			stmt.executeUpdate("DELETE FROM contactlist WHERE id=" + contactList.getId());
 			
-			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + contactList.getBoId());
+			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + contactList.getId());
 			con.commit();
 		
 		}
@@ -226,7 +226,7 @@ public class ContactListMapper{
 			 */
 			if (rs.next()) {
 				ContactList contactList = new ContactList();
-				contactList.setBoId(rs.getInt("id"));
+				contactList.setId(rs.getInt("id"));
 				contactList.setName(rs.getString("name"));
 				contactList.setCreatorId(rs.getInt("ownerId"));
 				return contactList;			
@@ -274,7 +274,7 @@ public class ContactListMapper{
 			 */
 			while (rs.next()) {
 				ContactList contactList = new ContactList();
-				contactList.setBoId(rs.getInt("id"));
+				contactList.setId(rs.getInt("id"));
 				contactList.setName(rs.getString("name"));
 			    contactList.setCreatorId(rs.getInt("ownerId"));
 				result.add(contactList);
@@ -328,7 +328,7 @@ public class ContactListMapper{
 			 */
 			while (rs.next()) {
 				ContactList contactlist = new ContactList();
-				contactlist.setBoId(rs.getInt("id"));
+				contactlist.setId(rs.getInt("id"));
 				contactlist.setName(rs.getString("name"));
 				contactlist.setCreatorId(rs.getInt("ownerId"));
 				result.add(contactlist);

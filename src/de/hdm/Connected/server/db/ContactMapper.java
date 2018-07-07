@@ -84,7 +84,7 @@ public class ContactMapper {
 		    ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
 			
 		    if(rs.next()){
-				contact.setBoId(rs.getInt("maxid")+1);
+				contact.setId(rs.getInt("maxid")+1);
 			}
 		    
 		    stmt = con.createStatement();
@@ -92,9 +92,9 @@ public class ContactMapper {
 			/*
 			 * SQL-Anweisung zum Einfügen des neuen Contact-Tupels in die Datenbank.
 			 */
-		    stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES " + "(" + contact.getBoId() + ")");
+		    stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES " + "(" + contact.getId() + ")");
 			
-			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, ownerId, creationDate, modificationDate) VALUES (" + contact.getBoId() + ", '"
+			stmt.executeUpdate("INSERT INTO contact (id, prename, surname, ownerId, creationDate, modificationDate) VALUES (" + contact.getId() + ", '"
 					+ contact.getPrename() + "', '" + contact.getSurname() + "', " + contact.getCreatorId() + ", '" + contact.getCreationDate() +"', '"+ contact.getModificationDate() + "')");
 			/*
 			 * Das Aufrufen des printStackTrace bietet die Möglichkeit, die Fehlermeldung
@@ -145,7 +145,7 @@ public class ContactMapper {
 			 * Datenbank.
 			 */
 			stmt.executeUpdate("UPDATE contact SET prename='" + contact.getPrename() + "', surname= '"
-					+ contact.getSurname() + "', modificationDate= '"+ currentTime + "' WHERE id= " + contact.getBoId());
+					+ contact.getSurname() + "', modificationDate= '"+ currentTime + "' WHERE id= " + contact.getId());
 		}
 		
 		/*
@@ -183,9 +183,9 @@ public class ContactMapper {
 			/*
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der Datenbank.
 			 */
-			stmt.executeUpdate("DELETE FROM contact WHERE id=" + contact.getBoId());
+			stmt.executeUpdate("DELETE FROM contact WHERE id=" + contact.getId());
 			
-			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + contact.getBoId());
+			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + contact.getId());
 			
 			con.commit();
 		}
@@ -231,7 +231,7 @@ public class ContactMapper {
 			 */
 			if (rs.next()) {
 				Contact contact = new Contact();
-				contact.setBoId(rs.getInt("id"));
+				contact.setId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				contact.setCreatorId(rs.getInt("ownerId"));
@@ -278,7 +278,7 @@ public class ContactMapper {
 			 */
 			while (rs.next()) {
 				Contact contact = new Contact();
-				contact.setBoId(rs.getInt("id"));
+				contact.setId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				contact.setCreatorId(rs.getInt("ownerid"));
@@ -331,7 +331,7 @@ public class ContactMapper {
 			 */
 			while (rs.next()) {
 				Contact contact = new Contact();
-				contact.setBoId(rs.getInt("id"));
+				contact.setId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				result.add(contact);
@@ -381,7 +381,7 @@ public class ContactMapper {
 			 */
 			while (rs.next()) {
 				Contact contact = new Contact();
-				contact.setBoId(rs.getInt("id"));
+				contact.setId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				result.add(contact);
@@ -437,7 +437,7 @@ public class ContactMapper {
 			 */
 			while (rs.next()) {
 				Contact contact = new Contact();
-				contact.setBoId(rs.getInt("id"));
+				contact.setId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				result.add(contact);
@@ -490,7 +490,7 @@ public class ContactMapper {
 
 			while (rs.next()) {
 				Contact contact = new Contact();
-				contact.setBoId(rs.getInt("id"));
+				contact.setId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				contact.setCreatorId(rs.getInt("ownerid"));
@@ -544,7 +544,7 @@ public class ContactMapper {
 			 */
 			while (rs.next()) {
 				Contact contact = new Contact();
-				contact.setBoId(rs.getInt("id"));
+				contact.setId(rs.getInt("id"));
 				contact.setPrename(rs.getString("prename"));
 				contact.setSurname(rs.getString("surname"));
 				result.add(contact);

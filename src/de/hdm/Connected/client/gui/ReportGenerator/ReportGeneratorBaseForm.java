@@ -339,7 +339,7 @@ public class ReportGeneratorBaseForm extends Widget {
 				} else {
 
 					rgsa.searchContacts(allContacts, sharedContacts, detailSearch, mailToServer,
-							propertyValueMapToServer, currentUser.getBoId(), new AsyncCallback<List<ReportObjekt>>() {
+							propertyValueMapToServer, currentUser.getId(), new AsyncCallback<List<ReportObjekt>>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -483,7 +483,7 @@ public class ReportGeneratorBaseForm extends Widget {
 	 */
 	private void loadDataForFiltering(User currentUser) {
 		// Users für User Dropbox
-		rgsa.allUsers(currentUser.getBoId(), new AsyncCallback<List<User>>() {
+		rgsa.allUsers(currentUser.getId(), new AsyncCallback<List<User>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Das Laden der Benutzer ist fehlgeschlagen!");
@@ -510,9 +510,9 @@ public class ReportGeneratorBaseForm extends Widget {
 			@Override
 			public void onSuccess(List<Property> result) {
 				for (Property p : result) {
-					String propertyId = String.valueOf(p.getBoId());
+					String propertyId = String.valueOf(p.getId());
 					propertyListBox.addItem(p.getName(), propertyId);
-					propertyIdUndName.put(p.getBoId(), p.getName());
+					propertyIdUndName.put(p.getId(), p.getName());
 				}
 				ReportGeneratorBaseForm.this.propertyId = Integer.valueOf(propertyListBox.getSelectedValue());
 

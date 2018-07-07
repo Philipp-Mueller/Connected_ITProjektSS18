@@ -11,19 +11,19 @@ import java.io.Serializable;
 abstract class BusinessObject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private int boId = 0;
+	private int id = 0;
 	
 	/**
 	 * @return the id
 	 */
-	public int getBoId() {
-		return boId;
+	public int getId() {
+		return id;
 	}
 	/**
 	 * @param id the id to set
 	 */
-	public void setBoId(int boId) {
-		this.boId = boId;
+	public void setId(int boId) {
+		this.id = boId;
 	}
 	
 	/**
@@ -31,13 +31,13 @@ abstract class BusinessObject implements Serializable {
 	 */
 	public String toString() {
 	
-		return this.getClass().getName() + " #" + this.boId;
+		return this.getClass().getName() + " #" + this.id;
 	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + boId;
+		result = prime * result + id;
 		return result;
 	}
 	@Override
@@ -49,7 +49,7 @@ abstract class BusinessObject implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		BusinessObject other = (BusinessObject) obj;
-		if (boId != other.boId)
+		if (id != other.id)
 			return false;
 		return true;
 	}

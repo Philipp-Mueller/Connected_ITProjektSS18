@@ -143,7 +143,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 		for (Contact c : ergebnisKontakte) {
 			if(c!=null){
 			// Eigenschaften lesen
-			List<Value> eigenschaften = adminImpl.findValuesByContactId(c.getBoId());
+			List<Value> eigenschaften = adminImpl.findValuesByContactId(c.getId());
 
 			// Reportobjekt aufbauen
 			Map<Integer, String> eigenschaftsMap = new HashMap<Integer, String>();
@@ -151,7 +151,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 			// Für jede mögliche Eigenschaft prüfen ob der Nutzer dazu ein Wert
 			// hat
 			for (Property p : allproperties) {
-				eigenschaftsMap.put(p.getBoId(), findeWertZuEigenschaft(p.getBoId(), eigenschaften));
+				eigenschaftsMap.put(p.getId(), findeWertZuEigenschaft(p.getId(), eigenschaften));
 			}
 
 			// ReportObjekt aus den berechneten Werten zusammenbauen
@@ -184,7 +184,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 		// Für jede Permission muss der Kontakt des Shared Objekt geladen werden
 		// wenn dieser mit dem sharedWith user übereinstimmt
 		for (Permission p : sharedPermissions) {
-			if (p.getReceiverUserID() == sharedWith.getBoId()) {
+			if (p.getReceiverUserID() == sharedWith.getId()) {
 				Contact c = adminImpl.findContactById(p.getSharedObjectId());
 				if (!sharedContacts.contains(c)) {
 					sharedContacts.add(c);

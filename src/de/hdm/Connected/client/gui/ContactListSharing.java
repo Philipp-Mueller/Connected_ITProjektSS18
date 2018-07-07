@@ -103,7 +103,7 @@ public class ContactListSharing extends PopupPanel {
 			/**
 			 * Anzeigen der User, die bereits Zugriff auf diese Kontaktliste haben
 			 */
-			ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(sharingContactList.getBoId(),
+			ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(sharingContactList.getId(),
 					new AsyncCallback<ArrayList<Permission>>() {
 
 						@Override
@@ -193,7 +193,7 @@ public class ContactListSharing extends PopupPanel {
 											Permission deletePermission = null;
 
 											for (Permission p : allPermissonForObject) {
-												if (p.getReceiverUserID() == object.getBoId()) {
+												if (p.getReceiverUserID() == object.getId()) {
 													deletePermission = p;
 												}
 											}
@@ -425,7 +425,7 @@ public class ContactListSharing extends PopupPanel {
 						}
 
 						ClientSideSettings.getConnectedAdmin().giveContactlistPermissionToUsers(sharingContactList,
-								selectedUsers, ClientSideSettings.getCurrentUser().getBoId(),
+								selectedUsers, ClientSideSettings.getCurrentUser().getId(),
 								new AsyncCallback<Void>() {
 
 									@Override
@@ -472,7 +472,7 @@ public class ContactListSharing extends PopupPanel {
 			public void onSuccess(ArrayList<User> result) {
 				oracle.clear();
 				for (User u : result) {
-					if (u.getBoId() != ClientSideSettings.getCurrentUser().getBoId()) {
+					if (u.getId() != ClientSideSettings.getCurrentUser().getId()) {
 						oracle.add(u.getLogEmail());
 					}
 				}

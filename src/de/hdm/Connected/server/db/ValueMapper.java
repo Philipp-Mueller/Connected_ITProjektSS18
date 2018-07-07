@@ -80,7 +80,7 @@ public class ValueMapper {
 		    ResultSet rs = stmt.executeQuery("SELECT MAX(id) AS maxid FROM sharedobject");
 		    
 		    if (rs.next()) {
-				value.setBoId(rs.getInt("maxid")+1);
+				value.setId(rs.getInt("maxid")+1);
 			}
 		
 		    stmt = con.createStatement();
@@ -89,9 +89,9 @@ public class ValueMapper {
 			 * SQL-Anweisung zum Einfügen des neuen ContactList-Tupels in die
 			 * Datenbank.
 			 */
-		    stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES " + "(" + value.getBoId() + ")");
+		    stmt.executeUpdate("INSERT INTO sharedobject (id) VALUES " + "(" + value.getId() + ")");
 	
-			stmt.executeUpdate("INSERT INTO value (id, name, propertyId, contactId, ownerId) VALUES (" + value.getBoId() + ", '"
+			stmt.executeUpdate("INSERT INTO value (id, name, propertyId, contactId, ownerId) VALUES (" + value.getId() + ", '"
 					+ value.getName() + "', " + value.getPropertyID() + ", " + value.getContactID() +  ", " + value.getCreatorId() + ")");
 			/*
 			 * Das Aufrufen des printStackTrace bietet die Moeglichkeit, die
@@ -134,7 +134,7 @@ public class ValueMapper {
 			 * der Datenbank.
 			 */
 			stmt.executeUpdate("UPDATE value SET name='" + value.getName() + "', propertyId = '" + value.getPropertyID()
-					+ "', contactId = '" + value.getContactID() + "' WHERE id= " + value.getBoId());
+					+ "', contactId = '" + value.getContactID() + "' WHERE id= " + value.getId());
 		}
 		
 		/*
@@ -172,9 +172,9 @@ public class ValueMapper {
 			 * SQL-Anweisung zum Loeschen des uebergebenen Datensatzes in der
 			 * Datenbank.
 			 */
-			stmt.executeUpdate("DELETE FROM value WHERE id=" + value.getBoId());
+			stmt.executeUpdate("DELETE FROM value WHERE id=" + value.getId());
 			
-			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + value.getBoId());
+			stmt.executeUpdate("DELETE FROM sharedobject WHERE id=" + value.getId());
 			
 			con.commit();
 		}
@@ -221,7 +221,7 @@ public class ValueMapper {
 			 */
 			if (rs.next()) {
 				Value value = new Value();
-				value.setBoId(rs.getInt("id"));
+				value.setId(rs.getInt("id"));
 				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
@@ -273,7 +273,7 @@ public class ValueMapper {
 			 */
 			while (rs.next()) {
 				Value value = new Value();
-				value.setBoId(rs.getInt("id"));
+				value.setId(rs.getInt("id"));
 				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
@@ -329,7 +329,7 @@ public class ValueMapper {
 			 */
 			while (rs.next()) {
 				Value value = new Value();
-				value.setBoId(rs.getInt("id"));
+				value.setId(rs.getInt("id"));
 				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
@@ -387,7 +387,7 @@ public class ValueMapper {
 			 */
 			while (rs.next()) {
 				Value value = new Value();
-				value.setBoId(rs.getInt("id"));
+				value.setId(rs.getInt("id"));
 				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
@@ -445,7 +445,7 @@ public class ValueMapper {
 			 */
 			while (rs.next()) {
 				Value value = new Value();
-				value.setBoId(rs.getInt("id"));
+				value.setId(rs.getInt("id"));
 				value.setName(rs.getString("name"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));
@@ -491,7 +491,7 @@ public class ValueMapper {
 
 			while (rs.next()) {
 				Value value = new Value();
-				value.setBoId(rs.getInt("id"));
+				value.setId(rs.getInt("id"));
 				value.setName(rs.getString("description"));
 				value.setPropertyID(rs.getInt("propertyId"));
 				value.setContactID(rs.getInt("contactId"));

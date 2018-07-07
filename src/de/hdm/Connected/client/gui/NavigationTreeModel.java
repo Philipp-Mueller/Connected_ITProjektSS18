@@ -188,7 +188,7 @@ public class NavigationTreeModel extends VerticalPanel {
 	    /* Darstellen aller Kontaklisten des Users in der Navigation, 
 	     * wobei jeder Kontakliste ein Button unter dem DisclosurePanel entspricht.
 	     */
-	    ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<ContactList>>(){
+	    ClientSideSettings.getConnectedAdmin().getContactListsByUserPermission(ClientSideSettings.getCurrentUser().getId(), new AsyncCallback<ArrayList<ContactList>>(){
 		
 	    	@Override
 			public void onFailure(Throwable caught) {
@@ -205,7 +205,7 @@ public class NavigationTreeModel extends VerticalPanel {
 						}
 					}
 					
-					if (cl.getCreatorId() != ClientSideSettings.getCurrentUser().getBoId()){
+					if (cl.getCreatorId() != ClientSideSettings.getCurrentUser().getId()){
 						showCL.setHTML("<strong><i> &ensp;" + cl.getName() + "</i></strong>");
 					} else {
 						showCL.setHTML("&ensp;" + cl.getName());
