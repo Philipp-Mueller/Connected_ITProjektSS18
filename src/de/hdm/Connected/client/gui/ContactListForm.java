@@ -27,7 +27,7 @@ import de.hdm.Connected.shared.bo.ContactList;
  * @author Moritz
  *
  */
-public class ContactListForm3 extends PopupPanel {
+public class ContactListForm extends PopupPanel {
 
 	private ConnectedAdminAsync connectedAdmin = ClientSideSettings.getConnectedAdmin();
 
@@ -35,7 +35,7 @@ public class ContactListForm3 extends PopupPanel {
 	private ContactList mainContactlist = new ContactList();
 
 	
-	public ContactListForm3(){
+	public ContactListForm(){
 		// Set the dialog box's caption.
 
 				// Enable animation.
@@ -92,7 +92,7 @@ public class ContactListForm3 extends PopupPanel {
 										Window.alert("Erfolgreich erstellt");
 										RootPanel.get("content").clear();
 										// Neuladen der Kontatliste
-										ContactListForm3 reload = new ContactListForm3(result);
+										ContactListForm reload = new ContactListForm(result);
 										RootPanel.get("nav").clear();
 										NavigationTreeModel treemodel = new NavigationTreeModel(result);
 										RootPanel.get("nav").add(treemodel);
@@ -113,7 +113,7 @@ public class ContactListForm3 extends PopupPanel {
 	
 	/**Überladener Konstruktor, der eine Kontaktliste als Parameter enthält
 	 * @param Kontaktliste**/
-	public ContactListForm3(final ContactList cl) {
+	public ContactListForm(final ContactList cl) {
 		
 
 		mainContactlist = cl;

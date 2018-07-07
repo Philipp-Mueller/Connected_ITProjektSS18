@@ -122,7 +122,7 @@ public class NavigationTreeModel extends VerticalPanel {
 				}
 				
 				//Anzeigen des PopUp-Panels
-				ContactListForm3 addContactListForm = new ContactListForm3();
+				ContactListForm addContactListForm = new ContactListForm();
 				addContactListForm.center();
 				addContactListForm.show();
 				Navigation reload = new Navigation();
@@ -219,7 +219,7 @@ public class NavigationTreeModel extends VerticalPanel {
 						@Override
 						public void onClick(ClickEvent event) {
 							RootPanel.get("content").clear();
-							ContactListForm3 showContactList = new ContactListForm3(cl);
+							ContactListForm showContactList = new ContactListForm(cl);
 							newContactButton.removeStyleName("gwt-Button-buttonpressednav");
 							newContactListButton.removeStyleName("gwt-Button-buttonpressednav");
 							myContactsButton.removeStyleName("gwt-Button-buttonpressednav");

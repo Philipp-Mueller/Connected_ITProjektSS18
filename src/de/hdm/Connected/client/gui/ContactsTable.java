@@ -1147,7 +1147,7 @@ public class ContactsTable extends CellTable<Contact> {
 						public void onSuccess(ContactList result) {
 							Window.alert("Erfolgreich umbenannt");
 							RootPanel.get("content").clear();
-							ContactListForm3 reload = new ContactListForm3(result);
+							ContactListForm reload = new ContactListForm(result);
 							RootPanel.get("nav").clear();
 							NavigationTreeModel treemodel = new NavigationTreeModel(result);
 							RootPanel.get("nav").add(treemodel);
