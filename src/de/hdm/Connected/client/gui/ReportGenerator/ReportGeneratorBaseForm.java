@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -16,14 +15,13 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.SimplePager;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -79,7 +77,7 @@ public class ReportGeneratorBaseForm extends Widget {
 	private SuggestBox valueBox = new SuggestBox(oracle);
 	private CellTable<ReportObjekt> table = new CellTable<ReportObjekt>();
 	private ListDataProvider<ReportObjekt> dataProvider = new ListDataProvider<ReportObjekt>();
-	private List<ReportObjekt> contactToShowInReport = new ArrayList<>();
+	private List<ReportObjekt> contactToShowInReport = new ArrayList<ReportObjekt>();
 	private boolean allContacts = false;
 	private boolean sharedContacts = false;
 	private boolean detailSearch = false;
@@ -367,9 +365,10 @@ public class ReportGeneratorBaseForm extends Widget {
 							@Override
 							public void onSuccess(List<ReportObjekt> result) {
 
-								// Daten in der Tabelle austauschen
 								dataProvider.getList().clear();
-								dataProvider.getList().addAll(result);
+								for(ReportObjekt r : result){
+									dataProvider.getList().add(r);
+								}
 							}
 						});
 			}
@@ -404,11 +403,12 @@ public class ReportGeneratorBaseForm extends Widget {
 		buttonPanel.add(filterAnwenden);
 		filterVpanelLinks.add(buttonPanel);
 		
-		
-		
-		
+
 		// Contact Tabelle verbindet die Tabelle mit dem Data Provider.
+		// Add the data to the data provider, which automatically pushes it to the widget.
 		dataProvider.addDataDisplay(table);
+		table.setRowCount(contactToShowInReport.size(), true);
+		table.setRowData(0, contactToShowInReport);
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 		
 		
@@ -436,18 +436,7 @@ public class ReportGeneratorBaseForm extends Widget {
 		table.addColumn(surnameColumn, "Nachname");
 
 		
-		
-		//
-		table.setRowCount(contactToShowInReport.size(), true);
-		table.setRowData(0, contactToShowInReport);
-
-		
-		
-		//
-	    ListHandler<ReportObjekt> columnSortHandler = new ListHandler<ReportObjekt>(contactToShowInReport);
-	    
-	    
-	    
+	    ListHandler<ReportObjekt> columnSortHandler = new ListHandler<ReportObjekt>(dataProvider.getList());
 	    //Filter in der Tabelle Vorname
 	    columnSortHandler.setComparator(nameColumn,
 	        new Comparator<ReportObjekt>() {
@@ -464,13 +453,7 @@ public class ReportGeneratorBaseForm extends Widget {
 	        });
 	    table.addColumnSortHandler(columnSortHandler);
 	    
-	    
-	    
-	    //
-	    ListHandler<ReportObjekt> columnSortHandler2 = new ListHandler<ReportObjekt>(contactToShowInReport);
-	    
-	    
-	    
+	    ListHandler<ReportObjekt> columnSortHandler2 = new ListHandler<ReportObjekt>(dataProvider.getList());
 	    //Filter in der Tabelle Nachname
 	    columnSortHandler2.setComparator(surnameColumn,
 	        new Comparator<ReportObjekt>() {
