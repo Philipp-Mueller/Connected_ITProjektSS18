@@ -26,9 +26,7 @@ public class ReportGeneratorFooter extends Widget {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				Window.alert("Click");
 				RootPanel.get("content").getElement().setInnerHTML("");
-				Window.alert("Click2");
 				RootPanel.get("content")
 						.add(new HTML("<h2>Impressum nach §5 TMG</h2>" + "<h3>Verantwortlich</h3>"
 								+ "<p>Hochschule der Medien<br />" + "Nobelstraße 8<br />" + "70569 Stuttgart<br /></p>"
@@ -41,7 +39,6 @@ public class ReportGeneratorFooter extends Widget {
 								+ "<p><strong>Website:</strong> <a href='http://www.hdm-stuttgart.de' target='_blank'>"
 								+ "www.hdm-stuttgart.de</a></p>"));
 
-				Window.alert("Click3");
 			}
 
 		});
