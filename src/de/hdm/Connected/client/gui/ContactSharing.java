@@ -68,6 +68,7 @@ public class ContactSharing extends PopupPanel {
 	final SingleSelectionModel<User> selectionModel_Single = new SingleSelectionModel<User>();
 	private ArrayList<User> allUsers = null;
 	private ArrayList<User> permissionUser = null;
+	private ArrayList<Integer> permissionUserIds = new ArrayList<Integer>();
 	private User changingUser =  null;
 	final ListBox userListBox = new ListBox(true);
 	private VerticalPanel root = new VerticalPanel();
@@ -88,7 +89,7 @@ public class ContactSharing extends PopupPanel {
 	private Label changeValues = new Label();
 	// Map<Property, Value> propertyValueMap = new HashMap<Property, Value>();
 
-	public ContactSharing(final Contact sharingContact, User creator) {
+	public ContactSharing(final Contact sharingContact, final User creator) {
 		this.setAnimationEnabled(true);
 		closeButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -136,6 +137,9 @@ public class ContactSharing extends PopupPanel {
 							noUserLabel.setVisible(true);
 						}
 						permissionUser = new ArrayList<User>();
+						if(creator.getBoId() != ClientSideSettings.getCurrentUser().getBoId()){
+						permissionUser.add(creator);}
+						permissionUserIds = new ArrayList<Integer>();
 						// User der Permissions abrufen
 						for (Permission p : result) {
 							ClientSideSettings.getConnectedAdmin().findUserById(p.getReceiverUserID(),
@@ -150,11 +154,15 @@ public class ContactSharing extends PopupPanel {
 										@Override
 										public void onSuccess(User result) {
 											permissionUser.add(result);
-
+											permissionUserIds.add(result.getBoId());
+											
+											
+											
 										}
 
 									});
 						}
+						
 						/** CellTable Coulns erstellen*/
 						TextColumn<User> nameColumn = new TextColumn<User>() {
 							public String getValue(User user) {
@@ -238,13 +246,15 @@ public class ContactSharing extends PopupPanel {
 						
 
 						usersWithPermission.addColumn(nameColumn, "Bereits geteilt mit:");
+						/** Alle user für die SuggestBox laden, die über das Oracle vorgeschlagen werden */
+						
+						loadAllUser();
 						usersWithPermission.addColumn(deleteColumn);
 
 					}
 
 				});
-		/** Alle user für die SuggestBox laden, die über das Oracle vorgeschlagen werden */
-		loadAllUser();
+		
 		/**
 		 * suggestBox KeyUpHandler, bei betätigung Vorschläge anzeigen
 		 * 
@@ -480,10 +490,6 @@ public class ContactSharing extends PopupPanel {
 						dataProvider.getList().addAll(propertiesAndValues);
 						dataProvider.addDataDisplay(propertyValueTable);
 
-						// multi auswahl freischalten in ListBox
-						userListBox.ensureDebugId("cwListBox-multiBox");
-						userListBox.setVisibleItemCount(7);
-
 						userDataProvider.getList().clear();
 						userDataProvider.getList().addAll(permissionUser);
 						userDataProvider.addDataDisplay(usersWithPermission);
@@ -605,12 +611,18 @@ public class ContactSharing extends PopupPanel {
 			@Override
 			public void onSuccess(ArrayList<User> result) {
 				oracle.clear();
-				for (User u : result) {
+				
+				for (User u : result) {		
+					if(!permissionUserIds.contains(u.getBoId())){					
+					
 					if(u.getBoId() !=
 					 ClientSideSettings.getCurrentUser().getBoId()){
 					oracle.add(u.getLogEmail());
 					 }
+						}
 				}
+				
+				
 
 			}
 

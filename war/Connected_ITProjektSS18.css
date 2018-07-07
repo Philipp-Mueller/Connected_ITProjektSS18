@@ -147,6 +147,11 @@ h1 a {
 	color: #fff;
 }
 
+#nav hr {
+	clear: both;
+  visibility: hidden;
+}
+
 #nav-wrapper {
 	background: #999 url('background.png') no-repeat left 50%;
 	width: 20%;
@@ -183,6 +188,25 @@ h1 a {
 #content button.delete:hover,
 #content button.delete:active {
     background: #ab4616;	
+}
+
+#content .gwt-Button {
+	margin: 5px;
+}
+
+#content .gwt-Label {
+	margin: 8px 0px 7px 0px;
+	margin-left: 18px;
+}
+
+#content .gwt-TextBox {
+	border-radius: 2px;
+	margin-left: 18px;
+}
+
+.lblHeaderTitel {
+  padding: 5px 0px 10px 26px;
+	font-size: 17px;
 }
 
 #repgen-heading {
@@ -251,12 +275,16 @@ table {
 }
 
 .gwt-PopupPanel .popupContent .button {
-	border: none;
+	  border: none;
     background: #009999;
     color: #fff;
     padding: 5px 10px;
     cursor: pointer;
 }
+.gwt-PopupPanel .popupContent {
+	padding: 8px;	
+}
+	
 .lblWelcome {
 	font-family: 'Montserrat', sans-serif;
 	text-align: center;
@@ -264,23 +292,6 @@ table {
 	font-size: 4rem;
 	font-weight: 700;
 	padding: 3%;
-}
-
-.cellList {
-	color:#666;
-	font-family: 'Montserrat', sans-serif;
-  padding-left: 9px;
-	font-weight: 300px;
-}
-
-.contactListPanel {
-	border-style: hidden;
-	border-color: transparent; 
-	border-width: 0px;
-}
-
-table.content td{
-	border: 1px;
 }
 
 .gwt-Button-buttonpressednav {
@@ -301,17 +312,6 @@ text-align: left;
 margin-left: inherit;
 } 
 
-table.cellListPanel.content {
-	text-align: left;
-  margin-left: inherit;
-}
-
-.gwt-PopupPanel button {
-	background: #009999;
-	color: #fff;
-	border: none;
-}
-
 .gwt-DialogBox button {
 	background: #009999;
 	color: #fff;
@@ -324,6 +324,10 @@ strong {
 	font-weight: bold;
 }
 
+.gwt-DialogBox {
+	margin: -60px 25px 20px 20px;
+}
+
 .gwt-DialogBox input {
 	margin: 7px 8px 7px 0px;
 	border-radius: 2px;
@@ -333,6 +337,33 @@ strong {
 	margin: 12px 8px 0px -10px;
 }
 
-.gwt-DialogBox .dialogMiddleCenter {
-	border-radius: 10px;
+.gwt-PopupPanel {
+	border-radius: 2px; 
+	margin-left: 30px;
+}
+
+.gwt-PopupPanel button {
+	background: #009999;
+	color: #fff;
+	border: none;
+}
+.gwt-PopupPanel input {
+	border-radius: 2px;
+}
+
+.gwt-PopupPanel h3 {
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+.gwt-PopupPanel h2 {
+	padding-bottom: 3px;
+}
+
+.gwt-PopupPanel button {
+	margin: 5px;
+}
+
+.gwt-PopupPanel td {
+	padding: 2px;
 }
