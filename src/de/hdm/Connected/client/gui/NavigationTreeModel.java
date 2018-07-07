@@ -22,7 +22,7 @@ import de.hdm.Connected.shared.bo.ContactList;
  * Die Klasse NavigationTreeModel steuert das Verhalten des Navigationbaumes
  * und stellt die Navigationshierarchie bereit.
  * 
- * @author 
+ * @author Philipp
  *
  */
 
@@ -122,7 +122,7 @@ public class NavigationTreeModel extends VerticalPanel {
 				}
 				
 				//Anzeigen des PopUp-Panels
-				NewContactListPopup addContactListForm = new NewContactListPopup();
+				ContactListForm3 addContactListForm = new ContactListForm3();
 				addContactListForm.center();
 				addContactListForm.show();
 				Navigation reload = new Navigation();
