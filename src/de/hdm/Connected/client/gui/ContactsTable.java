@@ -525,7 +525,7 @@ public class ContactsTable extends CellTable<Contact> {
 								// Wenn auf Löschen gedrückt wird, passiert
 								// folgendes. Das Bestätigungsfenster wird
 								// geöffnet.
-								final DialogBox agreeDelete = new DialogBox();
+								final PopupPanel agreeDelete = new PopupPanel();
 								VerticalPanel vpanel = new VerticalPanel();
 								HorizontalPanel buttonPanel = new HorizontalPanel();
 								Button yesButton = new Button("Ja");
@@ -573,9 +573,10 @@ public class ContactsTable extends CellTable<Contact> {
 									};
 								});
 
-								vpanel.add(new HTML("Wollen Sie diesen Kontakt wirklich löschen?"));
-								buttonPanel.add(noButton);
+								vpanel.add(new HTML("<h2>Wollen Sie diesen Kontakt wirklich löschen?</h2>"));
 								buttonPanel.add(yesButton);
+								buttonPanel.add(noButton);
+
 								if (contactlist == null) {
 									vpanel.add(buttonPanel);
 								}
@@ -1158,8 +1159,9 @@ public class ContactsTable extends CellTable<Contact> {
 			});
 
 			HorizontalPanel buttons = new HorizontalPanel();
-			buttons.add(ok);
 			buttons.add(close);
+			buttons.add(ok);
+			
 			v.add(buttons);
 			setWidget(v);
 
@@ -1167,12 +1169,12 @@ public class ContactsTable extends CellTable<Contact> {
 	}
 
 	/** Dialog zum Löschen einses Kontakt von einer Kontaktliste **/
-	private class deleteDialog extends DialogBox {
+	private class deleteDialog extends PopupPanel {
 
 		public deleteDialog(final int index) {
 
 			// Set the dialog box's caption.
-			setText("Kontakt entfernen");
+			
 
 			// Enable animation.
 			setAnimationEnabled(true);
@@ -1181,12 +1183,12 @@ public class ContactsTable extends CellTable<Contact> {
 			setGlassEnabled(true);
 
 			VerticalPanel v = new VerticalPanel();
-
-			Label deleteLabel = new Label("Kontakt von Kontaktliste entfernen?");
-			v.add(deleteLabel);
+			v.add(new HTML("<h2> Kontakt von Kontaktliste entfernen? </h2>"));
+			//Label deleteLabel = new Label("Kontakt von Kontaktliste entfernen?");
+			//v.add(deleteLabel);
 
 			Button delete = new Button("Ja");
-			Button abort = new Button("Abrechen");
+			Button abort = new Button("Nein");
 			// Kontakt aus einer Kontaktliste entfernen
 			delete.addClickHandler(new ClickHandler() {
 
@@ -1223,8 +1225,9 @@ public class ContactsTable extends CellTable<Contact> {
 			});
 			HorizontalPanel h = new HorizontalPanel();
 
-			h.add(abort);
 			h.add(delete);
+			h.add(abort);
+
 			v.add(h);
 			setWidget(v);
 
@@ -1233,12 +1236,12 @@ public class ContactsTable extends CellTable<Contact> {
 	}
 
 	/** DialogBox zum Löschen einer Kontaktliste **/
-	private class deleteContactListDialog extends DialogBox {
+	private class deleteContactListDialog extends PopupPanel {
 
 		public deleteContactListDialog() {
 
 			// Set the dialog box's caption.
-			setText("Löschen");
+			
 
 			// Enable animation.
 			setAnimationEnabled(true);
@@ -1248,11 +1251,11 @@ public class ContactsTable extends CellTable<Contact> {
 
 			VerticalPanel v = new VerticalPanel();
 
-			Label deleteLabel = new Label("Löschen wirklich durchführen?");
-			v.add(deleteLabel);
+			v.add(new HTML("<h2> Löschen wirklich durchführen? </h2>"));
+	
 
 			Button delete = new Button("Ja");
-			Button abort = new Button("Abrechen");
+			Button abort = new Button("Nein");
 
 			delete.addClickHandler(new ClickHandler() {
 
@@ -1294,9 +1297,10 @@ public class ContactsTable extends CellTable<Contact> {
 
 			});
 			HorizontalPanel h = new HorizontalPanel();
-
 			h.add(delete);
 			h.add(abort);
+
+			
 			v.add(h);
 			setWidget(v);
 
