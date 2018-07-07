@@ -1,16 +1,9 @@
 package de.hdm.Connected.client.gui;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -28,23 +21,18 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
-import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
 import de.hdm.Connected.client.ClientSideSettings;
-import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.ContactList;
 import de.hdm.Connected.shared.bo.Permission;
-import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
-import de.hdm.Connected.shared.bo.Value;
 
 public class ContactListSharing  extends PopupPanel {
 	
@@ -74,7 +62,7 @@ public class ContactListSharing  extends PopupPanel {
 	private Label selectValues = new Label();
 	private Label changeValues = new Label();
 
-	public ContactListSharing(final ContactList sharingContactList, User creator) {
+	public ContactListSharing(final ContactList sharingContactList, final User creator) {
 		try {
 			this.setAnimationEnabled(true);
 			closeButton.addClickHandler(new ClickHandler() {
@@ -106,7 +94,6 @@ public class ContactListSharing  extends PopupPanel {
 			root.add(instruction);
 			root.add(new HTML("<br />"));
 
-			// root.add(new HTML("Kontakt bereits geteilit mit: <br />"));
 
 			/**Anzeigen der User, die bereits Zugriff auf diesen Kontakt haben*/
 			ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(sharingContactList.getBoId(),
@@ -123,7 +110,7 @@ public class ContactListSharing  extends PopupPanel {
 								noUserLabel.setVisible(true);
 							}
 							allPermissonForObject =result;
-							permissionUser = new ArrayList<User>();
+					
 							// User der Permissions abrufen
 							for (Permission p : result) {
 								ClientSideSettings.getConnectedAdmin().findUserById(p.getReceiverUserID(),
@@ -138,12 +125,18 @@ public class ContactListSharing  extends PopupPanel {
 											@Override
 											public void onSuccess(User result) {
 												permissionUser.add(result);
+												usersWithPermission.redraw();
+												userDataProvider.getList().add(result);
 
 											}
 
 										});
 							}
-							/** CellTable Coulns erstellen*/
+							
+													
+							userDataProvider.addDataDisplay(usersWithPermission);
+							
+							/** CellTable Columns erstellen*/
 							TextColumn<User> nameColumn = new TextColumn<User>() {
 								public String getValue(User user) {
 									return user.getLogEmail();
@@ -173,7 +166,7 @@ public class ContactListSharing  extends PopupPanel {
 								@Override
 								public void update(int index, final User object, String value) {
 									// DialogBox anzeigen ob man diesen User wirklich die Berechtigungen entziehen möchte.
-									
+								
 									final DialogBox agreeDelete = new DialogBox();
 									VerticalPanel vpanel = new VerticalPanel();
 									HorizontalPanel buttonPanel = new HorizontalPanel();
@@ -227,6 +220,7 @@ public class ContactListSharing  extends PopupPanel {
 									agreeDelete.setGlassEnabled(true);
 									agreeDelete.center();
 									agreeDelete.show();
+								
 								}
 							});
 
@@ -370,7 +364,7 @@ public class ContactListSharing  extends PopupPanel {
 			 * Single selection model festlegen. Dieses dient der Auswhal im Celltable, es darf jedoch nur 1 Eintrag makiert werden.
 			 */
 			selectionModel_Single.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-				//SelectionModel_single SelectionChange Handler
+				
 				public void onSelectionChange(SelectionChangeEvent event) {
 					
 					//Aktionenn bei anwählen eines Eintrag der Liste.
@@ -383,9 +377,7 @@ public class ContactListSharing  extends PopupPanel {
 				}
 			});
 			
-			userDataProvider.getList().clear();
-			userDataProvider.getList().addAll(permissionUser);
-			userDataProvider.addDataDisplay(usersWithPermission);
+			
 
 			horizontal.getElement().getStyle().setMarginBottom(30, Unit.PX);
 

@@ -193,7 +193,7 @@ public class ContactSharing extends PopupPanel {
 							@Override
 							public void update(int index, final User object, String value) {
 								// DialogBox anzeigen ob man diesen User wirklich die Berechtigungen entziehen möchte.
-								
+								if(object.getBoId() == sharingContact.getCreatorId()){
 								final DialogBox agreeDelete = new DialogBox();
 								VerticalPanel vpanel = new VerticalPanel();
 								HorizontalPanel buttonPanel = new HorizontalPanel();
@@ -239,7 +239,11 @@ public class ContactSharing extends PopupPanel {
 								agreeDelete.setGlassEnabled(true);
 								agreeDelete.center();
 								agreeDelete.show();
+							}else{
+								Window.alert("Dem Inhaber kann die Berechtigung des Kontaktes nicht entzogen werden");
 							}
+							}
+							
 						});
 
 							
