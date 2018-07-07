@@ -11,6 +11,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import de.hdm.Connected.server.db.ContactListMapper;
 import de.hdm.Connected.server.db.ContactMapper;
+import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.client.LoginInfo;
 import de.hdm.Connected.server.db.ContactContactListMapper;
 import de.hdm.Connected.server.db.PermissionMapper;
@@ -532,15 +533,37 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public void addContactsToContactList(ArrayList<Contact> contactArray, ArrayList<ContactList> contactlistArray)
 			throws IllegalArgumentException {
 
+		
 		for (int i = 0; i < contactlistArray.size(); i++) {
+			ArrayList<Permission> clPermission = permissionMapper.findBySharedObjectId(contactlistArray.get(i).getBoId());
+			ArrayList<User> receiverUserArray = new ArrayList<User>();
+			//Permissions der CL holen
+			for(int s= 0; s<clPermission.size(); s++){
+				//Alle User der Permissions holen
+				receiverUserArray.add(this.findUserById(clPermission.get(s).getReceiverUserID()));
+			}
+			receiverUserArray.add(findUserById(contactlistArray.get(i).getCreatorId()));
+			//Alle Contacts der CL holen
+			ArrayList<Contact> contactidsinCL = ccMapper.findContactsByContactListId(contactlistArray.get(i).getBoId());
+			ArrayList<Contact> contactsinCL = new ArrayList<Contact>();
+			for(Contact c : contactidsinCL){
+				contactsinCL.add(contactMapper.findById(c.getBoId()));
+			}
+			for(Contact cont : contactArray){
+				contactsinCL.add(cont);
+			}
+			//Permissions für alle kontakte für alle User schreiben
+			this.giveContactPermissonToUsers(contactsinCL, receiverUserArray, 1);
+//			giveContactPermissonToUsers(contactsinCL, receiverUserArray, ClientSideSettings.getCurrentUser().getBoId());
+			
 			for (int j = 0; j < contactArray.size(); j++) {
 				boolean flag = false;
-				int idvonContact = contactArray.get(j).getBoId();
-				int idvonCL = contactlistArray.get(i).getBoId();
-				ArrayList<Contact> contactsinCL = ccMapper.findContactsByContactListId(idvonCL);
-
-				for (int v = 0; v < contactsinCL.size(); v++) {
-					if (contactsinCL.get(v).getBoId() == idvonContact) {
+				
+//				int idvonContact = contactArray.get(j).getBoId();
+//				int idvonCL = contactlistArray.get(i).getBoId();
+				
+				for (int v = 0; v < contactidsinCL.size(); v++) {
+					if (contactidsinCL.get(v).getBoId() == contactArray.get(j).getBoId()) {
 						flag = true;
 					}
 

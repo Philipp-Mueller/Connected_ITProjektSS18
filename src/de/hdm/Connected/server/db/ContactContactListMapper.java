@@ -61,6 +61,7 @@ public class ContactContactListMapper {
 		Connection con = DBConnection.connection();
 		
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/*
@@ -92,6 +93,7 @@ public class ContactContactListMapper {
 		Connection con = DBConnection.connection();
 		
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/*
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
@@ -123,6 +125,7 @@ public class ContactContactListMapper {
 		Connection con = DBConnection.connection();
 		
 		try {
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			/*
 			 * SQL-Anweisung zum Löschen des übergebenen Datensatzes in der
@@ -156,6 +159,7 @@ public class ContactContactListMapper {
 	ArrayList<Contact> result = new ArrayList<Contact>();
 	
 	try {
+		con.setAutoCommit(true);
 		Statement stmt = con.createStatement();
 		
 		/*
