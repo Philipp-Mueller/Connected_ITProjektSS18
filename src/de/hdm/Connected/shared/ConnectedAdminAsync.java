@@ -16,9 +16,10 @@ import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
 
 /**
- * @author Denise, Moritz Das asynchrone Gegenstück des Interface
+ * Das asynchrone Gegenstück des Interface
  *         ConnectedAdmin. Es wird semiautomatisch durch das Google Plugin
  *         erstellt und gepflegt.
+ *         @author Denise, Moritz 
  */
 
 public interface ConnectedAdminAsync {

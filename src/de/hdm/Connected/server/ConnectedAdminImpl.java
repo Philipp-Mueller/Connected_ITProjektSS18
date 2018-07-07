@@ -29,7 +29,7 @@ import de.hdm.Connected.shared.bo.Value;
  * Applikationslogik, stellt die Zusammenhänge konstistent dar und ist zuständig
  * um einen geordneten Ablauf zu gewährleisten.
  * 
- * @author Denise
+ * @author Denise, Moritz
  *
  */
 public class ConnectedAdminImpl extends RemoteServiceServlet implements ConnectedAdmin {
