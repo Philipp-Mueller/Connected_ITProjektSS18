@@ -93,23 +93,22 @@ public class ContactListSharing extends PopupPanel {
 			root.add(new HTML("<br /><hr><br />"));
 
 			instruction.getElement().setInnerHTML(
-					"Bitte einen User auswählen um dessen Berechtigung zu bearbeiten oder <br> rechts einen User eingeben um den Kontakt mit diesem zu teilen.");
+					"Bitte einen User auswählen um dessen Berechtigung zu löschen oder <br> rechts einen User eingeben um den Kontakt mit diesem zu teilen.");
 
-			noUserLabel.setVisible(false);
-			noUserLabel.setHTML("Diese Kontakt ist mit keinem anderen User geteilt");
+			
 
 			root.add(instruction);
 			root.add(new HTML("<br />"));
 
 			/**
-			 * Anzeigen der User, die bereits Zugriff auf diesen Kontakt haben
+			 * Anzeigen der User, die bereits Zugriff auf diese Kontaktliste haben
 			 */
 			ClientSideSettings.getConnectedAdmin().getPermissionsBySharedObjectId(sharingContactList.getBoId(),
 					new AsyncCallback<ArrayList<Permission>>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							Window.alert("Leider konnten die Permissions des Kontakts nicht abgefragt werden");
+							Window.alert("Leider konnten die Permissions der Kontaktliste nicht abgefragt werden");
 						}
 
 						@Override
@@ -156,7 +155,7 @@ public class ContactListSharing extends PopupPanel {
 									String title = "Berechtigung löschen";
 									if (data != null) {
 										sb.appendHtmlConstant("<img title='" + title + "' src=" + "/delete.png"
-												+ " alt=" + "Kontakt löschen" + " height=" + "18" + " width=" + "18"
+												+ " alt=" + "Kontaktliste löschen" + " height=" + "18" + " width=" + "18"
 												+ ">");
 
 									}
@@ -178,7 +177,7 @@ public class ContactListSharing extends PopupPanel {
 									// möchte.
 
 									final DialogBox agreeDelete = new DialogBox();
-									VerticalPanel vpanel = new VerticalPanel();
+									PopupPanel vpanel = new PopupPanel();
 									HorizontalPanel buttonPanel = new HorizontalPanel();
 									Button yesButton = new Button("Ja");
 									Button noButton = new Button("Nein");
@@ -222,9 +221,9 @@ public class ContactListSharing extends PopupPanel {
 										}
 									});
 									vpanel.add(new HTML(
-											"Wollen Sie diesen User die Berechtigungen für den Kontakt entziehen?"));
-									buttonPanel.add(noButton);
+											"Wollen Sie diesen User die Berechtigungen für die Kontaktliste entziehen?"));
 									buttonPanel.add(yesButton);
+									buttonPanel.add(noButton);
 									vpanel.add(buttonPanel);
 									agreeDelete.setWidget(vpanel);
 									agreeDelete.setGlassEnabled(true);
@@ -258,7 +257,7 @@ public class ContactListSharing extends PopupPanel {
 
 			suggestBox.getElement().getStyle().setMarginLeft(20, Unit.PX);
 			/**
-			 * Bei Hinzufügen des kontakts, schaltet es auf den "kontakt an
+			 * Bei Hinzufügen der kontaktlisten, schaltet es auf den "kontaktliste an
 			 * neuen User" Modus um
 			 */
 			addButton.addClickHandler(new ClickHandler() {
@@ -305,10 +304,10 @@ public class ContactListSharing extends PopupPanel {
 			ClickableTextCell deleteButton = new ClickableTextCell() {
 				@Override
 				public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
-					String title = "Kontakt entfernen";
+					String title = "User entfernen";
 					if (data != null) {
 						sb.appendHtmlConstant("<img title='" + title + "' src=" + "/delete.png" + " alt="
-								+ "Kontakt löschen" + " height=" + "18" + " width=" + "18" + ">");
+								+ "User entfernen" + " height=" + "18" + " width=" + "18" + ">");
 
 					}
 				}
@@ -324,7 +323,7 @@ public class ContactListSharing extends PopupPanel {
 				// dies passiert wenn ein User aus der Liste gelöscht wird
 				@Override
 				public void update(int index, final User object, String value) {
-					// DialogBox anzeigen ob man diesen Kontakt wirklich aus der
+					// DialogBox anzeigen ob man diesen Kontaktliste wirklich aus der
 					// Liste entfernen will.
 					final DialogBox agreeDelete = new DialogBox();
 					VerticalPanel vpanel = new VerticalPanel();
@@ -409,7 +408,7 @@ public class ContactListSharing extends PopupPanel {
 			root.add(changeValues);
 
 			/**
-			 * Dieser ClickHandler legt fest, was passiert wenn ein Kontakt
+			 * Dieser ClickHandler legt fest, was passiert wenn eine Kontaktliste
 			 * geteilt wird.
 			 */
 			shareButton.addClickHandler(new ClickHandler() {
@@ -431,7 +430,7 @@ public class ContactListSharing extends PopupPanel {
 
 									@Override
 									public void onFailure(Throwable caught) {
-										Window.alert("Der Kontakt konnte nicht geteilt werden");
+										Window.alert("Die Kontaktliste konnte nicht geteilt werden");
 									}
 
 									@Override

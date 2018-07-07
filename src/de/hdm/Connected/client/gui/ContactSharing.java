@@ -82,6 +82,7 @@ public class ContactSharing extends PopupPanel {
 	private String selectedUser;
 	private Button addButton = new Button("+");
 	private Label instruction = new Label();
+	private User clCreator = new User();
 	
 	private HTML noUserLabel = new HTML();
 	
@@ -91,6 +92,9 @@ public class ContactSharing extends PopupPanel {
 	
 	/** Überladener Konstruktoe den Kontakt zum teilen mit überzugeben*/
 	public ContactSharing(final Contact sharingContact, final User creator) {
+		
+		
+		clCreator = creator ;
 		this.setAnimationEnabled(true);
 		closeButton.addClickHandler(new ClickHandler() {
 			@Override
@@ -177,7 +181,7 @@ public class ContactSharing extends PopupPanel {
 								String title = "Berechtigung löschen";
 								if (data != null) {
 									sb.appendHtmlConstant("<img title='" + title + "' src=" + "/delete.png" + " alt="
-											+ "Kontakt löschen" + " height=" + "18" + " width=" + "18" + ">");
+											+ "Berechtigung löschen" + " height=" + "18" + " width=" + "18" + ">");
 
 								}
 							}
@@ -323,10 +327,10 @@ public class ContactSharing extends PopupPanel {
 		ClickableTextCell deleteButton = new ClickableTextCell() {
 			@Override
 			public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
-				String title = "Kontakt entfernen";
+				String title = "User entfernen";
 				if (data != null) {
 					sb.appendHtmlConstant("<img title='" + title + "' src=" + "/delete.png" + " alt="
-							+ "Kontakt löschen" + " height=" + "18" + " width=" + "18" + ">");
+							+ "User entfernen" + " height=" + "18" + " width=" + "18" + ">");
 
 				}
 			}
@@ -668,8 +672,7 @@ public class ContactSharing extends PopupPanel {
 				public void onClick(ClickEvent event) {
 					Window.alert("Neue Eigenschaft wurde gespeichert!");
 					MyDialog.this.hide();
-					// RootPanel.get("content").clear();
-					// ContactForm contactForm = new ContactForm(contact);
+					
 				}
 			});
 
@@ -698,10 +701,9 @@ public class ContactSharing extends PopupPanel {
 
 								@Override
 								public void onSuccess(Void result) {
-									Window.alert(Integer.toString(userArray.size()));
 									Window.alert("Die Eigenschaft wurde erstellt und geteilt");
 									MyDialog.this.hide();
-									// RootPanel.get("content").clear();
+									
 									ContactForm contactForm = new ContactForm(contact, null, null);
 
 								}
@@ -728,6 +730,7 @@ public class ContactSharing extends PopupPanel {
 						public void onSuccess(ArrayList<Permission> result) {
 							if(result.size() != 0){
 								show();
+								
 								// Enable animation.
 								setAnimationEnabled(true);
 
@@ -747,12 +750,34 @@ public class ContactSharing extends PopupPanel {
 
 											@Override
 											public void onSuccess(User result) {
+												//Aktuellen User nicht hinzufügen
+												if(result.getBoId() != ClientSideSettings.getCurrentUser().getBoId()){
 												userPermissionList.addItem(result.getLogEmail());
 												permissionUser.add(result);
+												}
 											}
 
 										});
 							}
+							
+							ClientSideSettings.getConnectedAdmin().findUserById(contact.getCreatorId(), new AsyncCallback<User>(){
+
+								@Override
+								public void onFailure(Throwable caught) {
+									Window.alert("Leider konnte der User nicht gefunden werden.");
+								}
+
+								@Override
+								public void onSuccess(User result) {
+									if(result.getBoId() != ClientSideSettings.getCurrentUser().getBoId()){
+									userPermissionList.addItem(result.getLogEmail());
+									permissionUser.add(result);
+									}
+									
+								}
+								
+							});
+							
 							}
 						}
 
