@@ -10,6 +10,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import de.hdm.Connected.server.ConnectedAdminImpl;
 import de.hdm.Connected.server.LoginServiceImpl;
+import de.hdm.Connected.server.ServersideSettings;
 import de.hdm.Connected.server.db.ContactMapper;
 import de.hdm.Connected.server.db.PermissionMapper;
 import de.hdm.Connected.server.db.PropertyMapper;
@@ -85,13 +86,13 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 	public List<ReportObjekt> searchContacts(boolean allContacts, boolean sharedContacts, boolean detailSearch,
 			String userEmail, Map<Integer, String> propertyValueMap, int currentUser) {
 
-		System.out.println(allContacts);
-		System.out.println(sharedContacts);
-		System.out.println(detailSearch);
-		System.out.println(userEmail);
-		System.out.println(currentUser);
-		System.out.println(propertyValueMap.size());
-
+		ServersideSettings.getLogger().info("allContacts: "+allContacts);
+		ServersideSettings.getLogger().info("sharedContacts: "+sharedContacts);
+		ServersideSettings.getLogger().info("detailSearch: "+detailSearch);
+		ServersideSettings.getLogger().info("userEmail: "+userEmail);
+		ServersideSettings.getLogger().info("propertyValueMap size: "+propertyValueMap.size());
+		ServersideSettings.getLogger().info("currentUser: "+currentUser);
+		
 		List<Contact> ergebnisKontakte = new ArrayList<Contact>();
 		List<ReportObjekt> ergebnisReport = new ArrayList<ReportObjekt>();
 
@@ -122,7 +123,6 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 		// alle Kontakte mit bestimmten eigenschaften
 		else if (detailSearch) {
 			ergebnisKontakte = allContactsPerUser(currentUser);
-			System.out.println("gefunden: " + ergebnisKontakte.size());
 			// Wenn es property filter gibt dann noch filtern...
 			if (!propertyValueMap.isEmpty()) {
 
@@ -143,7 +143,6 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 			// Fehler in der Programmlogik... das darf nicht passieren....
 		}
 
-		System.out.println("gefunden: " + ergebnisKontakte.size());
 
 		ArrayList<Property> allproperties = adminImpl.findAllProperties();
 		// Für jeden ErgebnisKontakt die Eigenschaften aufbauen
@@ -165,6 +164,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 			// Reportobjekt dem Ergebnis hinzufügen
 		}
 
+		ServersideSettings.getLogger().info("Gefundenen ReportObjekte: "+ergebnisReport.size());
 		return ergebnisReport;
 
 	}
@@ -224,10 +224,10 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 		String shownValue = "";
 		for (Value v : list) {
 			if (v.getPropertyID() == id) {
-				if(shownValue.isEmpty()){
+				if (shownValue.isEmpty()) {
 					shownValue = v.getName();
-				}else{
-					shownValue = shownValue + ", "+ v.getName();
+				} else {
+					shownValue = shownValue + ", " + v.getName();
 				}
 			}
 		}
