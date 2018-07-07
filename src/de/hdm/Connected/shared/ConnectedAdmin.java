@@ -1,7 +1,6 @@
 package de.hdm.Connected.shared;
 
 import java.sql.Date;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +9,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import de.hdm.Connected.client.LoginInfo;
+import de.hdm.Connected.server.ConnectedAdminImpl;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.ContactList;
 import de.hdm.Connected.shared.bo.Permission;
@@ -43,7 +43,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public User createUser(LoginInfo info) throws IllegalArgumentException;
-	
+
 	/**
 	 * Aktuallisiert ein User-Objekt.
 	 * 
@@ -53,32 +53,31 @@ public interface ConnectedAdmin extends RemoteService {
 	public void updateUser(User user) throws IllegalArgumentException;
 
 	/**
-	 * Löscht ein User-Objekt und alle eventuell darauf basierenden
-	 * Objekte.
+	 * Löscht ein User-Objekt und alle eventuell darauf basierenden Objekte.
 	 * 
 	 * @param user
 	 * @throws IllegalArgumentException
 	 */
 	public void deleteUser(User user) throws IllegalArgumentException;
-	
+
 	/**
 	 * Erstellt ein neues Property-Objekt.
 	 * 
 	 * @return neu erstelltes Property-Objekt
 	 * @throws IllegalArgumentException
 	 */
-	
+
 	public ArrayList<User> findAllUser() throws IllegalArgumentException;
+
 	/**
 	 * Gibt alle User zurück
 	 * 
 	 * @return
 	 * @throws IllegalArgumentException
 	 */
-	
-	
+
 	public Property createProperty(String name) throws IllegalArgumentException;
-	
+
 	/**
 	 * Aktuallisiert ein Property-Objekt.
 	 * 
@@ -86,18 +85,17 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public void updateProperty(Property property) throws IllegalArgumentException;
-	
+
 	/**
-	 * Löscht ein Proeprty-Objekt und alle eventuell darauf basierenden
-	 * Objekte.
+	 * Löscht ein Proeprty-Objekt und alle eventuell darauf basierenden Objekte.
 	 * 
 	 * @param property
 	 * @throws IllegalArgumentException
 	 */
 	public void deleteProperty(Property property) throws IllegalArgumentException;
-	
+
 	Contact createContact(String prename, String surname, Date creationDate, Date modificationDate, int ownerId);
-	
+
 	/**
 	 * Aktuallisiert ein Contact-Objekt.
 	 * 
@@ -105,16 +103,15 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public Contact updateContact(Contact contact) throws IllegalArgumentException;
-	
+
 	/**
-	 * Löscht ein Contact-Objekt und alle eventuell darauf basierenden
-	 * Objekte.
+	 * Löscht ein Contact-Objekt und alle eventuell darauf basierenden Objekte.
 	 * 
 	 * @param contact
 	 * @throws IllegalArgumentException
 	 */
 	public void deleteContact(Contact contact, User cUser) throws IllegalArgumentException;
-	
+
 	/**
 	 * Erstellt ein neues Value-Objekt.
 	 * 
@@ -122,7 +119,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public Value createValue(String name, int propertyId, int contactId, int ownerId) throws IllegalArgumentException;
-	
+
 	/**
 	 * Aktuallisiert ein Value-Objekt.
 	 * 
@@ -130,16 +127,15 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public Value updateValue(Value value, int oldPropertyId) throws IllegalArgumentException;
-	
+
 	/**
-	 * Löscht ein Value-Objekt und alle eventuell darauf basierenden
-	 * Objekte.
+	 * Löscht ein Value-Objekt und alle eventuell darauf basierenden Objekte.
 	 * 
 	 * @param value
 	 * @throws IllegalArgumentException
 	 */
-	public void deleteValue(Value value) throws IllegalArgumentException;
-	
+	public void deleteValue(Value value, User user) throws IllegalArgumentException;
+
 	/**
 	 * Erstellt ein neues ContactList-Objekt.
 	 * 
@@ -147,7 +143,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public ContactList createContactList(String name, int ownerId) throws IllegalArgumentException;
-	
+
 	/**
 	 * Aktuallisiert ein ContactList-Objekt.
 	 * 
@@ -155,7 +151,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public ContactList updateContactList(ContactList contactlist) throws IllegalArgumentException;
-	
+
 	/**
 	 * Löscht ein ContactList-Objekt und alle eventuell darauf basierenden
 	 * Objekte.
@@ -164,8 +160,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public void deleteContactList(ContactList contactlist) throws IllegalArgumentException;
-	
-	
+
 	/**
 	 * Gibt alle Contacts einer ContactList aus
 	 * 
@@ -173,7 +168,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public ArrayList<Contact> findContactsByContactListId(int contactlistId) throws IllegalArgumentException;
-	
+
 	/**
 	 * Gibt alle Contacts mit einer bestimmten Ausprägung aus
 	 * 
@@ -181,7 +176,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public ArrayList<Contact> findContactsByValue(String value) throws IllegalArgumentException;
-	
+
 	/**
 	 * Gibt einen spezifischen Contact anhand seiner Id aus.
 	 * 
@@ -189,7 +184,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public Contact findContactById(int id) throws IllegalArgumentException;
-	
+
 	/**
 	 * Gibt alle Contacte eines Users aus, bei denen er Owner ist
 	 * 
@@ -197,7 +192,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public ArrayList<Contact> findContactsByOwnerId(int id) throws IllegalArgumentException;
-	
+
 	/**
 	 * Gibt alle Values eines Contacts aus
 	 * 
@@ -205,7 +200,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public ArrayList<Value> findValuesByContactId(int id) throws IllegalArgumentException;
-	
+
 	/**
 	 * Gibt eine spezifische Property anhand seiner id aus
 	 * 
@@ -213,7 +208,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public Property findPropertyByPropertyId(int id) throws IllegalArgumentException;
-	
+
 	/**
 	 * Gibt eine spezifische Property anhand seines namen aus
 	 * 
@@ -221,8 +216,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public Property findPropertyByName(String name) throws IllegalArgumentException;
-	
-	
+
 	/**
 	 * Gibt alle Permissions eines User aus
 	 * 
@@ -230,54 +224,54 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @throws IllegalArgumentException
 	 */
 	public ArrayList<Permission> findPermissionsByUserId(int id) throws IllegalArgumentException;
-	
 
 	/**
-	 * Löscht ein Permission-Objekt 
+	 * Löscht ein Permission-Objekt
 	 * 
 	 * @param permission
 	 * @throws IllegalArgumentException
 	 */
 	public void deletePermission(Permission permission) throws IllegalArgumentException;
-	
+
 	/**
 	 * Fügt ein Contact einer ContactList hinzu
 	 * 
-	 * @param contactId, contactlistId
+	 * @param contactId,
+	 *            contactlistId
 	 * @throws IllegalArgumentException
 	 */
-	public void addContactsToContactList(ArrayList<Contact> contactArray, ArrayList<ContactList> contactlistArray) throws IllegalArgumentException;
-	
+	public void addContactsToContactList(ArrayList<Contact> contactArray, ArrayList<ContactList> contactlistArray)
+			throws IllegalArgumentException;
+
 	/**
 	 * Entfernt ein Contact einer ContactList
 	 * 
-	 * @param contactId, contactlistId
+	 * @param contactId,
+	 *            contactlistId
 	 * @throws IllegalArgumentException
 	 */
 	public void removeContactFromContactList(int contactid, int contactlistid) throws IllegalArgumentException;
-			
-	
-	
+
 	/**
 	 * Gibt alle Properties zurück
 	 * 
 	 * @throws IllegalArgumentException
 	 */
 	public ArrayList<Property> findAllProperties() throws IllegalArgumentException;
-	
+
 	/**
-	 * Gibt alle Contacts zurück
-	 * update
+	 * Gibt alle Contacts zurück update
+	 * 
 	 * @throws IllegalArgumentException
 	 */
 	public ArrayList<Contact> findAllContacts() throws IllegalArgumentException;
-	
+
 	/**
 	 * Gibt alle Contactlists zurück
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public ArrayList<ContactList> findAllContactlists () throws IllegalArgumentException;
+	public ArrayList<ContactList> findAllContactlists() throws IllegalArgumentException;
 
 	ArrayList<Contact> getContacts() throws IllegalArgumentException;
 
@@ -296,8 +290,9 @@ public interface ConnectedAdmin extends RemoteService {
 	ArrayList<Permission> getPermissionsByValueId(int valueId) throws IllegalArgumentException;
 
 	void updatePermission(Permission permission) throws IllegalArgumentException;
-	
-	void updatePermissionsForUser(ArrayList<Integer> newPermissions, int contactId, int userId) throws IllegalArgumentException;
+
+	void updatePermissionsForUser(ArrayList<Integer> newPermissions, int contactId, int userId)
+			throws IllegalArgumentException;
 
 	Permission getPermissionById(int id) throws IllegalArgumentException;
 
@@ -309,10 +304,12 @@ public interface ConnectedAdmin extends RemoteService {
 
 	public void giveContactPermissonToUsers(ArrayList<Contact> contactArray, ArrayList<User> userArray, int shareuserid)
 			throws IllegalArgumentException;
-	
-	public void giveContactlistPermissionToUsers(ContactList contactlist, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException;
-	
-	public void givePermissionToUsers(int shareObjectId, ArrayList<User> userArray, int shareuserid) throws IllegalArgumentException;
+
+	public void giveContactlistPermissionToUsers(ContactList contactlist, ArrayList<User> userArray, int shareuserid)
+			throws IllegalArgumentException;
+
+	public void givePermissionToUsers(int shareObjectId, ArrayList<User> userArray, int shareuserid)
+			throws IllegalArgumentException;
 
 	/**
 	 * Erstellt ein neues Permission-Objekt.
@@ -322,6 +319,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 */
 	void createPermission(int shareUserId, ArrayList<Integer> shareObjectId, ArrayList<Integer> receiverUserId)
 			throws IllegalArgumentException;
+
 	public void checkIfPropertyHasValue(int propertyId) throws IllegalArgumentException;
 
 	User findUserById(int userId) throws IllegalArgumentException;
@@ -329,29 +327,33 @@ public interface ConnectedAdmin extends RemoteService {
 	User findUserByEmail(String email) throws IllegalArgumentException;
 
 	boolean hasPermission(int shareObjectId, int receiverUserId) throws IllegalArgumentException;
-	
+
 	ArrayList<Contact> getContactsByUserPermission(int userId) throws IllegalArgumentException;
-	
+
 	ArrayList<ContactList> getContactListsByUserPermission(int userId) throws IllegalArgumentException;
-	
+
 	ArrayList<Value> getValuesByUserPermission(int contactId, int userId) throws IllegalArgumentException;
 
 	void deletePermissionFromContact(int userId, int contactId) throws IllegalArgumentException;
-	
+
 	ArrayList<Value> getValuesByReceiveUserPermission(int contactId, int userId) throws IllegalArgumentException;
 
 	void deleteContactList(ContactList contactList, int userid) throws IllegalArgumentException;
 
-	//Report Generator Methoden
-	
+	// Report Generator Methoden
+
 	/**
 	 * Methode die zu einer Eigenschaft alle Ausprägungen liest
+	 * 
 	 * @param propertyId
 	 * @return
 	 */
 	public List<Value> findAllValues(Integer propertyId);
+
 	/**
-	 * Methode die zu einer Property Id und einer Beschreibung alle Value Objekte zurückgibt
+	 * Methode die zu einer Property Id und einer Beschreibung alle Value
+	 * Objekte zurückgibt
+	 * 
 	 * @param propertyId
 	 * @param valueDescription
 	 * @return
