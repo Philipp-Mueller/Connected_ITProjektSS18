@@ -42,11 +42,6 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 	private static final long serialVersionUID = -7457694965996952587L;
 	private ConnectedAdmin adminImpl = null;
 	private LoginServiceImpl loginServiceImpl = null;
-	private ValueMapper valueMapper = null;
-	private ContactMapper contactMapper = null;
-	private UserMapper userMapper = null;
-	private PropertyMapper propertyMapper = null;
-	private PermissionMapper permissionMapper = null;
 
 	/*
 	 * Init ist eine Initialisierungsmethode, welche für jede Instanz der
@@ -60,39 +55,36 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 			loginServiceImpl = new LoginServiceImpl();
 		}
 		adminImpl.init();
-		this.valueMapper = ValueMapper.valueMapper();
-		this.contactMapper = ContactMapper.contactMapper();
-		this.userMapper = UserMapper.userMapper();
-		this.propertyMapper = PropertyMapper.propertyMapper();
-		this.permissionMapper = PermissionMapper.permissionMapper();
 	}
 
 	@Override
 	public List<User> allUsers() {
-		return userMapper.findAll();
+
+		return adminImpl.findAllUser();
 	}
 
 	@Override
 	public List<Property> allProperties() {
-		return this.propertyMapper.findAllProperties();
+		return this.adminImpl.findAllProperties();
 	}
 
 	@Override
 	public List<Value> allValues(Integer propertyId) {
-		return valueMapper.findByProperty(propertyId);
+		return adminImpl.findAllValues(propertyId);
 	}
 
 	@Override
 	public List<ReportObjekt> searchContacts(boolean allContacts, boolean sharedContacts, boolean detailSearch,
 			String userEmail, Map<Integer, String> propertyValueMap, int currentUser) {
 
-		ServersideSettings.getLogger().info("allContacts: "+allContacts);
-		ServersideSettings.getLogger().info("sharedContacts: "+sharedContacts);
-		ServersideSettings.getLogger().info("detailSearch: "+detailSearch);
-		ServersideSettings.getLogger().info("userEmail: "+userEmail);
-		ServersideSettings.getLogger().info("propertyValueMap size: "+propertyValueMap.size());
-		ServersideSettings.getLogger().info("currentUser: "+currentUser);
-		
+		// Input parameter werden Protokolliert
+		ServersideSettings.getLogger().info("allContacts: " + allContacts);
+		ServersideSettings.getLogger().info("sharedContacts: " + sharedContacts);
+		ServersideSettings.getLogger().info("detailSearch: " + detailSearch);
+		ServersideSettings.getLogger().info("userEmail: " + userEmail);
+		ServersideSettings.getLogger().info("propertyValueMap size: " + propertyValueMap.size());
+		ServersideSettings.getLogger().info("currentUser: " + currentUser);
+
 		List<Contact> ergebnisKontakte = new ArrayList<Contact>();
 		List<ReportObjekt> ergebnisReport = new ArrayList<ReportObjekt>();
 
@@ -110,7 +102,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 				// Nutzer
 				// gesetzt ist
 				if (userEmail != null && !userEmail.isEmpty()) {
-					User u = userMapper.findByEmail(userEmail);
+					User u = adminImpl.findUserByEmail(userEmail);
 					ergebnisKontakte = myContactsSharedWithUser(currentUser, u);
 
 				}
@@ -135,7 +127,6 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 				for (Integer propertyKey : propertyIds) {
 					List<Contact> valuesAndProperties = contactsBasedOnPropertiesAndValues(propertyKey,
 							propertyValueMap.get(propertyKey));
-					System.out.println("gefunden: valuesAndProperties:  " + valuesAndProperties.get(0));
 					ergebnisKontakte.retainAll(valuesAndProperties);
 				}
 			}
@@ -143,12 +134,11 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 			// Fehler in der Programmlogik... das darf nicht passieren....
 		}
 
-
 		ArrayList<Property> allproperties = adminImpl.findAllProperties();
 		// Für jeden ErgebnisKontakt die Eigenschaften aufbauen
 		for (Contact c : ergebnisKontakte) {
 			// Eigenschaften lesen
-			List<Value> eigenschaften = valueMapper.findByContactId(c.getBoId());
+			List<Value> eigenschaften = adminImpl.findValuesByContactId(c.getBoId());
 
 			// Reportobjekt aufbauen
 			Map<Integer, String> eigenschaftsMap = new HashMap<Integer, String>();
@@ -158,24 +148,39 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 			for (Property p : allproperties) {
 				eigenschaftsMap.put(p.getBoId(), findeWertZuEigenschaft(p.getBoId(), eigenschaften));
 			}
+			
+			//ReportObjekt aus den berechneten Werten zusammenbauen 
 			ReportObjekt ro = new ReportObjekt(c.getPrename(), c.getSurname(), eigenschaftsMap);
+			// Reportobjekt dem Ergebnis hinzufügen
 			ergebnisReport.add(ro);
 
-			// Reportobjekt dem Ergebnis hinzufügen
 		}
 
-		ServersideSettings.getLogger().info("Gefundenen ReportObjekte: "+ergebnisReport.size());
+		ServersideSettings.getLogger().info("Gefundenen ReportObjekte: " + ergebnisReport.size());
 		return ergebnisReport;
 
 	}
 
+	/**
+	 * Liefert die zu einem eingeloggtem Nutzer mit einem speziellen Kontakt die
+	 * geteilten Kontakte zurück.
+	 * 
+	 * @param currentUser
+	 *            eingeloggte Nutzer id
+	 * @param sharedWith
+	 *            Nutzer für welchen die geteilten Kontakte angezeigt werden
+	 *            sollen
+	 * @return
+	 */
 	private List<Contact> myContactsSharedWithUser(int currentUser, User sharedWith) {
 		List<Contact> sharedContacts = new ArrayList<Contact>();
-
 		List<Permission> sharedPermissions = this.adminImpl.getPermissionsByShareUserId(currentUser);
+
+		// Für jede Permission muss der Kontakt des Shared Objekt geladen werden
+		// wenn dieser mit dem sharedWith user übereinstimmt
 		for (Permission p : sharedPermissions) {
 			if (p.getReceiverUserID() == sharedWith.getBoId()) {
-				Contact c = contactMapper.findById(p.getSharedObjectId());
+				Contact c = adminImpl.findContactById(p.getSharedObjectId());
 				if (!sharedContacts.contains(c)) {
 					sharedContacts.add(c);
 				}
@@ -185,33 +190,33 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 		return sharedContacts;
 	}
 
-	private List<Contact> allContacts() {
-		return this.adminImpl.findAllContacts();
-	}
-
+	/**
+	 * Liefert alle Kontakte zurück, die der übergebene Nutzer angelegt hat (ist
+	 * owner von diesen)
+	 * 
+	 * @param userid
+	 *            Id des eingeloggten Nutzers
+	 * @return Alle Kontakte zu denen die übergebene userId Owner ist.
+	 */
 	private List<Contact> allContactsPerUser(int userid) {
 		return this.adminImpl.findContactsByOwnerId(userid);
 	}
 
-	private List<Contact> allSharedContacts() {
-		List<Contact> sharedContacts = new ArrayList<Contact>();
-		List<Permission> allPermissions = permissionMapper.findAll();
-		for (Permission p : allPermissions) {
-			Contact c = contactMapper.findById(p.getSharedObjectId());
-			if (!sharedContacts.contains(c)) {
-				sharedContacts.add(c);
-			}
-		}
-		return sharedContacts;
-	}
-
+	/**
+	 * Liefer alle geteilten Kontakte zu einem übergebenen (eingeloggten) Nutzer
+	 * zurück.
+	 * 
+	 * @param userId
+	 *            userId des eingeloggten Nutzers
+	 * @return Alle Kontakte die der eingeloggte Nutzer geteilt hat.
+	 */
 	private List<Contact> allSharedContactsPerUser(int userId) {
 
 		List<Contact> sharedContacts = new ArrayList<Contact>();
-
 		List<Permission> sharedPermissions = this.adminImpl.getPermissionsByShareUserId(userId);
+		// Für jede Permission muss der Kontakt des Shared Objekt geladen werden
 		for (Permission p : sharedPermissions) {
-			Contact c = contactMapper.findById(p.getSharedObjectId());
+			Contact c = adminImpl.findContactById(p.getSharedObjectId());
 			if (!sharedContacts.contains(c)) {
 				sharedContacts.add(c);
 			}
@@ -220,6 +225,19 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 		return sharedContacts;
 	}
 
+	/**
+	 * Berechnet alle Eigenschaftsausprägungen als Komma separierten String zu
+	 * einer übergebenen property id und value Liste
+	 * 
+	 * @param id
+	 *            property ID der Eingenschaft für welche die Werte berechnet
+	 *            werden sollen.
+	 * @param list
+	 *            Liste der Eingenschaften die als Basis für die Berechnung
+	 *            herangezogen werden soll.
+	 * @return Eregbnisstring (Komma separiert) alle eingeschaften der Liste die
+	 *         zu der Property id gehören.
+	 */
 	private String findeWertZuEigenschaft(int id, List<Value> list) {
 		String shownValue = "";
 		for (Value v : list) {
@@ -227,6 +245,11 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 				if (shownValue.isEmpty()) {
 					shownValue = v.getName();
 				} else {
+					/*
+					 * Wenn schonmal eine Ausprägung zur eigenschaft gefunden
+					 * wurde, dann Komma separiert die nächste Ausprägung
+					 * anhängen
+					 */
 					shownValue = shownValue + ", " + v.getName();
 				}
 			}
@@ -234,16 +257,27 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 		return shownValue;
 	}
 
+	/**
+	 * Liefert alle Kontakte für welche eine bestimmte Eingeschaft und
+	 * Ausprägung zutrifft.
+	 * 
+	 * @param propertyId
+	 *            Eingenschaft (id) für welche Kontakte gesucht werden sollen
+	 * @param valueDescription
+	 *            Eigenschaftsausprägung für welche Kontakte gesucht werdne
+	 *            sollen
+	 * @return Liste aller Kontakte die eine bestimmte Eingeschaft und
+	 *         Ausprägung haben.
+	 */
 	private List<Contact> contactsBasedOnPropertiesAndValues(int propertyId, String valueDescription) {
 
 		// Liefert Kontakte, die einen bestimmten Property / Value haben.
-
-		List<Value> listOfValuesWithGivenProperty = valueMapper.findByPropertyAndDescription(propertyId,
+		List<Value> listOfValuesWithGivenProperty = adminImpl.findValuesByPropertyAndDescription(propertyId,
 				valueDescription);
 
-		List<Contact> result = new ArrayList<Contact>();
+		List<Contact> result = new ArrayList<>();
 		for (Value value : listOfValuesWithGivenProperty) {
-			result.add(contactMapper.findById(value.getContactID()));
+			result.add(adminImpl.findContactById(value.getContactID()));
 		}
 		return result;
 
