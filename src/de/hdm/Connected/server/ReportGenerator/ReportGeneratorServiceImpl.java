@@ -5,17 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-
 import de.hdm.Connected.server.ConnectedAdminImpl;
 import de.hdm.Connected.server.LoginServiceImpl;
 import de.hdm.Connected.server.ServersideSettings;
-import de.hdm.Connected.server.db.ContactMapper;
-import de.hdm.Connected.server.db.PermissionMapper;
-import de.hdm.Connected.server.db.PropertyMapper;
-import de.hdm.Connected.server.db.UserMapper;
-import de.hdm.Connected.server.db.ValueMapper;
 import de.hdm.Connected.shared.ConnectedAdmin;
 import de.hdm.Connected.shared.ReportGenerator.ReportGeneratorService;
 import de.hdm.Connected.shared.ReportGenerator.ReportObjekt;
@@ -58,9 +51,16 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 	}
 
 	@Override
-	public List<User> allUsers() {
-
-		return adminImpl.findAllUser();
+	public List<User> allUsers(int currentUser) {
+		List<User> result = new ArrayList<User>();
+		List<Permission> sharedPermissions = this.adminImpl.getPermissionsByShareUserId(currentUser);
+		for(Permission p : sharedPermissions){
+			User u = adminImpl.findUserById(p.getReceiverUserID());
+			if(!result.contains(u)){
+				result.add(u);
+			}
+		}
+		return result;
 	}
 
 	@Override
@@ -104,8 +104,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 			// geteilt habe
 			if (!userEmail.isEmpty()) {
 				// Wenn nicht nach allen Kontakten gesucht werden soll und ein
-				// Nutzer
-				// gesetzt ist
+				// Nutzer gesetzt ist
 				if (userEmail != null && !userEmail.isEmpty()) {
 					User u = adminImpl.findUserByEmail(userEmail);
 					ergebnisKontakte = myContactsSharedWithUser(currentUser, u);
@@ -117,7 +116,7 @@ public class ReportGeneratorServiceImpl extends RemoteServiceServlet implements 
 			}
 
 		}
-		// alle Kontakte mit bestimmten eigenschaften
+		// alle Kontakte mit bestimmten Eigenschaften
 		else if (detailSearch) {
 			ergebnisKontakte = allContactsPerUser(currentUser);
 			// Wenn es property filter gibt dann noch filtern...
