@@ -1,43 +1,36 @@
 package de.hdm.Connected.client.gui;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.text.ParseException;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Timer;
-import java.util.Vector;
 
-import org.apache.commons.lang3.time.DateFormatUtils;
-
-import com.google.gwt.dev.javac.Shared;
 import com.google.gwt.dom.client.Style.Unit;
-//import com.google.appengine.labs.repackaged.com.google.common.collect.Multiset.Entry;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-//import com.google.gwt.thirdparty.javascript.jscomp.Result;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.WindowScrollListener;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.*;
-import com.google.gwt.user.datepicker.client.DateBox;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import de.hdm.Connected.client.ClientSideSettings;
-import de.hdm.Connected.client.Connected_ITProjektSS18;
-import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.ContactList;
-import de.hdm.Connected.shared.bo.Permission;
 import de.hdm.Connected.shared.bo.Property;
-import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
 
 public class ContactForm extends PopupPanel {
@@ -59,7 +52,7 @@ public class ContactForm extends PopupPanel {
 	private TextBox surnameBox = new TextBox();
 	private TextBox newPropertyTextBox = null;
 	private ListBox propertyListBox = null;
-	private DateBox birthday = new DateBox();
+	
 
 	private TextBox valueTextBox = null;
 	private Button addButton = new Button("weitere Eigenschaften hinzufügen");
@@ -591,8 +584,8 @@ public class ContactForm extends PopupPanel {
 																	}
 																	
 																	//Bei Telefonnummern nur Ziffern!
-																	if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyListBox.getSelectedItemText() == "Mobil (privat)" || propertyListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
-																		if (!valueTextBox.getText().matches("[0-9]+")) {
+																	if(propertyChangeListBox.getSelectedItemText() == "Telefon (privat)" || propertyChangeListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyChangeListBox.getSelectedItemText() == "Mobil (privat)" || propertyChangeListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
+																		if (!valueChangeTextBox.getText().matches("[0-9]+")) {
 																				Window.alert("Bitte nur Ziffern eintragen!");
 																				return;
 																		} 	
@@ -1153,8 +1146,8 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 												return;
 											}
 											
-											if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyListBox.getSelectedItemText() == "Mobil (privat)" || propertyListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
-												if (!valueTextBox.getText().matches("[0-9]+")) {
+											if(propertyChangeListBox.getSelectedItemText() == "Telefon (privat)" || propertyChangeListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyChangeListBox.getSelectedItemText() == "Mobil (privat)" || propertyChangeListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
+												if (!valueChangeTextBox.getText().matches("[0-9]+")) {
 														Window.alert("Bitte nur Ziffern eintragen!");
 														return;
 												} 	
@@ -1339,13 +1332,6 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 				newPropertyTable.setWidget(1, 2, propertySaveButton);
 				newPropertyTable.setWidget(1, 3, cancelButton);
 			}
-			if (propertyListBox.getSelectedItemText().equals("Geburtsdatum")) {
-				birthday = new DateBox();
-				birthday.setFormat(new DateBox.DefaultFormat
-				(DateTimeFormat.getFormat("dd.MM.yyyy")));
-				newPropertyTable.setWidget(1, 1, birthday);
-				
-			}
 		}
 
 	}
@@ -1493,8 +1479,8 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 									}
 									
 									//Bei Telefonnummern nur Ziffern!
-									if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyListBox.getSelectedItemText() == "Mobil (privat)" || propertyListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
-										if (!valueTextBox.getText().matches("[0-9]+")) {
+									if(propertyChangeListBox.getSelectedItemText() == "Telefon (privat)" || propertyChangeListBox.getSelectedItemText() == "Telefon (geschäftlich)" || propertyChangeListBox.getSelectedItemText() == "Mobil (privat)" || propertyChangeListBox.getSelectedItemText() == "Mobil (geschäftlich)"){
+										if (!valueChangeTextBox.getText().matches("[0-9]+")) {
 												Window.alert("Bitte nur Ziffern eintragen!");
 												return;
 										} 	
