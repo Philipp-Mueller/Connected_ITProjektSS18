@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.hdm.Connected.client.gui.ReportGenerator.ReportGeneratorBaseForm;
+import de.hdm.Connected.client.gui.ReportGenerator.ReportGeneratorFooter;
 import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.LoginService;
 import de.hdm.Connected.shared.LoginServiceAsync;
@@ -168,50 +169,8 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
 			}
 		});
 
-		// Footer Attribute
-		HorizontalPanel footer = new HorizontalPanel();
-		Anchor connectedLink = new Anchor("Connected", "Connected_ITProjektSS18.html");
-		HTML copyrightText2 = new HTML(" | ");
-		Anchor reportGeneratorLink = new Anchor(" ReportGenerator", "Connected_ITProjektSS18ReportGenerator.html");
-		HTML copyrightText = new HTML(" | 2018 Connected | ");
-		Anchor impressumLink = new Anchor("Impressum");
-
-        //Footer Impressum
-        impressumLink.addClickHandler(new ClickHandler() {
-
-            @Override
-            public void onClick(ClickEvent event) {
-                RootPanel.get("content").clear();
-                RootPanel.get("content").add(new HTML("<h2>Impressum nach §5 TMG</h2>"
-                        + "<h3>Verantwortlich</h3>"
-                        + "<p>Hochschule der Medien<br />"
-                        + "Nobelstraße 8<br />"
-                        + "70569 Stuttgart<br /></p>"
-                        + "<p><strong>Projektarbeit innerhalb des Studiengangs "
-                        + "Wirtschaftsinformatik und digitale Medien, "
-                        + "IT-Projekt SS 18.</strong></p>"
-                        + "<h3>Projektteam</h3>"
-                        + "<ul><li>Alexeyeva, Viktoriya</li>"
-                        + "<li>Aridag, Burak</li>"
-                        + "<li>Bittner, Moritz</li>"
-                        + "<li>Müller, Philip</li>"
-                        + "<li>Rodrigues Ribeiro, Patricia</li>"
-                        + "<li>Semmler, Denise</li></ul>"
-                        + "<h3>Kontakt</h3>"
-                        + "<p><strong>Telefon:</strong> 0711 8923 10 (Zentrale)</p>"
-                        + "<p><strong>Website:</strong> <a href='http://www.hdm-stuttgart.de' target='_blank'>"
-                        + "www.hdm-stuttgart.de</a></p>"));
-
-
-			}
-
-		});
-		footer.add(connectedLink);
-		footer.add(copyrightText2);
-		footer.add(reportGeneratorLink);
-		footer.add(copyrightText);
-		footer.add(impressumLink);
-		RootPanel.get("footer").add(footer);
+		ReportGeneratorFooter rgF = new ReportGeneratorFooter();
+		RootPanel.get("footer").add(rgF);
 
 	}
 

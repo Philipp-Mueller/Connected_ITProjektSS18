@@ -515,6 +515,7 @@ public class ReportGeneratorBaseForm extends Widget {
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 		hp.getElement().getStyle().setMarginLeft(10, Unit.EM);
 		datenHpanelRechts.add(hp);
+		
 
 	}
 
