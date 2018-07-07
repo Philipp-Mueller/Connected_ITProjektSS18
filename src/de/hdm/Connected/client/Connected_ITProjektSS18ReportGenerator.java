@@ -61,16 +61,7 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		
-		// Menü start
-		final Command settingDialog = new Command() {
-			public void execute() {
-
-				RootPanel.get("content").clear();
-				
-				RootPanel.get("content").add(settings);
-			}
-		};
-
+		//Aktion die ausgeführt wird, wenn der Logout Knopf betätigt wird.
 		final Command logout = new Command() {
 			public void execute() {
 				Window.open(loginInfo.getLogoutUrl(), "_self", "");
@@ -178,6 +169,9 @@ public class Connected_ITProjektSS18ReportGenerator implements EntryPoint {
 		console.log(s);
 	}-*/;
 	
+	/**
+	 * Statische Hilfsmethode für das Laden des LoginDialogs
+	 */
 	public static void loadLogin() {
 		// Assemble login panel.
 		signInLink.setHref(loginInfo.getLoginUrl());

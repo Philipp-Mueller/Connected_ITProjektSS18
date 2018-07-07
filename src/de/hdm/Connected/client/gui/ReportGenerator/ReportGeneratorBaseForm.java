@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -16,14 +15,13 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.SimplePager;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.cellview.client.SimplePager.TextLocation;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -63,7 +61,7 @@ public class ReportGeneratorBaseForm extends Widget {
 	private HorizontalPanel hPanelRbDetailSearch = new HorizontalPanel();
 	private HorizontalPanel hPanelValueButton = new HorizontalPanel();
 	private HorizontalPanel hPanelValueChosenButton = new HorizontalPanel();
-	
+
 	// Attribute RadioButton
 	private RadioButton allContactsRb = new RadioButton(" Alle meine Kontakte");
 	private RadioButton sharedContactsRb = new RadioButton(" Alle meinte geteilten Kontakte");
@@ -79,7 +77,7 @@ public class ReportGeneratorBaseForm extends Widget {
 	private SuggestBox valueBox = new SuggestBox(oracle);
 	private CellTable<ReportObjekt> table = new CellTable<ReportObjekt>();
 	private ListDataProvider<ReportObjekt> dataProvider = new ListDataProvider<ReportObjekt>();
-	private List<ReportObjekt> contactToShowInReport = new ArrayList<>();
+	private List<ReportObjekt> contactToShowInReport = new ArrayList<ReportObjekt>();
 	private boolean allContacts = false;
 	private boolean sharedContacts = false;
 	private boolean detailSearch = false;
@@ -103,7 +101,7 @@ public class ReportGeneratorBaseForm extends Widget {
 	private HTML trennStrich2 = new HTML("<hr>");
 	private HTML trennStrich3 = new HTML("<hr>");
 	private HTML trennStrich4 = new HTML("<hr>");
-	
+
 	public ReportGeneratorBaseForm(final User currentUser) {
 
 		// Panels
@@ -113,16 +111,14 @@ public class ReportGeneratorBaseForm extends Widget {
 		filterVpanelLinks.add(trennStrich2);
 		filterVpanelLinks.add(trennStrich3);
 		filterVpanelLinks.add(trennStrich4);
-		
-		
-		
-		//Überschrift filterVpanelLinks
+
+		// Überschrift filterVpanelLinks
 		labelFilter.getElement().getStyle().setMarginBottom(1, Unit.EM);
 		filterVpanelLinks.add(labelFilter);
 		filterVpanelLinks.add(trennStrich1);
 		trennStrich1.getElement().getStyle().setMarginBottom(2, Unit.EM);
 		trennStrich1.getElement().getStyle().setWidth(20, Unit.EM);
-		
+
 		// AllContacts RadioButton
 		allContactsRb.getElement().getStyle().setMarginBottom(2, Unit.EM);
 		allContactsRb.setValue(allContacts);
@@ -132,8 +128,8 @@ public class ReportGeneratorBaseForm extends Widget {
 			public void onClick(ClickEvent event) {
 				allContacts = ((RadioButton) event.getSource()).getValue();
 				sharedContacts = false;
-				
-				//Nutzer bei Allen Kontakten verbergen
+
+				// Nutzer bei Allen Kontakten verbergen
 				if (!allContacts) {
 					allContactsRb.setEnabled(true);
 				} else {
@@ -153,8 +149,7 @@ public class ReportGeneratorBaseForm extends Widget {
 		trennStrich2.getElement().getStyle().setMarginTop(2, Unit.EM);
 		trennStrich2.getElement().getStyle().setMarginBottom(2, Unit.EM);
 		trennStrich2.getElement().getStyle().setWidth(20, Unit.EM);
-		
-		
+
 		// SharedContact RadioButton
 		sharedContactsRb.getElement().getStyle().setMarginTop(2, Unit.EM);
 		sharedContactsRb.getElement().getStyle().setMarginBottom(2, Unit.EM);
@@ -165,8 +160,8 @@ public class ReportGeneratorBaseForm extends Widget {
 			public void onClick(ClickEvent event) {
 				sharedContacts = ((RadioButton) event.getSource()).getValue();
 				allContacts = false;
-				
-				//Nutzer bei Allen geteilten Kontakten anzeigen
+
+				// Nutzer bei Allen geteilten Kontakten anzeigen
 				if (!sharedContacts) {
 					sharedContactsRb.setEnabled(false);
 				} else {
@@ -180,16 +175,12 @@ public class ReportGeneratorBaseForm extends Widget {
 		hPanelRbSharedContacts.add(sharedContactsRb);
 		hPanelRbSharedContacts.add(labelSharedContactsText);
 		filterVpanelLinks.add(hPanelRbSharedContacts);
-		
-		
-		
+
 		// Abstand und Userlabel
 		labelUser.getElement().getStyle().setMarginRight(2, Unit.EM);
 		labelUser.getElement().getStyle().setMarginTop(2, Unit.EM);
 		filterVpanelLinks.add(labelUser);
 
-		
-		
 		// Userlistbox
 		userListBox.setVisibleItemCount(1);
 		userListBox.getElement().getStyle().setMarginLeft(1, Unit.EM);
@@ -206,8 +197,8 @@ public class ReportGeneratorBaseForm extends Widget {
 		trennStrich3.getElement().getStyle().setMarginTop(2, Unit.EM);
 		trennStrich3.getElement().getStyle().setMarginBottom(2, Unit.EM);
 		trennStrich3.getElement().getStyle().setWidth(20, Unit.EM);
-		
-		//Eigenschaftssuche RadioButton
+
+		// Eigenschaftssuche RadioButton
 		propertySearchRb.getElement().getStyle().setMarginTop(2, Unit.EM);
 		propertySearchRb.getElement().getStyle().setMarginBottom(2, Unit.EM);
 		propertySearchRb.setValue(detailSearch);
@@ -218,24 +209,25 @@ public class ReportGeneratorBaseForm extends Widget {
 				detailSearch = ((RadioButton) event.getSource()).getValue();
 				allContacts = false;
 				sharedContacts = false;
-				
-				//Detailsuche anzeigen wenn weder alle Kontakte noch geteilte Kontakte ausgewählt sind
+
+				// Detailsuche anzeigen wenn weder alle Kontakte noch geteilte
+				// Kontakte ausgewählt sind
 				if (!detailSearch) {
 					propertySearchRb.setEnabled(true);
-				}else{
+				} else {
 					userListBox.setEnabled(false);
 					propertyListBox.setEnabled(true);
 					valueBox.setEnabled(true);
 					valueListBox.setEnabled(true);
-					
+
 				}
 			}
-			});
+		});
 		hPanelRbDetailSearch.add(propertySearchRb);
 		hPanelRbDetailSearch.add(labelPropertySearchText);
 		filterVpanelLinks.add(hPanelRbDetailSearch);
-		
-		//Default page view
+
+		// Default page view
 		allContactsRb.setChecked(true);
 		userListBox.setEnabled(false);
 		propertyListBox.setEnabled(false);
@@ -244,13 +236,11 @@ public class ReportGeneratorBaseForm extends Widget {
 		detailSearch = false;
 		allContacts = true;
 		sharedContacts = false;
-		
-		// Abstand und  Eigenschaftslabel
+
+		// Abstand und Eigenschaftslabel
 		labelProperty.getElement().getStyle().setMarginTop(2, Unit.EM);
 		filterVpanelLinks.add(labelProperty);
 
-		
-		
 		// Eigenschaftslistbox
 		propertyListBox.setVisibleItemCount(1);
 		propertyListBox.getElement().getStyle().setMarginLeft(1, Unit.EM);
@@ -266,8 +256,6 @@ public class ReportGeneratorBaseForm extends Widget {
 		});
 		filterVpanelLinks.add(propertyListBox);
 
-		
-		
 		// Abstand und ValueDescription suggestbox
 		labelValue.getElement().getStyle().setMarginTop(2, Unit.EM);
 		valueBox.getElement().getStyle().setWidth(13, Unit.EM);
@@ -278,11 +266,8 @@ public class ReportGeneratorBaseForm extends Widget {
 				valueDescription = ((SuggestBox) event.getSource()).getText();
 			}
 		});
-		
-		
-		
-		
-		//Button zum Hinzufügen von Eigenschaften
+
+		// Button zum Hinzufügen von Eigenschaften
 		Button newPropertySelection = new Button("+");
 		newPropertySelection.getElement().getStyle().setWidth(2, Unit.EM);
 		newPropertySelection.getElement().getStyle().setMarginLeft(1, Unit.EM);
@@ -293,7 +278,8 @@ public class ReportGeneratorBaseForm extends Widget {
 				String value = valueBox.getText();
 				String propertyText = propertyListBox.getSelectedItemText();
 
-				 // Werte aus der Listbox Anzeige in die HashMap für Übertragung an den Server merken
+				// Werte aus der Listbox Anzeige in die HashMap für Übertragung
+				// an den Server merken
 				propertyValueMap.put(propertyId, value);
 				valueListBox.addItem(propertyText + ": " + value, propertyId.toString());
 			}
@@ -303,9 +289,7 @@ public class ReportGeneratorBaseForm extends Widget {
 		hPanelValueButton.add(newPropertySelection);
 		filterVpanelLinks.add(hPanelValueButton);
 
-		
-		
-		//Button zum entfernen ausgewählter Eigenschaften
+		// Button zum entfernen ausgewählter Eigenschaften
 		Button removePropertySelection = new Button("-");
 		removePropertySelection.getElement().getStyle().setWidth(2, Unit.EM);
 		removePropertySelection.getElement().getStyle().setMarginLeft(1, Unit.EM);
@@ -315,19 +299,17 @@ public class ReportGeneratorBaseForm extends Widget {
 			public void onClick(ClickEvent event) {
 				Integer selektionsProperties = valueListBox.getSelectedIndex();
 
-				
-				
-				 // Werte aus der Hash Map für die Server Übertragung wieder entfernen, da nicht mehr Relevant für die Selektion
+				// Werte aus der Hash Map für die Server Übertragung wieder
+				// entfernen, da nicht mehr Relevant für die Selektion
 				propertyValueMap.remove(Integer.valueOf(valueListBox.getSelectedValue()));
 				valueListBox.removeItem(selektionsProperties);
 			}
 		});
 		removePropertySelection.getElement().getStyle().setWidth(2, Unit.EM);
 		removePropertySelection.getElement().getStyle().setMarginTop(2, Unit.EM);
-		
-		
-		
-		//Ansicht der Listbox auf 3 Eigenschaften eingrenzen darüber erscheint Scrollbalken
+
+		// Ansicht der Listbox auf 3 Eigenschaften eingrenzen darüber erscheint
+		// Scrollbalken
 		labelPropertyValues.getElement().getStyle().setMarginTop(2, Unit.EM);
 		valueListBox.setVisibleItemCount(3);
 		valueListBox.getElement().getStyle().setWidth(14, Unit.EM);
@@ -339,9 +321,8 @@ public class ReportGeneratorBaseForm extends Widget {
 		trennStrich4.getElement().getStyle().setMarginTop(2, Unit.EM);
 		trennStrich4.getElement().getStyle().setMarginBottom(2, Unit.EM);
 		trennStrich4.getElement().getStyle().setWidth(20, Unit.EM);
-		
-		
-		//Filter Anwenden button
+
+		// Filter Anwenden button
 		Button filterAnwenden = new Button("Filter anwenden", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 
@@ -349,15 +330,15 @@ public class ReportGeneratorBaseForm extends Widget {
 
 				String mailToServer = "";
 				Map<Integer, String> propertyValueMapToServer = new HashMap<>();
-				if(!userEmail.equals("Ohne Nutzer")&&userListBox.isEnabled()){
+				if (!userEmail.equals("Ohne Nutzer") && userListBox.isEnabled()) {
 					mailToServer = userEmail;
 				}
-				if(propertyListBox.isEnabled()&&propertySearchRb.isChecked()){
+				if (propertyListBox.isEnabled() && propertySearchRb.isChecked()) {
 					propertyValueMapToServer = propertyValueMap;
 				}
-				 
-				rgsa.searchContacts(allContacts, sharedContacts,detailSearch, mailToServer, propertyValueMapToServer, currentUser.getBoId(),
-						new AsyncCallback<List<ReportObjekt>>() {
+
+				rgsa.searchContacts(allContacts, sharedContacts, detailSearch, mailToServer, propertyValueMapToServer,
+						currentUser.getBoId(), new AsyncCallback<List<ReportObjekt>>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
@@ -367,9 +348,10 @@ public class ReportGeneratorBaseForm extends Widget {
 							@Override
 							public void onSuccess(List<ReportObjekt> result) {
 
-								// Daten in der Tabelle austauschen
 								dataProvider.getList().clear();
-								dataProvider.getList().addAll(result);
+								for (ReportObjekt r : result) {
+									dataProvider.getList().add(r);
+								}
 							}
 						});
 			}
@@ -379,11 +361,11 @@ public class ReportGeneratorBaseForm extends Widget {
 		// Filter löschen Button
 		Button filterLoeschen = new Button("Filter löschen", new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				//Seitenansicht mit Default werten
+				// Seitenansicht mit Default werten
 				allContactsRb.setChecked(true);
 				userListBox.setEnabled(false);
 				userListBox.setSelectedIndex(0);
-				userEmail="Ohne Nutzer";
+				userEmail = "Ohne Nutzer";
 				propertyListBox.setEnabled(false);
 				valueBox.setEnabled(false);
 				valueBox.setValue("");
@@ -394,8 +376,7 @@ public class ReportGeneratorBaseForm extends Widget {
 				detailSearch = false;
 				allContacts = true;
 				sharedContacts = false;
-				
-				
+
 			}
 		});
 		filterLoeschen.getElement().getStyle().setMarginRight(1, Unit.EM);
@@ -403,17 +384,16 @@ public class ReportGeneratorBaseForm extends Widget {
 		buttonPanel.add(filterLoeschen);
 		buttonPanel.add(filterAnwenden);
 		filterVpanelLinks.add(buttonPanel);
-		
-		
-		
-		
+
 		// Contact Tabelle verbindet die Tabelle mit dem Data Provider.
+		// Add the data to the data provider, which automatically pushes it to
+		// the widget.
 		dataProvider.addDataDisplay(table);
+		table.setRowCount(contactToShowInReport.size(), true);
+		table.setRowData(0, contactToShowInReport);
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
-		
-		
-		
-		//Spaltenbezeichnung "Vorname"
+
+		// Spaltenbezeichnung "Vorname"
 		TextColumn<ReportObjekt> nameColumn = new TextColumn<ReportObjekt>() {
 			@Override
 			public String getValue(ReportObjekt object) {
@@ -423,9 +403,7 @@ public class ReportGeneratorBaseForm extends Widget {
 		nameColumn.setSortable(true);
 		table.addColumn(nameColumn, "Vorname");
 
-		
-		
-		//Spaltenbezeichnung "Nachname"
+		// Spaltenbezeichnung "Nachname"
 		TextColumn<ReportObjekt> surnameColumn = new TextColumn<ReportObjekt>() {
 			@Override
 			public String getValue(ReportObjekt object) {
@@ -435,101 +413,80 @@ public class ReportGeneratorBaseForm extends Widget {
 		surnameColumn.setSortable(true);
 		table.addColumn(surnameColumn, "Nachname");
 
-		
-		
-		//
-		table.setRowCount(contactToShowInReport.size(), true);
-		table.setRowData(0, contactToShowInReport);
+		ListHandler<ReportObjekt> columnSortHandler = new ListHandler<ReportObjekt>(dataProvider.getList());
+		// Filter in der Tabelle Vorname
+		columnSortHandler.setComparator(nameColumn, new Comparator<ReportObjekt>() {
+			public int compare(ReportObjekt c1, ReportObjekt c2) {
+				if (c1 == c2) {
+					return 0;
+				}
+				// Vergleicht den Vornamen in den Spalten.
+				if (c1 != null) {
+					return (c2 != null) ? c1.getVorname().compareTo(c2.getVorname()) : 1;
+				}
+				return -1;
+			}
+		});
+		table.addColumnSortHandler(columnSortHandler);
 
-		
-		
-		//
-	    ListHandler<ReportObjekt> columnSortHandler = new ListHandler<ReportObjekt>(contactToShowInReport);
-	    
-	    
-	    
-	    //Filter in der Tabelle Vorname
-	    columnSortHandler.setComparator(nameColumn,
-	        new Comparator<ReportObjekt>() {
-	          public int compare(ReportObjekt c1, ReportObjekt c2) {
-	            if (c1 == c2) {
-	              return 0;
-	            }
-	         // Vergleicht den Vornamen in den Spalten.
-	            if (c1 != null) {
-	              return (c2 != null) ? c1.getVorname().compareTo(c2.getVorname()) : 1;
-	            }
-	            return -1;
-	          }
-	        });
-	    table.addColumnSortHandler(columnSortHandler);
-	    
-	    
-	    
-	    //
-	    ListHandler<ReportObjekt> columnSortHandler2 = new ListHandler<ReportObjekt>(contactToShowInReport);
-	    
-	    
-	    
-	    //Filter in der Tabelle Nachname
-	    columnSortHandler2.setComparator(surnameColumn,
-	        new Comparator<ReportObjekt>() {
-	          public int compare(ReportObjekt c1, ReportObjekt c2) {
-	            if (c1 == c2) {
-	              return 0;
-	            }
+		ListHandler<ReportObjekt> columnSortHandler2 = new ListHandler<ReportObjekt>(dataProvider.getList());
+		// Filter in der Tabelle Nachname
+		columnSortHandler2.setComparator(surnameColumn, new Comparator<ReportObjekt>() {
+			public int compare(ReportObjekt c1, ReportObjekt c2) {
+				if (c1 == c2) {
+					return 0;
+				}
 
-	            // Vergleicht den Nachnamen in den Spalten.
-	            if (c1 != null) {
-	              return (c2 != null) ? c1.getNachname().compareTo(c2.getNachname()) : 1;
-	            }
-	            return -1;
-	          }
-	        });
-	    table.addColumnSortHandler(columnSortHandler2);
-	    table.getColumnSortList().push(nameColumn);
-	    table.getElement().getStyle().setMarginLeft(10, Unit.EM);
-        datenHpanelRechts.add(table);
-		
-        
-        
-		// Nachdem die UI erstellt ist werden die Daten für das Dropdown und die Suggestbox geladen
+				// Vergleicht den Nachnamen in den Spalten.
+				if (c1 != null) {
+					return (c2 != null) ? c1.getNachname().compareTo(c2.getNachname()) : 1;
+				}
+				return -1;
+			}
+		});
+		table.addColumnSortHandler(columnSortHandler2);
+		table.getColumnSortList().push(nameColumn);
+		table.getElement().getStyle().setMarginLeft(10, Unit.EM);
+		datenHpanelRechts.add(table);
+
+		// Nachdem die UI erstellt ist werden die Daten für das Dropdown und die
+		// Suggestbox geladen
 		loadDataForFiltering();
 
-		
-		
-		 // Vertical panel wird dem RootPanel hinzugefügt (Somit wirds sichtbar)
+		// Vertical panel wird dem RootPanel hinzugefügt (Somit wirds sichtbar)
 		RootPanel.get("content").add(hPanelFilter);
-		
-		
-		
-		//Paginierung der Tabelle
+
+		// Paginierung der Tabelle
 		SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
 		pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
-		pager.setDisplay(table);		
+		pager.setDisplay(table);
 
 		HorizontalPanel hp = new HorizontalPanel();
 		hp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 		hp.add(pager);
-		
+
 		table.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 		hp.getElement().getStyle().setMarginLeft(10, Unit.EM);
 		datenHpanelRechts.add(hp);
-		
 
 	}
 
-	//
+	/**
+	 * Private Hilfsmethode die alle Daten für die Filterung liest. Zuerst
+	 * werden alle User geladen anschließend alle Eigenschaften und Ihre
+	 * ausprägungen dazu. Wenn alle Daten bekannt sind, wird für jede
+	 * Eingenschaft dynamisch eine Spalte in der Ergebnistabelle inkl.
+	 * Sortierfunktion angelegt.
+	 * 
+	 */
 	private void loadDataForFiltering() {
 		// Users für User Dropbox
 		rgsa.allUsers(new AsyncCallback<List<User>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("all user geht ned!");
-
+				Window.alert("Das Laden der Benutzer ist fehlgeschlagen!");
 			}
 
-			
 			//
 			@Override
 			public void onSuccess(List<User> result) {
@@ -544,12 +501,9 @@ public class ReportGeneratorBaseForm extends Widget {
 		rgsa.allProperties(new AsyncCallback<List<Property>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Property laden geht ned!");
-
+				Window.alert("Das Laden der Eigenschaften ist fehlgeschlagen!");
 			}
 
-			
-			
 			//
 			@Override
 			public void onSuccess(List<Property> result) {
@@ -560,7 +514,8 @@ public class ReportGeneratorBaseForm extends Widget {
 				}
 				ReportGeneratorBaseForm.this.propertyId = Integer.valueOf(propertyListBox.getSelectedValue());
 
-				 // Die Properties sind geladen, jetzt werden die Values für die Suggestbox im Property-Dropdown geladen
+				// Die Properties sind geladen, jetzt werden die Values für die
+				// Suggestbox im Property-Dropdown geladen
 				loadValuesForSuggestion();
 				eigenschaftSpaltenFuerTabelle();
 			}
@@ -568,21 +523,24 @@ public class ReportGeneratorBaseForm extends Widget {
 
 	}
 
-	
-	
-	//
+	/**
+	 * Private Hilfsmethode die für eine Ausgewählte eingenschaft alle bereits
+	 * vorhandenen Ausprägungen lädt und für die Auto-Vervollständigung der
+	 * Suggestbox bereitstellt
+	 */
 	private void loadValuesForSuggestion() {
 		// Alle Values für suggestbox
 		rgsa.allValues(ReportGeneratorBaseForm.this.propertyId, new AsyncCallback<List<Value>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("all Value geht ned!");
-
+				Window.alert("Laden der Vorschläge für die Eingenschaftsausprägungen ist fehlgeschlagen!");
 			}
 
 			@Override
 			public void onSuccess(List<Value> result) {
+				// Suggestbox leeren
 				oracle.clear();
+				// jeden Element in die Suggestbox laden
 				for (Value v : result) {
 					oracle.add(v.getName());
 				}
@@ -591,25 +549,67 @@ public class ReportGeneratorBaseForm extends Widget {
 
 	}
 
-	
+	/**
+	 * Legt für jede geladenen Eigenschaft eine Spalte und einen Sortierhandler
+	 * an und fügt sie der Ergebnistabelle hinzu
+	 */
 	private void eigenschaftSpaltenFuerTabelle() {
-		// Nachdem die Eigenschaften geladen wurden können diese der Tabelle hinzugefügt werden (alle Eingeschaften sind bekannt)
-		for(Integer key : propertyIdUndName.keySet()) {
+		// Nachdem die Eigenschaften geladen wurden können diese der Tabelle
+		// hinzugefügt werden (alle Eingeschaften sind bekannt)
+		for (Integer key : propertyIdUndName.keySet()) {
 			final int keyP = key.intValue();
-			
+
+			// Anlegen einer eingenschaftsspalte
 			TextColumn<ReportObjekt> eigenschaftscolumn = new TextColumn<ReportObjekt>() {
 				@Override
 				public String getValue(ReportObjekt object) {
-					for(Integer kontaktEingeschaftKey : object.getPropertyValueMap().keySet()){
-						if(kontaktEingeschaftKey.intValue() ==keyP) {
+					/*
+					 * Der Wert der in der Spalte angezeigt wird, ist aus der
+					 * Eigenschaftsmap des darzustellenden ReportObjekts zum
+					 * Eigenschaftsschlüssel, für welchen die Spalte gerade
+					 * angelegt wird, zu lesen.
+					 */
+					for (Integer kontaktEingeschaftKey : object.getPropertyValueMap().keySet()) {
+						if (kontaktEingeschaftKey.intValue() == keyP) {
 							return object.getPropertyValueMap().get(kontaktEingeschaftKey);
 						}
 					}
 					return "";
 				}
 			};
+			eigenschaftscolumn.setSortable(true);
+
+			// Für jede Eingenschaftsspalte ist jeweils ein Sortierhandler zu
+			// erstellen.
+			ListHandler<ReportObjekt> eigenschaftscolumnHandler = new ListHandler<ReportObjekt>(dataProvider.getList());
+			// Filter in der Tabelle Nachname
+			eigenschaftscolumnHandler.setComparator(eigenschaftscolumn, new Comparator<ReportObjekt>() {
+				public int compare(ReportObjekt c1, ReportObjekt c2) {
+					if (c1 == c2) {
+						return 0;
+					}
+
+					/*
+					 * Vergleicht die Eingeschaftsausprägungen der zu
+					 * vergleichenden Objekte anhand der Eingenschaft (keyP) für
+					 * welchen dieser Handler gerade erstellt wird. Es wird der
+					 * Wert Zum schlüssel (keyP) aus der Eigenschaftsmap des
+					 * Objekts c1 mit dem Wert zum Schlüssel (keyP) aus der
+					 * Eigenschaftsmap des Objekts c2 verlgichen
+					 * 
+					 */
+					if (c1 != null) {
+						return (c2 != null)
+								? c1.getPropertyValueMap().get(keyP).compareTo(c2.getPropertyValueMap().get(keyP)) : 1;
+					}
+					return -1;
+				}
+			});
+			table.addColumnSortHandler(eigenschaftscolumnHandler);
+
+			// Spalte der Tabelle hinzufügen.
 			table.addColumn(eigenschaftscolumn, propertyIdUndName.get(key));
 		}
 	}
-	
+
 }
