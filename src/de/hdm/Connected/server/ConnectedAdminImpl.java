@@ -5,15 +5,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-import de.hdm.Connected.server.db.ContactListMapper;
-import de.hdm.Connected.server.db.ContactMapper;
-import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.client.LoginInfo;
 import de.hdm.Connected.server.db.ContactContactListMapper;
+import de.hdm.Connected.server.db.ContactListMapper;
+import de.hdm.Connected.server.db.ContactMapper;
 import de.hdm.Connected.server.db.PermissionMapper;
 import de.hdm.Connected.server.db.PropertyMapper;
 import de.hdm.Connected.server.db.UserMapper;
@@ -533,35 +531,36 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public void addContactsToContactList(ArrayList<Contact> contactArray, ArrayList<ContactList> contactlistArray)
 			throws IllegalArgumentException {
 
-		
 		for (int i = 0; i < contactlistArray.size(); i++) {
-			ArrayList<Permission> clPermission = permissionMapper.findBySharedObjectId(contactlistArray.get(i).getBoId());
+			ArrayList<Permission> clPermission = permissionMapper
+					.findBySharedObjectId(contactlistArray.get(i).getBoId());
 			ArrayList<User> receiverUserArray = new ArrayList<User>();
-			//Permissions der CL holen
-			for(int s= 0; s<clPermission.size(); s++){
-				//Alle User der Permissions holen
+			// Permissions der CL holen
+			for (int s = 0; s < clPermission.size(); s++) {
+				// Alle User der Permissions holen
 				receiverUserArray.add(this.findUserById(clPermission.get(s).getReceiverUserID()));
 			}
 			receiverUserArray.add(findUserById(contactlistArray.get(i).getCreatorId()));
-			//Alle Contacts der CL holen
+			// Alle Contacts der CL holen
 			ArrayList<Contact> contactidsinCL = ccMapper.findContactsByContactListId(contactlistArray.get(i).getBoId());
 			ArrayList<Contact> contactsinCL = new ArrayList<Contact>();
-			for(Contact c : contactidsinCL){
+			for (Contact c : contactidsinCL) {
 				contactsinCL.add(contactMapper.findById(c.getBoId()));
 			}
-			for(Contact cont : contactArray){
+			for (Contact cont : contactArray) {
 				contactsinCL.add(cont);
 			}
-			//Permissions für alle kontakte für alle User schreiben
+			// Permissions für alle kontakte für alle User schreiben
 			this.giveContactPermissonToUsers(contactsinCL, receiverUserArray, 1);
-//			giveContactPermissonToUsers(contactsinCL, receiverUserArray, ClientSideSettings.getCurrentUser().getBoId());
-			
+			// giveContactPermissonToUsers(contactsinCL, receiverUserArray,
+			// ClientSideSettings.getCurrentUser().getBoId());
+
 			for (int j = 0; j < contactArray.size(); j++) {
 				boolean flag = false;
-				
-//				int idvonContact = contactArray.get(j).getBoId();
-//				int idvonCL = contactlistArray.get(i).getBoId();
-				
+
+				// int idvonContact = contactArray.get(j).getBoId();
+				// int idvonCL = contactlistArray.get(i).getBoId();
+
 				for (int v = 0; v < contactidsinCL.size(); v++) {
 					if (contactidsinCL.get(v).getBoId() == contactArray.get(j).getBoId()) {
 						flag = true;
@@ -624,17 +623,16 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 			ArrayList<Integer> contactlistID = new ArrayList<Integer>();
 			userIds.add(userArray.get(i).getBoId());
 			contactlistID.add(contactlist.getBoId());
-			//Kontaktlisten permission geben
+			// Kontaktlisten permission geben
 			createPermission(shareuserid, contactlistID, userIds);
-		
-			
+
 			// Receiver User der Permission
 			User u = userArray.get(i);
 			ArrayList<User> singleUser = new ArrayList<User>();
 			singleUser.add(u);
 
 			// Erstellen der Permissions für alle Contacts der Liste
-			
+
 			this.giveContactPermissonToUsers(shareContacts, singleUser, shareuserid);
 
 		}
@@ -976,8 +974,8 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 		return null;
 	}
 
-	//Report Generator Methoden
-	
+	// Report Generator Methoden
+
 	@Override
 	public List<Value> findAllValues(Integer propertyId) {
 		return this.valueMapper.findByProperty(propertyId);
@@ -987,8 +985,5 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 	public List<Value> findValuesByPropertyAndDescription(int propertyId, String valueDescription) {
 		return this.valueMapper.findByPropertyAndDescription(propertyId, valueDescription);
 	}
-
-
-
 
 }
