@@ -306,9 +306,9 @@ public class ContactsTable extends CellTable<Contact> {
 
 						sharedColumn.setCellStyleNames("iconButton");
 
-						if (contactlist == null) {
+//						if (contactlist == null) {
 							cellTable.addColumn(sharedColumn, checkAllHeader);
-						}
+//						}
 
 						TextColumn<Contact> prenameColumn = new TextColumn<Contact>() {
 
@@ -802,7 +802,7 @@ public class ContactsTable extends CellTable<Contact> {
 							buttonPanel.add(shareContactListButton);
 							buttonPanel.add(updateContactListButton);
 							buttonPanel.add(deleteContactListButton);
-							buttonPanel.add(shareSelectedContacts);
+							//buttonPanel.add(shareSelectedContacts);
 							shareSelectedContacts.setVisible(false);
 
 							RootPanel.get("content").add(buttonPanel);

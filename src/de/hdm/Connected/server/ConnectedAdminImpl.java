@@ -530,7 +530,7 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 
 		//wenn user nicht owner dann permission löschen
-		if (userid != contactList.getContactId()) {			
+		if (userid != contactList.getCreatorId()) {			
 			permissionMapper.delete(permissionMapper.findBySharedObjectIdAndReceiverId(contactList.getBoId(), userid));
 		}
 		//wenn user owner kontaktliste löschen und kontakte vorher davon entfernen
