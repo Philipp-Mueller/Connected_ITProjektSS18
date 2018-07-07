@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.cell.client.Cell.Context;
@@ -52,20 +51,14 @@ import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SelectionChangeEvent.Handler;
 
 import de.hdm.Connected.client.ClientSideSettings;
-import de.hdm.Connected.shared.ConnectedAdminAsync;
 import de.hdm.Connected.shared.bo.Contact;
 import de.hdm.Connected.shared.bo.ContactList;
-import de.hdm.Connected.shared.bo.Property;
 import de.hdm.Connected.shared.bo.User;
 import de.hdm.Connected.shared.bo.Value;
 
 public class ContactsTable extends CellTable<Contact> {
 
-	private ConnectedAdminAsync connectedAdmin = ClientSideSettings.getConnectedAdmin();
-
 	private CellTable<Contact> cellTable = new CellTable<Contact>();
-	private Map<Property, Value> propertyValueMap = null;
-
 	private ArrayList<Contact> selectedContactsArray = new ArrayList<Contact>();
 	private ArrayList<User> selectedUser = new ArrayList<User>();
 	private ListBox userListbox = new ListBox();
@@ -85,7 +78,6 @@ public class ContactsTable extends CellTable<Contact> {
 	private Button shareSelectedContacts = new Button("Ausgewählte Kontakte teilen");
 	private Button addContactstoCL = new Button("Kontakte zu Kontaktlisten hinzufügen");
 	private Button shareSelectedContacts2 = new Button("Ausgewählte Kontakte teilen");
-	private ContactInfoForm contact = null;
 
 	private TextBox searchBox = new TextBox();
 	private int row = 0;
@@ -103,11 +95,8 @@ public class ContactsTable extends CellTable<Contact> {
 	private Button deleteContactListButton = new Button("<img border='0' src='delete_white.png' width = '20' length = '20'/>");
 	private ContactList mainContactlist = null;
 	private ArrayList<Contact> withinContactlist = null;
-	private ArrayList<User> uArray = new ArrayList<User>();
-	private ArrayList<User> publicUserArray = null;
-
 	private SimplePager pager;
-	private String imageHtml = "<img src=" + "Trash_Can.png" + " alt=" + "Kontakt löschen" + ">";
+	
 	boolean buttonPressed;
 
 	public ContactsTable(final ArrayList<Contact> contactlist, final ContactList contactlistObject) {
@@ -120,9 +109,12 @@ public class ContactsTable extends CellTable<Contact> {
 		SimplePager.Resources pagerResources = GWT.create(SimplePager.Resources.class);
 		pager = new SimplePager(TextLocation.CENTER, pagerResources, false, 0, true);
 		pager.setDisplay(cellTable);
+		
 
 		cellTable.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
 
+		/**CellPreviewHandler hinzufügen um die Reihe eines Doppelklicks zu erfahren */
+		
 		cellTable.addCellPreviewHandler(new CellPreviewEvent.Handler<Contact>() {
 
 			@Override
@@ -146,7 +138,7 @@ public class ContactsTable extends CellTable<Contact> {
 			public void onDoubleClick(final DoubleClickEvent event) {
 
 				ClientSideSettings.getConnectedAdmin().getValuesByUserPermission(
-						cellTable.getDisplayedItem(row).getBoId(), ClientSideSettings.getCurrentUser().getBoId(),
+						cellTable.getVisibleItem(row).getBoId(), ClientSideSettings.getCurrentUser().getBoId(),
 						new AsyncCallback<ArrayList<Value>>() {
 
 							public void onFailure(Throwable caught) {
@@ -155,7 +147,7 @@ public class ContactsTable extends CellTable<Contact> {
 
 							public void onSuccess(ArrayList<Value> result) {
 
-								ContactInfoForm contact = new ContactInfoForm(cellTable.getDisplayedItem(row), result);
+								ContactInfoForm contact = new ContactInfoForm(cellTable.getVisibleItem(row), result);
 
 								contact.center();
 								contact.show();
@@ -166,7 +158,9 @@ public class ContactsTable extends CellTable<Contact> {
 
 			}
 		}, DoubleClickEvent.getType());
-
+		
+		/** Zeigt alle Kontakte auf die der User Zugriff hat*/
+		
 		ClientSideSettings.getConnectedAdmin().getContactsByUserPermission(
 				ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<ArrayList<Contact>>() {
 
@@ -186,6 +180,7 @@ public class ContactsTable extends CellTable<Contact> {
 							contacts = contactlist;
 
 						}
+						/** Multiselection Model für den CellTable, mehrfache Auswahl möglich*/
 
 						final MultiSelectionModel<Contact> selectionModel = new MultiSelectionModel<Contact>();
 						cellTable.setSelectionModel(selectionModel,
@@ -194,7 +189,7 @@ public class ContactsTable extends CellTable<Contact> {
 						selectionModel.addSelectionChangeHandler(new Handler() {
 							@Override
 							public void onSelectionChange(SelectionChangeEvent event) {
-
+								//Je nach ausgwählten Kontakten werden verschiedene Buttons über dem Table angezeigt.
 								selectedContacts = selectionModel.getSelectedSet();
 								if (contactlist == null) {
 									if (selectedContacts != null && selectionModel.getSelectedSet().size() > 1) {
@@ -243,9 +238,9 @@ public class ContactsTable extends CellTable<Contact> {
 							}
 
 						});
-
+						
 						ImageCell image = new ImageCell();
-
+						//Wenn kontakt geteilt ist, wird dem User eine Kontakt Symbol angezeigt
 						Column<Contact, String> sharedColumn = new Column<Contact, String>(image) {
 
 							@Override
@@ -265,7 +260,7 @@ public class ContactsTable extends CellTable<Contact> {
 							}
 
 						};
-
+						// Cell Box damit alle Kontakte 
 						CheckboxCell cell = new CheckboxCell(true, true);
 
 						Header<Boolean> checkAllHeader = new Header<Boolean>(cell) {
@@ -281,15 +276,15 @@ public class ContactsTable extends CellTable<Contact> {
 							}
 
 						};
-
+						
 						checkAllHeader.setUpdater(new ValueUpdater<Boolean>() {
 
 							@Override
-
+							
 							public void update(Boolean value)
 
 				{
-
+								
 								for (Contact c : contacts) {
 									selectionModel.setSelected(c, value);
 								}
@@ -409,8 +404,7 @@ public class ContactsTable extends CellTable<Contact> {
 
 												// Enable glass background.
 												sharePopUp.setGlassEnabled(true);
-												// updatePopUp.setPopupPosition(200,
-												// 300);
+											
 												sharePopUp.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 
 													public void setPosition(int offsetWidth, int offsetHeight) {
@@ -429,7 +423,7 @@ public class ContactsTable extends CellTable<Contact> {
 										});
 							}
 						});
-
+						//ClickAbleText Cell für den Bearbeiten Modus
 						cellTable.addColumn(shareColumn);
 
 						ClickableTextCell updateButton = new ClickableTextCell() {
@@ -449,20 +443,18 @@ public class ContactsTable extends CellTable<Contact> {
 								return "";
 							}
 						};
-
+					
 						updateColumn.setCellStyleNames("iconButton");
 						updateColumn.setFieldUpdater(new FieldUpdater<Contact, String>() {
 							@Override
 							public void update(int index, Contact object, String value) {
-
-								// Window.alert("Hallooo");
-
+								//Popup öffnen um Kontakt zu bearbeiten
 								final ContactForm updatePopUp = new ContactForm(object, mainContactlist,
 										withinContactlist);
 
 								// Enable glass background.
 								updatePopUp.setGlassEnabled(true);
-								// updatePopUp.setPopupPosition(200, 300);
+							
 								updatePopUp.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 
 									public void setPosition(int offsetWidth, int offsetHeight) {
@@ -480,7 +472,7 @@ public class ContactsTable extends CellTable<Contact> {
 						});
 
 						cellTable.addColumn(updateColumn);
-
+						// Löschen Button für den Kontakt
 						ClickableTextCell deleteButton = new ClickableTextCell() {
 							@Override
 							public void render(Context context, SafeHtml data, SafeHtmlBuilder sb) {
@@ -513,7 +505,7 @@ public class ContactsTable extends CellTable<Contact> {
 							@Override
 							public void update(int index, final Contact object, String value) {
 
-								// Clickhandler
+								// Wenn auf Löschen gedrückt wird, passiert folgendes. 
 								final DialogBox agreeDelete = new DialogBox();
 								VerticalPanel vpanel = new VerticalPanel();
 								HorizontalPanel buttonPanel = new HorizontalPanel();
@@ -1195,7 +1187,7 @@ public class ContactsTable extends CellTable<Contact> {
 
 			Button delete = new Button("Ja");
 			Button abort = new Button("Abrechen");
-
+			//Kontakt aus einer Kontaktliste entfernen
 			delete.addClickHandler(new ClickHandler() {
 
 				public void onClick(ClickEvent event) {
