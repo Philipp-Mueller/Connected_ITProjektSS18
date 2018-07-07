@@ -591,7 +591,28 @@ public class ReportGeneratorBaseForm extends Widget {
 					return "";
 				}
 			};
-			table.addColumn(eigenschaftscolumn, propertyIdUndName.get(key));
+			eigenschaftscolumn.setSortable(true);
+			
+		    ListHandler<ReportObjekt> eigenschaftscolumnHandler = new ListHandler<ReportObjekt>(dataProvider.getList());
+		    //Filter in der Tabelle Nachname
+		    eigenschaftscolumnHandler.setComparator(eigenschaftscolumn,
+		        new Comparator<ReportObjekt>() {
+		          public int compare(ReportObjekt c1, ReportObjekt c2) {
+		            if (c1 == c2) {
+		              return 0;
+		            }
+
+		            // Vergleicht die Eingeschaftsausprägungen
+		            if (c1 != null) {
+		              return (c2 != null) ? c1.getPropertyValueMap().get(keyP).compareTo(c2.getPropertyValueMap().get(keyP)) : 1;
+		            }
+		            return -1;
+		          }
+		        });
+		    table.addColumnSortHandler(eigenschaftscolumnHandler);
+			
+			
+			table.addColumn (eigenschaftscolumn, propertyIdUndName.get(key));
 		}
 	}
 	
