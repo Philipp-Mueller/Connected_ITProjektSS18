@@ -733,7 +733,7 @@ public class ContactForm extends PopupPanel {
 										public void onClick(ClickEvent event) {
 											eventRow = propertyTable.getCellForEvent(event).getRowIndex();
 
-											ClientSideSettings.getConnectedAdmin().deleteValue(updatingOldValue,
+											ClientSideSettings.getConnectedAdmin().deleteValue(updatingOldValue, ClientSideSettings.getCurrentUser(),
 													new AsyncCallback<Void>() {
 
 														@Override
@@ -1267,7 +1267,7 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 				public void onClick(ClickEvent event) {
 					eventRow = propertyTable.getCellForEvent(event).getRowIndex();
 
-					ClientSideSettings.getConnectedAdmin().deleteValue(result, new AsyncCallback<Void>() {
+					ClientSideSettings.getConnectedAdmin().deleteValue(result, ClientSideSettings.getCurrentUser(), new AsyncCallback<Void>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
@@ -1599,7 +1599,7 @@ if(propertyListBox.getSelectedItemText() == "Telefon (privat)" || propertyListBo
 
 			eventRow = propertyTable.getCellForEvent(event).getRowIndex();
 
-			ClientSideSettings.getConnectedAdmin().deleteValue(updatingValue, new AsyncCallback<Void>() {
+			ClientSideSettings.getConnectedAdmin().deleteValue(updatingValue, ClientSideSettings.getCurrentUser(), new AsyncCallback<Void>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

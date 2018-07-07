@@ -134,7 +134,7 @@ public interface ConnectedAdmin extends RemoteService {
 	 * @param value
 	 * @throws IllegalArgumentException
 	 */
-	public void deleteValue(Value value) throws IllegalArgumentException;
+	public void deleteValue(Value value, User user) throws IllegalArgumentException;
 
 	/**
 	 * Erstellt ein neues ContactList-Objekt.

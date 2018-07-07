@@ -50,7 +50,7 @@ public interface ConnectedAdminAsync {
 
 	void updateValue(Value value, int oldPropertyId, AsyncCallback<Value> callback);
 
-	void deleteValue(Value value, AsyncCallback<Void> callback);
+	void deleteValue(Value value, User user, AsyncCallback<Void> callback);
 
 	void createContactList(String name, int ownerId, AsyncCallback<ContactList> callback);
 

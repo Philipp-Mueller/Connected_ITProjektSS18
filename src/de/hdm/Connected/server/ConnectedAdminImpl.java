@@ -828,9 +828,20 @@ public class ConnectedAdminImpl extends RemoteServiceServlet implements Connecte
 
 	/** löschen einer Value **/
 	@Override
-	public void deleteValue(Value value) throws IllegalArgumentException {
+	public void deleteValue(Value value, User user) throws IllegalArgumentException {
+		if(value.getCreatorId() == user.getBoId()){
+			ArrayList<Permission> permissionArray = getPermissionsBySharedObjectId(value.getBoId());
+			for(Permission p : permissionArray){
+				deletePermission(p);
+			}
 		this.valueMapper.delete(value);
 		checkIfPropertyHasValue(value.getPropertyID());
+		}
+		else{
+			Permission permission = permissionMapper.findBySharedObjectIdAndReceiverId(value.getBoId(), user.getBoId());
+			permissionMapper.delete(permission);
+		}
+		
 	}
 
 	/** gibt Value für eine String suche zurück **/
