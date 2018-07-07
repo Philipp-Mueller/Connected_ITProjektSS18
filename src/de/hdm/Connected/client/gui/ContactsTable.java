@@ -813,8 +813,8 @@ public class ContactsTable extends CellTable<Contact> {
 			setGlassEnabled(true);
 			userListbox.setMultipleSelect(true);
 
-			Button zurück = new Button("Zurück");
-			zurück.addClickHandler(new ClickHandler() {
+			Button zurueck = new Button("Zurück");
+			zurueck.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					selectedUser.clear();
 					selectedContacts.clear();
@@ -896,7 +896,7 @@ public class ContactsTable extends CellTable<Contact> {
 			});
 
 			buttonPanel.add(ok);
-			buttonPanel.add(zurück);
+			buttonPanel.add(zurueck);
 			v.add(new HTML("<h3> Mit welchen Usern sollen die Kontakte geteilt werden ?</h3>"));
 			v.add(userListbox);
 			v.add(buttonPanel);
@@ -976,8 +976,8 @@ public class ContactsTable extends CellTable<Contact> {
 
 					});
 
-			Button zurück = new Button("Abbrechen");
-			zurück.addClickHandler(new ClickHandler() {
+			Button zurueck = new Button("Abbrechen");
+			zurueck.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
 					selectedCLs.clear();
 					selectedContactsArray.clear();
@@ -1023,7 +1023,7 @@ public class ContactsTable extends CellTable<Contact> {
 			VerticalPanel v = new VerticalPanel();
 			HorizontalPanel buttonPanel = new HorizontalPanel();
 
-			buttonPanel.add(zurück);
+			buttonPanel.add(zurueck);
 			buttonPanel.add(ok);
 
 			v.add(contactlistListbox);
