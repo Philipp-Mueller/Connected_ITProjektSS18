@@ -79,7 +79,7 @@ public class ContactsTable extends CellTable<Contact> {
 	private boolean firstTimePressed = true;
 	private Label search = new Label();
 	private HTML breaks = new HTML("<br />");
-	private HTML hint = new HTML("<i>Strg + Linke Maustaste klicken, um mehrere Einträgen auszuwählen</i>");
+	private HTML hint = new HTML();
 
 	private Button addContactButton = new Button(" + Kontakt");
 	private Button shareSelectedContacts = new Button("Ausgewählte Kontakte teilen");
@@ -98,16 +98,16 @@ public class ContactsTable extends CellTable<Contact> {
 	private Set<Contact> selectedContacts = new HashSet<Contact>();
 
 	// Buttons für ContactList
-	Button shareContactListButton = new Button("<img border='0' src='share_white.png' width = '20' length = '20'/>");
-	Button updateContactListButton = new Button("<img border='0' src='edit_white.png' width = '20'  length = '20'/>");
-	Button deleteContactListButton = new Button("<img border='0' src='delete_white.png' width = '20' length = '20'/>");
-	ContactList mainContactlist = null;
-	ArrayList<Contact> withinContactlist = null;
-	ArrayList<User> uArray = new ArrayList<User>();
-	ArrayList<User> publicUserArray = null;
+	private Button shareContactListButton = new Button("<img border='0' src='share_white.png' width = '20' length = '20'/>");
+	private Button updateContactListButton = new Button("<img border='0' src='edit_white.png' width = '20'  length = '20'/>");
+	private Button deleteContactListButton = new Button("<img border='0' src='delete_white.png' width = '20' length = '20'/>");
+	private ContactList mainContactlist = null;
+	private ArrayList<Contact> withinContactlist = null;
+	private ArrayList<User> uArray = new ArrayList<User>();
+	private ArrayList<User> publicUserArray = null;
 
-	SimplePager pager;
-	String imageHtml = "<img src=" + "Trash_Can.png" + " alt=" + "Kontakt löschen" + ">";
+	private SimplePager pager;
+	private String imageHtml = "<img src=" + "Trash_Can.png" + " alt=" + "Kontakt löschen" + ">";
 	boolean buttonPressed;
 
 	public ContactsTable(final ArrayList<Contact> contactlist, final ContactList contactlistObject) {
@@ -207,14 +207,14 @@ public class ContactsTable extends CellTable<Contact> {
 										shareSelectedContacts.setVisible(false);
 										addContactstoCL.setVisible(true);
 										search.getElement().getStyle().setMarginLeft(368, Unit.PX);
-										hint.setVisible(true);
-										breaks.setVisible(true);
+										hint.setHTML("<i>Strg + Linke Maustaste klicken, um mehrere Einträgen auszuwählen</i>");
+									
 
 									} else if (selectionModel.getSelectedSet().size() == 0) {
 										shareSelectedContacts.setVisible(false);
 										addContactstoCL.setVisible(false);
-										hint.setVisible(false);
-										breaks.setVisible(false);
+										hint.setHTML("");
+										
 										search.getElement().getStyle().setMarginLeft(610, Unit.PX);
 
 									}
@@ -229,12 +229,12 @@ public class ContactsTable extends CellTable<Contact> {
 											&& selectionModel.getSelectedSet().size() == 1) {
 										shareSelectedContacts2.setVisible(false);
 										search.getElement().getStyle().setMarginLeft(368, Unit.PX);
-										hint.setVisible(true);
-										breaks.setVisible(true);
+										hint.setHTML("<i>Strg + Linke Maustaste klicken, um mehrere Einträgen auszuwählen</i>");
+										
 									} else if (selectionModel.getSelectedSet().size() == 0) {
 										shareSelectedContacts.setVisible(false);
-										hint.setVisible(false);
-										breaks.setVisible(false);
+										hint.setHTML("");
+										
 										search.getElement().getStyle().setMarginLeft(610, Unit.PX);
 
 									}
@@ -306,9 +306,9 @@ public class ContactsTable extends CellTable<Contact> {
 
 						sharedColumn.setCellStyleNames("iconButton");
 
-						if (contactlist == null) {
+//						if (contactlist == null) {
 							cellTable.addColumn(sharedColumn, checkAllHeader);
-						}
+//						}
 
 						TextColumn<Contact> prenameColumn = new TextColumn<Contact>() {
 
@@ -677,7 +677,7 @@ public class ContactsTable extends CellTable<Contact> {
 								addCToCl.setGlassEnabled(true);
 
 								addCToCl.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
-
+									//Position des Popups zentrieren
 									public void setPosition(int offsetWidth, int offsetHeight) {
 
 										int left = (Window.getClientWidth() - offsetWidth) / 3;
@@ -754,9 +754,9 @@ public class ContactsTable extends CellTable<Contact> {
 							buttonPanel.add(shareSelectedContacts);
 							buttonPanel.add(addContactstoCL);
 
-							hint.setVisible(false);
+							hint.setHTML("");
 
-							breaks.setVisible(false);
+							
 							hintPanel.add(hint);
 							hintPanel.add(breaks);
 
@@ -785,27 +785,24 @@ public class ContactsTable extends CellTable<Contact> {
 							searchBox.setWidth("215px");
 							search.getElement().getStyle().setMarginLeft(610, Unit.PX);
 
-							HTML hint = new HTML(
-									"<i>Strg + Linke Maustaste klicken, um mehrere Einträgen auszuwählen</i>");
-							hint.setVisible(false);
-							HTML breaks = new HTML("<br />");
-							breaks.setVisible(false);
+						
+							hint.setHTML("");
+							
+							
 							hintPanel.add(hint);
 							hintPanel.add(breaks);
 
 							buttonPanel.clear();
 							buttonPanel.setSpacing(20);
 							buttonPanel.add(new HTML("<h2> Kontaktliste: " + mainContactlist.getName() + "</h2>"));
-							// buttonPanel.add(newContactListButton);
-							// shareContactListButton.setHTML(("<img border='0'
-							// src='share.png' />"));
+					
 							shareContactListButton.addClickHandler(new shareCotactListClickhandler());
 							updateContactListButton.addClickHandler(new updateContactListClickhandler());
 							deleteContactListButton.addClickHandler(new deleteContactListClickhandler());
 							buttonPanel.add(shareContactListButton);
 							buttonPanel.add(updateContactListButton);
 							buttonPanel.add(deleteContactListButton);
-							buttonPanel.add(shareSelectedContacts);
+							//buttonPanel.add(shareSelectedContacts);
 							shareSelectedContacts.setVisible(false);
 
 							RootPanel.get("content").add(buttonPanel);
@@ -848,6 +845,12 @@ public class ContactsTable extends CellTable<Contact> {
 
 					for (int i = 0; i < userListbox.getItemCount(); i++) {
 						if (userListbox.isItemSelected(i)) {
+							for(User u : allUsers){
+								if(u.getLogEmail().equals(userListbox.getItemText(i))){
+									selectedUser.add(u);
+								}
+							}
+							
 						}
 					}
 
@@ -866,7 +869,7 @@ public class ContactsTable extends CellTable<Contact> {
 									public void onSuccess(Void result) {
 										allUsers.clear();
 										userListbox.clear();
-
+										Window.alert("Kontakte wurden geteilt");
 									}
 
 								});
@@ -1041,10 +1044,41 @@ public class ContactsTable extends CellTable<Contact> {
 
 		public void onClick(ClickEvent event) {
 
-			shareDialog dia = new shareDialog();
-			dia.center();
-			dia.show();
+		
+			ClientSideSettings.getConnectedAdmin().findUserById(mainContactlist.getCreatorId(),
+					new AsyncCallback<User>() {
 
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert(" User nicht gefunden");
+
+						}
+
+						@Override
+						public void onSuccess(User result) {
+							final ContactListSharing sharing = new ContactListSharing(mainContactlist, result);
+
+							// Enable glass background.
+							sharing.setGlassEnabled(true);
+							// updatePopUp.setPopupPosition(200,
+							// 300);
+							sharing.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+
+								public void setPosition(int offsetWidth, int offsetHeight) {
+
+									int left = (Window.getClientWidth() - offsetWidth) / 3;
+									int top = (Window.getClientHeight() - offsetHeight) / 3;
+
+									sharing.setPopupPosition(left, top);
+								}
+							});
+
+							sharing.show();
+
+						}
+
+					});
+			
 		}
 	}
 
@@ -1100,6 +1134,13 @@ public class ContactsTable extends CellTable<Contact> {
 			Button ok = new Button("Speichern");
 			ok.addClickHandler(new ClickHandler() {
 				public void onClick(ClickEvent event) {
+					
+					//Eingabeüberprüfung
+					if (nameTextBox.getText().matches("")) {
+						Window.alert("Bitte Wert eintragen!");
+						return;
+					}
+					
 					ContactList cl = new ContactList();
 					cl.setName(nameTextBox.getText());
 					cl.setBoId(mainContactlist.getBoId());
@@ -1130,106 +1171,6 @@ public class ContactsTable extends CellTable<Contact> {
 			v.add(buttons);
 			setWidget(v);
 
-		}
-	}
-
-	/** PopUp zum teilen einer Kontaktliste **/
-	private class shareDialog extends PopupPanel {
-
-		public shareDialog() {
-			// Set the dialog box's caption.
-			// setText("Kontaktliste " + mainContactlist.getName() + "
-			// teilen:");
-
-			// Enable animation.
-			setAnimationEnabled(true);
-
-			// Enable glass background.
-			setGlassEnabled(true);
-
-			VerticalPanel v = new VerticalPanel();
-			v.clear();
-
-			v.add(new HTML("<h2> Kontaktliste " + mainContactlist.getName() + " teilen: </h2>"));
-			v.add(userListbox);
-
-			userListbox.clear();
-
-			userListbox.setEnabled(true);
-			userListbox.setMultipleSelect(true);
-
-			// multi auswahl freischalten in ListBox
-			userListbox.ensureDebugId("cwListBox-multiBox");
-			userListbox.setVisibleItemCount(7);
-
-			publicUserArray = new ArrayList<User>();
-
-			ClientSideSettings.getConnectedAdmin().findAllUser(new AsyncCallback<ArrayList<User>>() {
-
-				@Override
-				public void onFailure(Throwable caught) {
-					Window.alert("Die User konnten nicht geladen werden");
-				}
-
-				@Override
-				// jeder User wird der ListBox hinzugefügt
-				public void onSuccess(ArrayList<User> result) {
-					publicUserArray = result;
-					for (User u : result) {
-						userListbox.addItem(u.getLogEmail());
-					}
-
-				}
-
-			});
-
-			Button close = new Button("Abbrechen");
-			close.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					shareDialog.this.hide();
-				}
-
-			});
-
-			Button ok = new Button("Teilen");
-			ok.addClickHandler(new ClickHandler() {
-
-				public void onClick(ClickEvent event) {
-
-					uArray.clear();
-					for (int i = 0; i < userListbox.getItemCount(); i++) {
-						if (userListbox.isItemSelected(i)) {
-							uArray.add(publicUserArray.get(i));
-						}
-					}
-
-					ClientSideSettings.getConnectedAdmin().giveContactlistPermissionToUsers(mainContactlist, uArray,
-							ClientSideSettings.getCurrentUser().getBoId(), new AsyncCallback<Void>() {
-
-								@Override
-								public void onFailure(Throwable caught) {
-									Window.alert("Ops, da ist etwas schief gelaufen!");
-								}
-
-								@Override
-								// jede Kontaktliste wird der ListBox
-								// hinzugefügt
-								public void onSuccess(Void result) {
-									Window.alert("Teilen von " + mainContactlist.getName() + " war erfolgreich!");
-									RootPanel.get("contant").clear();
-									ContactListForm3 reload = new ContactListForm3(mainContactlist);
-								}
-
-							});
-					shareDialog.this.hide();
-				}
-			});
-
-			HorizontalPanel buttons = new HorizontalPanel();
-			buttons.add(ok);
-			buttons.add(close);
-			v.add(buttons);
-			setWidget(v);
 		}
 	}
 

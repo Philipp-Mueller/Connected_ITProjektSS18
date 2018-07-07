@@ -3,6 +3,7 @@ package de.hdm.Connected.shared;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -340,5 +341,21 @@ public interface ConnectedAdmin extends RemoteService {
 	ArrayList<Value> getValuesByReceiveUserPermission(int contactId, int userId) throws IllegalArgumentException;
 
 	void deleteContactList(ContactList contactList, int userid) throws IllegalArgumentException;
+
+	//Report Generator Methoden
+	
+	/**
+	 * Methode die zu einer Eigenschaft alle Ausprägungen liest
+	 * @param propertyId
+	 * @return
+	 */
+	public List<Value> findAllValues(Integer propertyId);
+	/**
+	 * Methode die zu einer Property Id und einer Beschreibung alle Value Objekte zurückgibt
+	 * @param propertyId
+	 * @param valueDescription
+	 * @return
+	 */
+	public List<Value> findValuesByPropertyAndDescription(int propertyId, String valueDescription);
 
 }

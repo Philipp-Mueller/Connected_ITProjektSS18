@@ -480,10 +480,6 @@ public class ContactSharing extends PopupPanel {
 						dataProvider.getList().addAll(propertiesAndValues);
 						dataProvider.addDataDisplay(propertyValueTable);
 
-						// multi auswahl freischalten in ListBox
-						userListBox.ensureDebugId("cwListBox-multiBox");
-						userListBox.setVisibleItemCount(7);
-
 						userDataProvider.getList().clear();
 						userDataProvider.getList().addAll(permissionUser);
 						userDataProvider.addDataDisplay(usersWithPermission);
