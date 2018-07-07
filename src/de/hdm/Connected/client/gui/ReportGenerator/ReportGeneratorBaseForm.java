@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -34,7 +33,6 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
-
 import de.hdm.Connected.client.ClientSideSettings;
 import de.hdm.Connected.shared.ReportGenerator.ReportGeneratorServiceAsync;
 import de.hdm.Connected.shared.ReportGenerator.ReportObjekt;
@@ -334,30 +332,30 @@ public class ReportGeneratorBaseForm extends Widget {
 					mailToServer = userEmail;
 				}
 				if (propertyListBox.isEnabled() && propertySearchRb.isChecked()) {
-					if(propertyValueMap.size()==0){
-						Window.alert("Bitte geben Sie eine Ausprägung zur Eigenschaft an.");
-					}
 					propertyValueMapToServer = propertyValueMap;
 				}
-				
+				if (propertyValueMap.size() == 0 && propertySearchRb.isChecked()) {
+					Window.alert("Bitte geben Sie eine Ausprägung zur Eigenschaft an.");
+				} else {
 
-				rgsa.searchContacts(allContacts, sharedContacts, detailSearch, mailToServer, propertyValueMapToServer,
-						currentUser.getBoId(), new AsyncCallback<List<ReportObjekt>>() {
+					rgsa.searchContacts(allContacts, sharedContacts, detailSearch, mailToServer,
+							propertyValueMapToServer, currentUser.getBoId(), new AsyncCallback<List<ReportObjekt>>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Window.alert("Fehler beim lesen aller Kontakte aufgetreten");
-							}
-
-							@Override
-							public void onSuccess(List<ReportObjekt> result) {
-
-								dataProvider.getList().clear();
-								for (ReportObjekt r : result) {
-									dataProvider.getList().add(r);
+								@Override
+								public void onFailure(Throwable caught) {
+									Window.alert("Fehler beim lesen aller Kontakte aufgetreten");
 								}
-							}
-						});
+
+								@Override
+								public void onSuccess(List<ReportObjekt> result) {
+
+									dataProvider.getList().clear();
+									for (ReportObjekt r : result) {
+										dataProvider.getList().add(r);
+									}
+								}
+							});
+				}
 			}
 		});
 		// Abstand und Panel hinzufügen
@@ -455,7 +453,7 @@ public class ReportGeneratorBaseForm extends Widget {
 
 		// Nachdem die UI erstellt ist werden die Daten für das Dropdown und die
 		// Suggestbox geladen
-		loadDataForFiltering();
+		loadDataForFiltering(currentUser);
 
 		// Vertical panel wird dem RootPanel hinzugefügt (Somit wirds sichtbar)
 		RootPanel.get("content").add(hPanelFilter);
@@ -483,9 +481,9 @@ public class ReportGeneratorBaseForm extends Widget {
 	 * Sortierfunktion angelegt.
 	 * 
 	 */
-	private void loadDataForFiltering() {
+	private void loadDataForFiltering(User currentUser) {
 		// Users für User Dropbox
-		rgsa.allUsers(new AsyncCallback<List<User>>() {
+		rgsa.allUsers(currentUser.getBoId(), new AsyncCallback<List<User>>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Das Laden der Benutzer ist fehlgeschlagen!");
