@@ -67,6 +67,7 @@ public class UserMapper {
 			/*
 			 * leeres SQL-Statement (JDBC) anlegen.
 			 */
+			con.setAutoCommit(true);
 			Statement stmt = con.createStatement();
 			
 			/*
